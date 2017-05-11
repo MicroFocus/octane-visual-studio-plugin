@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.Shell;
 namespace octane_visual_studio_plugin {
 
     class OptionsPage : DialogPage {
-        private string url = "http://myd-vm10632.hpeswlab.net:8081";
+        private string url = "http://myd-vm10629.hpeswlab.net:8081";
         const string category = "Server Settings";
         private int ssid = 1001;
         private int wsid = 1002;
