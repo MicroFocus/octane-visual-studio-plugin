@@ -15,6 +15,7 @@ namespace Hpe.Nga.Octane.VisualStudio
     using System;
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
+    using octane_visual_studio_plugin;
 
     /// <summary>
     /// Interaction logic for MainWindowControl.
@@ -29,6 +30,8 @@ namespace Hpe.Nga.Octane.VisualStudio
             this.InitializeComponent();
         }
 
+        public MainWindowPackage Package { get; internal set; }
+
         /// <summary>
         /// Handles click on the button by displaying a message box.
         /// </summary>
@@ -38,9 +41,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Default event handler naming pattern")]
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            
-
-            OctaneServices octane = new OctaneServices(textUrl.Text, long.Parse(textSID.Text), long.Parse(textWID.Text), textUser.Text, textPassword.Text);
+            OctaneServices octane = new OctaneServices(Package.AlmUrl, Package.SharedSpaceId, Package.WorkSpaceId, Package.AlmUsername, Package.AlmPassword);
             octane.Connect();
             results.Items.Clear();
             try

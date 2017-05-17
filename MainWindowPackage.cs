@@ -15,8 +15,9 @@ using Microsoft.VisualStudio.OLE.Interop;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
+using Hpe.Nga.Octane.VisualStudio;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace octane_visual_studio_plugin
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
@@ -40,8 +41,7 @@ namespace Hpe.Nga.Octane.VisualStudio
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(MainWindow))]
     [Guid(MainWindowPackage.PackageGuidString)]
-    [ProvideOptionPage(typeof(OptionsPage),
-    "ALM Octane", "Server Details", 0, 0, true)]
+    [ProvideOptionPage(typeof(OptionsPage), "ALM Octane", "Server Details", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     public sealed class MainWindowPackage : Package
     {
@@ -77,5 +77,35 @@ namespace Hpe.Nga.Octane.VisualStudio
         }
 
         #endregion
+
+        internal OptionsPage Options
+        {
+            get { return (OptionsPage) GetDialogPage(typeof(OptionsPage)); }
+        }
+
+        internal string AlmUrl
+        {
+            get { return Options.Url; }
+        }
+
+        internal string AlmUsername
+        {
+            get { return Options.User; }
+        }
+
+        internal string AlmPassword
+        {
+            get { return Options.Password; }
+        }
+
+        internal long SharedSpaceId
+        {
+            get { return Options.SsId; }
+        }
+
+        internal long WorkSpaceId
+        {
+            get { return Options.WsId; }
+        }
     }
 }

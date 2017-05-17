@@ -9,17 +9,6 @@
              d:DesignHeight="300" d:DesignWidth="552"
              Name="MyToolWindow">
     <Grid>
-        <Label x:Name="label" Content="Server URL:" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textUrl" HorizontalAlignment="Left" Height="23" Margin="114,10,0,0" TextWrapping="Wrap" Text="http://myd-vm10632.hpeswlab.net:8081" VerticalAlignment="Top" Width="428"/>
-        <Label x:Name="label1" Content="Shared Space ID:" HorizontalAlignment="Left" Margin="10,41,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textSID" HorizontalAlignment="Left" Height="23" Margin="114,44,0,0" TextWrapping="Wrap" Text="1001" VerticalAlignment="Top" Width="86"/>
-        <Label x:Name="label1_Copy" Content="Workspace ID" HorizontalAlignment="Left" Margin="205,42,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textWID" HorizontalAlignment="Left" Height="23" Margin="293,44,0,0" TextWrapping="Wrap" Text="1002" VerticalAlignment="Top" Width="86"/>
-        <Label x:Name="label1_Copy1" Content="User" HorizontalAlignment="Left" Margin="10,72,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textUser" HorizontalAlignment="Left" Height="23" Margin="114,76,0,0" TextWrapping="Wrap" Text="sa@nga" VerticalAlignment="Top" Width="86" />
-        <Label x:Name="label1_Copy2" Content="Password" HorizontalAlignment="Left" Margin="10,103,0,0" VerticalAlignment="Top"/>
-        <TextBox x:Name="textPassword" HorizontalAlignment="Left" Height="23" Margin="114,107,0,0" TextWrapping="Wrap" Text="Welcome1" VerticalAlignment="Top" Width="86"/>
-        <Button Content="Show my items" Click="button1_Click" x:Name="goButton" Margin="205,107,0,0" Height="22" VerticalAlignment="Top" HorizontalAlignment="Left" Width="125"/>
-        <ListBox x:Name="results" HorizontalAlignment="Left" Height="141" Margin="10,0,0,5" VerticalAlignment="Bottom" Width="532"/>
+        <ListBox x:Name="results" />
     </Grid>
 </UserControl>

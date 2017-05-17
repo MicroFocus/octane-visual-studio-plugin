@@ -9,6 +9,7 @@ namespace Hpe.Nga.Octane.VisualStudio
     using System;
     using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Shell;
+    using octane_visual_studio_plugin;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
@@ -24,6 +25,8 @@ namespace Hpe.Nga.Octane.VisualStudio
     [Guid("af5c5224-1b4a-444f-923f-2fc9e06f7a40")]
     public class MainWindow : ToolWindowPane
     {
+        private readonly MainWindowControl mainWindowControl;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
@@ -34,7 +37,15 @@ namespace Hpe.Nga.Octane.VisualStudio
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            this.Content = new MainWindowControl();
+            mainWindowControl = new MainWindowControl();
+            this.Content = mainWindowControl;
+        }
+
+        protected override void OnCreate()
+        {
+            base.OnCreate();
+            var mainWindowPackage = (MainWindowPackage)Package;
+            mainWindowControl.Package = mainWindowPackage;
         }
     }
 }
