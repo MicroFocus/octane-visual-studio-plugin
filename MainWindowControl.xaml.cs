@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace octane_visual_studio_plugin
+namespace Hpe.Nga.Octane.VisualStudio
 {
     using System.Diagnostics.CodeAnalysis;
     using System.Windows;

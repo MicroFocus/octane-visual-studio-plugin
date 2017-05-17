@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace octane_visual_studio_plugin
+namespace Hpe.Nga.Octane.VisualStudio
 {
     class OctaneServices
     {

@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace octane_visual_studio_plugin
+namespace Hpe.Nga.Octane.VisualStudio
 {
     using System;
     using System.Runtime.InteropServices;
@@ -29,7 +29,7 @@ namespace octane_visual_studio_plugin
         /// </summary>
         public MainWindow() : base(null)
         {
-            this.Caption = "ALM Octane Plugin by Lilo";
+            this.Caption = "ALM Octane";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on

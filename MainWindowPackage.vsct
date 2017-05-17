@@ -46,7 +46,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
         <Icon guid="guidImages" id="bmpPic1" />
         <Strings>
-          <ButtonText>MainWindow</ButtonText>
+          <ButtonText>ALM Octane</ButtonText>
         </Strings>
       </Button>
       <Button guid="guidMainWindowPackageCmdSet1" id="cmdidOctaneCommand" priority="0x0100" type="Button">

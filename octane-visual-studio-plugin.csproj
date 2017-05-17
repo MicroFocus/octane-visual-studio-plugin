@@ -44,7 +44,7 @@
     <ProjectGuid>{95ADAD0B-A1FF-4BE8-AE43-300204E3E667}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>octane_visual_studio_plugin</RootNamespace>
+    <RootNamespace>Hpe.Nga.Octane.VisualStudio</RootNamespace>
     <AssemblyName>octane-visual-studio-plugin</AssemblyName>
     <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>

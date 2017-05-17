@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
 
-namespace octane_visual_studio_plugin {
+namespace Hpe.Nga.Octane.VisualStudio {
 
     class OptionsPage : DialogPage {
         private string url = "http://myd-vm10629.hpeswlab.net:8081";

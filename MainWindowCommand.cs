@@ -10,7 +10,7 @@ using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 
-namespace octane_visual_studio_plugin
+namespace Hpe.Nga.Octane.VisualStudio
 {
     /// <summary>
     /// Command handler

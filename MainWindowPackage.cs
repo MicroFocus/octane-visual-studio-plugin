@@ -16,7 +16,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 
-namespace octane_visual_studio_plugin
+namespace Hpe.Nga.Octane.VisualStudio
 {
     /// <summary>
     /// This is the class that implements the package exposed by this assembly.
