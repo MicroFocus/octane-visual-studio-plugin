@@ -22,44 +22,20 @@ namespace Hpe.Nga.Octane.VisualStudio
     /// </summary>
     public partial class MainWindowControl : UserControl
     {
+        private readonly OctaneMyItemsViewModel viewModel;
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowControl"/> class.
         /// </summary>
         public MainWindowControl()
         {
             this.InitializeComponent();
+            viewModel  = new OctaneMyItemsViewModel();
+            this.DataContext = viewModel;
         }
 
-        public MainWindowPackage Package { get; internal set; }
-
-        /// <summary>
-        /// Handles click on the button by displaying a message box.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event args.</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions", Justification = "Sample code")]
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Default event handler naming pattern")]
-        private void button1_Click(object sender, RoutedEventArgs e)
+        public void SetPackage(MainWindowPackage package)
         {
-            OctaneServices octane = new OctaneServices(Package.AlmUrl, Package.SharedSpaceId, Package.WorkSpaceId, Package.AlmUsername, Package.AlmPassword);
-            octane.Connect();
-            results.Items.Clear();
-            try
-            {
-                var items = octane.GetMyItems();
-                foreach (var item in items)
-                {
-                    results.Items.Add(item.Id + ": " + item.Name + " (" + item.Phase.Name + ")" );
-                }
-                
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error!");
-                Console.WriteLine(ex);
-            }
-
+            viewModel.SetPackage(package);
         }
-
     }
 }

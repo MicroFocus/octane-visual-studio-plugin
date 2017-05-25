@@ -73,7 +73,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DelegatedCommand.cs" />
+    <Compile Include="MyItemControl.xaml.cs">
+      <DependentUpon>MyItemControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="OctaneCommand.cs" />
+    <Compile Include="OctaneItemViewModel.cs" />
+    <Compile Include="OctaneMyItemsViewModel.cs" />
     <Compile Include="OctaneServices.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="MainWindowCommand.cs" />
@@ -106,6 +112,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MyItemControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

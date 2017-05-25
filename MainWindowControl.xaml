@@ -3,12 +3,22 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:local="clr-namespace:Hpe.Nga.Octane.VisualStudio"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="552"
              Name="MyToolWindow">
-    <Grid>
-        <ListBox x:Name="results" />
-    </Grid>
+    <DockPanel>
+        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
+            <Button Content="R" Width="32" Command="{Binding RefreshCommand}" />
+        </StackPanel>
+        <ListBox x:Name="results" ItemsSource="{Binding MyItems}">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <local:MyItemControl />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
 </UserControl>

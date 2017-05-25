@@ -45,7 +45,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             base.OnCreate();
             var mainWindowPackage = (MainWindowPackage)Package;
-            mainWindowControl.Package = mainWindowPackage;
+            mainWindowControl.SetPackage(mainWindowPackage);
         }
     }
 }
