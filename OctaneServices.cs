@@ -49,8 +49,10 @@ namespace Hpe.Nga.Octane.VisualStudio
         }
         private IList<QueryPhrase> ToQueryList(QueryPhrase query)
         {
-            List<QueryPhrase> queries = new List<QueryPhrase>();
-            queries.Add(query);
+            List<QueryPhrase> queries = new List<QueryPhrase>
+            {
+                query
+            };
             return queries;
         }
         public IList<WorkItem> GetMyItems()

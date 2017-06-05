@@ -16,6 +16,7 @@ namespace Hpe.Nga.Octane.VisualStudio
     using Microsoft.VisualStudio.Shell;
     using Microsoft.VisualStudio.Shell.Interop;
     using octane_visual_studio_plugin;
+    using System.Text;
 
     /// <summary>
     /// Interaction logic for MainWindowControl.
@@ -23,6 +24,8 @@ namespace Hpe.Nga.Octane.VisualStudio
     public partial class MainWindowControl : UserControl
     {
         private readonly OctaneMyItemsViewModel viewModel;
+        private MainWindowPackage package;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowControl"/> class.
         /// </summary>
@@ -35,7 +38,18 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         public void SetPackage(MainWindowPackage package)
         {
+            this.package = package;
             viewModel.SetPackage(package);
+        }
+
+        private void OpenInBrowser_Click(object sender, RoutedEventArgs e)
+        {
+            // url: http://myd-vm10629.hpeswlab.net:8081
+            // http://myd-vm10629.hpeswlab.net:8081/ui/entity-navigation?p=1001/1002&entityType=work_item&id=1111
+            var sb = new StringBuilder();
+            var selectedId = ((OctaneItemViewModel)this.results.SelectedItem).ID;
+            sb.AppendFormat("{0}/ui/entity-navigation?p={1}/{2}&entityType=work_item&id={3}", package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, selectedId);
+            System.Diagnostics.Process.Start(sb.ToString());
         }
     }
 }

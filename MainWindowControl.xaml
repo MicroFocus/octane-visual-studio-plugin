@@ -14,6 +14,11 @@
             <Button Content="R" Width="32" Command="{Binding RefreshCommand}" />
         </StackPanel>
         <ListBox x:Name="results" ItemsSource="{Binding MyItems}">
+            <ListBox.ContextMenu>
+                <ContextMenu Name="ListMenu">
+                    <MenuItem Header="Open in Browser" Click="OpenInBrowser_Click"></MenuItem>
+                </ContextMenu>
+            </ListBox.ContextMenu>
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <local:MyItemControl />
