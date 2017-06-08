@@ -17,6 +17,8 @@
             <ListBox.ContextMenu>
                 <ContextMenu Name="ListMenu">
                     <MenuItem Header="Open in Browser" Click="OpenInBrowser_Click"></MenuItem>
+                    <MenuItem Header="Show Details" Click="ShowDetails_Click"></MenuItem>
+                    <MenuItem Header="Toggle Active" Click="ToggleActive_Click"></MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.ItemTemplate>

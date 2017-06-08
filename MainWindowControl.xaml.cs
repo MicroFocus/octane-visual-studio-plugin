@@ -32,7 +32,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         public MainWindowControl()
         {
             this.InitializeComponent();
-            viewModel  = new OctaneMyItemsViewModel();
+            viewModel = new OctaneMyItemsViewModel();
             this.DataContext = viewModel;
         }
 
@@ -50,6 +50,30 @@ namespace Hpe.Nga.Octane.VisualStudio
             var selectedId = ((OctaneItemViewModel)this.results.SelectedItem).ID;
             sb.AppendFormat("{0}/ui/entity-navigation?p={1}/{2}&entityType=work_item&id={3}", package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, selectedId);
             System.Diagnostics.Process.Start(sb.ToString());
+        }
+
+        private void ShowDetails_Click(object sender, RoutedEventArgs e)
+        {
+            int selectedId = (int)((OctaneItemViewModel)results.SelectedItem).ID;
+            ToolWindowPane window = this.package.FindToolWindow(typeof(OctaneToolWindow), selectedId, false);
+            if (window == null)
+            {
+                // Create the window with the first free ID.   
+                window = (ToolWindowPane)this.package.FindToolWindow(typeof(OctaneToolWindow), selectedId, true);
+                if ((null == window) || (null == window.Frame))
+                {
+                    throw new NotSupportedException("Cannot create tool window");
+                }
+                window.Caption = "Item " + selectedId;
+            }
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+
+        }
+
+        private void ToggleActive_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

@@ -43,6 +43,7 @@ namespace octane_visual_studio_plugin
     [Guid(MainWindowPackage.PackageGuidString)]
     [ProvideOptionPage(typeof(OptionsPage), "ALM Octane", "Server Details", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
+    [ProvideToolWindow(typeof(OctaneToolWindow), MultiInstances = true)]
     public sealed class MainWindowPackage : Package
     {
         /// <summary>
