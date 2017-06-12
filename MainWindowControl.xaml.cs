@@ -42,19 +42,29 @@ namespace Hpe.Nga.Octane.VisualStudio
             viewModel.SetPackage(package);
         }
 
+        OctaneItemViewModel SelectedItem
+        {
+            get
+            {
+                return (OctaneItemViewModel)results.SelectedItem;
+            }
+        }
+        
         private void OpenInBrowser_Click(object sender, RoutedEventArgs e)
         {
             // url: http://myd-vm10629.hpeswlab.net:8081
             // http://myd-vm10629.hpeswlab.net:8081/ui/entity-navigation?p=1001/1002&entityType=work_item&id=1111
             var sb = new StringBuilder();
-            var selectedId = ((OctaneItemViewModel)this.results.SelectedItem).ID;
+            var selectedId = SelectedItem.ID;
             sb.AppendFormat("{0}/ui/entity-navigation?p={1}/{2}&entityType=work_item&id={3}", package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, selectedId);
             System.Diagnostics.Process.Start(sb.ToString());
         }
 
+       
+
         private void ShowDetails_Click(object sender, RoutedEventArgs e)
         {
-            int selectedId = (int)((OctaneItemViewModel)results.SelectedItem).ID;
+            int selectedId = (int)SelectedItem.ID;
             ToolWindowPane window = this.package.FindToolWindow(typeof(OctaneToolWindow), selectedId, false);
             if (window == null)
             {
@@ -73,7 +83,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void ToggleActive_Click(object sender, RoutedEventArgs e)
         {
-
+            
         }
     }
 }

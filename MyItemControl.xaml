@@ -9,9 +9,9 @@
     <DockPanel>
         <Border BorderThickness="1" MinHeight="50" MinWidth="50" DockPanel.Dock="Left" Margin="0 0 5 0">
                 <Border.Background>
-                    <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=Red}" />
+                    <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
                 </Border.Background>
-            <TextBlock Text="{Binding IconText, FallbackValue=WW}" VerticalAlignment="Center" TextAlignment="Center" />
+            <TextBlock Foreground="White" FontWeight="Light" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
         </Border>
 
         <Grid>

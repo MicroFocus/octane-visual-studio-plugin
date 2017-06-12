@@ -15,11 +15,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             iconTextMap = new Dictionary<string, string>();
             iconTextMap.Add(WorkItem.SUBTYPE_DEFECT, "D");
-            iconTextMap.Add(WorkItem.SUBTYPE_FEATURE, "F");
+            iconTextMap.Add(WorkItem.SUBTYPE_STORY, "US");
 
             iconBackgroundColorMap = new Dictionary<string, Color>();
-            iconBackgroundColorMap.Add(WorkItem.SUBTYPE_DEFECT, Color.FromArgb(255, 190, 102, 92));
-            iconBackgroundColorMap.Add(WorkItem.SUBTYPE_FEATURE, Color.FromArgb(255, 226, 132, 90));
+            iconBackgroundColorMap.Add(WorkItem.SUBTYPE_DEFECT, Color.FromRgb(190, 102, 92));
+            iconBackgroundColorMap.Add(WorkItem.SUBTYPE_STORY, Color.FromRgb(218, 199, 120));
         }
 
         public OctaneItemViewModel(WorkItem workItem)
@@ -35,9 +35,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
-                string iconText = "X";
-                iconTextMap.TryGetValue(workItem.SubType, out iconText);
-                return iconText;
+                string iconText;
+                if (iconTextMap.TryGetValue(workItem.SubType, out iconText))
+                    return iconText;
+                else
+                    return "?";
             }
         }
 
@@ -45,9 +47,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
-                Color bgc = Colors.Red;
-                iconBackgroundColorMap.TryGetValue(workItem.SubType, out bgc);
-                return bgc;
+                Color bgc;
+                if(iconBackgroundColorMap.TryGetValue(workItem.SubType, out bgc))
+                    return bgc;
+                else
+                    return Color.FromRgb(221, 221, 221);
             }
         }
     }
