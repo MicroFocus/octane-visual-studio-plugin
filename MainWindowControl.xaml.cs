@@ -17,6 +17,7 @@ namespace Hpe.Nga.Octane.VisualStudio
     using Microsoft.VisualStudio.Shell.Interop;
     using octane_visual_studio_plugin;
     using System.Text;
+    using System.Windows.Input;
 
     /// <summary>
     /// Interaction logic for MainWindowControl.
@@ -81,9 +82,32 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         }
 
-        private void ToggleActive_Click(object sender, RoutedEventArgs e)
+        private void GenerateCommitMsg_Click(object sender, RoutedEventArgs e)
         {
-            
+            var sb = new StringBuilder();
+            var item = SelectedItem;
+            sb.AppendFormat("{0} [{1}]: {2}", item.ID, item.Phase, item.Name);
+            Clipboard.SetText(sb.ToString());
+        }
+
+        private void results_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+            {
+                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                {
+                    GenerateCommitMsg_Click(sender, e);
+                }
+                else
+                {
+                    OpenInBrowser_Click(sender, e);
+                }
+            }
+            else
+            {
+                ShowDetails_Click(sender, e);
+            }
+                
         }
     }
 }

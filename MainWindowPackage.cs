@@ -44,6 +44,7 @@ namespace octane_visual_studio_plugin
     [ProvideOptionPage(typeof(OptionsPage), "ALM Octane", "Server Details", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideToolWindow(typeof(OctaneToolWindow), MultiInstances = true)]
+    [ProvideAutoLoad(UIContextGuids.SolutionExists,PackageAutoLoadFlags.SkipWhenUIContextRulesActive)]
     public sealed class MainWindowPackage : Package
     {
         /// <summary>
@@ -78,6 +79,16 @@ namespace octane_visual_studio_plugin
         }
 
         #endregion
+
+
+        private void TestCommitMessage()
+        {
+            //GitFileStatusTracker tracker;
+            //var repositoryGraph = tracker.RepositoryGraph;
+            //var commit = repositoryGraph.GetCommit(commitId);
+            //// commit.Message;
+            //IVsScc
+        }
 
         internal OptionsPage Options
         {

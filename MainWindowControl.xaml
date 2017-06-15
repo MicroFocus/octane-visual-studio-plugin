@@ -13,12 +13,12 @@
         <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
             <Button Content="R" Width="32" Command="{Binding RefreshCommand}" />
         </StackPanel>
-        <ListBox x:Name="results" ItemsSource="{Binding MyItems}">
+        <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick">
             <ListBox.ContextMenu>
                 <ContextMenu Name="ListMenu">
-                    <MenuItem Header="Open in Browser" Click="OpenInBrowser_Click"></MenuItem>
-                    <MenuItem Header="Show Details" Click="ShowDetails_Click"></MenuItem>
-                    <MenuItem Header="Toggle Active" Click="ToggleActive_Click"></MenuItem>
+                    <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
+                    <MenuItem Header="Open in Browser (Alt+DblClick)" Click="OpenInBrowser_Click"></MenuItem>
+                    <MenuItem Header="Copy Commit Message to Clipboard (Shift+Alt+DblClick)" Click="GenerateCommitMsg_Click"></MenuItem>
                 </ContextMenu>
             </ListBox.ContextMenu>
             <ListBox.ItemTemplate>

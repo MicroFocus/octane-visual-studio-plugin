@@ -13,13 +13,16 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         static OctaneItemViewModel()
         {
-            iconTextMap = new Dictionary<string, string>();
-            iconTextMap.Add(WorkItem.SUBTYPE_DEFECT, "D");
-            iconTextMap.Add(WorkItem.SUBTYPE_STORY, "US");
-
-            iconBackgroundColorMap = new Dictionary<string, Color>();
-            iconBackgroundColorMap.Add(WorkItem.SUBTYPE_DEFECT, Color.FromRgb(190, 102, 92));
-            iconBackgroundColorMap.Add(WorkItem.SUBTYPE_STORY, Color.FromRgb(218, 199, 120));
+            iconTextMap = new Dictionary<string, string>
+            {
+                { WorkItem.SUBTYPE_DEFECT, "D" },
+                { WorkItem.SUBTYPE_STORY, "US" }
+            };
+            iconBackgroundColorMap = new Dictionary<string, Color>
+            {
+                { WorkItem.SUBTYPE_DEFECT, Color.FromRgb(190, 102, 92) },
+                { WorkItem.SUBTYPE_STORY, Color.FromRgb(218, 199, 120) }
+            };
         }
 
         public OctaneItemViewModel(WorkItem workItem)
