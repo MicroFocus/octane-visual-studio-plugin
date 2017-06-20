@@ -26,6 +26,16 @@
                     <local:MyItemControl />
                 </DataTemplate>
             </ListBox.ItemTemplate>
+            
+            <!--
+            Set the horizontal content alignment to stretch so the item will have the full width of the list box.
+            This allows the MyItemControl to align the top and bottom fields to the right.
+            -->
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.ItemContainerStyle>
         </ListBox>
     </DockPanel>
 </UserControl>

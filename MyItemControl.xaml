@@ -5,29 +5,58 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="70" d:DesignWidth="500">
+
+    <UserControl.Resources>
+
+        <DataTemplate x:Key="FieldDataTemplate">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Label}" />
+                <TextBlock Text=":" />
+                <TextBlock Text="{Binding Content}" />
+                <TextBlock Text=" | " />
+            </StackPanel>
+        </DataTemplate>
+
+        <ItemsPanelTemplate x:Key="FieldsItemPanelTemplate">
+            <StackPanel Orientation="Horizontal" />
+        </ItemsPanelTemplate>
+
+    </UserControl.Resources>
+
     <Border Padding="10">
-    <DockPanel>
-        <Border BorderThickness="1" MinHeight="50" MinWidth="50" DockPanel.Dock="Left" Margin="0 0 5 0">
+        <DockPanel>
+            <Border BorderThickness="1" MinHeight="50" MinWidth="50" DockPanel.Dock="Left" Margin="0 0 5 0">
                 <Border.Background>
                     <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
                 </Border.Background>
-            <TextBlock Foreground="White" FontWeight="Light" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
-        </Border>
+                <TextBlock Foreground="White" FontWeight="Light" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
+            </Border>
 
-        <Grid>
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition />
-            </Grid.ColumnDefinitions>
-            
-            <TextBlock Text="{Binding ID, FallbackValue=Test}" Grid.Row="0" Grid.Column="0" Margin="0 0 5 0" />
-            <TextBlock Text="{Binding Name}" Grid.Row="0" Grid.Column="1" />
-            <TextBlock Text="No env set" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
-        </Grid>
-    </DockPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding ID, FallbackValue=Test}" Grid.Row="0" Grid.Column="0" Margin="0 0 5 0" />
+                <TextBlock Text="{Binding Name}" Grid.Row="0" Grid.Column="1" />
+                <TextBlock Text="No env set" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
+
+                <ItemsControl Grid.Row="0" Grid.Column="2" ItemsSource="{Binding TopFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
+                              ItemTemplate="{StaticResource FieldDataTemplate}"
+                              ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
+                </ItemsControl>
+
+                <ItemsControl Grid.Row="1" Grid.Column="2" ItemsSource="{Binding BottomFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
+                              ItemTemplate="{StaticResource FieldDataTemplate}"
+                              ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
+                </ItemsControl>
+            </Grid>
+        </DockPanel>
     </Border>
 </UserControl>

@@ -61,6 +61,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         internal void SetPackage(MainWindowPackage package)
         {
             this.package = package;
+            LoadMyItems();
         }
     }
 }

@@ -74,6 +74,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DelegatedCommand.cs" />
+    <Compile Include="FieldGetterViewModel.cs" />
     <Compile Include="MyItemControl.xaml.cs">
       <DependentUpon>MyItemControl.xaml</DependentUpon>
     </Compile>
