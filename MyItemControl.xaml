@@ -12,7 +12,7 @@
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Label}" />
                 <TextBlock Text=":" />
-                <TextBlock Text="{Binding Content}" />
+                <TextBlock Text="{Binding Content}" FontWeight="Bold" />
                 <TextBlock Text=" | " />
             </StackPanel>
         </DataTemplate>
