@@ -1,5 +1,5 @@
 ﻿//------------------------------------------------------------------------------
-// <copyright file="OctaneToolWindow.cs" company="Company">
+// <copyright file="DetailsToolWindow.cs" company="Company">
 //     Copyright (c) Company.  All rights reserved.
 // </copyright>
 //------------------------------------------------------------------------------
@@ -22,12 +22,12 @@ namespace Hpe.Nga.Octane.VisualStudio
     /// </para>
     /// </remarks>
     [Guid("d19915c9-3dea-4d5c-aa56-bd1fed3a7ab3")]
-    public class OctaneToolWindow : ToolWindowPane
+    public class DetailsToolWindow : ToolWindowPane
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OctaneToolWindow"/> class.
+        /// Initializes a new instance of the <see cref="DetailsToolWindow"/> class.
         /// </summary>
-        public OctaneToolWindow() : base(null)
+        public DetailsToolWindow() : base(null)
         {
             this.Caption = "OctaneToolWindow";
 
@@ -35,6 +35,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
             this.Content = new OctaneToolWindowControl();
+        }
+
+        internal void SetWorkItem(OctaneItemViewModel itemViewModel)
+        {
+            this.Caption = string.Format("Item #{0}", itemViewModel.ID);
         }
     }
 }

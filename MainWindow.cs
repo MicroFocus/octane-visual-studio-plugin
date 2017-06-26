@@ -22,9 +22,11 @@ namespace Hpe.Nga.Octane.VisualStudio
     /// implementation of the IVsUIElementPane interface.
     /// </para>
     /// </remarks>
-    [Guid("af5c5224-1b4a-444f-923f-2fc9e06f7a40")]
+    [Guid(WINDOW_ID)]
     public class MainWindow : ToolWindowPane
     {
+        internal const string WINDOW_ID = "af5c5224-1b4a-444f-923f-2fc9e06f7a40";
+
         private readonly MainWindowControl mainWindowControl;
 
         /// <summary>

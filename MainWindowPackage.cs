@@ -39,11 +39,11 @@ namespace octane_visual_studio_plugin
     [PackageRegistration(UseManagedResourcesOnly = true)]
     [InstalledProductRegistration("#110", "#112", "1.0", IconResourceID = 400)] // Info on this package for Help/About
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideToolWindow(typeof(MainWindow))]
+    [ProvideToolWindow(typeof(MainWindow), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindOutput)]
+    [ProvideToolWindow(typeof(DetailsToolWindow), MultiInstances = true, Style = VsDockStyle.Tabbed, Window = MainWindow.WINDOW_ID)]
     [Guid(MainWindowPackage.PackageGuidString)]
     [ProvideOptionPage(typeof(OptionsPage), "ALM Octane", "Server Details", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideToolWindow(typeof(OctaneToolWindow), MultiInstances = true)]
     [ProvideAutoLoad(UIContextGuids.SolutionExists,PackageAutoLoadFlags.SkipWhenUIContextRulesActive)]
     public sealed class MainWindowPackage : Package
     {

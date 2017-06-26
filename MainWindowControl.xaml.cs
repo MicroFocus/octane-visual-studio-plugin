@@ -65,21 +65,41 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void ShowDetails_Click(object sender, RoutedEventArgs e)
         {
-            int selectedId = (int)SelectedItem.ID;
-            ToolWindowPane window = this.package.FindToolWindow(typeof(OctaneToolWindow), selectedId, false);
-            if (window == null)
-            {
-                // Create the window with the first free ID.   
-                window = (ToolWindowPane)this.package.FindToolWindow(typeof(OctaneToolWindow), selectedId, true);
-                if ((null == window) || (null == window.Frame))
-                {
-                    throw new NotSupportedException("Cannot create tool window");
-                }
-                window.Caption = "Item " + selectedId;
-            }
+            ToolWindowPane window = CreateDetailsWindow(SelectedItem);
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
 
+        }
+
+        private ToolWindowPane CreateDetailsWindow(OctaneItemViewModel item)
+        {
+            // Create the window with the first free ID.   
+            DetailsToolWindow toolWindow = (DetailsToolWindow)this.package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), true);
+
+            if ((null == toolWindow) || (null == toolWindow.Frame))
+            {
+                throw new NotSupportedException("Cannot create tool window");
+            }
+
+            toolWindow.SetWorkItem(SelectedItem);
+
+            return toolWindow;
+        }
+
+        private ToolWindowPane GetDetailsWindow(OctaneItemViewModel item)
+        {
+            return this.package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), false);
+        }
+
+        /// <summary>
+        /// Octane treat WorkItem ID as long (64 bit) and Visual Studio needs int (32 bit) to identify tool windows.
+        /// This function safely convert long to int.
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private int GetItemIDAsInt(OctaneItemViewModel item)
+        {
+            return item.GetHashCode();
         }
 
         private void GenerateCommitMsg_Click(object sender, RoutedEventArgs e)
