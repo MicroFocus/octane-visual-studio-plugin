@@ -37,13 +37,13 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void LoadMyItems()
         {
-            OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
-            octane.Connect();
-
-            myItems.Clear();
-
             try
             {
+                OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
+                octane.Connect();
+
+                myItems.Clear();
+
                 var items = octane.GetMyItems();
                 foreach (WorkItem workItem in items)
                 {
@@ -53,8 +53,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error!");
-                Console.WriteLine(ex);
+                System.Windows.MessageBox.Show(ex.Message, "Fail to load My Items", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
             }
         }
 
