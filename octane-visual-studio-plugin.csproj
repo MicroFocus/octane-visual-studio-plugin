@@ -89,8 +89,8 @@
     </Compile>
     <Compile Include="MainWindowPackage.cs" />
     <Compile Include="DetailsToolWindow.cs" />
-    <Compile Include="OctaneToolWindowControl.xaml.cs">
-      <DependentUpon>OctaneToolWindowControl.xaml</DependentUpon>
+    <Compile Include="DetailsToolWindowControl.xaml.cs">
+      <DependentUpon>DetailsToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="OptionsPage.cs">
       <SubType>Component</SubType>
@@ -125,7 +125,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="OctaneToolWindowControl.xaml">
+    <Page Include="DetailsToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
