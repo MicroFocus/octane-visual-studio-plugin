@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Hpe.Nga.Octane.VisualStudio.Company.a390e36a-bd67-48af-b9c8-160f110de02a" Version="1.0" Language="en-US" Publisher="Company" />
-    <DisplayName>Hpe.Nga.Octane.VisualStudio</DisplayName>
-    <Description>Empty VSIX Project.</Description>
+    <Identity Id="Hpe.Nga.Octane.VisualStudio" Version="1.0" Language="en-US" Publisher="Company" />
+    <DisplayName>HPE ALM Octane Visual Studio Plugin</DisplayName>
+    <Description xml:space="preserve">HPE ALM Octane Visual Studio plugin</Description>
   </Metadata>
   <Installation>
     <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0, 15.0]" />
@@ -17,7 +17,5 @@
   </Assets>
   <Prerequisites>
     <Prerequisite Id="Microsoft.VisualStudio.Component.CoreEditor" Version="[15.0,16.0)" />
-    <Prerequisite Id="Microsoft.VisualStudio.Component.DiagnosticTools" Version="[15.0.25814.0,16.0)" />
-    <Prerequisite Id="Microsoft.VisualStudio.Shell.12.0" Version="[12.0]" />
   </Prerequisites>
 </PackageManifest>
