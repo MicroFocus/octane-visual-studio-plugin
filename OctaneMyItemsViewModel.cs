@@ -44,7 +44,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
                 myItems.Clear();
 
-                var items = octane.GetMyItems();
+                var items = octane.GetMyItems(new HashSet<string>(new string[] { WorkItem.SUBTYPE_DEFECT, WorkItem.SUBTYPE_STORY }));
                 foreach (WorkItem workItem in items)
                 {
                     myItems.Add(new OctaneItemViewModel(workItem));

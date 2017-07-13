@@ -56,13 +56,6 @@
           <ButtonText>Invoke OctaneCommand</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMainWindowPackageCmdSet" id="cmdidOctaneToolWindowCommand" priority="0x0100" type="Button">
-        <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
-        <Icon guid="guidImages2" id="bmpPic1" />
-        <Strings>
-          <ButtonText>OctaneToolWindow</ButtonText>
-        </Strings>
-      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->

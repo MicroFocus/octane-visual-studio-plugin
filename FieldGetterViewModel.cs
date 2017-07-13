@@ -1,4 +1,6 @@
-﻿using Hpe.Nga.Api.Core.Entities;
+﻿using System.Linq;
+using Hpe.Nga.Api.Core.Entities;
+using Hpe.Nga.Api.Core.Services;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {
@@ -7,12 +9,19 @@ namespace Hpe.Nga.Octane.VisualStudio
         private readonly OctaneItemViewModel itemViewModel;
         private readonly string fieldName;
         private readonly string fieldLabel;
+        private readonly string emptyPlaceholder;
 
-        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, string fieldName, string fieldLabel)
+        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, string fieldName, string fieldLabel) : this(itemViewModel, fieldName, fieldLabel, string.Empty)
+        {
+
+        }
+
+        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, string fieldName, string fieldLabel, string emptyPlaceholder) 
         {
             this.itemViewModel = itemViewModel;
             this.fieldName = fieldName;
             this.fieldLabel = fieldLabel;
+            this.emptyPlaceholder = emptyPlaceholder;
         }
 
         public string Label
@@ -25,15 +34,34 @@ namespace Hpe.Nga.Octane.VisualStudio
             get
             {
                 object value = itemViewModel.WorkItem.GetValue(fieldName);
+                if (value == null)
+                {
+                    return emptyPlaceholder;
+                }
+
                 if (value is BaseEntity)
                 {
                     return ((BaseEntity)value).Name;
                 }
-                else
+
+                if (value is EntityList<BaseEntity>)
                 {
-                    return value;
+                    return FormatEntityList((EntityList<BaseEntity>)value);
                 }
+
+                return value;
             }
+        }
+
+        private string FormatEntityList(EntityList<BaseEntity> value)
+        {
+            if (value.data.Count == 0)
+            {
+                return emptyPlaceholder;
+            }
+
+            string[] entityNames = value.data.Select(x => x.Name).ToArray();
+            return string.Join(", ", entityNames);
         }
     }
 }

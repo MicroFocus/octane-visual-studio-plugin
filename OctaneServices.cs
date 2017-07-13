@@ -3,16 +3,15 @@ using Hpe.Nga.Api.Core.Entities;
 using Hpe.Nga.Api.Core.Services;
 using Hpe.Nga.Api.Core.Services.Query;
 using Hpe.Nga.Api.Core.Services.RequestContext;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {
-    class OctaneServices
+    /// <summary>
+    /// Responsible for interacting with Octane API.
+    /// </summary>
+    internal class OctaneServices
     {
         private RestConnector rest;
         private EntityService es;
@@ -37,6 +36,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             sharedSpaceContext = new SharedSpaceContext(sharedspaceId);
 
         }
+
         public bool Connect()
         {
             if (rest.IsConnected())
@@ -47,6 +47,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             return rest.Connect(url, user, password);
 
         }
+
         private IList<QueryPhrase> ToQueryList(QueryPhrase query)
         {
             List<QueryPhrase> queries = new List<QueryPhrase>
@@ -55,9 +56,9 @@ namespace Hpe.Nga.Octane.VisualStudio
             };
             return queries;
         }
-        public IList<WorkItem> GetMyItems()
-        {
 
+        public IList<WorkItem> GetMyItems(ISet<string> subtypes)
+        {
             // get the id of the logged in user
             QueryPhrase ownerQuery = new LogicalQueryPhrase("email", this.user);
             var owner = es.Get<SharedspaceUser>(sharedSpaceContext, ToQueryList(ownerQuery), null).data.FirstOrDefault();
@@ -65,7 +66,9 @@ namespace Hpe.Nga.Octane.VisualStudio
             // get the items owned by the user
             QueryPhrase ownerItemsQuery = new CrossQueryPhrase("owner", new LogicalQueryPhrase("id", owner.Id));
             var results = es.Get<WorkItem>(workspaceContext,ToQueryList(ownerItemsQuery),null);
-            return results.data;
+
+            // Filter only the subtypes requested.
+            return results.data.Where(item => subtypes.Contains(item.SubType)).ToList();
         } 
     }
 }

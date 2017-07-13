@@ -3,20 +3,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:Hpe.Nga.Octane.VisualStudio"
              mc:Ignorable="d" 
              d:DesignHeight="70" d:DesignWidth="500">
 
     <UserControl.Resources>
 
-        <DataTemplate x:Key="FieldDataTemplate">
+        <DataTemplate DataType="{x:Type local:FieldGetterViewModel}">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Label}" />
                 <TextBlock Text=":" />
-                <TextBlock Text="{Binding Content}" FontWeight="Bold" />
-                <TextBlock Text=" | " />
+                <TextBlock Text="{Binding Content}" 
+                           FontWeight="Bold"
+                           Margin="5 0 0 0"/>
             </StackPanel>
         </DataTemplate>
 
+        <DataTemplate DataType="{x:Type local:SeparatorViewModel}">
+            <TextBlock Text=" | " />
+        </DataTemplate>
+        
         <ItemsPanelTemplate x:Key="FieldsItemPanelTemplate">
             <StackPanel Orientation="Horizontal" />
         </ItemsPanelTemplate>
@@ -45,15 +51,14 @@
 
                 <TextBlock Text="{Binding ID, FallbackValue=Test}" Grid.Row="0" Grid.Column="0" Margin="0 0 5 0" />
                 <TextBlock Text="{Binding Name}" Grid.Row="0" Grid.Column="1" />
-                <TextBlock Text="No env set" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" />
+                <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Subtitle field}"
+                                  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
 
                 <ItemsControl Grid.Row="0" Grid.Column="2" ItemsSource="{Binding TopFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
-                              ItemTemplate="{StaticResource FieldDataTemplate}"
                               ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
                 </ItemsControl>
 
                 <ItemsControl Grid.Row="1" Grid.Column="2" ItemsSource="{Binding BottomFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
-                              ItemTemplate="{StaticResource FieldDataTemplate}"
                               ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
                 </ItemsControl>
             </Grid>
