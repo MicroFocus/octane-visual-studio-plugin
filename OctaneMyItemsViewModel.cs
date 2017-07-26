@@ -4,20 +4,51 @@ using octane_visual_studio_plugin;
 using System.Collections.ObjectModel;
 using System.Collections.Generic;
 using Hpe.Nga.Api.Core.Entities;
+using System.ComponentModel;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {
-    public class OctaneMyItemsViewModel
+    public class OctaneMyItemsViewModel : INotifyPropertyChanged
     {
+        private static OctaneMyItemsViewModel instance;
+
         private DelegatedCommand refreshCommand;
+        private DelegatedCommand openOctaneOptionsDialogCommand;
         private MainWindowPackage package;
 
+        private MainWindowMode mode;
         private ObservableCollection<OctaneItemViewModel> myItems;
+
+        /// <summary>
+        /// Store the exception message from load items.
+        /// </summary>
+        private string lastExceptionMessage;
+
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public OctaneMyItemsViewModel()
         {
+            instance = this;
+
             refreshCommand = new DelegatedCommand(Refresh);
+            openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
             myItems = new ObservableCollection<OctaneItemViewModel>();
+            mode = MainWindowMode.FirstTime;
+        }
+
+        public static OctaneMyItemsViewModel Instance
+        {
+            get { return instance; }
+        }
+
+        public MainWindowMode Mode
+        {
+            get { return mode; }
+            private set
+            {
+                mode = value;
+                NotifyPropertyChanged("Mode");
+            }
         }
 
         public ICommand RefreshCommand
@@ -25,9 +56,24 @@ namespace Hpe.Nga.Octane.VisualStudio
             get { return refreshCommand; }
         }
 
+        public ICommand OpenOctaneOptionsDialogCommand
+        {
+            get { return openOctaneOptionsDialogCommand; }
+        }
+
         public IEnumerable<OctaneItemViewModel> MyItems
         {
             get { return myItems; }
+        }
+
+        public string LastExceptionMessage
+        {
+            get { return lastExceptionMessage; }
+            set
+            {
+                lastExceptionMessage = value;
+                NotifyPropertyChanged("LastExceptionMessage");
+            }
         }
 
         private void Refresh(object parameter)
@@ -35,8 +81,28 @@ namespace Hpe.Nga.Octane.VisualStudio
             LoadMyItems();
         }
 
-        private void LoadMyItems()
+        private void OpenOctaneOptionsDialog(object parameter)
         {
+            package.ShowOptionPage(typeof(OptionsPage));
+        }
+
+        /// <summary>
+        /// This method is called after the options are changed.
+        /// </summary>
+        internal void OptionsChanged()
+        {
+            LoadMyItems();
+        }
+
+        internal void LoadMyItems()
+        {
+            if (string.IsNullOrEmpty(package.AlmUrl))
+            {
+                // No URL which means it's the first time use.
+                Mode = MainWindowMode.FirstTime;
+                return;
+            }
+
             try
             {
                 OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
@@ -50,10 +116,12 @@ namespace Hpe.Nga.Octane.VisualStudio
                     myItems.Add(new OctaneItemViewModel(workItem));
                 }
 
+                Mode = MainWindowMode.ItemsLoaded;
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show(ex.Message, "Fail to load My Items", System.Windows.MessageBoxButton.OK, System.Windows.MessageBoxImage.Error);
+                Mode = MainWindowMode.FailToLoad;
+                LastExceptionMessage = ex.Message;
             }
         }
 
@@ -61,6 +129,14 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             this.package = package;
             LoadMyItems();
+        }
+
+        private void NotifyPropertyChanged(string propName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
         }
     }
 }

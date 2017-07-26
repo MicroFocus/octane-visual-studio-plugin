@@ -7,35 +7,137 @@
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="552"
+             d:DesignHeight="300" d:DesignWidth="952"
              Name="MyToolWindow">
-    <DockPanel>
-        <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-            <Button Content="R" Width="32" Command="{Binding RefreshCommand}" />
-        </StackPanel>
-        <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick">
-            <ListBox.ContextMenu>
-                <ContextMenu Name="ListMenu">
-                    <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
-                    <MenuItem Header="Open in Browser (Alt+DblClick)" Click="OpenInBrowser_Click"></MenuItem>
-                    <MenuItem Header="Copy Commit Message to Clipboard (Shift+Alt+DblClick)" Click="GenerateCommitMsg_Click"></MenuItem>
-                </ContextMenu>
-            </ListBox.ContextMenu>
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <local:MyItemControl />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-            
-            <!--
+    <Grid>
+
+        <DockPanel>
+            <DockPanel.Style>
+                <Style TargetType="DockPanel">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Mode}" Value="FirstTime">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Style>
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
+
+                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
+
+                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    Welcome to ALM Octane Visual Studio plugin.
+                    <LineBreak />
+                    Please open Tools -> Options -> ALM Octane to setup the connect to your Octane.
+                </TextBlock>
+
+                <Button Grid.Row="2" Grid.ColumnSpan="2"
+                        Command="{Binding OpenOctaneOptionsDialogCommand}"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Padding="10">
+                    Open Options
+                </Button>
+            </Grid>
+        </DockPanel>
+
+        <DockPanel>
+            <DockPanel.Style>
+                <Style TargetType="DockPanel">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Mode}" Value="FailToLoad">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Style>
+
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
+
+                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
+
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <TextBlock>
+                    ALM Octane failed to be reached, please review your settings and check your network connection.
+                    </TextBlock>
+
+                    <TextBlock Text="{Binding LastExceptionMessage, FallbackValue=this will show the error message}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Foreground="Red"/>
+                </StackPanel>
+
+                <Button Grid.Row="2" Grid.ColumnSpan="2"
+                        Command="{Binding OpenOctaneOptionsDialogCommand}"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Padding="10">
+                    Open Options
+                </Button>
+            </Grid>
+        
+        </DockPanel>
+
+        <DockPanel>
+            <DockPanel.Style>
+                <Style TargetType="DockPanel">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding Mode}" Value="ItemsLoaded">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Style>
+
+            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
+                <Button Content="R" Width="32" Command="{Binding RefreshCommand}" />
+            </StackPanel>
+            <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick">
+                <ListBox.ContextMenu>
+                    <ContextMenu Name="ListMenu">
+                        <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
+                        <MenuItem Header="Open in Browser (Alt+DblClick)" Click="OpenInBrowser_Click"></MenuItem>
+                        <MenuItem Header="Copy Commit Message to Clipboard (Shift+Alt+DblClick)" Click="GenerateCommitMsg_Click"></MenuItem>
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <local:MyItemControl />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+
+                <!--
             Set the horizontal content alignment to stretch so the item will have the full width of the list box.
             This allows the MyItemControl to align the top and bottom fields to the right.
             -->
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
-    </DockPanel>
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </DockPanel>
+    </Grid>
 </UserControl>

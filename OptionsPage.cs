@@ -1,20 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using Microsoft.VisualStudio.Shell;
 
-namespace Hpe.Nga.Octane.VisualStudio {
-
-    class OptionsPage : DialogPage {
-        private string url = "http://myd-vm10629.hpeswlab.net:8081";
+namespace Hpe.Nga.Octane.VisualStudio
+{
+    /// <summary>
+    /// Options page represent the settings the user can set for ALM Octane plugin.
+    /// This class is presented to the user as a page in Visual Studio options dialog.
+    /// </summary>
+    internal class OptionsPage : DialogPage {
         const string category = "Server Settings";
+
+        private string url = string.Empty; //"http://myd-vm10629.hpeswlab.net:8081";
         private int ssid = 1001;
         private int wsid = 1002;
-        private string user = "sa@nga";
-        private string password = "Welcome1";
+        private string user = string.Empty; //"sa@nga";
+        private string password = string.Empty; //"Welcome1";
+
+        protected override void OnApply(PageApplyEventArgs e)
+        {
+            base.OnApply(e);
+
+            // After settings are applied we notify the main ViewModel to allow it to refresh.
+            OctaneMyItemsViewModel.Instance.OptionsChanged();
+        }
 
         [Category(category)]
         [DisplayName("1. Server URL")]

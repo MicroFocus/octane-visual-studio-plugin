@@ -75,6 +75,7 @@
   <ItemGroup>
     <Compile Include="DelegatedCommand.cs" />
     <Compile Include="FieldGetterViewModel.cs" />
+    <Compile Include="MainWindowMode.cs" />
     <Compile Include="MyItemControl.xaml.cs">
       <DependentUpon>MyItemControl.xaml</DependentUpon>
     </Compile>
@@ -112,8 +113,10 @@
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
+    <Resource Include="Resources\hpe-logo.png" />
     <Content Include="Resources\MainWindowCommand.png" />
     <Content Include="Resources\MainWindowPackage.ico" />
+    <Resource Include="Resources\octane-logo.png" />
     <Content Include="Resources\OctaneCommand.png" />
     <Content Include="Resources\OctaneToolWindowCommand.png" />
     <Content Include="stylesheet.css" />
