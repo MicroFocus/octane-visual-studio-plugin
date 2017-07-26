@@ -112,7 +112,10 @@
             </DockPanel.Style>
 
             <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Content="R" Width="32" Command="{Binding RefreshCommand}" />
+                <Button Width="32" Command="{Binding RefreshCommand}">
+                    <!--This text-block show the reload sign as unicode character-->
+                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" />
+                </Button>
             </StackPanel>
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick">
                 <ListBox.ContextMenu>
