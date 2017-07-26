@@ -104,10 +104,9 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void GenerateCommitMsg_Click(object sender, RoutedEventArgs e)
         {
-            var sb = new StringBuilder();
             var item = SelectedItem;
-            sb.AppendFormat("{0} [{1}]: {2}", item.ID, item.Phase, item.Name);
-            Clipboard.SetText(sb.ToString());
+            string message = string.Format("{0} #{1}: {2}",  item.WorkItem.SubType, item.ID, item.Name);
+            Clipboard.SetText(message);
         }
 
         private void results_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
