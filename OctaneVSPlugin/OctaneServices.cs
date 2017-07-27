@@ -61,7 +61,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             // get the id of the logged in user
             QueryPhrase ownerQuery = new LogicalQueryPhrase("email", this.user);
-            var owner = es.Get<WorkspaceUser>(sharedSpaceContext, ToQueryList(ownerQuery), null).data.FirstOrDefault();
+            var owner = es.Get<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null).data.FirstOrDefault();
 
             // get the items owned by the user
             QueryPhrase ownerItemsQuery = new CrossQueryPhrase("owner", new LogicalQueryPhrase("id", owner.Id));
