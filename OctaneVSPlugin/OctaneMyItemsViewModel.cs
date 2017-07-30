@@ -131,6 +131,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             LoadMyItems();
         }
 
+        internal MainWindowPackage Package
+        {
+            get { return package; }
+        }
+
         private void NotifyPropertyChanged(string propName)
         {
             if (PropertyChanged != null)
