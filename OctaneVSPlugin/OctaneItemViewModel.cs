@@ -69,7 +69,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         public long ID { get { return workItem.Id; } }
         public string Name { get { return workItem.Name; } }
         public string Phase { get { return workItem.Phase.Name; } }
-        public string Description { get { return workItem.Description; } }
+        public string Description { get { return workItem.Description ?? string.Empty; } }
 
         public FieldGetterViewModel SubTitleField
         {

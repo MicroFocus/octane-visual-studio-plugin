@@ -34,7 +34,11 @@ namespace Hpe.Nga.Octane.VisualStudio
                     OctaneMyItemsViewModel.Instance.Package.WorkSpaceId);
 
                 string htmlWithImageUrls = itemViewModel.Description.Replace("file://[IMAGE_BASE_PATH_PLACEHOLDER]", octaneImageBaseUrl);
-                DescBrowser.NavigateToString(htmlWithImageUrls);
+
+                if (!string.IsNullOrWhiteSpace(htmlWithImageUrls))
+                {
+                    DescBrowser.NavigateToString(htmlWithImageUrls);
+                }
             }
         }
 
