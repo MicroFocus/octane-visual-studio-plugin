@@ -5,6 +5,7 @@ using Hpe.Nga.Api.Core.Services.Query;
 using Hpe.Nga.Api.Core.Services.RequestContext;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {
@@ -37,14 +38,12 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         }
 
-        public bool Connect()
+        public async Task Connect()
         {
-            if (rest.IsConnected())
+            if (!rest.IsConnected())
             {
-                return true;
+                await rest.ConnectAsync(url, new UserPassConnectionInfo(user, password));
             }
-            
-            return rest.Connect(url, new UserPassConnectionInfo(user, password));
 
         }
 
@@ -57,15 +56,16 @@ namespace Hpe.Nga.Octane.VisualStudio
             return queries;
         }
 
-        public IList<WorkItem> GetMyItems(ISet<string> subtypes)
+        public async Task<IList<WorkItem>> GetMyItems(ISet<string> subtypes)
         {
             // get the id of the logged in user
             QueryPhrase ownerQuery = new LogicalQueryPhrase("email", this.user);
-            var owner = es.Get<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null).data.FirstOrDefault();
+            EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
+            WorkspaceUser owner = ownerQueryResult.data.FirstOrDefault();
 
             // get the items owned by the user
             QueryPhrase ownerItemsQuery = new CrossQueryPhrase("owner", new LogicalQueryPhrase("id", owner.Id));
-            var results = es.Get<WorkItem>(workspaceContext,ToQueryList(ownerItemsQuery),null);
+            EntityListResult<WorkItem> results = await es.GetAsync<WorkItem>(workspaceContext,ToQueryList(ownerItemsQuery),null);
 
             // Filter only the subtypes requested.
             return results.data.Where(item => subtypes.Contains(item.SubType)).ToList();

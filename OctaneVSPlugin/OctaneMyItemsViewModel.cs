@@ -94,7 +94,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             LoadMyItems();
         }
 
-        internal void LoadMyItems()
+        internal async void LoadMyItems()
         {
             if (string.IsNullOrEmpty(package.AlmUrl))
             {
@@ -103,14 +103,16 @@ namespace Hpe.Nga.Octane.VisualStudio
                 return;
             }
 
+            Mode = MainWindowMode.LoadingItems;
+
             try
             {
                 OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
-                octane.Connect();
+                await octane.Connect();
 
                 myItems.Clear();
 
-                var items = octane.GetMyItems(new HashSet<string>(new string[] { WorkItem.SUBTYPE_DEFECT, WorkItem.SUBTYPE_STORY }));
+                IList<WorkItem> items = await octane.GetMyItems(new HashSet<string>(new string[] { WorkItem.SUBTYPE_DEFECT, WorkItem.SUBTYPE_STORY }));
                 foreach (WorkItem workItem in items)
                 {
                     myItems.Add(new OctaneItemViewModel(workItem));
