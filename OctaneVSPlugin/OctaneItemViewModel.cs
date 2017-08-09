@@ -7,82 +7,63 @@ namespace Hpe.Nga.Octane.VisualStudio
 {
     public class OctaneItemViewModel
     {
-        private static readonly Dictionary<string, string> iconTextMap;
-        private static readonly Dictionary<string, Color> iconBackgroundColorMap;
-
-        private readonly WorkItem workItem;
+        private readonly BaseEntity entity;
+        private readonly MyWorkMetadata myWorkMetadata;
 
         private readonly List<FieldGetterViewModel> topFields;
         private readonly List<FieldGetterViewModel> bottomFields;
         private readonly FieldGetterViewModel subTitleField;
 
-        static OctaneItemViewModel()
+        public OctaneItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
         {
-            iconTextMap = new Dictionary<string, string>
-            {
-                { WorkItem.SUBTYPE_DEFECT, "D" },
-                { WorkItem.SUBTYPE_STORY, "US" }
-            };
-            iconBackgroundColorMap = new Dictionary<string, Color>
-            {
-                { WorkItem.SUBTYPE_DEFECT, Color.FromRgb(190, 102, 92) },
-                { WorkItem.SUBTYPE_STORY, Color.FromRgb(218, 199, 120) }
-            };
-        }
-
-        public OctaneItemViewModel(WorkItem workItem)
-        {
-            this.workItem = workItem;
+            this.entity = entity;
+            this.myWorkMetadata = myWorkMetadata;
 
             topFields = new List<FieldGetterViewModel>();
             bottomFields = new List<FieldGetterViewModel>();
 
-            if (workItem.SubType == WorkItem.SUBTYPE_STORY)
+            subTitleField = new FieldGetterViewModel(this, myWorkMetadata.GetSubTitleFieldInfo(entity));
+
+            foreach (FieldInfo fieldInfo in myWorkMetadata.GetTopFieldsInfo(entity))
             {
-                subTitleField = new FieldGetterViewModel(this, "release", "Release", "No release");
-
-                topFields.Add(new FieldGetterViewModel(this, "owner", "Owner"));
-                topFields.Add(new FieldGetterViewModel(this, "phase", "Phase"));
-                topFields.Add(new FieldGetterViewModel(this, "story_points", "Story Points"));
-
-                bottomFields.Add(new FieldGetterViewModel(this, "invested_hours", "Invested Hors"));
-                bottomFields.Add(new FieldGetterViewModel(this, "remaining_hours", "Remaining Hors"));
-                bottomFields.Add(new FieldGetterViewModel(this, "estimated_hours", "Estimated Hors"));
+                topFields.Add(new FieldGetterViewModel(this, fieldInfo));
             }
-            else if (workItem.SubType == WorkItem.SUBTYPE_DEFECT)
+
+            foreach (FieldInfo fieldInfo in myWorkMetadata.GetBottomFieldsInfo(entity))
             {
-                subTitleField = new FieldGetterViewModel(this, "taxonomies", "Environments", "No environment");
-
-                topFields.Add(new FieldGetterViewModel(this, "owner", "Owner"));
-                topFields.Add(new FieldGetterViewModel(this, "detected_by", "Detected By"));
-                topFields.Add(new FieldGetterViewModel(this, "story_points", "SP"));
-                topFields.Add(new FieldGetterViewModel(this, "severity", "Severity"));
-
-                bottomFields.Add(new FieldGetterViewModel(this, "invested_hours", "Invested Hors"));
-                bottomFields.Add(new FieldGetterViewModel(this, "remaining_hours", "Remaining Hors"));
-                bottomFields.Add(new FieldGetterViewModel(this, "estimated_hours", "Estimated Hors"));
+                bottomFields.Add(new FieldGetterViewModel(this, fieldInfo));
             }
         }
 
-        public WorkItem WorkItem {  get { return workItem; } }
+        public BaseEntity Entity { get { return entity; } }
 
-        public long ID { get { return workItem.Id; } }
-        public string Name { get { return workItem.Name; } }
-        public string Phase { get { return workItem.Phase.Name; } }
-        public string Description { get { return workItem.Description ?? string.Empty; } }
+        public long ID { get { return entity.Id; } }
+        public string Name { get { return entity.Name; } }
+
+        public string SubType
+        {
+            get { return entity.GetStringValue(WorkItemFields.SUB_TYPE); }
+        }
+
+        public string Description
+        {
+            get { return entity.GetStringValue(WorkItemFields.DESCRIPTION) ?? string.Empty; }
+        }
 
         public FieldGetterViewModel SubTitleField
         {
             get { return subTitleField; }
         }
 
-        public IEnumerable<object> TopFields {
+        public IEnumerable<object> TopFields
+        {
             get
             {
                 return FieldsWithSeparators(topFields);
             }
         }
-        public IEnumerable<object> BottomFields {
+        public IEnumerable<object> BottomFields
+        {
             get
             {
                 return FieldsWithSeparators(bottomFields);
@@ -91,6 +72,12 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private IEnumerable<object> FieldsWithSeparators(List<FieldGetterViewModel> fields)
         {
+            // Handle the case there are no fields so we don't need any seperators.
+            if (fields.Count == 0)
+            {
+                yield break;
+            }
+
             foreach (FieldGetterViewModel field in fields.Take(fields.Count - 1))
             {
                 yield return field;
@@ -104,11 +91,8 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
-                string iconText;
-                if (iconTextMap.TryGetValue(workItem.SubType, out iconText))
-                    return iconText;
-                else
-                    return "?";
+                string iconText = myWorkMetadata.GetIconText(entity);
+                return iconText;
             }
         }
 
@@ -116,11 +100,8 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
-                Color bgc;
-                if(iconBackgroundColorMap.TryGetValue(workItem.SubType, out bgc))
-                    return bgc;
-                else
-                    return Color.FromRgb(221, 221, 221);
+                Color bgc = myWorkMetadata.GetIconColor(entity);
+                return bgc;
             }
         }
     }

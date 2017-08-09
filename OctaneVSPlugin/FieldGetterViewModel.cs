@@ -11,17 +11,12 @@ namespace Hpe.Nga.Octane.VisualStudio
         private readonly string fieldLabel;
         private readonly string emptyPlaceholder;
 
-        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, string fieldName, string fieldLabel) : this(itemViewModel, fieldName, fieldLabel, string.Empty)
-        {
-
-        }
-
-        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, string fieldName, string fieldLabel, string emptyPlaceholder) 
+        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, FieldInfo fieldInfo) 
         {
             this.itemViewModel = itemViewModel;
-            this.fieldName = fieldName;
-            this.fieldLabel = fieldLabel;
-            this.emptyPlaceholder = emptyPlaceholder;
+            fieldName = fieldInfo.Name;
+            fieldLabel = fieldInfo.Title;
+            emptyPlaceholder = fieldInfo.EmptyPlaceholder;
         }
 
         public string Label
@@ -33,7 +28,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
-                object value = itemViewModel.WorkItem.GetValue(fieldName);
+                object value = itemViewModel.Entity.GetValue(fieldName);
                 if (value == null)
                 {
                     return emptyPlaceholder;

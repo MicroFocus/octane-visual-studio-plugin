@@ -19,6 +19,8 @@ namespace Hpe.Nga.Octane.VisualStudio
         private MainWindowMode mode;
         private ObservableCollection<OctaneItemViewModel> myItems;
 
+        private MyWorkMetadata myWorkMetadata;
+
         /// <summary>
         /// Store the exception message from load items.
         /// </summary>
@@ -29,6 +31,8 @@ namespace Hpe.Nga.Octane.VisualStudio
         public OctaneMyItemsViewModel()
         {
             instance = this;
+
+            myWorkMetadata = new MyWorkMetadata();
 
             refreshCommand = new DelegatedCommand(Refresh);
             openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
@@ -112,10 +116,10 @@ namespace Hpe.Nga.Octane.VisualStudio
 
                 myItems.Clear();
 
-                IList<WorkItem> items = await octane.GetMyItems(new HashSet<string>(new string[] { WorkItem.SUBTYPE_DEFECT, WorkItem.SUBTYPE_STORY }));
-                foreach (WorkItem workItem in items)
+                IList<BaseEntity> items = await octane.GetMyItems(myWorkMetadata);
+                foreach (BaseEntity entity in items)
                 {
-                    myItems.Add(new OctaneItemViewModel(workItem));
+                    myItems.Add(new OctaneItemViewModel(entity, myWorkMetadata));
                 }
 
                 Mode = MainWindowMode.ItemsLoaded;
