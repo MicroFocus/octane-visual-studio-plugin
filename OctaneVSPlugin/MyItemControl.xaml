@@ -35,7 +35,7 @@
                 <Border.Background>
                     <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
                 </Border.Background>
-                <TextBlock Foreground="White" FontWeight="Light" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
+                <TextBlock Foreground="White" FontWeight="Bold" FontSize="16" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" Margin="0,11.2,0,10.8" />
             </Border>
 
             <Grid>
