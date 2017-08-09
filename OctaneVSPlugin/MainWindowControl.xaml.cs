@@ -50,7 +50,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 return (OctaneItemViewModel)results.SelectedItem;
             }
         }
-        
+
         private void OpenInBrowser_Click(object sender, RoutedEventArgs e)
         {
             // url: http://myd-vm10629.hpeswlab.net:8081
@@ -61,7 +61,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             System.Diagnostics.Process.Start(sb.ToString());
         }
 
-       
+
 
         private void ShowDetails_Click(object sender, RoutedEventArgs e)
         {
@@ -104,8 +104,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void GenerateCommitMsg_Click(object sender, RoutedEventArgs e)
         {
-            var item = SelectedItem;
-            string message = string.Format("{0} #{1}: {2}",  item.SubType, item.ID, item.Name);
+            string message = SelectedItem.CommitMessage;
             Clipboard.SetText(message);
         }
 
@@ -126,7 +125,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             {
                 ShowDetails_Click(sender, e);
             }
-                
+
         }
     }
 }

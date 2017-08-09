@@ -50,6 +50,15 @@ namespace Hpe.Nga.Octane.VisualStudio
             get { return entity.GetStringValue(WorkItemFields.DESCRIPTION) ?? string.Empty; }
         }
 
+        public string CommitMessage
+        {
+            get
+            {
+                string message = string.Format("{0} #{1}: {2}", myWorkMetadata.GetCommitMessageTypeName(entity), ID, Name);
+                return message;
+            }
+        }
+
         public FieldGetterViewModel SubTitleField
         {
             get { return subTitleField; }

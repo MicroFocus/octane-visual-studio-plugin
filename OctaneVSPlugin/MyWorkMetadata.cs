@@ -28,7 +28,9 @@ namespace Hpe.Nga.Octane.VisualStudio
             fieldsByEntityType = new Dictionary<Type, List<string>>();
             subTypesByEntityType = new Dictionary<Type, HashSet<string>>();
 
-            AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT, "D", Color.FromRgb(190, 102, 92),
+            AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT, 
+                    "defect",
+                    "D", Color.FromRgb(190, 102, 92),
                     FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "No environment"),
                     FieldAtTop(WorkItemFields.OWNER, "Owner"),
                     FieldAtTop(WorkItemFields.DETECTED_BY, "Detected By"),
@@ -39,7 +41,9 @@ namespace Hpe.Nga.Octane.VisualStudio
                     FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
                     );
 
-            AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY, "US", Color.FromRgb(218, 199, 120),
+            AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY, 
+                "user story",
+                "US", Color.FromRgb(218, 199, 120),
                 FieldAtSubTitle(WorkItemFields.RELEASE, "Release", "No release"),
                 FieldAtTop(WorkItemFields.PHASE, "Phase"),
                 FieldAtTop(WorkItemFields.STORY_POINTS, "SP"),
@@ -50,7 +54,9 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
-            AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY, "QS", Color.FromRgb(95, 112, 118),
+            AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY, 
+                "quality story", 
+                "QS", Color.FromRgb(95, 112, 118),
                 FieldAtSubTitle(WorkItemFields.RELEASE, "Release", "No release"),
                 FieldAtTop(WorkItemFields.PHASE, "Phase"),
                 FieldAtTop(WorkItemFields.STORY_POINTS, "SP"),
@@ -61,7 +67,9 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
-            AddSubType<Test>("test_manual", "MT", Color.FromRgb(96, 121, 141),
+            AddSubType<Test>("test_manual", 
+                "manual test", 
+                "MT", Color.FromRgb(96, 121, 141),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(WorkItemFields.PHASE, "Phase"),
                 FieldAtTop(WorkItemFields.OWNER, "Owner"),
@@ -70,7 +78,9 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(WorkItemFields.AUTOMATION_STATUS, "Automation status")
                 );
 
-            AddSubType<Test>("gherkin_test", "GT", Color.FromRgb(120, 196, 192),
+            AddSubType<Test>("gherkin_test",
+                "gherkin test",
+                "GT", Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(WorkItemFields.PHASE, "Phase"),
                 FieldAtTop(WorkItemFields.OWNER, "Owner"),
@@ -78,19 +88,25 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(WorkItemFields.AUTOMATION_STATUS, "Automation status")
                 );
 
-            AddSubType<Run>("run_suite", "SR", Color.FromRgb(133, 169, 188),
+            AddSubType<Run>("run_suite",
+                "suite run", 
+                "SR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(WorkItemFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(WorkItemFields.STARTED, "Strated")
                 );
 
-            AddSubType<Run>("run_manual", "MR", Color.FromRgb(133, 169, 188),
+            AddSubType<Run>("run_manual",
+                "manual run",
+                "MR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(WorkItemFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(WorkItemFields.STARTED, "Strated")
                 );
 
-            AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT, "R", Color.FromRgb(215, 194, 56),
+            AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT, 
+                "requirement document",
+                "R", Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(WorkItemFields.PHASE, "Phase"),
                 FieldAtTop(WorkItemFields.AUTHOR, "Author")
                 );
@@ -110,6 +126,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         internal Color GetIconColor(BaseEntity entity)
         {
             return entitiesFetchInfo[entity.GetType()][entity.GetStringValue(WorkItemFields.SUB_TYPE)].IconInfo.LabelColor;
+        }
+
+        internal string GetCommitMessageTypeName(BaseEntity entity)
+        {
+            return entitiesFetchInfo[entity.GetType()][entity.GetStringValue(WorkItemFields.SUB_TYPE)].CommitMessageTypeName;
         }
 
         internal IEnumerable<FieldInfo> GetTopFieldsInfo(BaseEntity entity)
@@ -188,10 +209,13 @@ namespace Hpe.Nga.Octane.VisualStudio
             return fields;
         }
 
-        private void AddSubType<TEntityType>(string subtype, string shortLabel, Color labelColor, params FieldInfo[] fields)
+        private void AddSubType<TEntityType>(string subtype, 
+            string commitMessageTypeName,
+            string shortLabel, Color labelColor,
+            params FieldInfo[] fields)
         {
             Dictionary<string, ItemSubTypeInfo> subTypeFields = GetSubtypesForEntityType<TEntityType>();
-            subTypeFields.Add(subtype, new ItemSubTypeInfo(fields, new ItemIconInfo(shortLabel, labelColor)));
+            subTypeFields.Add(subtype, new ItemSubTypeInfo(commitMessageTypeName, fields, new ItemIconInfo(shortLabel, labelColor)));
         }
 
         private Dictionary<string, ItemSubTypeInfo> GetSubtypesForEntityType<TEntityType>()
@@ -211,9 +235,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             public FieldInfo[] Fields { get; set; }
             public ItemIconInfo IconInfo { get; set; }
+            public string CommitMessageTypeName { get; set; }
 
-            public ItemSubTypeInfo(FieldInfo[] fields, ItemIconInfo iconInfo)
+            public ItemSubTypeInfo(string commitMessageTypeName, FieldInfo[] fields, ItemIconInfo iconInfo)
             {
+                CommitMessageTypeName = commitMessageTypeName;
                 Fields = fields;
                 IconInfo = iconInfo;
             }
