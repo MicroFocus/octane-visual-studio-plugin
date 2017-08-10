@@ -45,20 +45,23 @@
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition Width="Auto" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock Text="{Binding ID, FallbackValue=Test}" Grid.Row="0" Grid.Column="0" Margin="0 0 5 0" />
-                <TextBlock Text="{Binding Name}" Grid.Row="0" Grid.Column="1" />
-                <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Subtitle field}"
-                                  Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+                <StackPanel Orientation="Horizontal"
+                            Grid.Row="0" Grid.Column="0">
+                    <TextBlock Text="{Binding ID, FallbackValue=Test}" Margin="0 0 5 0" />
+                    <TextBlock FontWeight="Bold" Text="{Binding Name, FallbackValue=Im item number 1}" />
+                </StackPanel>
+                
+                <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Subtitle field sldkfj slkdfjlsdkjflskd jflsdkj flskdj flsdjkf BindsDirectlyToSource;lfks ;dlfk ;sldkf; sldkf }"
+                                  Grid.Row="1" Grid.Column="0" />
 
-                <ItemsControl Grid.Row="0" Grid.Column="2" ItemsSource="{Binding TopFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
+                <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding TopFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
                               ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
                 </ItemsControl>
 
-                <ItemsControl Grid.Row="1" Grid.Column="2" ItemsSource="{Binding BottomFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
+                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding BottomFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
                               ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
                 </ItemsControl>
             </Grid>
