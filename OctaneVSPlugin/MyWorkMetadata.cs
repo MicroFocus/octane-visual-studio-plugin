@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Windows.Media;
 using Hpe.Nga.Api.Core.Entities;
+using System.Diagnostics;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {
@@ -22,13 +23,26 @@ namespace Hpe.Nga.Octane.VisualStudio
         // Cache fields
         private Dictionary<Type, List<string>> fieldsByEntityType;
 
+        /// <summary>
+        /// Placeholder value for entities without subtype.
+        /// </summary>
+        private const string SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER = "SimpleEntity";
+
+        /// <summary>
+        /// Array of entity types that do not have sub-types.
+        /// 
+        /// Most of the entites are aggregated entities with sub-types, for the exceptions listed
+        /// here the Subtype field is not fetched.
+        /// </summary>
+        private readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task) };
+
         public MyWorkMetadata()
         {
             entitiesFetchInfo = new Dictionary<Type, Dictionary<string, ItemSubTypeInfo>>();
             fieldsByEntityType = new Dictionary<Type, List<string>>();
             subTypesByEntityType = new Dictionary<Type, HashSet<string>>();
 
-            AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT, 
+            AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT,
                     "defect",
                     "D", Color.FromRgb(190, 102, 92),
                     FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "No environment"),
@@ -41,7 +55,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                     FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
                     );
 
-            AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY, 
+            AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY,
                 "user story",
                 "US", Color.FromRgb(218, 199, 120),
                 FieldAtSubTitle(WorkItemFields.RELEASE, "Release", "No release"),
@@ -54,8 +68,8 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
-            AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY, 
-                "quality story", 
+            AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY,
+                "quality story",
                 "QS", Color.FromRgb(95, 112, 118),
                 FieldAtSubTitle(WorkItemFields.RELEASE, "Release", "No release"),
                 FieldAtTop(WorkItemFields.PHASE, "Phase"),
@@ -67,8 +81,8 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
-            AddSubType<Test>("test_manual", 
-                "manual test", 
+            AddSubType<Test>("test_manual",
+                "manual test",
                 "MT", Color.FromRgb(96, 121, 141),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(WorkItemFields.PHASE, "Phase"),
@@ -89,7 +103,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 );
 
             AddSubType<Run>("run_suite",
-                "suite run", 
+                "suite run",
                 "SR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(WorkItemFields.TEST_RUN_NATIVE_STATUS, "Status"),
@@ -104,44 +118,63 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(WorkItemFields.STARTED, "Strated")
                 );
 
-            AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT, 
+            AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
                 "requirement document",
                 "R", Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(WorkItemFields.PHASE, "Phase"),
                 FieldAtTop(WorkItemFields.AUTHOR, "Author")
                 );
+
+            AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
+                "task",
+                "T",
+                Color.FromRgb(137, 204, 174),
+                FieldAtSubTitle(Task.STORY_FIELD, "Story"),
+                FieldAtTop(Task.OWNER_FIELD, "Owner"),
+                FieldAtTop(Task.PHASE_FIELD, "Phase"),
+                FieldAtTop(Task.AUTHOR_FIELD, "Author"),
+                FieldAtBottom(Task.INVESTED_HOURS_FIELD, "Invested Hours"),
+                FieldAtBottom(Task.REMAINING_HOURS_FIELD, "Remaining Hours"),
+                FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
+                );
         }
 
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)
         {
-            var subType = (string)entity.GetValue("subtype");
+            string subType = GetEntitySubType(entity);
             return GetFieldInfoByType(entity.GetType(), subType, FieldPosition.Bottom);
         }
 
         internal string GetIconText(BaseEntity entity)
         {
-            return entitiesFetchInfo[entity.GetType()][entity.GetStringValue(WorkItemFields.SUB_TYPE)].IconInfo.ShortLabel;
+            return GetEntitySubTypeInfo(entity).IconInfo.ShortLabel;
         }
 
         internal Color GetIconColor(BaseEntity entity)
         {
-            return entitiesFetchInfo[entity.GetType()][entity.GetStringValue(WorkItemFields.SUB_TYPE)].IconInfo.LabelColor;
+            return GetEntitySubTypeInfo(entity).IconInfo.LabelColor;
         }
 
         internal string GetCommitMessageTypeName(BaseEntity entity)
         {
-            return entitiesFetchInfo[entity.GetType()][entity.GetStringValue(WorkItemFields.SUB_TYPE)].CommitMessageTypeName;
+            return GetEntitySubTypeInfo(entity).CommitMessageTypeName;
+        }
+
+        private ItemSubTypeInfo GetEntitySubTypeInfo(BaseEntity entity)
+        {
+            string subType = GetEntitySubType(entity);
+            return entitiesFetchInfo[entity.GetType()][subType];
         }
 
         internal IEnumerable<FieldInfo> GetTopFieldsInfo(BaseEntity entity)
         {
-            var subType = (string)entity.GetValue("subtype");
+            string subType = GetEntitySubType(entity);
             return GetFieldInfoByType(entity.GetType(), subType, FieldPosition.Top);
         }
 
         internal FieldInfo GetSubTitleFieldInfo(BaseEntity entity)
         {
-            var subType = (string)entity.GetValue("subtype");
+            string subType = GetEntitySubType(entity);
             return GetFieldInfoByType(entity.GetType(), subType, FieldPosition.SubTitle).First();
         }
 
@@ -153,6 +186,22 @@ namespace Hpe.Nga.Octane.VisualStudio
                 select field;
 
             return fieldByTypeQuery;
+        }
+
+        private string GetEntitySubType(BaseEntity entity)
+        {
+            string subType;
+            if (IsAggregateEntity(entity.GetType()))
+            {
+                subType = (string)entity.GetValue(WorkItemFields.SUB_TYPE);
+                Debug.Assert(subType != null, "Entity should have subtype field. If it's simple list it in EntitiesWithoutSubtype array.");
+            }
+            else
+            {
+                subType = SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER;
+            }
+
+            return subType;
         }
 
         private FieldInfo FieldAtBottom(string field, string title, string emptyPlaceholder = "")
@@ -200,8 +249,13 @@ namespace Hpe.Nga.Octane.VisualStudio
 
                 // Add common fields
                 fields.Add(WorkItemFields.DESCRIPTION);
-                fields.Add(WorkItemFields.SUB_TYPE);
                 fields.Add(WorkItemFields.NAME);
+
+                // Some entities are listed as not having subtype field
+                if (IsAggregateEntity(typeof(TEntity)))
+                {
+                    fields.Add(WorkItemFields.SUB_TYPE);
+                }
 
                 fieldsByEntityType.Add(typeof(TEntity), fields);
             }
@@ -209,7 +263,17 @@ namespace Hpe.Nga.Octane.VisualStudio
             return fields;
         }
 
-        private void AddSubType<TEntityType>(string subtype, 
+        /// <summary>
+        /// Get indication if the entity is simple or aggregate.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
+        private bool IsAggregateEntity(Type entityType)
+        {
+            return -1 == Array.IndexOf<Type>(EntitiesWithoutSubtype, entityType);
+        }
+
+        private void AddSubType<TEntityType>(string subtype,
             string commitMessageTypeName,
             string shortLabel, Color labelColor,
             params FieldInfo[] fields)

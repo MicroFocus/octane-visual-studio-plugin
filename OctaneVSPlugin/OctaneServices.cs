@@ -8,6 +8,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using System;
 
+using Task = System.Threading.Tasks.Task;
+using OctaneTask = Hpe.Nga.Api.Core.Entities.Task; 
+
 namespace Hpe.Nga.Octane.VisualStudio
 {
     /// <summary>
@@ -112,17 +115,24 @@ namespace Hpe.Nga.Octane.VisualStudio
                 userItem => userItem.Requirement,
                 itemFetchInfo);
 
+            Task<EntityListResult<OctaneTask>> taskTask = FetchEntities<OctaneTask>(
+                userItems.data,
+                userItem => userItem.Task,
+                itemFetchInfo);
+
             // Filter only the subtypes requested.
             List<WorkItem> workItems = (await workItemsTask).data;
             List<Test> tests = (await testTask).data;
             List<Run> testRuns = (await testRunTask).data;
             List<Requirement> requirements = (await requirementTask).data;
+            List<OctaneTask> tasks = (await taskTask).data;
 
             List<BaseEntity> result = new List<BaseEntity>();
             result.AddRange(workItems);
             result.AddRange(tests);
             result.AddRange(testRuns);
             result.AddRange(requirements);
+            result.AddRange(tasks);
 
             return result;
         }
@@ -157,7 +167,8 @@ namespace Hpe.Nga.Octane.VisualStudio
                 UserItem.WORK_ITEM_REFERENCE,
                 UserItem.TEST_REFERENCE,
                 UserItem.RUN_REFERENCE,
-                UserItem.REQUIREMENT_REFERENCE
+                UserItem.REQUIREMENT_REFERENCE,
+                UserItem.TASK_REFERENCE
             };
             return fields.ToList();
         }
