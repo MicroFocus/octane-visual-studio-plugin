@@ -56,93 +56,30 @@ namespace Hpe.Nga.Octane.VisualStudio
             return queries;
         }
 
-        private IList<QueryPhrase> BuildWorkItemCriteria<TEntityType>(WorkspaceUser user, MyWorkMetadata itemFetchInfo, string[] phasePartialLogicalNames)
+        private IList<QueryPhrase> BuildUserItemCriteria(WorkspaceUser user)
         {
-            var phaseCriteria = new LogicalQueryPhrase("logical_name");
-            ISet<string> subTypes = itemFetchInfo.SubtypesForType<TEntityType>();
-            AddSubTypesPhaseCriteria(phaseCriteria, subTypes, phasePartialLogicalNames);
-
-            var subTypeCriteria = new LogicalQueryPhrase("subtype");
-            foreach (string subType in subTypes)
-            {
-                subTypeCriteria.AddExpression(subType, ComparisonOperator.Equal);
-            }
-
             List<QueryPhrase> queries = new List<QueryPhrase>
             {
-                new CrossQueryPhrase("owner", new LogicalQueryPhrase("id", user.Id)),
-                new CrossQueryPhrase("phase", phaseCriteria)
+                new CrossQueryPhrase("user", new LogicalQueryPhrase("id", user.Id)),
             };
 
             return queries;
         }
 
-        private IList<QueryPhrase> BuildTestRunCriteria(WorkspaceUser user, MyWorkMetadata itemFetchInfo)
+        private LogicalQueryPhrase BuildCriteria(List<UserItem> userItems, Func<UserItem, BaseEntity> getReferenceEntityFunc)
         {
-            string[] phasePartialLogicalNames = new string[] {
-                "list_node.run_native_status.blocked",
-                "list_node.run_native_status.not_completed",
-                "list_node.run_native_status.planned" };
+            var idPhrase = new LogicalQueryPhrase("id");
 
-            var nativeStatusCriteria = new LogicalQueryPhrase("logical_name");
-            foreach (string statusLogicalName in phasePartialLogicalNames)
+            foreach (UserItem userItem in userItems)
             {
-                nativeStatusCriteria.AddExpression(statusLogicalName, ComparisonOperator.Equal);
-            }
-
-            var subTypeCriteria = new LogicalQueryPhrase("subtype");
-            foreach (string subType in itemFetchInfo.SubtypesForType<Run>())
-            {
-                subTypeCriteria.AddExpression(subType, ComparisonOperator.Equal);
-            }
-
-            List<QueryPhrase> queries = new List<QueryPhrase>
-            {
-                new CrossQueryPhrase("run_by", new LogicalQueryPhrase("id", user.Id)),
-                new CrossQueryPhrase("native_status", nativeStatusCriteria),
-                new CrossQueryPhrase("parent_suite", NullQueryPhrase.Null)
-            };
-
-            return queries;
-        }
-
-        private IList<QueryPhrase> BuildRequirementCriteria(WorkspaceUser user, MyWorkMetadata itemFetchInfo)
-        {
-            string[] phasePartialLogicalNames = new string[] {
-                "phase.requirement_document.draft",
-                "phase.requirement_document.accepted",
-                "phase.requirement_document.indesign" };
-
-            var phaseCriteria = new LogicalQueryPhrase("logical_name");
-            foreach (string statusLogicalName in phasePartialLogicalNames)
-            {
-                phaseCriteria.AddExpression(statusLogicalName, ComparisonOperator.Equal);
-            }
-
-            var subTypeCriteria = new LogicalQueryPhrase("subtype");
-            foreach (string subType in itemFetchInfo.SubtypesForType<Requirement>())
-            {
-                subTypeCriteria.AddExpression(subType, ComparisonOperator.Equal);
-            }
-
-            List<QueryPhrase> queries = new List<QueryPhrase>
-            {
-                new CrossQueryPhrase("owner", new LogicalQueryPhrase("id", user.Id)),
-                new CrossQueryPhrase("phase", phaseCriteria)
-            };
-
-            return queries;
-        }
-
-        private void AddSubTypesPhaseCriteria(LogicalQueryPhrase phaseCriteria, ISet<string> workItemSubTypes, string[] phasePartialLogicalNames)
-        {
-            foreach (string subType in workItemSubTypes)
-            {
-                foreach (string phasePartialLogicalName in phasePartialLogicalNames)
+                BaseEntity referenceEntity = getReferenceEntityFunc(userItem);
+                if (referenceEntity != null)
                 {
-                    phaseCriteria.Expressions.Add(new QueryExpression(string.Format("phase.{0}.{1}", subType, phasePartialLogicalName)));
+                    idPhrase.AddExpression(referenceEntity.Id, ComparisonOperator.Equal);
                 }
             }
+
+            return idPhrase;
         }
 
         public async Task<IList<BaseEntity>> GetMyItems(MyWorkMetadata itemFetchInfo)
@@ -152,19 +89,28 @@ namespace Hpe.Nga.Octane.VisualStudio
             EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
             WorkspaceUser owner = ownerQueryResult.data.FirstOrDefault();
 
-            Task<EntityListResult<WorkItem>> workItemsTask = es.GetAsync<WorkItem>(workspaceContext, 
-                BuildWorkItemCriteria<WorkItem>(owner, itemFetchInfo, new string[] { "new", "inprogress", "intesting" }), 
-                itemFetchInfo.FieldsForType<WorkItem>());
+            EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
+                BuildUserItemCriteria(owner), BuildUserItemFields());
 
-            Task<EntityListResult<Test>> testTask = es.GetAsync<Test>(workspaceContext,
-                BuildWorkItemCriteria<Test>(owner, itemFetchInfo, new string[] { "new", "indesign" }),
-                itemFetchInfo.FieldsForType<Test>());
+            Task<EntityListResult<WorkItem>> workItemsTask = FetchEntities<WorkItem>(
+                userItems.data,
+                userItem => userItem.WorkItem, 
+                itemFetchInfo);
 
-            Task<EntityListResult<Run>> testRunTask = es.GetAsync<Run>(workspaceContext, BuildTestRunCriteria(owner, itemFetchInfo), itemFetchInfo.FieldsForType<Run>());
+            Task<EntityListResult<Test>> testTask = FetchEntities<Test>(
+                userItems.data,
+                userItem => userItem.Test,
+                itemFetchInfo);
 
-            Task<EntityListResult<Requirement>> requirementTask = es.GetAsync<Requirement>(workspaceContext, 
-                BuildRequirementCriteria(owner, itemFetchInfo), 
-                itemFetchInfo.FieldsForType<Requirement>());
+            Task<EntityListResult<Run>> testRunTask = FetchEntities<Run>(
+                userItems.data,
+                userItem => userItem.Run,
+                itemFetchInfo);
+
+            Task<EntityListResult<Requirement>> requirementTask = FetchEntities<Requirement>(
+                userItems.data,
+                userItem => userItem.Requirement,
+                itemFetchInfo);
 
             // Filter only the subtypes requested.
             List<WorkItem> workItems = (await workItemsTask).data;
@@ -179,6 +125,41 @@ namespace Hpe.Nga.Octane.VisualStudio
             result.AddRange(requirements);
 
             return result;
+        }
+
+        private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
+            List<UserItem> userItems,
+            Func<UserItem, BaseEntity> getReferenceEntityFunc,
+            MyWorkMetadata itemFetchInfo) 
+            where TEntity : BaseEntity
+        {
+            LogicalQueryPhrase idCriteria = BuildCriteria(userItems, getReferenceEntityFunc);
+            if (idCriteria.Expressions.Count == 0)
+            {
+                // There are no items to select, return empty list.
+                return Task.FromResult(new EntityListResult<TEntity>());
+            }
+
+            Task<EntityListResult<TEntity>> fetchEntitiesTask = es.GetAsync<TEntity>(workspaceContext,
+                ToQueryList(idCriteria),
+                itemFetchInfo.FieldsForType<TEntity>());
+
+            return fetchEntitiesTask;
+        }
+
+        private List<string> BuildUserItemFields()
+        {
+            string[] fields = new[]
+            {
+                UserItem.ENTITY_TYPE_FIELD,
+                UserItem.REASON_FIELD,
+                UserItem.USER_FIELD,
+                UserItem.WORK_ITEM_REFERENCE,
+                UserItem.TEST_REFERENCE,
+                UserItem.RUN_REFERENCE,
+                UserItem.REQUIREMENT_REFERENCE
+            };
+            return fields.ToList();
         }
     }
 }
