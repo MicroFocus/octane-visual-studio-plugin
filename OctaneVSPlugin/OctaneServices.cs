@@ -95,44 +95,15 @@ namespace Hpe.Nga.Octane.VisualStudio
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
                 BuildUserItemCriteria(owner), BuildUserItemFields());
 
-            Task<EntityListResult<WorkItem>> workItemsTask = FetchEntities<WorkItem>(
-                userItems.data,
-                userItem => userItem.WorkItem, 
-                itemFetchInfo);
+            var collector = new EntitiesCollector(this, userItems, itemFetchInfo);
 
-            Task<EntityListResult<Test>> testTask = FetchEntities<Test>(
-                userItems.data,
-                userItem => userItem.Test,
-                itemFetchInfo);
+            collector.Add<WorkItem>(userItem => userItem.WorkItem);
+            collector.Add<Test>(userItem => userItem.Test);
+            collector.Add<Run>(userItem => userItem.Run);
+            collector.Add<Requirement>(userItem => userItem.Requirement);
+            collector.Add<OctaneTask>(userItem => userItem.Task);
 
-            Task<EntityListResult<Run>> testRunTask = FetchEntities<Run>(
-                userItems.data,
-                userItem => userItem.Run,
-                itemFetchInfo);
-
-            Task<EntityListResult<Requirement>> requirementTask = FetchEntities<Requirement>(
-                userItems.data,
-                userItem => userItem.Requirement,
-                itemFetchInfo);
-
-            Task<EntityListResult<OctaneTask>> taskTask = FetchEntities<OctaneTask>(
-                userItems.data,
-                userItem => userItem.Task,
-                itemFetchInfo);
-
-            // Filter only the subtypes requested.
-            List<WorkItem> workItems = (await workItemsTask).data;
-            List<Test> tests = (await testTask).data;
-            List<Run> testRuns = (await testRunTask).data;
-            List<Requirement> requirements = (await requirementTask).data;
-            List<OctaneTask> tasks = (await taskTask).data;
-
-            List<BaseEntity> result = new List<BaseEntity>();
-            result.AddRange(workItems);
-            result.AddRange(tests);
-            result.AddRange(testRuns);
-            result.AddRange(requirements);
-            result.AddRange(tasks);
+            List<BaseEntity> result = await collector.GetAllEntities();
 
             return result;
         }
@@ -171,6 +142,56 @@ namespace Hpe.Nga.Octane.VisualStudio
                 UserItem.TASK_REFERENCE
             };
             return fields.ToList();
+        }
+
+        private class EntitiesCollector
+        {
+            private readonly OctaneServices octaneService;
+            private readonly EntityListResult<UserItem> userItems;
+            private readonly MyWorkMetadata itemFetchInfo;
+
+            private List<Task<GenericEntityListResult>> fetchTasks;
+
+            public EntitiesCollector(OctaneServices octaneService, EntityListResult<UserItem> userItems, MyWorkMetadata itemFetchInfo)
+            {
+                this.octaneService = octaneService;
+                this.userItems = userItems;
+                this.itemFetchInfo = itemFetchInfo;
+
+                fetchTasks = new List<Task<GenericEntityListResult>>();
+            }
+
+            public async Task<List<BaseEntity>> GetAllEntities()
+            {
+                await Task.WhenAll(fetchTasks.ToArray());
+
+                var allEntities =
+                    from task in fetchTasks
+                    let result = task.Result.BaseEntities
+                    select result;
+
+                // Flat the result list and materialize it with ToList.
+                return allEntities.SelectMany(x => x).ToList();
+            }
+
+            public void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc) where TEntityType : BaseEntity
+            {
+                var tcs = new TaskCompletionSource<GenericEntityListResult>();
+
+                Task<EntityListResult<TEntityType>> fetchTask = octaneService.FetchEntities<TEntityType>(
+                    userItems.data,
+                    getReferenceEntityFunc,
+                    itemFetchInfo);
+
+                // This trick turns a Task<EntityListResult<TEntity>> to generic Task<GenericEntityListResult>.
+                // This allows us to later aggregate all the fetched entities without caring about the specific type of each one.
+                fetchTask.ContinueWith((result) =>
+                {
+                    tcs.TrySetResult(fetchTask.Result);
+                });
+
+                fetchTasks.Add(tcs.Task);
+            }
         }
     }
 }
