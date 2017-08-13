@@ -74,6 +74,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="DelegatedCommand.cs" />
+    <Compile Include="EntityComparerByLastModified.cs" />
     <Compile Include="FieldGetterViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
@@ -102,7 +103,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeparatorViewModel.cs" />
     <Compile Include="MyWorkMetadata.cs" />
-    <Compile Include="WorkItemFields.cs" />
+    <Compile Include="CommonFields.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

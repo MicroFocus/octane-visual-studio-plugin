@@ -45,84 +45,84 @@ namespace Hpe.Nga.Octane.VisualStudio
             AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT,
                     "defect",
                     "D", Color.FromRgb(190, 102, 92),
-                    FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "No environment"),
-                    FieldAtTop(WorkItemFields.OWNER, "Owner"),
-                    FieldAtTop(WorkItemFields.DETECTED_BY, "Detected By"),
-                    FieldAtTop(WorkItemFields.STORY_POINTS, "SP"),
-                    FieldAtTop(WorkItemFields.SEVERITY, "Severity"),
-                    FieldAtBottom(WorkItemFields.INVESTED_HOURS, "Invested Hours"),
-                    FieldAtBottom(WorkItemFields.REMAINING_HOURS, "Remaining Hours"),
-                    FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
+                    FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),
+                    FieldAtTop(CommonFields.OWNER, "Owner"),
+                    FieldAtTop(CommonFields.DETECTED_BY, "Detected By"),
+                    FieldAtTop(CommonFields.STORY_POINTS, "SP"),
+                    FieldAtTop(CommonFields.SEVERITY, "Severity"),
+                    FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
+                    FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
+                    FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
                     );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY,
                 "user story",
                 "US", Color.FromRgb(218, 199, 120),
-                FieldAtSubTitle(WorkItemFields.RELEASE, "Release", "No release"),
-                FieldAtTop(WorkItemFields.PHASE, "Phase"),
-                FieldAtTop(WorkItemFields.STORY_POINTS, "SP"),
-                FieldAtTop(WorkItemFields.OWNER, "Owner"),
-                FieldAtTop(WorkItemFields.AUTHOR, "Author"),
-                FieldAtBottom(WorkItemFields.INVESTED_HOURS, "Invested Hours"),
-                FieldAtBottom(WorkItemFields.REMAINING_HOURS, "Remaining Hours"),
-                FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
+                FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
+                FieldAtTop(CommonFields.PHASE, "Phase"),
+                FieldAtTop(CommonFields.STORY_POINTS, "SP"),
+                FieldAtTop(CommonFields.OWNER, "Owner"),
+                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
+                FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
+                FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY,
                 "quality story",
                 "QS", Color.FromRgb(95, 112, 118),
-                FieldAtSubTitle(WorkItemFields.RELEASE, "Release", "No release"),
-                FieldAtTop(WorkItemFields.PHASE, "Phase"),
-                FieldAtTop(WorkItemFields.STORY_POINTS, "SP"),
-                FieldAtTop(WorkItemFields.OWNER, "Owner"),
-                FieldAtTop(WorkItemFields.AUTHOR, "Author"),
-                FieldAtBottom(WorkItemFields.INVESTED_HOURS, "Invested Hours"),
-                FieldAtBottom(WorkItemFields.REMAINING_HOURS, "Remaining Hours"),
-                FieldAtBottom(WorkItemFields.ESTIMATED_HOURS, "Estimated Hours")
+                FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
+                FieldAtTop(CommonFields.PHASE, "Phase"),
+                FieldAtTop(CommonFields.STORY_POINTS, "SP"),
+                FieldAtTop(CommonFields.OWNER, "Owner"),
+                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
+                FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
+                FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
             AddSubType<Test>("test_manual",
                 "manual test",
                 "MT", Color.FromRgb(96, 121, 141),
                 FieldAtSubTitle("test_type", "Test Type"),
-                FieldAtTop(WorkItemFields.PHASE, "Phase"),
-                FieldAtTop(WorkItemFields.OWNER, "Owner"),
-                FieldAtTop(WorkItemFields.AUTHOR, "Author"),
-                FieldAtBottom(WorkItemFields.STEPS_NUM, "Steps"),
-                FieldAtBottom(WorkItemFields.AUTOMATION_STATUS, "Automation status")
+                FieldAtTop(CommonFields.PHASE, "Phase"),
+                FieldAtTop(CommonFields.OWNER, "Owner"),
+                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtBottom(CommonFields.STEPS_NUM, "Steps"),
+                FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
             AddSubType<Test>("gherkin_test",
                 "gherkin test",
                 "GT", Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
-                FieldAtTop(WorkItemFields.PHASE, "Phase"),
-                FieldAtTop(WorkItemFields.OWNER, "Owner"),
-                FieldAtTop(WorkItemFields.AUTHOR, "Author"),
-                FieldAtBottom(WorkItemFields.AUTOMATION_STATUS, "Automation status")
+                FieldAtTop(CommonFields.PHASE, "Phase"),
+                FieldAtTop(CommonFields.OWNER, "Owner"),
+                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
             AddSubType<Run>("run_suite",
                 "suite run",
                 "SR", Color.FromRgb(133, 169, 188),
-                FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "[No environment]"),
-                FieldAtTop(WorkItemFields.TEST_RUN_NATIVE_STATUS, "Status"),
-                FieldAtBottom(WorkItemFields.STARTED, "Strated")
+                FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
+                FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
+                FieldAtBottom(CommonFields.STARTED, "Strated")
                 );
 
             AddSubType<Run>("run_manual",
                 "manual run",
                 "MR", Color.FromRgb(133, 169, 188),
-                FieldAtSubTitle(WorkItemFields.ENVIROMENT, "Environment", "[No environment]"),
-                FieldAtTop(WorkItemFields.TEST_RUN_NATIVE_STATUS, "Status"),
-                FieldAtBottom(WorkItemFields.STARTED, "Strated")
+                FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
+                FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
+                FieldAtBottom(CommonFields.STARTED, "Strated")
                 );
 
             AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
                 "requirement document",
                 "R", Color.FromRgb(215, 194, 56),
-                FieldAtSubTitle(WorkItemFields.PHASE, "Phase"),
-                FieldAtTop(WorkItemFields.AUTHOR, "Author")
+                FieldAtSubTitle(CommonFields.PHASE, "Phase"),
+                FieldAtTop(CommonFields.AUTHOR, "Author")
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
@@ -193,7 +193,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             string subType;
             if (IsAggregateEntity(entity.GetType()))
             {
-                subType = (string)entity.GetValue(WorkItemFields.SUB_TYPE);
+                subType = (string)entity.GetValue(CommonFields.SUB_TYPE);
                 Debug.Assert(subType != null, "Entity should have subtype field. If it's simple list it in EntitiesWithoutSubtype array.");
             }
             else
@@ -248,13 +248,14 @@ namespace Hpe.Nga.Octane.VisualStudio
                     .ToList();
 
                 // Add common fields
-                fields.Add(WorkItemFields.DESCRIPTION);
-                fields.Add(WorkItemFields.NAME);
+                fields.Add(CommonFields.DESCRIPTION);
+                fields.Add(CommonFields.NAME);
+                fields.Add(CommonFields.LAST_MODIFIED);
 
                 // Some entities are listed as not having subtype field
                 if (IsAggregateEntity(typeof(TEntity)))
                 {
-                    fields.Add(WorkItemFields.SUB_TYPE);
+                    fields.Add(CommonFields.SUB_TYPE);
                 }
 
                 fieldsByEntityType.Add(typeof(TEntity), fields);

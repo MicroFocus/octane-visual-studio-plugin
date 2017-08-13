@@ -3,7 +3,7 @@
     /// <summary>
     /// Contains field names of work item entity.
     /// </summary>
-    internal class WorkItemFields
+    internal class CommonFields
     {
         public const string ENVIROMENT = "taxonomies";
         public const string DETECTED_BY = "detected_by";
@@ -24,5 +24,6 @@
         public const string TEST_RUN_NATIVE_STATUS = "native_status";
         public const string STARTED = "started";
         public const string TEST_TYPE = "test_type";
+        public const string LAST_MODIFIED = "last_modified";
     }
 }

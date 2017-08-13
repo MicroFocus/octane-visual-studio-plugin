@@ -42,12 +42,12 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         public string SubType
         {
-            get { return entity.GetStringValue(WorkItemFields.SUB_TYPE); }
+            get { return entity.GetStringValue(CommonFields.SUB_TYPE); }
         }
 
         public string Description
         {
-            get { return entity.GetStringValue(WorkItemFields.DESCRIPTION) ?? string.Empty; }
+            get { return entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty; }
         }
 
         public string CommitMessage

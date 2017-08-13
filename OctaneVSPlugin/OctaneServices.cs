@@ -27,6 +27,8 @@ namespace Hpe.Nga.Octane.VisualStudio
         private WorkspaceContext workspaceContext;
         private SharedSpaceContext sharedSpaceContext;
 
+        private static readonly EntityComparerByLastModified entityComparer = new EntityComparerByLastModified();
+
         public OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
         {
             this.url = url;
@@ -104,6 +106,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             collector.Add<OctaneTask>(userItem => userItem.Task);
 
             List<BaseEntity> result = await collector.GetAllEntities();
+            result.Sort(entityComparer);
 
             return result;
         }
