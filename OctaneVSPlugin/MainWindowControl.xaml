@@ -153,7 +153,10 @@
                     <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" />
                 </Button>
             </StackPanel>
-            <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick">
+            <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
+                    Background="{DynamicResource VsBrush.Window}"
+                    Foreground="{DynamicResource VsBrush.WindowText}"
+>
                 <ListBox.ContextMenu>
                     <ContextMenu Name="ListMenu" Opened="ListMenu_Opened">
                         <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
