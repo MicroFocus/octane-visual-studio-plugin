@@ -37,7 +37,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
             if (isDescending)
             {
-                result = 1 - result;
+                result = -1 * result;
             }
 
             return result;
