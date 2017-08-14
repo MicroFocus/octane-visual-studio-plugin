@@ -124,6 +124,7 @@
     <Content Include="Resources\MainWindowPackage.ico" />
     <Resource Include="Resources\octane-logo.png" />
     <Content Include="Resources\OctaneCommand.png" />
+    <Content Include="Resources\OctaneLogo16x16.png" />
     <Content Include="Resources\OctaneToolWindowCommand.png" />
     <Content Include="stylesheet.css" />
   </ItemGroup>
