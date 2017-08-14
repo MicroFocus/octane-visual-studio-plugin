@@ -127,5 +127,28 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
 
         }
+
+        private async void DownloadGherkinScript_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+
+                Test test = (Test)SelectedItem.Entity;
+                string script = await viewModel.GetGherkinScript(test);
+
+                package.CreateFile(test.Name, script);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fail to get test script");
+            }
+        }
+
+        private void ListMenu_Opened(object sender, RoutedEventArgs e)
+        {
+            var cm = (ContextMenu)sender;
+            var mi = (MenuItem)cm.Items[3];
+            mi.Visibility = (SelectedItem.SubType == "gherkin_test") ? Visibility.Visible : Visibility.Collapsed;
+        }
     }
 }

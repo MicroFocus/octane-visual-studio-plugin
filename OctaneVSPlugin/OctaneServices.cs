@@ -131,6 +131,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             return fetchEntitiesTask;
         }
 
+        public Task<TestScript> GetTestScript(long id)
+        {
+            return es.GetTestScriptAsync(workspaceContext, id);
+        }
+
         private List<string> BuildUserItemFields()
         {
             string[] fields = new[]

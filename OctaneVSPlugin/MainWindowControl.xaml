@@ -155,10 +155,11 @@
             </StackPanel>
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick">
                 <ListBox.ContextMenu>
-                    <ContextMenu Name="ListMenu">
+                    <ContextMenu Name="ListMenu" Opened="ListMenu_Opened">
                         <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
                         <MenuItem Header="Open in Browser (Alt+DblClick)" Click="OpenInBrowser_Click"></MenuItem>
                         <MenuItem Header="Copy Commit Message to Clipboard (Shift+Alt+DblClick)" Click="GenerateCommitMsg_Click"></MenuItem>
+                        <MenuItem Header="Download Gherkin Script" Click="DownloadGherkinScript_Click"></MenuItem>
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>

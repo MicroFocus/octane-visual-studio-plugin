@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using Hpe.Nga.Api.Core.Entities;
 using System.ComponentModel;
 
+using Task = System.Threading.Tasks.Task;
+using OctaneTask = Hpe.Nga.Api.Core.Entities.Task;
+
 namespace Hpe.Nga.Octane.VisualStudio
 {
     public class OctaneMyItemsViewModel : INotifyPropertyChanged
@@ -147,6 +150,22 @@ namespace Hpe.Nga.Octane.VisualStudio
             if (PropertyChanged != null)
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+
+        public async System.Threading.Tasks.Task<string> GetGherkinScript(Test test)
+        {
+            try
+            {
+                OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
+                await octane.Connect();
+
+                TestScript testScript = await octane.GetTestScript(test.Id);
+                return testScript.Script;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Fail to get test script", ex);
             }
         }
     }

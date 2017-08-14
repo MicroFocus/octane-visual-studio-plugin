@@ -16,6 +16,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using Microsoft.Win32;
 using Hpe.Nga.Octane.VisualStudio;
+using EnvDTE;
 
 namespace octane_visual_studio_plugin
 {
@@ -113,6 +114,21 @@ namespace octane_visual_studio_plugin
         internal long SharedSpaceId
         {
             get { return Options.SsId; }
+        }
+
+        internal void CreateFile(string fileName, string content)
+        {
+            DTE dte = (DTE)GetService(typeof(DTE));
+            dte.ItemOperations.NewFile("General\\Text File", fileName);
+
+            TextSelection textSel = (TextSelection)dte.ActiveDocument.Selection;
+            TextDocument textDoc = (TextDocument)dte.ActiveDocument.Object();
+
+            textSel.SelectAll();
+            textSel.Delete();
+            textSel.Insert(content);
+
+            textSel.GotoLine(1);
         }
 
         internal long WorkSpaceId
