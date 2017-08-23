@@ -40,6 +40,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         public long ID { get { return entity.Id; } }
         public string Name { get { return entity.Name; } }
 
+        public string TypeName
+        {
+            get { return entity.TypeName; }
+        }
+
         public string SubType
         {
             get { return entity.GetStringValue(CommonFields.SUB_TYPE); }

@@ -55,10 +55,23 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             // url: http://myd-vm10629.hpeswlab.net:8081
             // http://myd-vm10629.hpeswlab.net:8081/ui/entity-navigation?p=1001/1002&entityType=work_item&id=1111
-            var sb = new StringBuilder();
-            var selectedId = SelectedItem.ID;
-            sb.AppendFormat("{0}/ui/entity-navigation?p={1}/{2}&entityType=work_item&id={3}", package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, selectedId);
-            System.Diagnostics.Process.Start(sb.ToString());
+
+            string url = string.Format("{0}/ui/entity-navigation?p={1}/{2}&entityType={3}&id={4}", 
+                package.AlmUrl, 
+                package.SharedSpaceId, 
+                package.WorkSpaceId, 
+                SelectedItem.TypeName, 
+                SelectedItem.ID);
+
+            try
+            {
+                // Open the URL in the user's default browser.
+                System.Diagnostics.Process.Start(url);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fail to open the browser\n\n" + ex.Message, "Octane ALM", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
 
