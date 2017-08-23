@@ -107,7 +107,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 "SR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
-                FieldAtBottom(CommonFields.STARTED, "Strated")
+                FieldAtBottom(CommonFields.STARTED, "Started")
                 );
 
             AddSubType<Run>("run_manual",
@@ -115,7 +115,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 "MR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
-                FieldAtBottom(CommonFields.STARTED, "Strated")
+                FieldAtBottom(CommonFields.STARTED, "Started")
                 );
 
             AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
