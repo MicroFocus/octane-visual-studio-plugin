@@ -29,6 +29,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         private const string SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER = "SimpleEntity";
 
         /// <summary>
+        /// Placeholder value for entities that should not support copy of commit message.
+        /// </summary>
+        private const string COMMIT_MESSAGE_NOT_APPLICABLE = "";
+
+        /// <summary>
         /// Array of entity types that do not have sub-types.
         /// 
         /// Most of the entites are aggregated entities with sub-types, for the exceptions listed
@@ -82,7 +87,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 );
 
             AddSubType<Test>("test_manual",
-                "manual test",
+                COMMIT_MESSAGE_NOT_APPLICABLE,
                 "MT", Color.FromRgb(96, 121, 141),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
@@ -93,7 +98,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 );
 
             AddSubType<Test>("gherkin_test",
-                "gherkin test",
+                COMMIT_MESSAGE_NOT_APPLICABLE,
                 "GT", Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
@@ -103,7 +108,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 );
 
             AddSubType<Run>("run_suite",
-                "suite run",
+                COMMIT_MESSAGE_NOT_APPLICABLE,
                 "SR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
@@ -111,7 +116,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 );
 
             AddSubType<Run>("run_manual",
-                "manual run",
+                COMMIT_MESSAGE_NOT_APPLICABLE,
                 "MR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
@@ -119,7 +124,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 );
 
             AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
-                "requirement document",
+                COMMIT_MESSAGE_NOT_APPLICABLE,
                 "R", Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.AUTHOR, "Author")
@@ -153,6 +158,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         internal Color GetIconColor(BaseEntity entity)
         {
             return GetEntitySubTypeInfo(entity).IconInfo.LabelColor;
+        }
+
+        internal bool IsSupportCopyCommitMessage(BaseEntity entity)
+        {
+            return COMMIT_MESSAGE_NOT_APPLICABLE != GetEntitySubTypeInfo(entity).CommitMessageTypeName;
         }
 
         internal string GetCommitMessageTypeName(BaseEntity entity)

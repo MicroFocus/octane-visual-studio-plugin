@@ -64,6 +64,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
         }
 
+        public bool IsSupportCopyCommitMessage
+        {
+            get { return myWorkMetadata.IsSupportCopyCommitMessage(entity); }
+        }
+
         public FieldGetterViewModel SubTitleField
         {
             get { return subTitleField; }

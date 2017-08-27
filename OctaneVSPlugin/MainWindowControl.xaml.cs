@@ -160,8 +160,14 @@ namespace Hpe.Nga.Octane.VisualStudio
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
         {
             var cm = (ContextMenu)sender;
-            var mi = (MenuItem)cm.Items[3];
-            mi.Visibility = (SelectedItem.SubType == "gherkin_test") ? Visibility.Visible : Visibility.Collapsed;
+
+            // Show the Download Gherkin Test only for gherkind test items.
+            var gherkinTestMenuItem = (MenuItem)cm.Items[3];
+            gherkinTestMenuItem.Visibility = (SelectedItem.SubType == "gherkin_test") ? Visibility.Visible : Visibility.Collapsed;
+
+            // Show the Copy Comment Message only to items which supports that
+            MenuItem copyCommitMessageMenuItem = (MenuItem)cm.Items[2];
+            copyCommitMessageMenuItem.Visibility = SelectedItem.IsSupportCopyCommitMessage ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }
