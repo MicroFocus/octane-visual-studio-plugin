@@ -49,13 +49,6 @@
           <ButtonText>ALM Octane</ButtonText>
         </Strings>
       </Button>
-      <Button guid="guidMainWindowPackageCmdSet1" id="cmdidOctaneCommand" priority="0x0100" type="Button">
-        <Parent guid="guidMainWindowPackageCmdSet1" id="MyMenuGroup" />
-        <Icon guid="guidImages1" id="bmpPic1" />
-        <Strings>
-          <ButtonText>Invoke OctaneCommand</ButtonText>
-        </Strings>
-      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
