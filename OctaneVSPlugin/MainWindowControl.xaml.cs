@@ -117,8 +117,11 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void GenerateCommitMsg_Click(object sender, RoutedEventArgs e)
         {
-            string message = SelectedItem.CommitMessage;
-            Clipboard.SetText(message);
+            if (SelectedItem.IsSupportCopyCommitMessage)
+            {
+                string message = SelectedItem.CommitMessage;
+                Clipboard.SetText(message);
+            }
         }
 
         private void results_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
