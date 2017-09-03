@@ -44,7 +44,7 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" MinWidth="100" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
