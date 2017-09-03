@@ -78,6 +78,7 @@
     <Compile Include="FieldGetterViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
+    <Compile Include="GreaterThanValueConverter.cs" />
     <Compile Include="ItemIconInfo.cs" />
     <Compile Include="MainWindowMode.cs" />
     <Compile Include="MyItemControl.xaml.cs">
@@ -126,6 +127,7 @@
     <Content Include="Resources\OctaneCommand.png" />
     <Content Include="Resources\OctaneLogo16x16.png" />
     <Content Include="Resources\OctaneToolWindowCommand.png" />
+    <Resource Include="Resources\unidrag-small.png" />
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>

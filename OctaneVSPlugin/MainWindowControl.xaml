@@ -140,9 +140,105 @@
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding Mode}" Value="ItemsLoaded">
-                            <Setter Property="Visibility" Value="Visible" />
-                        </DataTrigger>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
+                                <Condition Binding="{Binding MyItems.Count}" Value="0" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Visible" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </DockPanel.Style>
+
+            <Grid HorizontalAlignment="Stretch">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                    <Button Command="{Binding RefreshCommand}" ToolTip="Click me to refersh">
+                        <!--This text-block show the reload sign as unicode character-->
+                        <Image Margin="20" Grid.Row="1" Grid.ColumnSpan="2" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/unidrag-small.png">
+                            <Image.Effect>
+                                <DropShadowEffect ShadowDepth="20" />
+                            </Image.Effect>
+                        </Image>
+
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Background" Value="Transparent" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter TextElement.Foreground="{TemplateBinding Foreground}" />
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="true">
+                                                    <Setter Property="Background" Value="#2000" />
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </Button.Style>
+                        
+                        <!--<Button.Style>
+                            <Style TargetType="{x:Type Button}">
+                                <Setter Property="Background" Value="{x:Null}"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type Button}">
+                                            <Border Background="{TemplateBinding Background}">
+                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            </Border>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="{x:Null}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>-->
+                    </Button>
+                    
+                    <TextBlock FontSize="20" TextAlignment="Center">
+                        You're Awesome! You finished all your work! 
+                        <LineBreak />
+                        You may want to talk with your team leader... or have some fun!
+                    </TextBlock>
+                </StackPanel>
+            </Grid>
+
+        </DockPanel>
+
+        <DockPanel>
+            <DockPanel.Resources>
+                <local:GreaterThanValueConverter x:Key="GreaterThanValueConverter" />
+            </DockPanel.Resources>
+            <DockPanel.Style>
+                <Style TargetType="DockPanel">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
+                                <Condition Binding="{Binding MyItems.Count, Converter={StaticResource GreaterThanValueConverter}}" Value="True" />
+                            </MultiDataTrigger.Conditions>
+                            <MultiDataTrigger.Setters>
+                                <Setter Property="Visibility" Value="Visible" />
+                            </MultiDataTrigger.Setters>
+                        </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
