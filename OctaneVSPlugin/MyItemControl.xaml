@@ -44,17 +44,21 @@
                     <RowDefinition />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="Auto" />
-                    <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Orientation="Horizontal"
-                            Grid.Row="0" Grid.Column="0">
+                <Grid Grid.Row="0" Grid.Column="0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    
                     <TextBlock Text="{Binding ID, FallbackValue=Test}" Margin="0 0 5 0" />
-                    <TextBlock FontWeight="Bold" Text="{Binding Name, FallbackValue=Im item number 1}" />
-                </StackPanel>
+                    <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" FontWeight="Bold" Text="{Binding Name, FallbackValue=Im im number 1 with very very very long title and many many more things like this and that}" />
+                </Grid>
                 
-                <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Subtitle field sldkfj slkdfjlsdkjflskd jflsdkj flskdj flsdjkf BindsDirectlyToSource;lfks ;dlfk ;sldkf; sldkf }"
+                <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Subtitle field sldkfj slkdfjlsdkjflskd jflsdkj}"
                                   Grid.Row="1" Grid.Column="0" />
 
                 <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding TopFields}" Margin="5 0 0 0" HorizontalAlignment="Right"

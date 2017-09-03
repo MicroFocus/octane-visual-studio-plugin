@@ -252,7 +252,7 @@
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
                     Background="{DynamicResource VsBrush.Window}"
                     Foreground="{DynamicResource VsBrush.WindowText}"
->
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                 <ListBox.ContextMenu>
                     <ContextMenu Name="ListMenu" Opened="ListMenu_Opened">
                         <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
