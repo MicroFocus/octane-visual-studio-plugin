@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
   <Metadata>
-    <Identity Id="Hpe.Nga.Octane.VisualStudio" Version="0.7" Language="en-US" Publisher="HPE" />
+    <Identity Id="Hpe.Nga.Octane.VisualStudio" Version="0.8" Language="en-US" Publisher="HPE" />
     <DisplayName>HPE ALM Octane Visual Studio Plugin</DisplayName>
     <Description xml:space="preserve">HPE ALM Octane Visual Studio plugin</Description>
   </Metadata>
