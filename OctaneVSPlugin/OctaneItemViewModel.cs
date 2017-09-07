@@ -59,7 +59,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
-                string message = string.Format("{0} #{1}: {2}", myWorkMetadata.GetCommitMessageTypeName(entity), ID, Name);
+                string message = string.Format("{0} #{1}", myWorkMetadata.GetCommitMessageTypeName(entity), ID);
                 return message;
             }
         }

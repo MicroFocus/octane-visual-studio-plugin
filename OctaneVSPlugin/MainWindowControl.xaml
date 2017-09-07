@@ -38,9 +38,9 @@
                 <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
 
                 <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    Welcome to ALM Octane Visual Studio plugin.
+                    Welcome to the ALM Octane Visual Studio plugin.
                     <LineBreak />
-                    Please open Tools -> Options -> ALM Octane to setup the connect to your Octane.
+                    To start, go to Tools -> Options -> ALM Octane and connect.
                 </TextBlock>
 
                 <Button Grid.Row="2" Grid.ColumnSpan="2"
@@ -81,7 +81,7 @@
 
                 <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock>
-                    ALM Octane failed to be reached, please review your settings and check your network connection.
+                    Connection to ALM Octane failed. Review your settings and check your network connection.
                     </TextBlock>
 
                     <TextBlock Text="{Binding LastExceptionMessage, FallbackValue=this will show the error message}"
@@ -171,7 +171,7 @@
                     </Image>
 
                     <TextBlock FontSize="20" TextAlignment="Center">
-                        You're Awesome! You finished all your work! 
+                        You're awesome! You finished all your work! 
                         <LineBreak />
                         You may want to talk with your team leader... or have some fun!
                     </TextBlock>
@@ -222,7 +222,7 @@
                         <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
                         <MenuItem Header="Open in Browser (Alt+DblClick)" Click="OpenInBrowser_Click"></MenuItem>
                         <MenuItem Header="Copy Commit Message to Clipboard (Shift+Alt+DblClick)" Click="GenerateCommitMsg_Click"></MenuItem>
-                        <MenuItem Header="Download Gherkin Script" Click="DownloadGherkinScript_Click"></MenuItem>
+                        <MenuItem Header="Download Script" Click="DownloadGherkinScript_Click"></MenuItem>
                     </ContextMenu>
                 </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>
