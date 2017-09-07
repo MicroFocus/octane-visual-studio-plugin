@@ -154,7 +154,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
                 package.CreateFile(test.Name, script);
             }
-            catch (Exception ex)
+            catch
             {
                 MessageBox.Show("Fail to get test script");
             }
