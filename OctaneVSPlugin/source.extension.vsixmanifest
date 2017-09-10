@@ -5,6 +5,8 @@
     <DisplayName>ALM Octane Visual Studio Plugin</DisplayName>
     <Description xml:space="preserve">Enables integration with ALM Octane. 
 Compatible with ALM Octane version 12.55.7 and above.</Description>
+    <Icon>Resources\octane-logo-32x32.png</Icon>
+    <PreviewImage>Resources\screen-shot-200x200.png</PreviewImage>
     <Tags>octane, alm</Tags>
   </Metadata>
   <Installation>
