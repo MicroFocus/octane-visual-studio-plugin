@@ -7,7 +7,8 @@ namespace Hpe.Nga.Octane.VisualStudio
     /// Options page represent the settings the user can set for ALM Octane plugin.
     /// This class is presented to the user as a page in Visual Studio options dialog.
     /// </summary>
-    internal class OptionsPage : DialogPage {
+    internal class OptionsPage : DialogPage
+    {
         const string category = "Server Settings";
 
         private string url = string.Empty; //"http://myd-vm10629.hpeswlab.net:8081";
@@ -30,21 +31,24 @@ namespace Hpe.Nga.Octane.VisualStudio
         [Category(category)]
         [DisplayName("1. Server URL")]
         [Description("Format: http://servername:8081 (do not include additional info)")]
-        public string Url {
+        public string Url
+        {
             get { return url; }
             set { url = value; }
         }
 
         [Category(category)]
         [DisplayName("2. Shared Space ID")]
-        public int SsId {
+        public int SsId
+        {
             get { return ssid; }
             set { ssid = value; }
         }
 
         [Category(category)]
         [DisplayName("3. Workspace ID")]
-        public int WsId {
+        public int WsId
+        {
             get { return wsid; }
             set { wsid = value; }
         }
@@ -52,17 +56,54 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         [Category(category)]
         [DisplayName("4. User")]
-        public string User {
+        public string User
+        {
             get { return user; }
             set { user = value; }
+        }
+
+        public override void LoadSettingsFromStorage()
+        {
+            base.LoadSettingsFromStorage();
+            DecryptPassword();
+        }
+
+        public override void SaveSettingsToStorage()
+        {
+            EncryptPassword();
+            base.SaveSettingsToStorage();
+            DecryptPassword();
+        }
+
+        private void EncryptPassword()
+        {
+            if (password != null)
+            {
+                password = DataProtector.Protect(password);
+            }
+        }
+
+        private void DecryptPassword()
+        {
+            if (password != null)
+            {
+                password = DataProtector.Unprotect(password);
+            }
         }
 
         [Category(category)]
         [DisplayName("5. Password")]
         [PasswordPropertyText(true)]
-        public string Password {
-            get { return password; }
-            set { password = value; }
+        public string Password
+        {
+            get
+            {
+                return password;
+            }
+            set
+            {
+                password = value;
+            }
         }
 
     }
