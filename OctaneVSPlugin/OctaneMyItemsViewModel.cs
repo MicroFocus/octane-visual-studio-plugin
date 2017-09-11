@@ -110,6 +110,12 @@ namespace Hpe.Nga.Octane.VisualStudio
                 return;
             }
 
+            // If we already loading wait for the runnung load to complete.
+            if (Mode == MainWindowMode.LoadingItems)
+            {
+                return;
+            }
+
             Mode = MainWindowMode.LoadingItems;
 
             try
