@@ -62,14 +62,33 @@ namespace Hpe.Nga.Octane.VisualStudio
             set { user = value; }
         }
 
+        [Category(category)]
+        [DisplayName("5. Password")]
+        [PasswordPropertyText(true)]
+        public string Password
+        {
+            get
+            {
+                return password;
+            }
+            set
+            {
+                password = value;
+            }
+        }
+
         public override void LoadSettingsFromStorage()
         {
+            // After loading the settings from storage, we'll get the encrypted password.
+            // We then decrypt the password to allow the extension to use it.
             base.LoadSettingsFromStorage();
             DecryptPassword();
         }
 
         public override void SaveSettingsToStorage()
         {
+            // Before saving the settings we encrypt the password using Windows Data Protection API.
+            // Then we save the settings and then we decrypt the password to allow the extension to use it.
             EncryptPassword();
             base.SaveSettingsToStorage();
             DecryptPassword();
@@ -88,21 +107,6 @@ namespace Hpe.Nga.Octane.VisualStudio
             if (password != null)
             {
                 password = DataProtector.Unprotect(password);
-            }
-        }
-
-        [Category(category)]
-        [DisplayName("5. Password")]
-        [PasswordPropertyText(true)]
-        public string Password
-        {
-            get
-            {
-                return password;
-            }
-            set
-            {
-                password = value;
             }
         }
 

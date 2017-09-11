@@ -7,7 +7,7 @@
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
-             d:DesignHeight="400" d:DesignWidth="952"
+             d:DesignHeight="200" d:DesignWidth="952"
              Name="MyToolWindow">
     <Grid>
 
@@ -153,35 +153,36 @@
                 </Style>
             </DockPanel.Style>
 
-            <Grid HorizontalAlignment="Stretch">
+            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
+                <Button Width="24" Height="24" Command="{Binding RefreshCommand}">
+                    <!--This text-block show the reload sign as unicode character-->
+                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
+                </Button>
+            </StackPanel>
+
+            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <!--This text-block show the reload sign as unicode character-->
-                    <Image Margin="20" Grid.Row="1" Grid.ColumnSpan="2" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/unidrag-small.png">
-                        <Image.Effect>
-                            <DropShadowEffect ShadowDepth="20" />
-                        </Image.Effect>
-                    </Image>
+                <Viewbox Grid.Row="0" Grid.ColumnSpan="2" MaxHeight="200">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <!--This text-block show the reload sign as unicode character-->
+                        <Image Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/unidrag-small.png" />
+                    </StackPanel>
 
-                    <TextBlock FontSize="20" TextAlignment="Center">
+                </Viewbox>
+
+                <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
                         You're awesome! You finished all your work! 
                         <LineBreak />
                         You may want to talk with your team leader... or have some fun!
-                    </TextBlock>
+                </TextBlock>
 
-                    <Button HorizontalAlignment="Center" Command="{Binding RefreshCommand}" Margin="0 20 0 0" Padding="5">
-                        <!--This text-block show the reload sign as unicode character-->
-                        <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="30" />
-                    </Button>
-
-                </StackPanel>
             </Grid>
 
         </DockPanel>
@@ -208,15 +209,16 @@
             </DockPanel.Style>
 
             <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="32" Command="{Binding RefreshCommand}">
+                <Button Width="24" Height="24" Command="{Binding RefreshCommand}">
                     <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" />
+                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
                 </Button>
             </StackPanel>
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
                     Background="{DynamicResource VsBrush.Window}"
                     Foreground="{DynamicResource VsBrush.WindowText}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     BorderThickness="0">
                 <ListBox.ContextMenu>
                     <ContextMenu Name="ListMenu" Opened="ListMenu_Opened">
                         <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
