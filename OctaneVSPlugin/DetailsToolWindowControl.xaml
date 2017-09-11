@@ -43,9 +43,11 @@
                 </Grid>
             </StackPanel>
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal"/>
+            <DockPanel Grid.Row="1" LastChildFill="True">
+                <Label DockPanel.Dock="Top">Description:</Label>
+                <WebBrowser x:Name="DescBrowser" Navigating="DescBrowser_Navigating" />
+            </DockPanel>
 
-            <WebBrowser Grid.Row="1" x:Name="DescBrowser" Navigating="DescBrowser_Navigating" />
         </Grid>
 
     </Border>
