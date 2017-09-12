@@ -33,13 +33,26 @@ namespace Hpe.Nga.Octane.VisualStudio
             DataProtectionScope scope = DataProtectionScope.CurrentUser)
         {
             if (encryptedText == null)
-                throw new ArgumentNullException("encryptedText");
-            byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
-            byte[] entropyBytes = string.IsNullOrEmpty(optionalEntropy)
-                ? null
-                : Encoding.UTF8.GetBytes(optionalEntropy);
-            byte[] clearBytes = ProtectedData.Unprotect(encryptedBytes, entropyBytes, scope);
-            return Encoding.UTF8.GetString(clearBytes);
+            {
+                return string.Empty;
+            }
+
+            try
+            {
+                byte[] encryptedBytes = Convert.FromBase64String(encryptedText);
+                byte[] entropyBytes = string.IsNullOrEmpty(optionalEntropy)
+                    ? null
+                    : Encoding.UTF8.GetBytes(optionalEntropy);
+                byte[] clearBytes = ProtectedData.Unprotect(encryptedBytes, entropyBytes, scope);
+                return Encoding.UTF8.GetString(clearBytes);
+            }
+            catch
+            {
+                // If there was a problem unencrypt the data we ignore it
+                // and return empty string.
+                // This may happen when the stored data is not a valid encrypted data.
+                return string.Empty;
+            }
         }
 
     }
