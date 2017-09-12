@@ -25,7 +25,7 @@
                     <Border.Background>
                         <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
                     </Border.Background>
-                    <TextBlock Foreground="White" FontWeight="Light" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
+                    <TextBlock Foreground="White" FontWeight="Bold" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
                 </Border>
 
                 <Grid>
@@ -44,7 +44,7 @@
             </StackPanel>
 
             <DockPanel Grid.Row="1" LastChildFill="True">
-                <Label DockPanel.Dock="Top">Description:</Label>
+                <TextBlock DockPanel.Dock="Top">Description:</TextBlock>
                 <WebBrowser x:Name="DescBrowser" Navigating="DescBrowser_Navigating" />
             </DockPanel>
 
