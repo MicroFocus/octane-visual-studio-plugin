@@ -131,7 +131,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             return fetchEntitiesTask;
         }
 
-        public Task<TestScript> GetTestScript(long id)
+        public Task<TestScript> GetTestScript(EntityId id)
         {
             return es.GetTestScriptAsync(workspaceContext, id);
         }

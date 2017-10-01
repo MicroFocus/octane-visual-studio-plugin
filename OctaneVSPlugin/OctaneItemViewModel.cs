@@ -37,7 +37,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         public BaseEntity Entity { get { return entity; } }
 
-        public long ID { get { return entity.Id; } }
+        public EntityId ID { get { return entity.Id; } }
         public string Name { get { return entity.Name; } }
 
         public string TypeName
