@@ -45,7 +45,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Hpe.Nga.Octane.VisualStudio</RootNamespace>
     <AssemblyName>octane-visual-studio-plugin</AssemblyName>
-    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
