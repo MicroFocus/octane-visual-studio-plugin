@@ -27,7 +27,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
 
             canExecute = value;
-            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+
+            if (CanExecuteChanged != null)
+            {
+                CanExecuteChanged.Invoke(this, EventArgs.Empty);
+            }
         }
 
         public bool CanExecute(object parameter)
