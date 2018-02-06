@@ -55,7 +55,7 @@
             </Grid>
         </DockPanel>
 
-        <DockPanel>
+        <DockPanel x:Name="FailedToLoadPanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -68,21 +68,19 @@
             </DockPanel.Style>
 
             <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
+                <Image Grid.Row="1" Stretch="None"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
 
-                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
-
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock>
                     Connection to ALM Octane failed. Review your settings and check your network connection.
                     </TextBlock>
@@ -92,14 +90,18 @@
                                Foreground="Red"/>
                 </StackPanel>
 
-                <Button Grid.Row="2" Grid.ColumnSpan="2"
+                <Button Grid.Row="3" Grid.ColumnSpan="2"
                         Command="{Binding OpenOctaneOptionsDialogCommand}"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Padding="10">
                     Open Options
                 </Button>
-            </Grid>
 
+                <Image Grid.Row="4" Stretch="None"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
+            </Grid>
         </DockPanel>
 
         <DockPanel>
