@@ -104,7 +104,7 @@
             </Grid>
         </DockPanel>
 
-        <DockPanel>
+        <DockPanel x:Name="LoadingItemsPanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -116,28 +116,8 @@
                 </Style>
             </DockPanel.Style>
 
-            <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
-
-                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
-
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock FontSize="30">
-                    Loading items from ALM Octane...
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-
+            <local:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+            
         </DockPanel>
 
         <DockPanel>
