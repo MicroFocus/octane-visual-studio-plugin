@@ -126,6 +126,7 @@
     <Content Include="Resources\MainWindowCommand.png" />
     <Content Include="Resources\MainWindowPackage.ico" />
     <Resource Include="Resources\octane-logo.png" />
+    <Resource Include="Resources\microfocus-blue-logo.png" />
     <Content Include="Resources\octane-large-logo.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

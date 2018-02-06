@@ -11,7 +11,7 @@
              Name="MyToolWindow">
     <Grid>
 
-        <DockPanel>
+        <DockPanel x:Name="WelcomePanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -23,32 +23,35 @@
                 </Style>
             </DockPanel.Style>
             <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
+                <Image Grid.Row="1" Stretch="None"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
 
-                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
-
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
                     Welcome to the ALM Octane Visual Studio plugin.
                     <LineBreak />
                     To start, go to Tools -> Options -> ALM Octane and connect.
                 </TextBlock>
 
-                <Button Grid.Row="2" Grid.ColumnSpan="2"
+                <Button Grid.Row="3"
                         Command="{Binding OpenOctaneOptionsDialogCommand}"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Padding="10">
                     Open Options
                 </Button>
+
+                <Image Grid.Row="4" Stretch="None"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
             </Grid>
         </DockPanel>
 
