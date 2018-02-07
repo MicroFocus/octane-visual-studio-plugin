@@ -120,7 +120,7 @@
             
         </DockPanel>
 
-        <DockPanel>
+        <DockPanel x:Name="NoItemsPanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -146,30 +146,24 @@
             </StackPanel>
 
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Viewbox Grid.Row="0" Grid.ColumnSpan="2" MaxHeight="200">
+                <Viewbox Grid.Row="0" MaxHeight="200">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <!--This text-block show the reload sign as unicode character-->
-                        <Image Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/unidrag-small.png" />
+                        <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/s-rocket.png" />
                     </StackPanel>
 
                 </Viewbox>
 
                 <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
-                        You're awesome! You finished all your work! 
+                        You're Awesome! You finished all your work! 
                         <LineBreak />
                         You may want to talk with your team leader... or have some fun!
                 </TextBlock>
-
             </Grid>
-
         </DockPanel>
 
         <DockPanel>
