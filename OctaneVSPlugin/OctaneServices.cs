@@ -1,15 +1,14 @@
-﻿using Hpe.Nga.Api.Core.Connector;
-using Hpe.Nga.Api.Core.Entities;
-using Hpe.Nga.Api.Core.Services;
-using Hpe.Nga.Api.Core.Services.Query;
-using Hpe.Nga.Api.Core.Services.RequestContext;
+﻿using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
+using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
-
+using OctaneTask = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 using Task = System.Threading.Tasks.Task;
-using OctaneTask = Hpe.Nga.Api.Core.Entities.Task; 
 
 namespace Hpe.Nga.Octane.VisualStudio
 {
@@ -114,7 +113,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
             List<UserItem> userItems,
             Func<UserItem, BaseEntity> getReferenceEntityFunc,
-            MyWorkMetadata itemFetchInfo) 
+            MyWorkMetadata itemFetchInfo)
             where TEntity : BaseEntity
         {
             LogicalQueryPhrase idCriteria = BuildCriteria(userItems, getReferenceEntityFunc);

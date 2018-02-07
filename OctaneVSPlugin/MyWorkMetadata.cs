@@ -1,9 +1,9 @@
-﻿using System.Linq;
-using System.Collections.Generic;
+﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
-using System.Windows.Media;
-using Hpe.Nga.Api.Core.Entities;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using System.Windows.Media;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {

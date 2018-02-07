@@ -1,13 +1,10 @@
-﻿using System;
-using System.Windows.Input;
+﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
 using octane_visual_studio_plugin;
-using System.Collections.ObjectModel;
+using System;
 using System.Collections.Generic;
-using Hpe.Nga.Api.Core.Entities;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-
-using Task = System.Threading.Tasks.Task;
-using OctaneTask = Hpe.Nga.Api.Core.Entities.Task;
+using System.Windows.Input;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {

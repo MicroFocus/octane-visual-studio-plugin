@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Hpe.Nga.Api.Core.Entities;
-using Hpe.Nga.Api.Core.Services;
+﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Services;
+using System.Linq;
 
 namespace Hpe.Nga.Octane.VisualStudio
 {
@@ -11,7 +11,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         private readonly string fieldLabel;
         private readonly string emptyPlaceholder;
 
-        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, FieldInfo fieldInfo) 
+        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, FieldInfo fieldInfo)
         {
             this.itemViewModel = itemViewModel;
             fieldName = fieldInfo.Name;

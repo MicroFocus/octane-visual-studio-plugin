@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using Hpe.Nga.Api.Core.Entities;
+﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 
 namespace Hpe.Nga.Octane.VisualStudio

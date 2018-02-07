@@ -4,21 +4,17 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
+using octane_visual_studio_plugin;
+using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Input;
+
 namespace Hpe.Nga.Octane.VisualStudio
 {
-    using System.Diagnostics.CodeAnalysis;
-    using System.Windows;
-    using System.Windows.Controls;
-    using Hpe.Nga.Api.Core.Connector;
-    using Hpe.Nga.Api.Core.Entities;
-    using Hpe.Nga.Api.Core.Services;
-    using System;
-    using Microsoft.VisualStudio.Shell;
-    using Microsoft.VisualStudio.Shell.Interop;
-    using octane_visual_studio_plugin;
-    using System.Text;
-    using System.Windows.Input;
-
     /// <summary>
     /// Interaction logic for MainWindowControl.
     /// </summary>
@@ -56,11 +52,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             // url: http://myd-vm10629.hpeswlab.net:8081
             // http://myd-vm10629.hpeswlab.net:8081/ui/entity-navigation?p=1001/1002&entityType=work_item&id=1111
 
-            string url = string.Format("{0}/ui/entity-navigation?p={1}/{2}&entityType={3}&id={4}", 
-                package.AlmUrl, 
-                package.SharedSpaceId, 
-                package.WorkSpaceId, 
-                SelectedItem.TypeName, 
+            string url = string.Format("{0}/ui/entity-navigation?p={1}/{2}&entityType={3}&id={4}",
+                package.AlmUrl,
+                package.SharedSpaceId,
+                package.WorkSpaceId,
+                SelectedItem.TypeName,
                 SelectedItem.ID);
 
             try

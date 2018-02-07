@@ -1,4 +1,4 @@
-﻿using Hpe.Nga.Api.Core.Entities;
+﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
 using System.Collections.Generic;
 
