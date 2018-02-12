@@ -128,6 +128,12 @@ namespace Hpe.Nga.Octane.VisualStudio
                     myItems.Add(new OctaneItemViewModel(entity, myWorkMetadata));
                 }
 
+                IList<BaseEntity> comments = await octane.GetMyCommentItems();
+                foreach (BaseEntity comment in comments)
+                {
+                    myItems.Add(new OctaneItemViewModel(comment, myWorkMetadata));
+                }
+
                 Mode = MainWindowMode.ItemsLoaded;
             }
             catch (Exception ex)

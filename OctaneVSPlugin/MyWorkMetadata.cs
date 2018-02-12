@@ -1,4 +1,5 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.WorkItems;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -39,7 +40,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         /// Most of the entites are aggregated entities with sub-types, for the exceptions listed
         /// here the Subtype field is not fetched.
         /// </summary>
-        private readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task) };
+        private readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
 
         public MyWorkMetadata()
         {
@@ -141,6 +142,13 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(Task.INVESTED_HOURS_FIELD, "Invested Hours"),
                 FieldAtBottom(Task.REMAINING_HOURS_FIELD, "Remaining Hours"),
                 FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
+                );
+
+            AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
+                COMMIT_MESSAGE_NOT_APPLICABLE,
+                "C", Color.FromRgb(234, 179, 124),
+                FieldAtSubTitle(Comment.TEXT_FIELD, "Text"),
+                FieldAtTop(Comment.AUTHOR_FIELD, "Author")
                 );
         }
 

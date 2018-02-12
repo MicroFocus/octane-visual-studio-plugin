@@ -1,5 +1,6 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.WorkItems;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
@@ -88,11 +89,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         public async Task<IList<BaseEntity>> GetMyItems(MyWorkMetadata itemFetchInfo)
         {
-            // get the id of the logged in user
-            QueryPhrase ownerQuery = new LogicalQueryPhrase("email", this.user);
-            EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
-            WorkspaceUser owner = ownerQueryResult.data.FirstOrDefault();
-
+            var owner = await GetWorkspaceUser();
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
                 BuildUserItemCriteria(owner), BuildUserItemFields());
 
@@ -108,6 +105,28 @@ namespace Hpe.Nga.Octane.VisualStudio
             result.Sort(entityComparer);
 
             return result;
+        }
+
+        private IList<QueryPhrase> BuildCommentsCriteria(WorkspaceUser user)
+        {
+            return new List<QueryPhrase>
+            {
+                new CrossQueryPhrase("mention_user", new LogicalQueryPhrase("id", user.Id))
+            };
+        }
+
+        public async Task<IList<BaseEntity>> GetMyCommentItems()
+        {
+            var owner = await GetWorkspaceUser();
+            EntityListResult<Comment> comments = await es.GetAsync<Comment>(workspaceContext, BuildCommentsCriteria(owner), null);
+            return comments.BaseEntities.ToList();
+        }
+
+        private async Task<WorkspaceUser> GetWorkspaceUser()
+        {
+            QueryPhrase ownerQuery = new LogicalQueryPhrase("email", user);
+            EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
+            return ownerQueryResult.data.FirstOrDefault();
         }
 
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
