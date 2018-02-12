@@ -1,5 +1,6 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using System;
 using System.Linq;
 
 namespace Hpe.Nga.Octane.VisualStudio
@@ -10,6 +11,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         private readonly string fieldName;
         private readonly string fieldLabel;
         private readonly string emptyPlaceholder;
+        private readonly Func<BaseEntity, object> customContentFunc;
 
         public FieldGetterViewModel(OctaneItemViewModel itemViewModel, FieldInfo fieldInfo)
         {
@@ -17,6 +19,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             fieldName = fieldInfo.Name;
             fieldLabel = fieldInfo.Title;
             emptyPlaceholder = fieldInfo.EmptyPlaceholder;
+            customContentFunc = fieldInfo.ContentFunc;
         }
 
         public string Label
@@ -28,23 +31,21 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
+                if (customContentFunc != null)
+                    return customContentFunc(itemViewModel.Entity);
+
                 object value = itemViewModel.Entity.GetValue(fieldName);
-                if (value == null)
+                switch (value)
                 {
-                    return emptyPlaceholder;
+                    case null:
+                        return emptyPlaceholder;
+                    case BaseEntity entity:
+                        return entity.Name;
+                    case EntityList<BaseEntity> entityList:
+                        return FormatEntityList(entityList);
+                    default:
+                        return value;
                 }
-
-                if (value is BaseEntity)
-                {
-                    return ((BaseEntity)value).Name;
-                }
-
-                if (value is EntityList<BaseEntity>)
-                {
-                    return FormatEntityList((EntityList<BaseEntity>)value);
-                }
-
-                return value;
             }
         }
 

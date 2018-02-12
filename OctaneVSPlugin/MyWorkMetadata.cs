@@ -1,4 +1,5 @@
-﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
+﻿using Hpe.Nga.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Entities.WorkItems;
 using System;
 using System.Collections.Generic;
@@ -68,7 +69,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
@@ -81,7 +82,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
@@ -93,7 +94,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.STEPS_NUM, "Steps"),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
@@ -104,7 +105,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
@@ -128,7 +129,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "R", Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.AUTHOR, "Author")
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName)
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
@@ -138,7 +139,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtSubTitle(Task.STORY_FIELD, "Story"),
                 FieldAtTop(Task.OWNER_FIELD, "Owner"),
                 FieldAtTop(Task.PHASE_FIELD, "Phase"),
-                FieldAtTop(Task.AUTHOR_FIELD, "Author"),
+                FieldAtTop(Task.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(Task.INVESTED_HOURS_FIELD, "Invested Hours"),
                 FieldAtBottom(Task.REMAINING_HOURS_FIELD, "Remaining Hours"),
                 FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
@@ -148,8 +149,13 @@ namespace Hpe.Nga.Octane.VisualStudio
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "C", Color.FromRgb(234, 179, 124),
                 FieldAtSubTitle(Comment.TEXT_FIELD, "Text"),
-                FieldAtTop(Comment.AUTHOR_FIELD, "Author")
+                FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName)
                 );
+        }
+
+        private object GetAuthorFullName(BaseEntity entity)
+        {
+            return Utility.GetPropertyOfChildEntity(entity, Comment.AUTHOR_FIELD, BaseUserEntity.FULL_NAME_FIELD);
         }
 
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)
@@ -227,9 +233,9 @@ namespace Hpe.Nga.Octane.VisualStudio
             return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.Bottom);
         }
 
-        private FieldInfo FieldAtTop(string field, string title, string emptyPlaceholder = "")
+        private FieldInfo FieldAtTop(string field, string title, string emptyPlaceholder = "", Func<BaseEntity, object> contentFunc = null)
         {
-            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.Top);
+            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.Top, contentFunc);
         }
 
         private FieldInfo FieldAtSubTitle(string field, string title, string emptyPlaceholder = "")

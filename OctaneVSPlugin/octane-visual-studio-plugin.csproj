@@ -107,6 +107,7 @@
     <Compile Include="SeparatorViewModel.cs" />
     <Compile Include="MyWorkMetadata.cs" />
     <Compile Include="CommonFields.cs" />
+    <Compile Include="Common\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
