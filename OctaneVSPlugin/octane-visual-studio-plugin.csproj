@@ -74,6 +74,7 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CommentViewModel.cs" />
     <Compile Include="DataProtector.cs" />
     <Compile Include="DelegatedCommand.cs" />
     <Compile Include="EntityComparerByLastModified.cs" />

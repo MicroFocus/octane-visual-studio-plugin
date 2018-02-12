@@ -7,7 +7,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 {
     public class OctaneItemViewModel
     {
-        private readonly BaseEntity entity;
+        protected readonly BaseEntity entity;
         private readonly MyWorkMetadata myWorkMetadata;
 
         private readonly List<FieldGetterViewModel> topFields;
@@ -38,7 +38,10 @@ namespace Hpe.Nga.Octane.VisualStudio
         public BaseEntity Entity { get { return entity; } }
 
         public EntityId ID { get { return entity.Id; } }
-        public string Name { get { return entity.Name; } }
+
+        public virtual bool VisibleID { get { return true; } }
+
+        public virtual string Title { get { return entity.Name; } }
 
         public string TypeName
         {
