@@ -115,10 +115,19 @@ namespace Hpe.Nga.Octane.VisualStudio
             };
         }
 
+        private readonly List<string> commentFields = new List<string>
+        {
+            Comment.AUTHOR_FIELD,
+            Comment.OWNER_WORK_FIELD,
+            Comment.OWNER_TEST_FIELD,
+            Comment.OWNER_RUN_FIELD,
+            Comment.TEXT_FIELD
+        };
+
         public async Task<IList<BaseEntity>> GetMyCommentItems()
         {
             var owner = await GetWorkspaceUser();
-            EntityListResult<Comment> comments = await es.GetAsync<Comment>(workspaceContext, BuildCommentsCriteria(owner), null);
+            EntityListResult<Comment> comments = await es.GetAsync<Comment>(workspaceContext, BuildCommentsCriteria(owner), commentFields);
             return comments.BaseEntities.ToList();
         }
 
