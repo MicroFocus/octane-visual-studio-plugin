@@ -221,7 +221,8 @@
                      BorderThickness="0">
                 <ListBox.ContextMenu>
                     <ContextMenu Name="ListMenu" Opened="ListMenu_Opened">
-                        <MenuItem Header="Show Details (DblClick)" Click="ShowDetails_Click"></MenuItem>
+                        <MenuItem Header="View details (DblClick)" Click="ViewDetails_Click"></MenuItem>
+                        <MenuItem Header="View parent details (DblClick)" Click="ViewParentDetails_Click"></MenuItem>
                         <MenuItem Header="Open in Browser (Alt+DblClick)" Click="OpenInBrowser_Click"></MenuItem>
                         <MenuItem Header="Copy Commit Message to Clipboard (Shift+Alt+DblClick)" Click="GenerateCommitMsg_Click"></MenuItem>
                         <MenuItem Header="Download Script" Click="DownloadGherkinScript_Click"></MenuItem>

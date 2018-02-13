@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
 using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -70,17 +71,26 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
         }
 
-
-
-        private async void ShowDetails_Click(object sender, RoutedEventArgs e)
+        private void ViewDetails_Click(object sender, RoutedEventArgs e)
         {
-            var entityId = SelectedItem.ID;
-            if (SelectedItem is CommentViewModel comment)
+            ViewEntityDetails(SelectedItem.ID);
+        }
+
+        private void ViewParentDetails_Click(object sender, RoutedEventArgs e)
+        {
+            var commentViewModel = SelectedItem as CommentViewModel;
+            if (commentViewModel == null)
             {
-                entityId = comment.ParentEntity.Id;
+                Debug.Fail("Entity should be a comment.");
+                return;
             }
 
-            var entity = await viewModel.GetItem(entityId);
+            ViewEntityDetails(commentViewModel.ParentEntity.Id);
+        }
+
+        private async void ViewEntityDetails(EntityId id)
+        {
+            var entity = await viewModel.GetItem(id);
 
             ToolWindowPane window = CreateDetailsWindow(entity);
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
@@ -100,11 +110,6 @@ namespace Hpe.Nga.Octane.VisualStudio
             toolWindow.SetWorkItem(item);
 
             return toolWindow;
-        }
-
-        private ToolWindowPane GetDetailsWindow(OctaneItemViewModel item)
-        {
-            return this.package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), false);
         }
 
         /// <summary>
@@ -142,16 +147,21 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
             else
             {
-                ShowDetails_Click(sender, e);
+                if (SelectedItem is CommentViewModel)
+                {
+                    ViewParentDetails_Click(sender, e);
+                }
+                else
+                {
+                    ViewDetails_Click(sender, e);
+                }
             }
-
         }
 
         private async void DownloadGherkinScript_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-
                 Test test = (Test)SelectedItem.Entity;
                 string script = await viewModel.GetGherkinScript(test);
 
@@ -167,13 +177,23 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             var cm = (ContextMenu)sender;
 
-            // Show the Download Gherkin Test only for gherkind test items.
-            var gherkinTestMenuItem = (MenuItem)cm.Items[3];
-            gherkinTestMenuItem.Visibility = (SelectedItem.SubType == "gherkin_test") ? Visibility.Visible : Visibility.Collapsed;
+            var selectedItemIsComment = SelectedItem is CommentViewModel;
 
-            // Show the Copy Comment Message only to items which supports that
-            MenuItem copyCommitMessageMenuItem = (MenuItem)cm.Items[2];
+            // Show the "View details" item for all items except comment
+            var viewDetailsMenuItem = (MenuItem)cm.Items[0];
+            viewDetailsMenuItem.Visibility = !selectedItemIsComment ? Visibility.Visible : Visibility.Collapsed;
+
+            // Show the "View parent details" item only to comment entities
+            var viewParentDetailsMenuItem = (MenuItem)cm.Items[1];
+            viewParentDetailsMenuItem.Visibility = selectedItemIsComment ? Visibility.Visible : Visibility.Collapsed;
+
+            // Show the "Copy Comment Message" item only to items which supports it
+            var copyCommitMessageMenuItem = (MenuItem)cm.Items[3];
             copyCommitMessageMenuItem.Visibility = SelectedItem.IsSupportCopyCommitMessage ? Visibility.Visible : Visibility.Collapsed;
+
+            // Show the "Download Gherkin Test" item only for gherkind test items
+            var gherkinTestMenuItem = (MenuItem)cm.Items[4];
+            gherkinTestMenuItem.Visibility = (SelectedItem.SubType == "gherkin_test") ? Visibility.Visible : Visibility.Collapsed;
         }
     }
 }
