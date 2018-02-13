@@ -177,5 +177,14 @@ namespace Hpe.Nga.Octane.VisualStudio
                 throw new Exception("Fail to get test script", ex);
             }
         }
+
+        internal async System.Threading.Tasks.Task<OctaneItemViewModel> GetItem(EntityId id)
+        {
+            OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
+            await octane.Connect();
+
+            var entity = await octane.GetWorkItem(id, myWorkMetadata);
+            return new OctaneItemViewModel(entity, myWorkMetadata);
+        }
     }
 }

@@ -138,6 +138,16 @@ namespace Hpe.Nga.Octane.VisualStudio
             return ownerQueryResult.data.FirstOrDefault();
         }
 
+        public async Task<BaseEntity> GetWorkItem(EntityId id, MyWorkMetadata itemFetchInfo)
+        {
+            var query = new List<QueryPhrase>
+            {
+                new LogicalQueryPhrase("id", id)
+            };
+            var workItems = await es.GetAsync<WorkItem>(workspaceContext, query, itemFetchInfo.FieldsForType<WorkItem>());
+            return workItems.BaseEntities.FirstOrDefault();
+        }
+
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
             List<UserItem> userItems,
             Func<UserItem, BaseEntity> getReferenceEntityFunc,

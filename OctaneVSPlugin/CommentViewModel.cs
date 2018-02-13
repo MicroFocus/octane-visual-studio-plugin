@@ -12,6 +12,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             : base(entity, myWorkMetadata)
         {
             commentEntity = (Comment)entity;
+            ParentEntity = GetOwnerEntity();
         }
 
         public override bool VisibleID { get { return false; } }
@@ -20,19 +21,23 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             get
             {
-                BaseEntity owner = GetOwnerEntity();
-                if (owner == null)
+                if (ParentEntity == null)
                     return "Orphaned comment";
 
                 var sb = new StringBuilder("Comment on ")
-                    .Append(owner.TypeName)
+                    .Append(ParentEntity.TypeName)
                     .Append(": ")
-                    .Append(owner.Id.ToString())
+                    .Append(ParentEntity.Id.ToString())
                     .Append(" ")
-                    .Append(owner.Name);
+                    .Append(ParentEntity.Name);
                 return sb.ToString();
             }
         }
+
+        /// <summary>
+        /// Returns entity under which the comment is located
+        /// </summary>
+        public BaseEntity ParentEntity { get; }
 
         private BaseEntity GetOwnerEntity()
         {

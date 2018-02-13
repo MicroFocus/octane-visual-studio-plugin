@@ -72,12 +72,19 @@ namespace Hpe.Nga.Octane.VisualStudio
 
 
 
-        private void ShowDetails_Click(object sender, RoutedEventArgs e)
+        private async void ShowDetails_Click(object sender, RoutedEventArgs e)
         {
-            ToolWindowPane window = CreateDetailsWindow(SelectedItem);
+            var entityId = SelectedItem.ID;
+            if (SelectedItem is CommentViewModel comment)
+            {
+                entityId = comment.ParentEntity.Id;
+            }
+
+            var entity = await viewModel.GetItem(entityId);
+
+            ToolWindowPane window = CreateDetailsWindow(entity);
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
-
         }
 
         private ToolWindowPane CreateDetailsWindow(OctaneItemViewModel item)
@@ -90,7 +97,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 throw new NotSupportedException("Cannot create tool window");
             }
 
-            toolWindow.SetWorkItem(SelectedItem);
+            toolWindow.SetWorkItem(item);
 
             return toolWindow;
         }
