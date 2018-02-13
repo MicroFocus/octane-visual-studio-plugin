@@ -27,6 +27,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             get { return fieldLabel; }
         }
 
+        public bool HideLabel
+        {
+            get { return string.IsNullOrEmpty(Label); }
+        }
+
         public object Content
         {
             get

@@ -148,7 +148,12 @@ namespace Hpe.Nga.Octane.VisualStudio
             AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "C", Color.FromRgb(234, 179, 124),
-                FieldAtSubTitle(Comment.TEXT_FIELD, "Text"),
+                FieldAtSubTitle(Comment.TEXT_FIELD, string.Empty, string.Empty, entity =>
+                {
+                    var text = entity.GetStringValue(Comment.TEXT_FIELD);
+                    var doc = NSoup.Parse.Parser.Parse(text, "US-ASCII");
+                    return doc.Text().ToString();
+                }),
                 FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName)
                 );
         }
@@ -238,9 +243,9 @@ namespace Hpe.Nga.Octane.VisualStudio
             return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.Top, contentFunc);
         }
 
-        private FieldInfo FieldAtSubTitle(string field, string title, string emptyPlaceholder = "")
+        private FieldInfo FieldAtSubTitle(string field, string title, string emptyPlaceholder = "", Func<BaseEntity, object> contentFunc = null)
         {
-            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.SubTitle);
+            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.SubTitle, contentFunc);
         }
 
         /// <summary>
