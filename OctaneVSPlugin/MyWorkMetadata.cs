@@ -1,6 +1,5 @@
 ﻿using Hpe.Nga.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.WorkItems;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

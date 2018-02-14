@@ -1,5 +1,4 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.WorkItems;
 using System.Text;
 
 namespace Hpe.Nga.Octane.VisualStudio

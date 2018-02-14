@@ -220,13 +220,7 @@
                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      BorderThickness="0">
                 <ListBox.ContextMenu>
-                    <ContextMenu Name="ListMenu" Opened="ListMenu_Opened">
-                        <MenuItem Header="View details (DblClick)" Click="ViewDetails_Click"></MenuItem>
-                        <MenuItem Header="View parent details (DblClick)" Click="ViewParentDetails_Click"></MenuItem>
-                        <MenuItem Header="Open in Browser (Alt+DblClick)" Click="OpenInBrowser_Click"></MenuItem>
-                        <MenuItem Header="Copy Commit Message to Clipboard (Shift+Alt+DblClick)" Click="GenerateCommitMsg_Click"></MenuItem>
-                        <MenuItem Header="Download Script" Click="DownloadGherkinScript_Click"></MenuItem>
-                    </ContextMenu>
+                    <ContextMenu Name="ListMenu" Opened="ListMenu_Opened" />
                 </ListBox.ContextMenu>
                 <ListBox.ItemTemplate>
                     <DataTemplate>
@@ -235,9 +229,9 @@
                 </ListBox.ItemTemplate>
 
                 <!--
-            Set the horizontal content alignment to stretch so the item will have the full width of the list box.
-            This allows the MyItemControl to align the top and bottom fields to the right.
-            -->
+                    Set the horizontal content alignment to stretch so the item will have the full width of the list box.
+                    This allows the MyItemControl to align the top and bottom fields to the right.
+                -->
                 <ListBox.ItemContainerStyle>
                     <Style TargetType="ListBoxItem">
                         <Setter Property="HorizontalContentAlignment" Value="Stretch" />

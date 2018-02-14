@@ -9,7 +9,6 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -24,6 +23,11 @@ namespace Hpe.Nga.Octane.VisualStudio
         private readonly OctaneMyItemsViewModel viewModel;
         private MainWindowPackage package;
 
+        private readonly MenuItem viewDetailsMenuItem;
+        private readonly MenuItem openInBrowserMenuItem;
+        private readonly MenuItem copyCommitMessageMenuItem;
+        private readonly MenuItem gherkinTestMenuItem;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowControl"/> class.
         /// </summary>
@@ -32,6 +36,30 @@ namespace Hpe.Nga.Octane.VisualStudio
             this.InitializeComponent();
             viewModel = new OctaneMyItemsViewModel();
             this.DataContext = viewModel;
+
+            viewDetailsMenuItem = new MenuItem
+            {
+                Header = "View details (DblClick)",
+                Command = new DelegatedCommand(ViewDetails)
+            };
+
+            openInBrowserMenuItem = new MenuItem
+            {
+                Header = "Open in Browser(Alt + DblClick)",
+                Command = new DelegatedCommand(OpenInBrowser)
+            };
+
+            copyCommitMessageMenuItem = new MenuItem
+            {
+                Header = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)",
+                Command = new DelegatedCommand(CopyCommitMessage)
+            };
+
+            gherkinTestMenuItem = new MenuItem
+            {
+                Header = "Download Script",
+                Command = new DelegatedCommand(DownloadGherkinScript)
+            };
         }
 
         public void SetPackage(MainWindowPackage package)
@@ -40,7 +68,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             viewModel.SetPackage(package);
         }
 
-        OctaneItemViewModel SelectedItem
+        private OctaneItemViewModel SelectedItem
         {
             get
             {
@@ -48,17 +76,21 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
         }
 
-        private void OpenInBrowser_Click(object sender, RoutedEventArgs e)
-        {
-            // url: http://myd-vm10629.hpeswlab.net:8081
-            // http://myd-vm10629.hpeswlab.net:8081/ui/entity-navigation?p=1001/1002&entityType=work_item&id=1111
+        #region OpenInBrowser
 
+        private void OpenInBrowser(object param)
+        {
+            OpenInBrowser(SelectedItem.Entity.Id, SelectedItem.Entity.TypeName);
+        }
+
+        private void OpenInBrowser(EntityId id, string type)
+        {
             string url = string.Format("{0}/ui/entity-navigation?p={1}/{2}&entityType={3}&id={4}",
                 package.AlmUrl,
                 package.SharedSpaceId,
                 package.WorkSpaceId,
-                SelectedItem.TypeName,
-                SelectedItem.ID);
+                type,
+                id);
 
             try
             {
@@ -71,30 +103,34 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
         }
 
-        private void ViewDetails_Click(object sender, RoutedEventArgs e)
-        {
-            ViewEntityDetails(SelectedItem.ID);
-        }
+        #endregion
 
-        private void ViewParentDetails_Click(object sender, RoutedEventArgs e)
+        private async void ViewDetails(object param)
         {
-            var commentViewModel = SelectedItem as CommentViewModel;
-            if (commentViewModel == null)
+            var selectedEntity = SelectedItem.Entity;
+            if (SelectedItem is CommentViewModel commentViewModel)
             {
-                Debug.Fail("Entity should be a comment.");
+                selectedEntity = commentViewModel.ParentEntity;
+            }
+
+            if (selectedEntity.TypeName == "feature" || selectedEntity.TypeName == "epic")
+            {
+                OpenInBrowser(selectedEntity.Id, "work_item");
                 return;
             }
 
-            ViewEntityDetails(commentViewModel.ParentEntity.Id);
-        }
+            try
+            {
+                var entity = await viewModel.GetItem(selectedEntity);
 
-        private async void ViewEntityDetails(EntityId id)
-        {
-            var entity = await viewModel.GetItem(id);
-
-            ToolWindowPane window = CreateDetailsWindow(entity);
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                ToolWindowPane window = CreateDetailsWindow(entity);
+                IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Fail to open details window\n\n" + ex.Message, "Octane ALM", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private ToolWindowPane CreateDetailsWindow(OctaneItemViewModel item)
@@ -123,7 +159,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             return item.GetHashCode();
         }
 
-        private void GenerateCommitMsg_Click(object sender, RoutedEventArgs e)
+        private void CopyCommitMessage(object sender)
         {
             if (SelectedItem.IsSupportCopyCommitMessage)
             {
@@ -138,27 +174,20 @@ namespace Hpe.Nga.Octane.VisualStudio
             {
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
                 {
-                    GenerateCommitMsg_Click(sender, e);
+                    CopyCommitMessage(sender);
                 }
                 else
                 {
-                    OpenInBrowser_Click(sender, e);
+                    OpenInBrowser(sender);
                 }
             }
             else
             {
-                if (SelectedItem is CommentViewModel)
-                {
-                    ViewParentDetails_Click(sender, e);
-                }
-                else
-                {
-                    ViewDetails_Click(sender, e);
-                }
+                ViewDetails(sender);
             }
         }
 
-        private async void DownloadGherkinScript_Click(object sender, RoutedEventArgs e)
+        private async void DownloadGherkinScript(object sender)
         {
             try
             {
@@ -177,23 +206,24 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             var cm = (ContextMenu)sender;
 
-            var selectedItemIsComment = SelectedItem is CommentViewModel;
+            cm.Items.Clear();
 
-            // Show the "View details" item for all items except comment
-            var viewDetailsMenuItem = (MenuItem)cm.Items[0];
-            viewDetailsMenuItem.Visibility = !selectedItemIsComment ? Visibility.Visible : Visibility.Collapsed;
+            viewDetailsMenuItem.Header = !(SelectedItem is CommentViewModel)
+                ? "View details (DblClick)"
+                : "View parent details (DblClick)";
+            cm.Items.Add(viewDetailsMenuItem);
 
-            // Show the "View parent details" item only to comment entities
-            var viewParentDetailsMenuItem = (MenuItem)cm.Items[1];
-            viewParentDetailsMenuItem.Visibility = selectedItemIsComment ? Visibility.Visible : Visibility.Collapsed;
+            cm.Items.Add(openInBrowserMenuItem);
 
-            // Show the "Copy Comment Message" item only to items which supports it
-            var copyCommitMessageMenuItem = (MenuItem)cm.Items[3];
-            copyCommitMessageMenuItem.Visibility = SelectedItem.IsSupportCopyCommitMessage ? Visibility.Visible : Visibility.Collapsed;
+            if (SelectedItem.IsSupportCopyCommitMessage)
+            {
+                cm.Items.Add(copyCommitMessageMenuItem);
+            }
 
-            // Show the "Download Gherkin Test" item only for gherkind test items
-            var gherkinTestMenuItem = (MenuItem)cm.Items[4];
-            gherkinTestMenuItem.Visibility = (SelectedItem.SubType == "gherkin_test") ? Visibility.Visible : Visibility.Collapsed;
+            if (SelectedItem.SubType == "gherkin_test")
+            {
+                cm.Items.Add(gherkinTestMenuItem);
+            }
         }
     }
 }

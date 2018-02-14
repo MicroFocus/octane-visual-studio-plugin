@@ -178,12 +178,12 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
         }
 
-        internal async System.Threading.Tasks.Task<OctaneItemViewModel> GetItem(EntityId id)
+        internal async System.Threading.Tasks.Task<OctaneItemViewModel> GetItem(BaseEntity entityModel)
         {
             OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
             await octane.Connect();
 
-            var entity = await octane.GetWorkItem(id, myWorkMetadata);
+            var entity = await octane.FindEntity(entityModel);
             return new OctaneItemViewModel(entity, myWorkMetadata);
         }
     }

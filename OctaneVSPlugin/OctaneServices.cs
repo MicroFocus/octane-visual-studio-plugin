@@ -1,6 +1,5 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.WorkItems;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
@@ -138,14 +137,11 @@ namespace Hpe.Nga.Octane.VisualStudio
             return ownerQueryResult.data.FirstOrDefault();
         }
 
-        public async Task<BaseEntity> GetWorkItem(EntityId id, MyWorkMetadata itemFetchInfo)
+        public async Task<BaseEntity> FindEntity(BaseEntity entityModel)
         {
-            var query = new List<QueryPhrase>
-            {
-                new LogicalQueryPhrase("id", id)
-            };
-            var workItems = await es.GetAsync<WorkItem>(workspaceContext, query, itemFetchInfo.FieldsForType<WorkItem>());
-            return workItems.BaseEntities.FirstOrDefault();
+            var type = entityModel.AggregateType ?? entityModel.TypeName;
+            var entityzxc = await es.GetByIdAsync(workspaceContext, entityModel.Id, type, null);
+            return entityzxc;
         }
 
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
