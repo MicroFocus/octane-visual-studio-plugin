@@ -4,6 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using Hpe.Nga.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
@@ -80,7 +81,8 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void OpenInBrowser(object param)
         {
-            OpenInBrowser(SelectedItem.Entity.Id, SelectedItem.Entity.TypeName);
+            var selectedEntity = GetSelectedEntity();
+            OpenInBrowser(selectedEntity.Id, Utility.GetEntityType(selectedEntity));
         }
 
         private void OpenInBrowser(EntityId id, string type)
@@ -107,12 +109,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private async void ViewDetails(object param)
         {
-            var selectedEntity = SelectedItem.Entity;
-            if (SelectedItem is CommentViewModel commentViewModel)
-            {
-                selectedEntity = commentViewModel.ParentEntity;
-            }
-
+            var selectedEntity = GetSelectedEntity();
             if (selectedEntity.TypeName == "feature" || selectedEntity.TypeName == "epic")
             {
                 OpenInBrowser(selectedEntity.Id, "work_item");
@@ -224,6 +221,17 @@ namespace Hpe.Nga.Octane.VisualStudio
             {
                 cm.Items.Add(gherkinTestMenuItem);
             }
+        }
+
+        private BaseEntity GetSelectedEntity()
+        {
+            var selectedEntity = SelectedItem.Entity;
+            if (SelectedItem is CommentViewModel commentViewModel)
+            {
+                selectedEntity = commentViewModel.ParentEntity;
+            }
+
+            return selectedEntity;
         }
     }
 }

@@ -18,5 +18,13 @@ namespace Hpe.Nga.Octane.VisualStudio.Common
             var childEntity = (BaseEntity)entity.GetValue(child);
             return childEntity?.GetValue(property);
         }
+
+        /// <summary>
+        /// Returns the entity type
+        /// </summary>
+        public static string GetEntityType(BaseEntity entity)
+        {
+            return entity.AggregateType ?? entity.TypeName;
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using MicroFocus.Adm.Octane.Api.Core.Connector;
+﻿using Hpe.Nga.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
@@ -139,9 +140,8 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         public async Task<BaseEntity> FindEntity(BaseEntity entityModel)
         {
-            var type = entityModel.AggregateType ?? entityModel.TypeName;
-            var entityzxc = await es.GetByIdAsync(workspaceContext, entityModel.Id, type, null);
-            return entityzxc;
+            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetEntityType(entityModel), null);
+            return entity;
         }
 
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
