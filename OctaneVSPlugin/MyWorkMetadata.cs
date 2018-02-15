@@ -120,7 +120,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
-            AddSubType<Run>("run_suite",
+            AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "SR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
