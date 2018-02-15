@@ -219,7 +219,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 cm.Items.Add(copyCommitMessageMenuItem);
             }
 
-            if (SelectedItem.SubType == "gherkin_test")
+            if (SelectedItem.SubType == TestGherkin.SUBTYPE_GHERKIN_TEST)
             {
                 cm.Items.Add(gherkinTestMenuItem);
             }

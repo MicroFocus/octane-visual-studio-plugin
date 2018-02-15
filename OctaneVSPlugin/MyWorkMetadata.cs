@@ -110,7 +110,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtSubTitle("description", "Description")
             );
 
-            AddSubType<Test>("gherkin_test",
+            AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "GT", Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
@@ -128,7 +128,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(CommonFields.STARTED, "Started")
                 );
 
-            AddSubType<Run>("run_manual",
+            AddSubType<Run>(RunManual.SUBTYPE_RUN_MANUAL,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "MR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
