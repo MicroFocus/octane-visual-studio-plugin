@@ -98,6 +98,12 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
+            AddSubType<Test>(TestSuite.SUBTYPE_TEST_SUITE,
+                COMMIT_MESSAGE_NOT_APPLICABLE,
+                "TS", Color.FromRgb(133, 114, 147),
+                FieldAtSubTitle("description", "Description")
+            );
+
             AddSubType<Test>("gherkin_test",
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "GT", Color.FromRgb(120, 196, 192),
