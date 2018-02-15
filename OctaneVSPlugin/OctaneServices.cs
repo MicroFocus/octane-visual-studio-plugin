@@ -121,6 +121,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             Comment.OWNER_WORK_FIELD,
             Comment.OWNER_TEST_FIELD,
             Comment.OWNER_RUN_FIELD,
+            Comment.OWNER_REQUIREMENT_FIELD,
             Comment.TEXT_FIELD
         };
 

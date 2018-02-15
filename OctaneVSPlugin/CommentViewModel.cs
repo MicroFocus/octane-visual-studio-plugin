@@ -21,7 +21,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             get
             {
                 if (ParentEntity == null)
-                    return "Orphaned comment";
+                    return "Unable to determine the comment's owner entity";
 
                 var sb = new StringBuilder("Comment on ")
                     .Append(ParentEntity.TypeName)
@@ -49,7 +49,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             if (commentEntity.OwnerRun != null)
                 return commentEntity.OwnerRun;
 
-            return null;
+            return commentEntity.OwnerRequirement;
         }
     }
 }
