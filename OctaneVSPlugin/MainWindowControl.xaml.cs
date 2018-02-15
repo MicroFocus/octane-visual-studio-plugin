@@ -29,14 +29,16 @@ namespace Hpe.Nga.Octane.VisualStudio
         private readonly MenuItem copyCommitMessageMenuItem;
         private readonly MenuItem gherkinTestMenuItem;
 
+        private const string AppName = "ALM Octane";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowControl"/> class.
         /// </summary>
         public MainWindowControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
             viewModel = new OctaneMyItemsViewModel();
-            this.DataContext = viewModel;
+            DataContext = viewModel;
 
             viewDetailsMenuItem = new MenuItem
             {
@@ -46,7 +48,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
             openInBrowserMenuItem = new MenuItem
             {
-                Header = "Open in Browser(Alt + DblClick)",
+                Header = "Open in Browser (Alt + DblClick)",
                 Command = new DelegatedCommand(OpenInBrowser)
             };
 
@@ -77,47 +79,38 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
         }
 
-        #region OpenInBrowser
-
         private void OpenInBrowser(object param)
         {
-            var selectedEntity = GetSelectedEntity();
-            OpenInBrowser(selectedEntity.Id, Utility.GetEntityType(selectedEntity));
-        }
-
-        private void OpenInBrowser(EntityId id, string type)
-        {
-            string url = string.Format("{0}/ui/entity-navigation?p={1}/{2}&entityType={3}&id={4}",
-                package.AlmUrl,
-                package.SharedSpaceId,
-                package.WorkSpaceId,
-                type,
-                id);
-
             try
             {
-                // Open the URL in the user's default browser.
-                System.Diagnostics.Process.Start(url);
+                var selectedEntity = GetSelectedEntity();
+                OpenInBrowserInternal(selectedEntity.Id, Utility.GetEntityType(selectedEntity));
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Fail to open the browser\n\n" + ex.Message, "Octane ALM", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        #endregion
+        private void OpenInBrowserInternal(EntityId id, string type)
+        {
+            var url = $"{package.AlmUrl}/ui/entity-navigation?p={package.SharedSpaceId}/{package.WorkSpaceId}&entityType={type}&id={id}";
+
+            // Open the URL in the user's default browser.
+            System.Diagnostics.Process.Start(url);
+        }
 
         private async void ViewDetails(object param)
         {
-            var selectedEntity = GetSelectedEntity();
-            if (selectedEntity.TypeName == "feature" || selectedEntity.TypeName == "epic")
-            {
-                OpenInBrowser(selectedEntity.Id, "work_item");
-                return;
-            }
-
             try
             {
+                var selectedEntity = GetSelectedEntity();
+                if (selectedEntity.TypeName == "feature" || selectedEntity.TypeName == "epic")
+                {
+                    OpenInBrowserInternal(selectedEntity.Id, "work_item");
+                    return;
+                }
+
                 var entity = await viewModel.GetItem(selectedEntity);
 
                 ToolWindowPane window = CreateDetailsWindow(entity);
@@ -126,16 +119,15 @@ namespace Hpe.Nga.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Fail to open details window\n\n" + ex.Message, "Octane ALM", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private ToolWindowPane CreateDetailsWindow(OctaneItemViewModel item)
         {
             // Create the window with the first free ID.   
-            DetailsToolWindow toolWindow = (DetailsToolWindow)this.package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), true);
-
-            if ((null == toolWindow) || (null == toolWindow.Frame))
+            DetailsToolWindow toolWindow = (DetailsToolWindow)package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), true);
+            if (toolWindow?.Frame == null)
             {
                 throw new NotSupportedException("Cannot create tool window");
             }
@@ -158,10 +150,17 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void CopyCommitMessage(object sender)
         {
-            if (SelectedItem.IsSupportCopyCommitMessage)
+            try
             {
-                string message = SelectedItem.CommitMessage;
-                Clipboard.SetText(message);
+                if (SelectedItem.IsSupportCopyCommitMessage)
+                {
+                    string message = SelectedItem.CommitMessage;
+                    Clipboard.SetText(message);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to obtain commit message.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -193,9 +192,9 @@ namespace Hpe.Nga.Octane.VisualStudio
 
                 package.CreateFile(test.Name, script);
             }
-            catch
+            catch (Exception ex)
             {
-                MessageBox.Show("Fail to get test script");
+                MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
