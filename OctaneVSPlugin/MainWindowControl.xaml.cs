@@ -166,6 +166,9 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         private void results_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
+            if (SelectedItem == null)
+                return;
+
             if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
             {
                 if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
