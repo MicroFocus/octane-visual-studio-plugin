@@ -104,6 +104,12 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtSubTitle("description", "Description")
             );
 
+            AddSubType<Test>(TestAutomated.SUBTYPE_TEST_AUTOMATED,
+                COMMIT_MESSAGE_NOT_APPLICABLE,
+                "AT", Color.FromRgb(135, 123, 117),
+                FieldAtSubTitle("description", "Description")
+            );
+
             AddSubType<Test>("gherkin_test",
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "GT", Color.FromRgb(120, 196, 192),
