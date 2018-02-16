@@ -1,4 +1,5 @@
-﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
+﻿using Hpe.Nga.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System.Text;
 
 namespace Hpe.Nga.Octane.VisualStudio
@@ -24,7 +25,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                     return "Unable to determine the comment's owner entity";
 
                 var sb = new StringBuilder("Comment on ")
-                    .Append(ParentEntity.TypeName)
+                    .Append(EntityNames.GetDisplayName(ParentEntity.TypeName).ToLower())
                     .Append(": ")
                     .Append(ParentEntity.Id.ToString())
                     .Append(" ")

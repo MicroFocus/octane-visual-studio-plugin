@@ -75,6 +75,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CommentViewModel.cs" />
+    <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
     <Compile Include="DelegatedCommand.cs" />
     <Compile Include="EntityComparerByLastModified.cs" />
