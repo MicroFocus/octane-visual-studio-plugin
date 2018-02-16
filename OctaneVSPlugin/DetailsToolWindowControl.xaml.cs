@@ -4,7 +4,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     using System.Windows;
     using System.Windows.Controls;
@@ -28,7 +28,7 @@ namespace Hpe.Nga.Octane.VisualStudio
             var itemViewModel = DataContext as OctaneItemViewModel;
             if (itemViewModel != null)
             {
-                string octaneImageBaseUrl = string.Format("{0}/api/shared_spaces/{1}/workspaces/{2}/attachments/", 
+                string octaneImageBaseUrl = string.Format("{0}/api/shared_spaces/{1}/workspaces/{2}/attachments/",
                     OctaneMyItemsViewModel.Instance.Package.AlmUrl,
                     OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
                     OctaneMyItemsViewModel.Instance.Package.WorkSpaceId);

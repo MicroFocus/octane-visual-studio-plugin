@@ -1,6 +1,6 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
 
-namespace Hpe.Nga.Octane.VisualStudio.Common
+namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
     /// Utility class

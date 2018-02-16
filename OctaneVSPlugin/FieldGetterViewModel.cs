@@ -3,7 +3,7 @@ using MicroFocus.Adm.Octane.Api.Core.Services;
 using System;
 using System.Linq;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     public class FieldGetterViewModel
     {

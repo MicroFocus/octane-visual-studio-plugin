@@ -1,7 +1,7 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     public class FieldInfo
     {

@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Comparer for BaseEntity by LastModified field.

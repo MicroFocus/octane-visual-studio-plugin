@@ -1,7 +1,7 @@
-﻿using System.ComponentModel;
-using Microsoft.VisualStudio.Shell;
+﻿using Microsoft.VisualStudio.Shell;
+using System.ComponentModel;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Options page represent the settings the user can set for ALM Octane plugin.

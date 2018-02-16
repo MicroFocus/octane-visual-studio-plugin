@@ -4,13 +4,12 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.InteropServices;
+using EnvDTE;
+using MicroFocus.Adm.Octane.VisualStudio;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using Hpe.Nga.Octane.VisualStudio;
-using EnvDTE;
+using System.Diagnostics.CodeAnalysis;
+using System.Runtime.InteropServices;
 
 namespace octane_visual_studio_plugin
 {
@@ -39,7 +38,7 @@ namespace octane_visual_studio_plugin
     [Guid(MainWindowPackage.PackageGuidString)]
     [ProvideOptionPage(typeof(OptionsPage), "ALM Octane", "Server Details", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
-    [ProvideAutoLoad(UIContextGuids.SolutionExists,PackageAutoLoadFlags.SkipWhenUIContextRulesActive)]
+    [ProvideAutoLoad(UIContextGuids.SolutionExists, PackageAutoLoadFlags.SkipWhenUIContextRulesActive)]
     public sealed class MainWindowPackage : Package
     {
         /// <summary>
@@ -87,7 +86,7 @@ namespace octane_visual_studio_plugin
 
         internal OptionsPage Options
         {
-            get { return (OptionsPage) GetDialogPage(typeof(OptionsPage)); }
+            get { return (OptionsPage)GetDialogPage(typeof(OptionsPage)); }
         }
 
         internal string AlmUrl

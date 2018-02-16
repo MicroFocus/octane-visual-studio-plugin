@@ -4,13 +4,12 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-using System;
-using System.ComponentModel.Design;
-using System.Globalization;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
+using System;
+using System.ComponentModel.Design;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Command handler
@@ -93,7 +92,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         private void MenuItemCallback(object sender, EventArgs e)
         {
 
-            ToolWindowPane window = this.package.FindToolWindow(typeof(MainWindow),0, true);
+            ToolWindowPane window = this.package.FindToolWindow(typeof(MainWindow), 0, true);
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             windowFrame.Show();
 

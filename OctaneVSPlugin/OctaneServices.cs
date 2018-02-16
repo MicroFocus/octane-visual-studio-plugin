@@ -1,9 +1,9 @@
-﻿using Hpe.Nga.Octane.VisualStudio.Common;
-using MicroFocus.Adm.Octane.Api.Core.Connector;
+﻿using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using OctaneTask = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 using Task = System.Threading.Tasks.Task;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Responsible for interacting with Octane API.

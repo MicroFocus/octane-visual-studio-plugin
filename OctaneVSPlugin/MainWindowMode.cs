@@ -1,4 +1,4 @@
-﻿namespace Hpe.Nga.Octane.VisualStudio
+﻿namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Represents the modes in which the main window can be in.
@@ -9,7 +9,7 @@
         /// This mode is set on the first use of this plugin and guide the user how to configure the connection to Octane.
         /// </summary>
         FirstTime,
-        
+
         /// <summary>
         /// This mode is set during loading of the items.
         /// </summary>

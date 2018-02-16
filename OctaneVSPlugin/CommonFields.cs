@@ -1,4 +1,4 @@
-﻿namespace Hpe.Nga.Octane.VisualStudio
+﻿namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Contains field names of work item entity.

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Info about the icon label and color.

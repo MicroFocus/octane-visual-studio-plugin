@@ -1,12 +1,12 @@
-﻿using Hpe.Nga.Octane.VisualStudio.Common;
-using MicroFocus.Adm.Octane.Api.Core.Entities;
+﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Media;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// This is one-stop-shop for entity information to fetch and display.

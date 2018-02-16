@@ -1,4 +1,4 @@
-﻿namespace Hpe.Nga.Octane.VisualStudio
+﻿namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Specify where the field is position in MyItem template.

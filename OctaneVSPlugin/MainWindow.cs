@@ -4,12 +4,12 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
-    using System;
-    using System.Runtime.InteropServices;
     using Microsoft.VisualStudio.Shell;
     using octane_visual_studio_plugin;
+    using System;
+    using System.Runtime.InteropServices;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
