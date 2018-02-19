@@ -26,5 +26,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         {
             return entity.AggregateType ?? entity.TypeName;
         }
+
+        /// <summary>
+        /// Returns the concrete/subtype entity type
+        /// For example for a user story, it will return 'story'
+        /// </summary>
+        public static string GetConcreteEntityType(BaseEntity entity)
+        {
+            var subtype = entity.GetStringValue(WorkItem.SUBTYPE_FIELD);
+            return !string.IsNullOrEmpty(subtype) ? subtype : entity.TypeName;
+        }
     }
 }

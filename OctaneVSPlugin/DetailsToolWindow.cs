@@ -4,12 +4,13 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using Microsoft.VisualStudio.Shell;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
-    using Microsoft.VisualStudio.Shell;
-    using System;
-    using System.Runtime.InteropServices;
-
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
@@ -25,6 +26,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     public class DetailsToolWindow : ToolWindowPane
     {
         private readonly OctaneToolWindowControl detailsControl;
+
+        private static readonly HashSet<string> supportedEntityTypes = new HashSet<string>
+        {
+            // work item
+            WorkItem.SUBTYPE_DEFECT,
+            WorkItem.SUBTYPE_STORY,
+            WorkItem.SUBTYPE_QUALITY_STORY,
+
+            // task
+            "task",
+
+            // test
+            TestGherkin.SUBTYPE_GHERKIN_TEST,
+            Test.SUBTYPE_MANUAL_TEST,
+
+            // run
+            RunManual.SUBTYPE_RUN_MANUAL,
+            RunSuite.SUBTYPE_RUN_SUITE,
+
+            // requirement
+            Requirement.SUBTYPE_DOCUMENT
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DetailsToolWindow"/> class.
@@ -44,6 +67,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             this.Caption = string.Format("Item #{0}", itemViewModel.ID);
             detailsControl.DataContext = itemViewModel;
+        }
+
+        /// <summary>
+        /// Returns whether the given type can be shown by the details window.
+        /// </summary>
+        public static bool IsEntityTypeSupported(string type)
+        {
+            return supportedEntityTypes.Contains(type);
         }
     }
 }

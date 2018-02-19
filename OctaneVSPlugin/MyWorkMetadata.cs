@@ -98,18 +98,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
-            AddSubType<Test>(TestSuite.SUBTYPE_TEST_SUITE,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                "TS", Color.FromRgb(133, 114, 147),
-                FieldAtSubTitle("description", "Description")
-            );
-
-            AddSubType<Test>(TestAutomated.SUBTYPE_TEST_AUTOMATED,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                "AT", Color.FromRgb(135, 123, 117),
-                FieldAtSubTitle("description", "Description")
-            );
-
             AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "GT", Color.FromRgb(120, 196, 192),

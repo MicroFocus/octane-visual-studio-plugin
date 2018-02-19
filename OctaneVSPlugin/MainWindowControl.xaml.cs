@@ -182,7 +182,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             else
             {
-                ViewDetails(sender);
+                var selectedEntity = GetSelectedEntity();
+                if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+                {
+                    ViewDetails(sender);
+                }
+                else
+                {
+                    OpenInBrowser(sender);
+                }
             }
         }
 
@@ -207,10 +215,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             cm.Items.Clear();
 
-            viewDetailsMenuItem.Header = !(SelectedItem is CommentViewModel)
-                ? "View details (DblClick)"
-                : "View parent details (DblClick)";
-            cm.Items.Add(viewDetailsMenuItem);
+            var selectedEntity = GetSelectedEntity();
+            if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+            {
+                viewDetailsMenuItem.Header = !(SelectedItem is CommentViewModel)
+                    ? "View details (DblClick)"
+                    : "View parent details (DblClick)";
+                cm.Items.Add(viewDetailsMenuItem);
+            }
 
             cm.Items.Add(openInBrowserMenuItem);
 
