@@ -84,7 +84,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             try
             {
                 var selectedEntity = GetSelectedEntity();
-                OpenInBrowserInternal(selectedEntity.Id, Utility.GetEntityType(selectedEntity));
+                OpenInBrowserInternal(selectedEntity.Id, Utility.GetBaseEntityType(selectedEntity));
             }
             catch (Exception ex)
             {

@@ -21,10 +21,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         }
 
         /// <summary>
-        /// Returns the entity type
+        /// Returns the base entity type
+        /// Example: for a user story, it will return the base "work_item" type
+        ///          for a task, it will return "task"
         /// </summary>
-        public static string GetEntityType(BaseEntity entity)
+        public static string GetBaseEntityType(BaseEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             return entity.AggregateType ?? entity.TypeName;
         }
 

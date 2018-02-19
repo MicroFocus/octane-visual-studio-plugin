@@ -141,7 +141,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public async Task<BaseEntity> FindEntity(BaseEntity entityModel)
         {
-            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetEntityType(entityModel), null);
+            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), null);
             return entity;
         }
 

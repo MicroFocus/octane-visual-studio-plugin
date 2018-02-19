@@ -13,6 +13,33 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
+        public void UtilityTests_GetBaseEntityType_NullEntity_Throws()
+        {
+            Utility.GetBaseEntityType(null);
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetBaseEntityType_TypeWithAggregateType_Success()
+        {
+            var entity = new WorkItem();
+            entity.SetValue(BaseEntity.TYPE_FIELD, "custom_type");
+
+            var actualType = Utility.GetBaseEntityType(entity);
+            Assert.AreEqual(entity.AggregateType, actualType);
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetBaseEntityType_NoAggregateType_Success()
+        {
+            var entity = new BaseEntity();
+            entity.SetValue(BaseEntity.TYPE_FIELD, "custom_type");
+
+            var actualType = Utility.GetBaseEntityType(entity);
+            Assert.AreEqual("custom_type", actualType);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void UtilityTests_GetConcreteEntityType_NullEntity_Throws()
         {
             Utility.GetConcreteEntityType(null);
