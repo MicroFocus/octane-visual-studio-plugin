@@ -48,10 +48,21 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\UtilityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\alm-octane-csharp-rest-sdk\OctaneSdk\OctaneSdk.csproj">
+      <Project>{344d2ea6-c3e6-4a67-95c1-51b5e7647e89}</Project>
+      <Name>OctaneSdk</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\OctaneVSPlugin\octane-visual-studio-plugin.csproj">
+      <Project>{95adad0b-a1ff-4be8-ae43-300204e3e667}</Project>
+      <Name>octane-visual-studio-plugin</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

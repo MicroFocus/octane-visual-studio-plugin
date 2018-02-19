@@ -1,4 +1,5 @@
 ﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
+using System;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
@@ -33,6 +34,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         public static string GetConcreteEntityType(BaseEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             var subtype = entity.GetStringValue(WorkItem.SUBTYPE_FIELD);
             return !string.IsNullOrEmpty(subtype) ? subtype : entity.TypeName;
         }
