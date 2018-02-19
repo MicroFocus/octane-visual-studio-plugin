@@ -7,7 +7,7 @@
     <ProjectGuid>{03A92195-E4C0-4E3B-BCBC-C49D9E1170F9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>octane_visual_studio_plugin_tests</RootNamespace>
+    <RootNamespace>MicroFocus.Adm.Octane.VisualStudio.Tests</RootNamespace>
     <AssemblyName>octane-visual-studio-plugin-tests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
