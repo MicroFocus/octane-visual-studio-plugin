@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MicroFocus.Adm.Octane.Api.Core.Entities;
+using System.Collections.Generic;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
@@ -10,21 +11,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         private static readonly Dictionary<string, string> DisplayNames = new Dictionary<string, string>
         {
             // work item
-            { "story", "User Story" },
-            { "quality_story", "Quality Story" },
+            { WorkItem.SUBTYPE_STORY, "User Story" },
+            { WorkItem.SUBTYPE_QUALITY_STORY, "Quality Story" },
 
             // test
-            { "test_manual", "Manual Test" },
-            { "gherkin_test", "Gherkin Test" },
-            { "test_automated", "Automated Test" },
-            { "test_suite", "Test Suite" },
+            { Test.SUBTYPE_MANUAL_TEST, "Manual Test" },
+            { TestGherkin.SUBTYPE_GHERKIN_TEST, "Gherkin Test" },
+            { TestAutomated.SUBTYPE_TEST_AUTOMATED, "Automated Test" },
+            { TestSuite.SUBTYPE_TEST_SUITE, "Test Suite" },
 
             // run
-            { "run_manual", "Manual Test Run" },
-            { "run_suite", "Test Suite Run" },
+            { RunManual.SUBTYPE_RUN_MANUAL, "Manual Test Run" },
+            { RunAutomated.SUBTYPE_RUN_AUTOMATED, "Automated Test Run" },
+            { RunSuite.SUBTYPE_RUN_SUITE, "Test Suite Run" },
 
             // requirement
-            { "requirement_document", "Requirement" }
+            { Requirement.SUBTYPE_DOCUMENT, "Requirement" }
         };
 
         /// <summary>
