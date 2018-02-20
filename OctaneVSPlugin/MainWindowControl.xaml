@@ -11,7 +11,7 @@
              Name="MyToolWindow">
     <Grid>
 
-        <DockPanel>
+        <DockPanel x:Name="WelcomePanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -23,36 +23,39 @@
                 </Style>
             </DockPanel.Style>
             <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
+                <Image Grid.Row="1" Stretch="None"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
 
-                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
-
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
                     Welcome to the ALM Octane Visual Studio plugin.
                     <LineBreak />
                     To start, go to Tools -> Options -> ALM Octane and connect.
                 </TextBlock>
 
-                <Button Grid.Row="2" Grid.ColumnSpan="2"
+                <Button Grid.Row="3"
                         Command="{Binding OpenOctaneOptionsDialogCommand}"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Padding="10">
                     Open Options
                 </Button>
+
+                <Image Grid.Row="4" Stretch="None"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
             </Grid>
         </DockPanel>
 
-        <DockPanel>
+        <DockPanel x:Name="FailedToLoadPanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -65,21 +68,19 @@
             </DockPanel.Style>
 
             <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                     <RowDefinition />
                 </Grid.RowDefinitions>
 
-                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
+                <Image Grid.Row="1" Stretch="None"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
 
-                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
-
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock>
                     Connection to ALM Octane failed. Review your settings and check your network connection.
                     </TextBlock>
@@ -89,17 +90,21 @@
                                Foreground="Red"/>
                 </StackPanel>
 
-                <Button Grid.Row="2" Grid.ColumnSpan="2"
+                <Button Grid.Row="3" Grid.ColumnSpan="2"
                         Command="{Binding OpenOctaneOptionsDialogCommand}"
                         HorizontalAlignment="Center" VerticalAlignment="Center"
                         Padding="10">
                     Open Options
                 </Button>
-            </Grid>
 
+                <Image Grid.Row="4" Stretch="None"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
+            </Grid>
         </DockPanel>
 
-        <DockPanel>
+        <DockPanel x:Name="LoadingItemsPanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -111,31 +116,11 @@
                 </Style>
             </DockPanel.Style>
 
-            <Grid HorizontalAlignment="Stretch">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
-                    <RowDefinition />
-                </Grid.RowDefinitions>
-
-                <Image Grid.Row="0" Grid.Column="0" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/hpe-logo.png"/>
-
-                <Image Grid.Row="0" Grid.Column="1" Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
-
-                <StackPanel Grid.Row="1" Grid.ColumnSpan="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <TextBlock FontSize="30">
-                    Loading items from ALM Octane...
-                    </TextBlock>
-                </StackPanel>
-            </Grid>
-
+            <local:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+            
         </DockPanel>
 
-        <DockPanel>
+        <DockPanel x:Name="NoItemsPanel">
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -161,30 +146,24 @@
             </StackPanel>
 
             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
                     <RowDefinition />
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <Viewbox Grid.Row="0" Grid.ColumnSpan="2" MaxHeight="200">
+                <Viewbox Grid.Row="0" MaxHeight="200">
                     <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <!--This text-block show the reload sign as unicode character-->
-                        <Image Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/unidrag-small.png" />
+                        <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/s-rocket.png" />
                     </StackPanel>
 
                 </Viewbox>
 
                 <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
-                        You're awesome! You finished all your work! 
+                        You're Awesome! You finished all your work! 
                         <LineBreak />
                         You may want to talk with your team leader... or have some fun!
                 </TextBlock>
-
             </Grid>
-
         </DockPanel>
 
         <DockPanel>

@@ -11,11 +11,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     {
         const string category = "Server Settings";
 
-        private string url = string.Empty; //"http://myd-vm10629.hpeswlab.net:8081";
+        private string url = string.Empty;
         private int ssid = 1001;
         private int wsid = 1002;
-        private string user = string.Empty; //"sa@nga";
-        private string password = string.Empty; //"Welcome1";
+        private string user = string.Empty;
+        private string password = string.Empty;
 
         protected override void OnApply(PageApplyEventArgs e)
         {
