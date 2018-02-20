@@ -169,28 +169,35 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (SelectedItem == null)
                 return;
 
-            if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+            try
             {
-                if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
                 {
-                    CopyCommitMessage(sender);
+                    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                    {
+                        CopyCommitMessage(sender);
+                    }
+                    else
+                    {
+                        OpenInBrowser(sender);
+                    }
                 }
                 else
                 {
-                    OpenInBrowser(sender);
+                    var selectedEntity = GetSelectedEntity();
+                    if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+                    {
+                        ViewDetails(sender);
+                    }
+                    else
+                    {
+                        OpenInBrowser(sender);
+                    }
                 }
             }
-            else
+            catch (Exception ex)
             {
-                var selectedEntity = GetSelectedEntity();
-                if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
-                {
-                    ViewDetails(sender);
-                }
-                else
-                {
-                    OpenInBrowser(sender);
-                }
+                MessageBox.Show("Unable to process double click operation.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -215,25 +222,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             cm.Items.Clear();
 
-            var selectedEntity = GetSelectedEntity();
-            if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+            try
             {
-                viewDetailsMenuItem.Header = !(SelectedItem is CommentViewModel)
-                    ? "View details (DblClick)"
-                    : "View parent details (DblClick)";
-                cm.Items.Add(viewDetailsMenuItem);
+                var selectedEntity = GetSelectedEntity();
+                if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+                {
+                    viewDetailsMenuItem.Header = !(SelectedItem is CommentViewModel)
+                        ? "View details (DblClick)"
+                        : "View parent details (DblClick)";
+                    cm.Items.Add(viewDetailsMenuItem);
+                }
+
+                cm.Items.Add(openInBrowserMenuItem);
+
+                if (SelectedItem.IsSupportCopyCommitMessage)
+                {
+                    cm.Items.Add(copyCommitMessageMenuItem);
+                }
+
+                if (SelectedItem.SubType == TestGherkin.SUBTYPE_GHERKIN_TEST)
+                {
+                    cm.Items.Add(gherkinTestMenuItem);
+                }
             }
-
-            cm.Items.Add(openInBrowserMenuItem);
-
-            if (SelectedItem.IsSupportCopyCommitMessage)
+            catch (Exception ex)
             {
-                cm.Items.Add(copyCommitMessageMenuItem);
-            }
-
-            if (SelectedItem.SubType == TestGherkin.SUBTYPE_GHERKIN_TEST)
-            {
-                cm.Items.Add(gherkinTestMenuItem);
+                MessageBox.Show("Unable to show context menu.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
