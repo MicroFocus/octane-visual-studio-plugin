@@ -16,7 +16,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// <param name="property">property name to be retieved from the child entity</param>
         public static object GetPropertyOfChildEntity(BaseEntity entity, string child, string property)
         {
-            var childEntity = (BaseEntity)entity.GetValue(child);
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
+            if (string.IsNullOrEmpty(child))
+                throw new ArgumentNullException(nameof(child));
+
+            if (string.IsNullOrEmpty(property))
+                throw new ArgumentNullException(nameof(property));
+
+            var value = entity.GetValue(child);
+            var childEntity = value as BaseEntity;
             return childEntity?.GetValue(property);
         }
 

@@ -13,6 +13,62 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
     {
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
+        public void UtilityTests_GetPropertyOfChildEntity_NullEntity_Throws()
+        {
+            Utility.GetPropertyOfChildEntity(null, null, null);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void UtilityTests_GetPropertyOfChildEntity_NullChild_Null()
+        {
+            var entity = new WorkItem();
+            Utility.GetPropertyOfChildEntity(entity, null, null);
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetPropertyOfChildEntity_InvalidChild_Null()
+        {
+            var entity = new WorkItem();
+            Assert.IsNull(Utility.GetPropertyOfChildEntity(entity, "invalid", "property"), "Invalid child should return null");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void UtilityTests_GetPropertyOfChildEntity_NullProperty_Null()
+        {
+            var entity = new WorkItem();
+            Utility.GetPropertyOfChildEntity(entity, "child", null);
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetPropertyOfChildEntity_ChildIsNotBaseEntity_Null()
+        {
+            var entity = new WorkItem();
+            entity.SetIntValue("child", 1);
+            Assert.IsNull(Utility.GetPropertyOfChildEntity(entity, "child", "property"), "Invalid child type should return null");
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetPropertyOfChildEntity_MissingProperty_Null()
+        {
+            var entity = new WorkItem();
+            entity.SetValue("child", new WorkItem());
+            Assert.IsNull(Utility.GetPropertyOfChildEntity(entity, "child", "invalid"), "Invalid property should return null");
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetPropertyOfChildEntity_PropertyExists_Success()
+        {
+            var child = new WorkItem();
+            child.SetIntValue("property", 1);
+            var entity = new WorkItem();
+            entity.SetValue("child", child);
+            Assert.AreEqual(1, (int)Utility.GetPropertyOfChildEntity(entity, "child", "property"), "Mismatched property values");
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
         public void UtilityTests_GetBaseEntityType_NullEntity_Throws()
         {
             Utility.GetBaseEntityType(null);
@@ -25,7 +81,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             entity.SetValue(BaseEntity.TYPE_FIELD, "custom_type");
 
             var actualType = Utility.GetBaseEntityType(entity);
-            Assert.AreEqual(entity.AggregateType, actualType);
+            Assert.AreEqual(entity.AggregateType, actualType, "Mismatched entity base type");
         }
 
         [TestMethod]
@@ -35,7 +91,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             entity.SetValue(BaseEntity.TYPE_FIELD, "custom_type");
 
             var actualType = Utility.GetBaseEntityType(entity);
-            Assert.AreEqual("custom_type", actualType);
+            Assert.AreEqual("custom_type", actualType, "Mismatched entity type");
         }
 
         [TestMethod]
@@ -53,7 +109,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             entity.SubType = "custom_subtype";
 
             var actualType = Utility.GetConcreteEntityType(entity);
-            Assert.AreEqual("custom_subtype", actualType);
+            Assert.AreEqual("custom_subtype", actualType, "Mismatched entity sub-type");
         }
 
         [TestMethod]
@@ -63,7 +119,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             entity.SetValue(BaseEntity.TYPE_FIELD, "custom_type");
 
             var actualType = Utility.GetConcreteEntityType(entity);
-            Assert.AreEqual("custom_type", actualType);
+            Assert.AreEqual("custom_type", actualType, "Mismatched entity type");
         }
     }
 }
