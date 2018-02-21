@@ -27,12 +27,16 @@
     <UserControl.Resources>
 
         <DataTemplate DataType="{x:Type local:FieldGetterViewModel}">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock x:Name ="LabelName" Text="{Binding Label}" Visibility="Visible"/>
-                <TextBlock x:Name ="LabelColon" Text=":" Visibility="Visible" Margin="0 0 5 0"/>
-                <TextBlock Text="{Binding Content}" 
-                           FontWeight="Bold"/>
-            </StackPanel>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" x:Name ="LabelName" Text="{Binding Label}" Visibility="Visible"/>
+                <TextBlock Grid.Column="1" x:Name ="LabelColon" Text=":" Visibility="Visible" Margin="0 0 5 0"/>
+                <TextBlock Grid.Column="2" Text="{Binding Content}" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+            </Grid>
             <DataTemplate.Triggers>
                 <DataTrigger Binding="{Binding HideLabel}" Value="True">
                     <Setter Property="Visibility" TargetName="LabelName" Value="Collapsed"/>
@@ -50,7 +54,7 @@
         </ItemsPanelTemplate>
 
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
-        
+
     </UserControl.Resources>
 
     <Border Padding="10">
@@ -81,7 +85,7 @@
                     <TextBlock Text="{Binding ID, FallbackValue=Test}" Visibility="{Binding Path=VisibleID, Converter={StaticResource BoolToVisConverter}}" Margin="0 0 5 0" />
                     <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" FontWeight="Bold" Text="{Binding Title, FallbackValue=Im im number 1 with very very very long title and many many more things like this and that}" />
                 </Grid>
-                
+
                 <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Subtitle field sldkfj slkdfjlsdkjflskd jflsdkj}"
                                   Grid.Row="1" Grid.Column="0" />
 
