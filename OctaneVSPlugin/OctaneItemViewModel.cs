@@ -16,13 +16,17 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Windows.Input;
 using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
-    public class OctaneItemViewModel
+    public class OctaneItemViewModel : INotifyPropertyChanged
     {
+        private DelegatedCommand toggleCommentSectionCommand;
+
         protected readonly BaseEntity entity;
         private readonly MyWorkMetadata myWorkMetadata;
 
@@ -37,6 +41,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             topFields = new List<FieldGetterViewModel>();
             bottomFields = new List<FieldGetterViewModel>();
+
+            toggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
 
             subTitleField = new FieldGetterViewModel(this, myWorkMetadata.GetSubTitleFieldInfo(entity));
 
@@ -140,6 +146,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 Color bgc = myWorkMetadata.GetIconColor(entity);
                 return bgc;
+            }
+        }
+
+        public bool CommentSectionVisibility { get; set; }
+
+        public ICommand ToggleCommentSectionCommand
+        {
+            get { return toggleCommentSectionCommand; }
+        }
+
+        private void SwitchCommentSectionVisibility(object param)
+        {
+            CommentSectionVisibility = !CommentSectionVisibility;
+            NotifyPropertyChanged("CommentSectionVisibility");
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        private void NotifyPropertyChanged(string propName)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
     }
