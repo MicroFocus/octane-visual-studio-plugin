@@ -14,11 +14,12 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using System.Windows;
+using System.Windows.Controls;
+
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
-    using System.Windows;
-    using System.Windows.Controls;
-
     /// <summary>
     /// Interaction logic for OctaneToolWindowControl.
     /// </summary>
@@ -35,7 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private void OctaneToolWindowControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var itemViewModel = DataContext as OctaneItemViewModel;
+            var itemViewModel = DataContext as DetailedItemViewModel;
             if (itemViewModel != null)
             {
                 string octaneImageBaseUrl = string.Format("{0}/api/shared_spaces/{1}/workspaces/{2}/attachments/",

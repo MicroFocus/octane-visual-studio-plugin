@@ -15,34 +15,23 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
-    public class OctaneItemViewModel : INotifyPropertyChanged
+    public class OctaneItemViewModel : BaseItemViewModel
     {
-        private DelegatedCommand toggleCommentSectionCommand;
-
-        protected readonly BaseEntity entity;
-        private readonly MyWorkMetadata myWorkMetadata;
-
         private readonly List<FieldGetterViewModel> topFields;
         private readonly List<FieldGetterViewModel> bottomFields;
         private readonly FieldGetterViewModel subTitleField;
 
         public OctaneItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
+            : base(entity, myWorkMetadata)
         {
-            this.entity = entity;
-            this.myWorkMetadata = myWorkMetadata;
-
             topFields = new List<FieldGetterViewModel>();
             bottomFields = new List<FieldGetterViewModel>();
-
-            toggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
 
             subTitleField = new FieldGetterViewModel(this, myWorkMetadata.GetSubTitleFieldInfo(entity));
 
@@ -57,41 +46,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        public BaseEntity Entity { get { return entity; } }
-
-        public EntityId ID { get { return entity.Id; } }
-
         public virtual bool VisibleID { get { return true; } }
-
-        public virtual string Title { get { return entity.Name; } }
 
         public string TypeName
         {
-            get { return entity.TypeName; }
+            get { return Entity.TypeName; }
         }
 
         public string SubType
         {
-            get { return entity.GetStringValue(CommonFields.SUB_TYPE); }
-        }
-
-        public string Description
-        {
-            get { return entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty; }
+            get { return Entity.GetStringValue(CommonFields.SUB_TYPE); }
         }
 
         public string CommitMessage
         {
             get
             {
-                string message = string.Format("{0} #{1}: ", myWorkMetadata.GetCommitMessageTypeName(entity), ID);
+                string message = string.Format("{0} #{1}: ", MyWorkMetadata.GetCommitMessageTypeName(Entity), ID);
                 return message;
             }
         }
 
         public bool IsSupportCopyCommitMessage
         {
-            get { return myWorkMetadata.IsSupportCopyCommitMessage(entity); }
+            get { return MyWorkMetadata.IsSupportCopyCommitMessage(Entity); }
         }
 
         public FieldGetterViewModel SubTitleField
@@ -129,47 +107,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
 
             yield return fields.Last();
-        }
-
-        public string IconText
-        {
-            get
-            {
-                string iconText = myWorkMetadata.GetIconText(entity);
-                return iconText;
-            }
-        }
-
-        public Color IconBackgroundColor
-        {
-            get
-            {
-                Color bgc = myWorkMetadata.GetIconColor(entity);
-                return bgc;
-            }
-        }
-
-        public bool CommentSectionVisibility { get; set; }
-
-        public ICommand ToggleCommentSectionCommand
-        {
-            get { return toggleCommentSectionCommand; }
-        }
-
-        private void SwitchCommentSectionVisibility(object param)
-        {
-            CommentSectionVisibility = !CommentSectionVisibility;
-            NotifyPropertyChanged("CommentSectionVisibility");
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        private void NotifyPropertyChanged(string propName)
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
         }
     }
 }

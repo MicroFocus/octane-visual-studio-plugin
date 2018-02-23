@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
@@ -73,7 +74,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             this.Content = detailsControl;
         }
 
-        internal void SetWorkItem(OctaneItemViewModel itemViewModel)
+        internal void SetWorkItem(DetailedItemViewModel itemViewModel)
         {
             this.Caption = string.Format("Item #{0}", itemViewModel.ID);
             detailsControl.DataContext = itemViewModel;

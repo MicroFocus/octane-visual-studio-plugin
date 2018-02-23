@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
@@ -133,7 +134,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        private ToolWindowPane CreateDetailsWindow(OctaneItemViewModel item)
+        private ToolWindowPane CreateDetailsWindow(DetailedItemViewModel item)
         {
             // Create the window with the first free ID.   
             DetailsToolWindow toolWindow = (DetailsToolWindow)package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), true);
@@ -153,7 +154,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private int GetItemIDAsInt(OctaneItemViewModel item)
+        private int GetItemIDAsInt(DetailedItemViewModel item)
         {
             return item.GetHashCode();
         }

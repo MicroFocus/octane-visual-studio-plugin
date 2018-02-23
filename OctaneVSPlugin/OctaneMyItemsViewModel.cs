@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using octane_visual_studio_plugin;
 using System;
 using System.Collections.Generic;
@@ -194,13 +195,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        internal async System.Threading.Tasks.Task<OctaneItemViewModel> GetItem(BaseEntity entityModel)
+        internal async System.Threading.Tasks.Task<DetailedItemViewModel> GetItem(BaseEntity entityModel)
         {
             OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
             await octane.Connect();
 
             var entity = await octane.FindEntity(entityModel);
-            return new OctaneItemViewModel(entity, myWorkMetadata);
+            return new DetailedItemViewModel(entity, myWorkMetadata);
         }
     }
 }
