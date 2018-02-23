@@ -74,7 +74,7 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CommentViewModel.cs" />
+    <Compile Include="ViewModel\CommentViewModel.cs" />
     <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
     <Compile Include="DelegatedCommand.cs" />
@@ -92,8 +92,8 @@
       <DependentUpon>MyItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="OctaneCommand.cs" />
-    <Compile Include="OctaneItemViewModel.cs" />
-    <Compile Include="OctaneMyItemsViewModel.cs" />
+    <Compile Include="ViewModel\OctaneItemViewModel.cs" />
+    <Compile Include="ViewModel\OctaneMyItemsViewModel.cs" />
     <Compile Include="OctaneServices.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="MainWindowCommand.cs" />

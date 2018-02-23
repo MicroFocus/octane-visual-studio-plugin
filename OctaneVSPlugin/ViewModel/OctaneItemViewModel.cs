@@ -15,11 +15,10 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     public class OctaneItemViewModel : BaseItemViewModel
     {

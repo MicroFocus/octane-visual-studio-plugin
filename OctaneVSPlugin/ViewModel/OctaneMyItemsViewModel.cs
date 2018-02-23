@@ -15,7 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using octane_visual_studio_plugin;
 using System;
 using System.Collections.Generic;
@@ -23,7 +22,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     public class OctaneMyItemsViewModel : INotifyPropertyChanged
     {
