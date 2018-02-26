@@ -74,10 +74,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             this.Content = detailsControl;
         }
 
-        internal void SetWorkItem(DetailedItemViewModel itemViewModel)
+        internal void LoadEntity(BaseEntity entity)
         {
-            this.Caption = string.Format("Item #{0}", itemViewModel.ID);
-            detailsControl.DataContext = itemViewModel;
+            var viewModel = new DetailedItemViewModel(entity, new MyWorkMetadata());
+            viewModel.Initialize();
+            Caption = $"Item #{viewModel.ID}";
+            detailsControl.DataContext = viewModel;
         }
 
         /// <summary>

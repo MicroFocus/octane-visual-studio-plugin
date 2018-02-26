@@ -32,7 +32,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             MyWorkMetadata = myWorkMetadata;
         }
 
-        public BaseEntity Entity { get; }
+        public BaseEntity Entity { get; protected set; }
 
         public EntityId ID { get { return Entity.Id; } }
 
@@ -43,12 +43,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty; }
         }
 
-        public string IconText
+        public virtual string IconText
         {
             get { return MyWorkMetadata.GetIconText(Entity); }
         }
 
-        public Color IconBackgroundColor
+        public virtual Color IconBackgroundColor
         {
             get { return MyWorkMetadata.GetIconColor(Entity); }
         }

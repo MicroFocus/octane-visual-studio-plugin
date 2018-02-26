@@ -122,11 +122,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                     return;
                 }
 
-                var entity = await viewModel.GetItem(selectedEntity);
-
-                ToolWindowPane window = CreateDetailsWindow(entity);
+                DetailsToolWindow window = CreateDetailsWindow(selectedEntity);
                 IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
                 Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                window.LoadEntity(selectedEntity);
             }
             catch (Exception ex)
             {
@@ -134,16 +133,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        private ToolWindowPane CreateDetailsWindow(DetailedItemViewModel item)
+        private DetailsToolWindow CreateDetailsWindow(BaseEntity entity)
         {
             // Create the window with the first free ID.   
-            DetailsToolWindow toolWindow = (DetailsToolWindow)package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), true);
+            DetailsToolWindow toolWindow = (DetailsToolWindow)package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(entity), true);
             if (toolWindow?.Frame == null)
             {
                 throw new NotSupportedException("Cannot create tool window");
             }
-
-            toolWindow.SetWorkItem(item);
 
             return toolWindow;
         }
@@ -154,7 +151,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         /// <param name="item"></param>
         /// <returns></returns>
-        private int GetItemIDAsInt(DetailedItemViewModel item)
+        private int GetItemIDAsInt(BaseEntity item)
         {
             return item.GetHashCode();
         }

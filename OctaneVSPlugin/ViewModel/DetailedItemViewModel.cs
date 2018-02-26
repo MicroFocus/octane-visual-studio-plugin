@@ -16,7 +16,9 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System.ComponentModel;
+using System.Threading.Tasks;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -31,7 +33,41 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             : base(entity, myWorkMetadata)
         {
             _toggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+
+            Mode = MainWindowMode.LoadingItems;
         }
+
+        public async void Initialize()
+        {
+            Entity = await GetItem(Entity);
+            Mode = MainWindowMode.ItemsLoaded;
+            NotifyPropertyChanged();
+        }
+
+        public override string IconText
+        {
+            get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconText(Entity) : null; }
+        }
+
+        public override Color IconBackgroundColor
+        {
+            get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconColor(Entity) : new Color(); }
+        }
+
+        private async Task<BaseEntity> GetItem(BaseEntity entityModel)
+        {
+            OctaneServices octane = new OctaneServices(
+                OctaneMyItemsViewModel.Instance.Package.AlmUrl,
+                OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
+                OctaneMyItemsViewModel.Instance.Package.WorkSpaceId,
+                OctaneMyItemsViewModel.Instance.Package.AlmUsername,
+                OctaneMyItemsViewModel.Instance.Package.AlmPassword);
+            await octane.Connect();
+
+            return await octane.FindEntity(entityModel);
+        }
+
+        public MainWindowMode Mode { get; private set; }
 
         public bool CommentSectionVisibility { get; set; }
 
@@ -48,7 +84,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
-        private void NotifyPropertyChanged(string propName)
+        private void NotifyPropertyChanged(string propName = "")
         {
             if (PropertyChanged != null)
             {
