@@ -38,7 +38,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public virtual string Title { get { return Entity.Name; } }
 
-        public string Description
+        public virtual string Description
         {
             get { return Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty; }
         }

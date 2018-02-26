@@ -108,7 +108,7 @@
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <TextBlock Grid.Row="0" DockPanel.Dock="Top">Description:</TextBlock>
-                            <WebBrowser Grid.Row="1" x:Name="DescBrowser" Navigating="DescBrowser_Navigating"/>
+                            <WebBrowser Grid.Row="1" x:Name="DescBrowser" visualStudio:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/>
                         </Grid>
 
                         <DockPanel Grid.Column="1" Width="300" >

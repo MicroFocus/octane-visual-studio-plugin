@@ -44,6 +44,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged();
         }
 
+        public override string Description
+        {
+            get { return Mode != MainWindowMode.LoadingItems ? Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty : string.Empty; }
+        }
+
         public override string IconText
         {
             get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconText(Entity) : null; }

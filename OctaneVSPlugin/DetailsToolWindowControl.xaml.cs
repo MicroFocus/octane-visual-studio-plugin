@@ -31,25 +31,41 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public OctaneToolWindowControl()
         {
             this.InitializeComponent();
-            DataContextChanged += OctaneToolWindowControl_DataContextChanged;
         }
 
-        private void OctaneToolWindowControl_DataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        public static readonly DependencyProperty BindableSourceProperty =
+            DependencyProperty.RegisterAttached("BindableSource", typeof(string), typeof(OctaneToolWindowControl), new UIPropertyMetadata(null, BindableSourcePropertyChanged));
+
+        public static string GetBindableSource(DependencyObject obj)
         {
-            var itemViewModel = DataContext as DetailedItemViewModel;
-            if (itemViewModel != null)
+            return (string)obj.GetValue(BindableSourceProperty);
+        }
+
+        public static void SetBindableSource(DependencyObject obj, string value)
+        {
+            obj.SetValue(BindableSourceProperty, value);
+        }
+
+        private static void BindableSourcePropertyChanged(DependencyObject o, DependencyPropertyChangedEventArgs e)
+        {
+            WebBrowser browser = o as WebBrowser;
+            if (browser == null)
+                return;
+
+            var itemViewModel = browser.DataContext as DetailedItemViewModel;
+            if (itemViewModel == null)
+                return;
+
+            string octaneImageBaseUrl = string.Format("{0}/api/shared_spaces/{1}/workspaces/{2}/attachments/",
+                OctaneMyItemsViewModel.Instance.Package.AlmUrl,
+                OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
+                OctaneMyItemsViewModel.Instance.Package.WorkSpaceId);
+
+            string htmlWithImageUrls = itemViewModel.Description.Replace("file://[IMAGE_BASE_PATH_PLACEHOLDER]", octaneImageBaseUrl);
+
+            if (!string.IsNullOrWhiteSpace(htmlWithImageUrls))
             {
-                string octaneImageBaseUrl = string.Format("{0}/api/shared_spaces/{1}/workspaces/{2}/attachments/",
-                    OctaneMyItemsViewModel.Instance.Package.AlmUrl,
-                    OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
-                    OctaneMyItemsViewModel.Instance.Package.WorkSpaceId);
-
-                string htmlWithImageUrls = itemViewModel.Description.Replace("file://[IMAGE_BASE_PATH_PLACEHOLDER]", octaneImageBaseUrl);
-
-                if (!string.IsNullOrWhiteSpace(htmlWithImageUrls))
-                {
-                    DescBrowser.NavigateToString(htmlWithImageUrls);
-                }
+                browser.NavigateToString(htmlWithImageUrls);
             }
         }
 
