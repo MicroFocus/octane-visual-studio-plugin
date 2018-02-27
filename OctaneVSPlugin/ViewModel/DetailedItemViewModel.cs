@@ -17,6 +17,7 @@
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -31,12 +32,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly DelegatedCommand _toggleCommentSectionCommand;
         private readonly OctaneServices _octaneService;
 
+        private ObservableCollection<CommentViewModel> _commentViewModels;
+
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
         {
             _toggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
 
-            Comments = new List<CommentViewModel>();
+            _commentViewModels = new ObservableCollection<CommentViewModel>();
 
             Mode = MainWindowMode.LoadingItems;
 
@@ -71,7 +74,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconColor(Entity) : new Color(); }
         }
 
-        public List<CommentViewModel> Comments { get; private set; }
+        public IEnumerable<CommentViewModel> Comments
+        {
+            get { return _commentViewModels; }
+        }
 
         public MainWindowMode Mode { get; private set; }
 
@@ -90,23 +96,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 try
                 {
-                    Comments.Clear();
+                    _commentViewModels.Clear();
                     var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
                     foreach (var comment in commentEntities)
                     {
-                        Comments.Add(new CommentViewModel(comment, MyWorkMetadata));
+                        _commentViewModels.Add(new CommentViewModel(comment, MyWorkMetadata));
                     }
                 }
                 catch (Exception)
                 {
-                    Comments.Clear();
+                    _commentViewModels.Clear();
                 }
             }
             else
             {
-                Comments.Clear();
+                _commentViewModels.Clear();
             }
-            NotifyPropertyChanged("Comments");
             NotifyPropertyChanged("CommentSectionVisibility");
         }
 
