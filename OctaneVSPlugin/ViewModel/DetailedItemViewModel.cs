@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -96,12 +97,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 try
                 {
-                    _commentViewModels.Clear();
+                    var viewModels = new List<CommentViewModel>();
                     var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
                     foreach (var comment in commentEntities)
                     {
-                        _commentViewModels.Add(new CommentViewModel(comment, MyWorkMetadata));
+                        viewModels.Add(new CommentViewModel(comment, MyWorkMetadata));
                     }
+
+                    _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => c.CreationTime));
                 }
                 catch (Exception)
                 {
@@ -112,6 +115,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 _commentViewModels.Clear();
             }
+            NotifyPropertyChanged("Comments");
             NotifyPropertyChanged("CommentSectionVisibility");
         }
 
