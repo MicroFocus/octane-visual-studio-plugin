@@ -126,12 +126,12 @@
 
                             <TextBlock DockPanel.Dock="Top">Comments</TextBlock>
 
-                            <ListBox x:Name="results" ItemsSource="{Binding Comments}"
+                            <ItemsControl x:Name="results" ItemsSource="{Binding Comments}"
                                      Background="{DynamicResource VsBrush.Window}"
                                      Foreground="{DynamicResource VsBrush.WindowText}"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                      BorderThickness="0">
-                                <ListBox.ItemTemplate>
+                                <ItemsControl.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Margin="0 5 0 5">
                                             <StackPanel Orientation="Horizontal">
@@ -142,9 +142,9 @@
                                             <TextBlock Text="{Binding Text}" TextWrapping="Wrap" />
                                         </StackPanel>
                                     </DataTemplate>
-                                </ListBox.ItemTemplate>
+                                </ItemsControl.ItemTemplate>
 
-                            </ListBox>
+                            </ItemsControl>
                         </DockPanel>
 
                     </Grid>
