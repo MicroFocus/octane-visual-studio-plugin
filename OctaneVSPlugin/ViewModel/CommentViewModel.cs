@@ -16,6 +16,8 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using System;
+using System.Globalization;
 using System.Text;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -29,6 +31,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             commentEntity = (Comment)entity;
             ParentEntity = GetOwnerEntity();
+
+            Author = Utility.GetAuthorFullName(commentEntity);
+            CreationTime = DateTime.Parse(commentEntity.CreationTime).ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            Text = Utility.StripHtml(commentEntity.Text);
         }
 
         public override bool VisibleID { get { return false; } }
@@ -69,19 +75,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             return commentEntity.OwnerRequirement;
         }
 
-        public string Author
-        {
-            get { return Utility.GetAuthorFullName(commentEntity); }
-        }
+        public string Author { get; }
 
-        public string CreationTime
-        {
-            get { return commentEntity.CreationTime; }
-        }
+        public string CreationTime { get; }
 
-        public string Text
-        {
-            get { return Utility.StripHtml(commentEntity.Text); }
-        }
+        public string Text { get; }
     }
 }
