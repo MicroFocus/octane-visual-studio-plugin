@@ -126,12 +126,17 @@
 
                             <TextBlock DockPanel.Dock="Top">Comments</TextBlock>
 
-                            <ItemsControl x:Name="results" ItemsSource="{Binding Comments}"
+                            <ListBox x:Name="results" ItemsSource="{Binding Comments}"
                                      Background="{DynamicResource VsBrush.Window}"
                                      Foreground="{DynamicResource VsBrush.WindowText}"
                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                      BorderThickness="0">
-                                <ItemsControl.ItemTemplate>
+                                <ListBox.ItemContainerStyle>
+                                    <Style TargetType="{x:Type ListBoxItem}">
+                                        <Setter Property="IsHitTestVisible" Value="False" />
+                                    </Style>
+                                </ListBox.ItemContainerStyle>
+                                <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Margin="0 5 0 5">
                                             <StackPanel Orientation="Horizontal">
@@ -142,9 +147,9 @@
                                             <TextBlock Text="{Binding Text}" TextWrapping="Wrap" />
                                         </StackPanel>
                                     </DataTemplate>
-                                </ItemsControl.ItemTemplate>
+                                </ListBox.ItemTemplate>
 
-                            </ItemsControl>
+                            </ListBox>
                         </DockPanel>
 
                     </Grid>
