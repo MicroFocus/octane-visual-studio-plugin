@@ -125,6 +125,23 @@
                             </DockPanel.Style>
 
                             <TextBlock DockPanel.Dock="Top">Comments</TextBlock>
+
+                            <ListBox x:Name="results" ItemsSource="{Binding Comments}"
+                                     Background="{DynamicResource VsBrush.Window}"
+                                     Foreground="{DynamicResource VsBrush.WindowText}"
+                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                     BorderThickness="0">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Margin="0 5 0 5">
+                                            <TextBlock Text="{Binding CreationTime}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding Author}" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding Text}" TextWrapping="Wrap" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+
+                            </ListBox>
                         </DockPanel>
 
                     </Grid>

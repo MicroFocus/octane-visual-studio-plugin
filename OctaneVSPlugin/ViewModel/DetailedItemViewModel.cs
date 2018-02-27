@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Media;
@@ -34,6 +35,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             : base(entity, myWorkMetadata)
         {
             _toggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+
+            Comments = new List<Comment>();
 
             Mode = MainWindowMode.LoadingItems;
 
@@ -68,6 +71,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconColor(Entity) : new Color(); }
         }
 
+        public List<Comment> Comments { get; private set; }
+
         public MainWindowMode Mode { get; private set; }
 
         public bool CommentSectionVisibility { get; set; }
@@ -85,13 +90,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 try
                 {
-                    var list = await _octaneService.GetAttachedCommentsToEntity(Entity);
+                    Comments = await _octaneService.GetAttachedCommentsToEntity(Entity);
                 }
                 catch (Exception)
                 {
+                    Comments = new List<Comment>();
                 }
-
             }
+            else
+            {
+                Comments = new List<Comment>();
+            }
+            NotifyPropertyChanged("Comments");
             NotifyPropertyChanged("CommentSectionVisibility");
         }
 
