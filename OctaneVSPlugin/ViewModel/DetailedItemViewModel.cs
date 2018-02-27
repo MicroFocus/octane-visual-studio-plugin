@@ -56,8 +56,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             await _octaneService.Connect();
             Entity = await _octaneService.FindEntity(Entity);
+
+            await RetrieveComments();
+
             Mode = MainWindowMode.ItemsLoaded;
             NotifyPropertyChanged();
+        }
+
+        private async System.Threading.Tasks.Task RetrieveComments()
+        {
+            try
+            {
+                var viewModels = new List<CommentViewModel>();
+                var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
+                foreach (var comment in commentEntities)
+                {
+                    viewModels.Add(new CommentViewModel(comment, MyWorkMetadata));
+                }
+
+                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => c.CreationTime));
+            }
+            catch (Exception)
+            {
+                _commentViewModels.Clear();
+            }
         }
 
         public override string Description
@@ -89,33 +111,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return _toggleCommentSectionCommand; }
         }
 
-        private async void SwitchCommentSectionVisibility(object param)
+        private void SwitchCommentSectionVisibility(object param)
         {
             CommentSectionVisibility = !CommentSectionVisibility;
-
-            if (CommentSectionVisibility)
-            {
-                try
-                {
-                    var viewModels = new List<CommentViewModel>();
-                    var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
-                    foreach (var comment in commentEntities)
-                    {
-                        viewModels.Add(new CommentViewModel(comment, MyWorkMetadata));
-                    }
-
-                    _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => c.CreationTime));
-                }
-                catch (Exception)
-                {
-                    _commentViewModels.Clear();
-                }
-            }
-            else
-            {
-                _commentViewModels.Clear();
-            }
-            NotifyPropertyChanged("Comments");
             NotifyPropertyChanged("CommentSectionVisibility");
         }
 
