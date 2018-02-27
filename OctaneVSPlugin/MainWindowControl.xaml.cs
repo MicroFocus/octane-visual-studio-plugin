@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;

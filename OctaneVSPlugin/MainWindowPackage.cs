@@ -16,6 +16,7 @@
 
 using EnvDTE;
 using MicroFocus.Adm.Octane.VisualStudio;
+using MicroFocus.Adm.Octane.VisualStudio.View;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Diagnostics.CodeAnalysis;

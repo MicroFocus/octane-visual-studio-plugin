@@ -18,7 +18,7 @@ using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
     /// <summary>
     /// Interaction logic for OctaneToolWindowControl.

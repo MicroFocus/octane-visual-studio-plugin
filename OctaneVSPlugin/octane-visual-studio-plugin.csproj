@@ -101,8 +101,8 @@
       <DependentUpon>MainWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindowPackage.cs" />
-    <Compile Include="DetailsToolWindow.cs" />
-    <Compile Include="DetailsToolWindowControl.xaml.cs">
+    <Compile Include="View\DetailsToolWindow.cs" />
+    <Compile Include="View\DetailsToolWindowControl.xaml.cs">
       <DependentUpon>DetailsToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="OptionsPage.cs">
@@ -158,7 +158,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DetailsToolWindowControl.xaml">
+    <Page Include="View\DetailsToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

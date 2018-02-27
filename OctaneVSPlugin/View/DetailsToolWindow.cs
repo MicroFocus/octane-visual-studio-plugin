@@ -20,7 +20,7 @@ using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
