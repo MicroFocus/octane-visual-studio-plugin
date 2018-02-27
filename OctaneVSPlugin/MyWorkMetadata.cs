@@ -84,7 +84,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
@@ -97,7 +97,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
@@ -109,7 +109,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.STEPS_NUM, "Steps"),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
@@ -120,7 +120,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
@@ -144,7 +144,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "R", Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName)
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
@@ -154,7 +154,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtSubTitle(Task.STORY_FIELD, "Story"),
                 FieldAtTop(Task.OWNER_FIELD, "Owner"),
                 FieldAtTop(Task.PHASE_FIELD, "Phase"),
-                FieldAtTop(Task.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(Task.AUTHOR_FIELD, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(Task.INVESTED_HOURS_FIELD, "Invested Hours"),
                 FieldAtBottom(Task.REMAINING_HOURS_FIELD, "Remaining Hours"),
                 FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
@@ -165,17 +165,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 "C", Color.FromRgb(234, 179, 124),
                 FieldAtSubTitle(Comment.TEXT_FIELD, string.Empty, string.Empty, entity =>
                 {
-                    var text = entity.GetStringValue(Comment.TEXT_FIELD);
-                    var doc = NSoup.Parse.Parser.Parse(text, "US-ASCII");
-                    return doc.Text().ToString();
+                    return Utility.StripHtml(entity.GetStringValue(Comment.TEXT_FIELD));
                 }),
-                FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName)
+                FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
-        }
-
-        private object GetAuthorFullName(BaseEntity entity)
-        {
-            return Utility.GetPropertyOfChildEntity(entity, Comment.AUTHOR_FIELD, BaseUserEntity.FULL_NAME_FIELD);
         }
 
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)

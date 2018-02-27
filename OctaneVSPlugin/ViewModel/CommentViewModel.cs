@@ -68,5 +68,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             return commentEntity.OwnerRequirement;
         }
+
+        public string Author
+        {
+            get { return Utility.GetAuthorFullName(commentEntity); }
+        }
+
+        public string CreationTime
+        {
+            get { return commentEntity.CreationTime; }
+        }
+
+        public string Text
+        {
+            get { return Utility.StripHtml(commentEntity.Text); }
+        }
     }
 }

@@ -46,6 +46,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             return childEntity?.GetValue(property);
         }
 
+        public static string GetAuthorFullName(BaseEntity entity)
+        {
+            return (string)GetPropertyOfChildEntity(entity, Comment.AUTHOR_FIELD, BaseUserEntity.FULL_NAME_FIELD);
+        }
+
+        /// <summary>
+        /// Strip outer html tags from the given text
+        /// </summary>
+        public static string StripHtml(string text)
+        {
+            var doc = NSoup.Parse.Parser.Parse(text, "US-ASCII");
+            return doc.Text();
+        }
+
         /// <summary>
         /// Returns the base entity type
         /// Example: for a user story, it will return the base "work_item" type
