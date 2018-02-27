@@ -161,6 +161,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return entity;
         }
 
+        private readonly Dictionary<string, string> commentSupport = new Dictionary<string, string>
+        {
+            { "work_item", "owner_work_item" },
+            { "test", "owner_test" },
+            { "requirement", "owner_requirement" }
+        };
+
+        /// <summary>
+        /// Retrieves a list of all the comments attached to the given entity
+        /// </summary>
+        public async Task<List<Comment>> GetAttachedCommentsToEntity(BaseEntity entity)
+        {
+            if (string.IsNullOrEmpty(entity.AggregateType))
+                return new List<Comment>();
+
+            if (!commentSupport.TryGetValue(entity.AggregateType, out var type))
+                return new List<Comment>();
+
+            var query = new List<QueryPhrase>
+            {
+                new CrossQueryPhrase(type, new LogicalQueryPhrase("id", entity.Id))
+            };
+            var comments = await es.GetAsync<Comment>(workspaceContext, query, commentFields);
+            return comments?.data;
+        }
+
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
             List<UserItem> userItems,
             Func<UserItem, BaseEntity> getReferenceEntityFunc,

@@ -15,8 +15,8 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using System;
 using System.ComponentModel;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -28,6 +28,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged
     {
         private readonly DelegatedCommand _toggleCommentSectionCommand;
+        private readonly OctaneServices _octaneService;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
@@ -35,11 +36,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             _toggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
 
             Mode = MainWindowMode.LoadingItems;
+
+            _octaneService = new OctaneServices(
+                OctaneMyItemsViewModel.Instance.Package.AlmUrl,
+                OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
+                OctaneMyItemsViewModel.Instance.Package.WorkSpaceId,
+                OctaneMyItemsViewModel.Instance.Package.AlmUsername,
+                OctaneMyItemsViewModel.Instance.Package.AlmPassword);
         }
 
         public async void Initialize()
         {
-            Entity = await GetItem(Entity);
+            await _octaneService.Connect();
+            Entity = await _octaneService.FindEntity(Entity);
             Mode = MainWindowMode.ItemsLoaded;
             NotifyPropertyChanged();
         }
@@ -59,19 +68,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconColor(Entity) : new Color(); }
         }
 
-        private async Task<BaseEntity> GetItem(BaseEntity entityModel)
-        {
-            OctaneServices octane = new OctaneServices(
-                OctaneMyItemsViewModel.Instance.Package.AlmUrl,
-                OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
-                OctaneMyItemsViewModel.Instance.Package.WorkSpaceId,
-                OctaneMyItemsViewModel.Instance.Package.AlmUsername,
-                OctaneMyItemsViewModel.Instance.Package.AlmPassword);
-            await octane.Connect();
-
-            return await octane.FindEntity(entityModel);
-        }
-
         public MainWindowMode Mode { get; private set; }
 
         public bool CommentSectionVisibility { get; set; }
@@ -81,9 +77,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return _toggleCommentSectionCommand; }
         }
 
-        private void SwitchCommentSectionVisibility(object param)
+        private async void SwitchCommentSectionVisibility(object param)
         {
             CommentSectionVisibility = !CommentSectionVisibility;
+
+            if (CommentSectionVisibility)
+            {
+                try
+                {
+                    var list = await _octaneService.GetAttachedCommentsToEntity(Entity);
+                }
+                catch (Exception)
+                {
+                }
+
+            }
             NotifyPropertyChanged("CommentSectionVisibility");
         }
 
