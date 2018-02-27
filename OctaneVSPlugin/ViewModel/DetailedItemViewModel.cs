@@ -90,6 +90,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 try
                 {
+                    Comments.Clear();
                     var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
                     foreach (var comment in commentEntities)
                     {
@@ -98,12 +99,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
                 catch (Exception)
                 {
-                    Comments = new List<CommentViewModel>();
+                    Comments.Clear();
                 }
             }
             else
             {
-                Comments = new List<CommentViewModel>();
+                Comments.Clear();
             }
             NotifyPropertyChanged("Comments");
             NotifyPropertyChanged("CommentSectionVisibility");
