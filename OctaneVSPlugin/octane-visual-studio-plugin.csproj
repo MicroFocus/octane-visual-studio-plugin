@@ -74,6 +74,13 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common\HTMLConverter\HtmlCssParser.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlFromXamlConverter.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlLexicalAnalyzer.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlParser.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlSchema.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlTokenType.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
     <Compile Include="ViewModel\CommentViewModel.cs" />
     <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
