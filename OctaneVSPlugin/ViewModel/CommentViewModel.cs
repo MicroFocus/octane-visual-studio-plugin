@@ -35,6 +35,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Author = Utility.GetAuthorFullName(commentEntity);
             CreationTime = DateTime.Parse(commentEntity.CreationTime).ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
             Text = Utility.StripHtml(commentEntity.Text);
+            OriginalText = commentEntity.Text;
         }
 
         public override bool VisibleID { get { return false; } }
@@ -80,5 +81,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public string CreationTime { get; }
 
         public string Text { get; }
+
+        public string OriginalText { get; }
     }
 }
