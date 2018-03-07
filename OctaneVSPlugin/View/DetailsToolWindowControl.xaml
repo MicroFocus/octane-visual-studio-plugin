@@ -151,20 +151,21 @@
                                 </ListView.ItemContainerStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                    <StackPanel Margin="0 5 0 5">
-                                        <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                                            <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
-                                            <TextBlock Text="{Binding Author}"/>
-                                            <TextBlock Text=":"/>
+                                        <StackPanel Margin="0 5 0 5">
+                                            <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                                <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
+                                                <TextBlock Text="{Binding Author}"/>
+                                                <TextBlock Text=":"/>
+                                            </StackPanel>
+                                            <FlowDocumentScrollViewer
+                                                HorizontalScrollBarVisibility="Disabled"
+                                                VerticalScrollBarVisibility="Disabled"
+                                                Margin="-5 0 -5 0"
+                                                Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
+                                                PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
+                                            <Separator/>
                                         </StackPanel>
-                                        <FlowDocumentScrollViewer
-                                            HorizontalScrollBarVisibility="Disabled"
-                                            VerticalScrollBarVisibility="Disabled"
-                                            Margin="-5 0 -5 0"
-                                            Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                                            PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
-                                    </StackPanel>
-                                </DataTemplate>
+                                    </DataTemplate>
                                 </ListView.ItemTemplate>
                             </ListView>
                         </DockPanel>
