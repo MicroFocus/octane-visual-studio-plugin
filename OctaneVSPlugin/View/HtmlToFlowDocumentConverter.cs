@@ -53,9 +53,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private void LinkRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            var hyperLink = (Hyperlink)e.OriginalSource;
-            var uri = e.Uri.AbsoluteUri + "#" + hyperLink.TargetName;
-            Process.Start(new ProcessStartInfo(uri));
+            try
+            {
+                var hyperLink = (Hyperlink)e.OriginalSource;
+                var uri = e.Uri.AbsoluteUri + "#" + hyperLink.TargetName;
+                Process.Start(new ProcessStartInfo(uri));
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+            }
+
             e.Handled = true;
         }
 
