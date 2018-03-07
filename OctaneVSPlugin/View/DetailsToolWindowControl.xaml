@@ -132,11 +132,11 @@
                             <TextBlock DockPanel.Dock="Top">Comments</TextBlock>
 
                             <ListView x:Name="results" ItemsSource="{Binding Comments}"
-                                     Background="{DynamicResource VsBrush.Window}"
-                                     Foreground="{DynamicResource VsBrush.WindowText}"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                     ScrollViewer.CanContentScroll="False"
-                                     BorderThickness="0">
+                                    Background="{DynamicResource VsBrush.Window}"
+                                    Foreground="{DynamicResource VsBrush.WindowText}"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                    ScrollViewer.CanContentScroll="False"
+                                    BorderThickness="0">
                                 <ListView.ItemContainerStyle>
                                     <Style TargetType="{x:Type ListViewItem}">
                                         <Setter Property="Background" Value="Transparent" />
@@ -151,19 +151,20 @@
                                 </ListView.ItemContainerStyle>
                                 <ListView.ItemTemplate>
                                     <DataTemplate>
-                                        <StackPanel Margin="0 5 0 5">
-                                            <StackPanel Orientation="Horizontal">
-                                                <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
-                                                <TextBlock Text="{Binding Author}"/>
-                                                <TextBlock Text=":"/>
-                                            </StackPanel>
-                                            <FlowDocumentReader
-                                                
-                                                Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"/>
+                                    <StackPanel Margin="0 5 0 5">
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
+                                            <TextBlock Text="{Binding Author}"/>
+                                            <TextBlock Text=":"/>
                                         </StackPanel>
-                                    </DataTemplate>
+                                        <FlowDocumentScrollViewer
+                                            HorizontalScrollBarVisibility="Disabled"
+                                            VerticalScrollBarVisibility="Disabled"
+                                            Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
+                                            PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
+                                    </StackPanel>
+                                </DataTemplate>
                                 </ListView.ItemTemplate>
-
                             </ListView>
                         </DockPanel>
 

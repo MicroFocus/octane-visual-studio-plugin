@@ -17,6 +17,7 @@
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -76,6 +77,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 e.Cancel = true;
                 System.Diagnostics.Process.Start(e.Uri.ToString());
             }
+        }
+
+        private void FlowDocumentScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
+        {
+            if (e.Handled)
+                return;
+
+            // The FlowDocumentScrollViewer control captures the scroll event when the scroll bars are hidden
+            // and it is placed inside a scrollable parent, so we need to raise the scroll event to its parent
+            // For more details see discussion at:
+            // https://social.msdn.microsoft.com/Forums/vstudio/en-US/4223ebb1-863e-4109-bb02-ee972d406f4c/make-it-scroll-flowdocumentscrollviewer?forum=wpf
+            e.Handled = true;
+            var eventArg = new MouseWheelEventArgs(e.MouseDevice, e.Timestamp, e.Delta)
+            {
+                RoutedEvent = MouseWheelEvent,
+                Source = sender
+            };
+            if (((Control)sender).Parent is UIElement parent)
+                parent.RaiseEvent(eventArg);
         }
     }
 }
