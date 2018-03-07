@@ -23,7 +23,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             var xaml = HtmlToXamlConverter.ConvertHtmlToXaml(value.ToString(), false);
 
             var flowDocument = new FlowDocument();
-            using (var stream = new MemoryStream((new ASCIIEncoding()).GetBytes(xaml)))
+            using (var stream = new MemoryStream((new UTF8Encoding()).GetBytes(xaml)))
             {
                 var text = new TextRange(flowDocument.ContentStart, flowDocument.ContentEnd);
                 text.Load(stream, DataFormats.Xaml);
