@@ -31,6 +31,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
             SubscribeToAllHyperlinks(flowDocument);
 
+            flowDocument.FontSize = SystemFonts.IconFontSize;
+            flowDocument.FontWeight = SystemFonts.MessageFontWeight;
+            flowDocument.FontFamily = SystemFonts.CaptionFontFamily;
+
             return flowDocument;
         }
 
