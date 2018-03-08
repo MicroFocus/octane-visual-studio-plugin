@@ -117,7 +117,7 @@
                             <WebBrowser Grid.Row="1" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/>
                         </Grid>
 
-                        <DockPanel Grid.Column="1" Width="300" >
+                        <DockPanel Grid.Column="1" Width="300" Margin="5 0 0 0">
                             <DockPanel.Style>
                                 <Style TargetType="DockPanel">
                                     <Setter Property="Visibility" Value="Collapsed" />
@@ -129,7 +129,7 @@
                                 </Style>
                             </DockPanel.Style>
 
-                            <TextBlock DockPanel.Dock="Top">Comments</TextBlock>
+                            <TextBlock DockPanel.Dock="Top">Comments:</TextBlock>
 
                             <ListView x:Name="results" ItemsSource="{Binding Comments}"
                                     Background="{DynamicResource VsBrush.Window}"
