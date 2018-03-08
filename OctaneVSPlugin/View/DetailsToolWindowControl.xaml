@@ -139,14 +139,22 @@
                                 </Grid>
                             </StackPanel>
 
-                            <Button Grid.Column="1"
-                                    x:Name="ShowCommentsButton"
-                                    Width="30" Height="30"
-                                    HorizontalAlignment="Left" VerticalAlignment="Center"
-                                    Command="{Binding ToggleCommentSectionCommand}"
-                                    Visibility="{Binding Path=EntitySupportsComments, Converter={StaticResource BoolToVisConverter}}">
-                                <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png"></Image>
-                            </Button>
+                            <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
+                                <Button 
+                                        x:Name="ShowCommentsButton"
+                                        Width="30" Height="30"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Command="{Binding ToggleCommentSectionCommand}"
+                                        Visibility="{Binding Path=EntitySupportsComments, Converter={StaticResource BoolToVisConverter}}">
+                                    <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png"></Image>
+                                </Button>
+                                <Button Width="30" Height="30" Command="{Binding RefreshCommand}" Margin="5 0 0 0">
+                                    <!--This text-block show the reload sign as unicode character-->
+                                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
+                                </Button>
+
+                            </StackPanel>
+                            
                         </Grid>
                     </Grid>
 

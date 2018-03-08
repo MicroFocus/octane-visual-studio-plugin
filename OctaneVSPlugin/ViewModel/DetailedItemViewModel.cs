@@ -31,7 +31,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// </summary>
     public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged
     {
-        private readonly DelegatedCommand _toggleCommentSectionCommand;
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
@@ -39,7 +38,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
         {
-            _toggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+            RefreshCommand = new DelegatedCommand(Refresh);
+            ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
 
@@ -143,10 +143,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public bool CommentSectionVisibility { get; set; }
 
-        public ICommand ToggleCommentSectionCommand
+        public ICommand RefreshCommand { get; }
+
+        private void Refresh(object param)
         {
-            get { return _toggleCommentSectionCommand; }
+            Mode = DetailsWindowMode.LoadingItem;
+            NotifyPropertyChanged();
+            Initialize();
         }
+
+        public ICommand ToggleCommentSectionCommand { get; }
 
         private void SwitchCommentSectionVisibility(object param)
         {
