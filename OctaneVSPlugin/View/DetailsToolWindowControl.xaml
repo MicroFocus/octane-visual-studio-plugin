@@ -98,7 +98,13 @@
                                 </Grid>
                             </StackPanel>
 
-                            <Button Grid.Column="1" x:Name="button" Content="Toggle comments" HorizontalAlignment="Left" VerticalAlignment="Top" Command="{Binding ToggleCommentSectionCommand}"/>
+                            <Button Grid.Column="1"
+                                    x:Name="ShowCommentsButton"
+                                    Width="30" Height="30"
+                                    HorizontalAlignment="Left" VerticalAlignment="Center"
+                                    Command="{Binding ToggleCommentSectionCommand}">
+                                <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png"></Image>
+                            </Button>
                         </Grid>
                     </Grid>
 
