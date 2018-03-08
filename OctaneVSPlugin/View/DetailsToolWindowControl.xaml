@@ -62,31 +62,46 @@
                     </Style>
                 </DockPanel.Style>
 
-                <Grid HorizontalAlignment="Stretch">
+                <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
-                        <RowDefinition />
+                        <RowDefinition Height="50"/>
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <Image Grid.Row="1" Stretch="None"
-                       RenderOptions.BitmapScalingMode="Fant"
-                       Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                        <Button Width="30" Height="30" Command="{Binding RefreshCommand}" >
+                            <!--This text-block show the reload sign as unicode character-->
+                            <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
+                        </Button>
 
-                    <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock>Unable to retrieve entity information</TextBlock>
-
-                        <TextBlock Text="{Binding ErrorMessage, FallbackValue=this will show the error message}"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"
-                               Foreground="Red"/>
                     </StackPanel>
 
-                    <Image Grid.Row="4" Stretch="None"
-                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
-                       RenderOptions.BitmapScalingMode="Fant"
-                       Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
+                    <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="1" Stretch="None"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
+
+                        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock>Unable to retrieve entity information</TextBlock>
+
+                            <TextBlock Text="{Binding ErrorMessage, FallbackValue=this will show the error message}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="Red"/>
+                        </StackPanel>
+
+                        <Image Grid.Row="4" Stretch="None"
+                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
+                    </Grid>
                 </Grid>
             </DockPanel>
 
