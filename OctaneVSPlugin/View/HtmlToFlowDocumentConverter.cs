@@ -1,4 +1,5 @@
 ﻿using HTMLConverter;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -60,7 +61,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             try
             {
                 var hyperLink = (Hyperlink)e.OriginalSource;
-                var uri = e.Uri.AbsoluteUri + "#" + hyperLink.TargetName;
+                string uri;
+                if (e.Uri.IsAbsoluteUri)
+                {
+                    uri = e.Uri.AbsoluteUri + "#" + hyperLink.TargetName;
+                }
+                else
+                {
+                    uri = OctaneMyItemsViewModel.Instance.Package.AlmUrl + hyperLink.NavigateUri;
+                }
+
                 Process.Start(new ProcessStartInfo(uri));
             }
             catch (Exception exception)
