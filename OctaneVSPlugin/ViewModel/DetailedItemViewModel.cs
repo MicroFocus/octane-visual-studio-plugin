@@ -43,7 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
 
-            Mode = MainWindowMode.LoadingItems;
+            Mode = DetailsWindowMode.LoadingItem;
 
             if (EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity)))
                 EntitySupportsComments = true;
@@ -58,15 +58,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public async void Initialize()
         {
-            await _octaneService.Connect();
-            Entity = await _octaneService.FindEntity(Entity);
+            try
+            {
+                await _octaneService.Connect();
+                Entity = await _octaneService.FindEntity(Entity);
 
-            if (EntitySupportsComments)
-                await RetrieveComments();
+                if (EntitySupportsComments)
+                    await RetrieveComments();
 
-            Mode = MainWindowMode.ItemsLoaded;
+                Mode = DetailsWindowMode.ItemLoaded;
+                NotifyPropertyChanged();
+            }
+            catch (Exception ex)
+            {
+                Mode = DetailsWindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
             NotifyPropertyChanged();
         }
+
+        public string ErrorMessage { get; private set; }
 
         private async System.Threading.Tasks.Task RetrieveComments()
         {
@@ -89,17 +100,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public override string Description
         {
-            get { return Mode != MainWindowMode.LoadingItems ? Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty : string.Empty; }
+            get { return Mode != DetailsWindowMode.LoadingItem ? Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty : string.Empty; }
         }
 
         public override string IconText
         {
-            get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconText(Entity) : null; }
+            get { return Mode != DetailsWindowMode.LoadingItem ? MyWorkMetadata.GetIconText(Entity) : null; }
         }
 
         public override Color IconBackgroundColor
         {
-            get { return Mode != MainWindowMode.LoadingItems ? MyWorkMetadata.GetIconColor(Entity) : new Color(); }
+            get { return Mode != DetailsWindowMode.LoadingItem ? MyWorkMetadata.GetIconColor(Entity) : new Color(); }
         }
 
         public IEnumerable<CommentViewModel> Comments
@@ -107,7 +118,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return _commentViewModels; }
         }
 
-        public MainWindowMode Mode { get; private set; }
+        public DetailsWindowMode Mode { get; private set; }
 
         public bool EntitySupportsComments { get; }
 

@@ -34,12 +34,12 @@
 
     <Border Padding="10">
         <Grid>
-            <DockPanel x:Name="LoadingItemsPanel">
+            <DockPanel x:Name="LoadingItemPanel">
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="LoadingItems">
+                            <DataTrigger Binding="{Binding Mode}" Value="LoadingItem">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -50,12 +50,52 @@
 
             </DockPanel>
 
+            <DockPanel x:Name="FailedToLoadPanel">
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Mode}" Value="FailedToLoad">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+
+                <Grid HorizontalAlignment="Stretch">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <Image Grid.Row="1" Stretch="None"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
+
+                    <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock>Unable to retrieve entity information</TextBlock>
+
+                        <TextBlock Text="{Binding ErrorMessage, FallbackValue=this will show the error message}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"
+                               Foreground="Red"/>
+                    </StackPanel>
+
+                    <Image Grid.Row="4" Stretch="None"
+                       HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
+                       RenderOptions.BitmapScalingMode="Fant"
+                       Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
+                </Grid>
+            </DockPanel>
+
             <DockPanel x:Name="ShowDetailedView">
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="ItemsLoaded">
+                            <DataTrigger Binding="{Binding Mode}" Value="ItemLoaded">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
