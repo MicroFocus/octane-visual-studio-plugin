@@ -29,6 +29,7 @@
 
     <UserControl.Resources>
         <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
+        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
     </UserControl.Resources>
 
     <Border Padding="10">
@@ -102,7 +103,8 @@
                                     x:Name="ShowCommentsButton"
                                     Width="30" Height="30"
                                     HorizontalAlignment="Left" VerticalAlignment="Center"
-                                    Command="{Binding ToggleCommentSectionCommand}">
+                                    Command="{Binding ToggleCommentSectionCommand}"
+                                    Visibility="{Binding Path=EntitySupportsComments, Converter={StaticResource BoolToVisConverter}}">
                                 <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png"></Image>
                             </Button>
                         </Grid>

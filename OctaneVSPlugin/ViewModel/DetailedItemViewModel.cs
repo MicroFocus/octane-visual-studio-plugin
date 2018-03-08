@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -44,6 +45,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             Mode = MainWindowMode.LoadingItems;
 
+            if (EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity)))
+                EntitySupportsComments = true;
+
             _octaneService = new OctaneServices(
                 OctaneMyItemsViewModel.Instance.Package.AlmUrl,
                 OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
@@ -57,7 +61,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             await _octaneService.Connect();
             Entity = await _octaneService.FindEntity(Entity);
 
-            await RetrieveComments();
+            if (EntitySupportsComments)
+                await RetrieveComments();
 
             Mode = MainWindowMode.ItemsLoaded;
             NotifyPropertyChanged();
@@ -103,6 +108,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         public MainWindowMode Mode { get; private set; }
+
+        public bool EntitySupportsComments { get; }
+
+        private static readonly HashSet<string> EntityTypesSupportingComments = new HashSet<string>
+        {
+            // work item
+            WorkItem.SUBTYPE_DEFECT,
+            WorkItem.SUBTYPE_STORY,
+            WorkItem.SUBTYPE_QUALITY_STORY,
+
+            // test
+            TestGherkin.SUBTYPE_GHERKIN_TEST,
+            Test.SUBTYPE_MANUAL_TEST,
+
+            // run
+            RunManual.SUBTYPE_RUN_MANUAL,
+            RunSuite.SUBTYPE_RUN_SUITE,
+
+            // requirement
+            Requirement.SUBTYPE_DOCUMENT
+        };
 
         public bool CommentSectionVisibility { get; set; }
 
