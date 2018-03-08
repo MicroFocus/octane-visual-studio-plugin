@@ -11,16 +11,14 @@
 namespace HTMLConverter
 {
     using System;
-    using System.Xml;
-    using System.Diagnostics;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Text;
-    using System.IO;
-
+    using System.Diagnostics;
+    using System.Linq;
     using System.Windows; // DependencyProperty
     using System.Windows.Documents; // TextElement
-  
+    using System.Xml;
+
     /// <summary>
     /// HtmlToXamlConverter is a static class that takes an HTML string
     /// and converts it into XAML
@@ -565,7 +563,7 @@ namespace HTMLConverter
                 if (htmlNode is XmlElement)
                 {
                     string htmlChildName = ((XmlElement)htmlNode).LocalName.ToLower();
-                    if (HtmlSchema.IsInlineElement(htmlChildName) || HtmlSchema.IsBlockElement(htmlChildName) || 
+                    if (HtmlSchema.IsInlineElement(htmlChildName) || HtmlSchema.IsBlockElement(htmlChildName) ||
                         htmlChildName == "img" || htmlChildName == "br" || htmlChildName == "hr")
                     {
                         elementHasChildren = true;
@@ -717,6 +715,36 @@ namespace HTMLConverter
         private static void AddImage(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
             //  Implement images
+            string src = GetAttribute(htmlElement, "src");
+            if (src == null)
+            {
+                // When src attribute is missing - ignore the image
+                AddSpanOrRun(xamlParentElement, htmlElement, inheritedProperties, stylesheet, sourceContext);
+                return;
+            }
+
+            XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Hyperlink, _xamlNamespace);
+
+            string[] srcParts = src.Split(new char[] { '#' });
+            if (srcParts.Length > 0 && srcParts[0].Trim().Length > 0)
+            {
+                xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_NavigateUri, srcParts[0].Trim());
+            }
+            if (srcParts.Length == 2 && srcParts[1].Trim().Length > 0)
+            {
+                xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_TargetName, srcParts[1].Trim());
+            }
+
+            string text = GetAttribute(htmlElement, "alt");
+            if (string.IsNullOrEmpty(text))
+            {
+                srcParts = src.Split('/');
+                text = srcParts.LastOrDefault();
+            }
+            AddTextRun(xamlElement, text ?? string.Empty);
+
+            // Add the new element to the parent.
+            xamlParentElement.AppendChild(xamlElement);
         }
 
         // .............................................................
@@ -842,7 +870,7 @@ namespace HTMLConverter
             {
                 AddListItem(xamlListElement, (XmlElement)htmlChildNode, inheritedProperties, stylesheet, sourceContext);
                 lastProcessedListItemElement = (XmlElement)htmlChildNode;
-                htmlChildNode = htmlChildNode.NextSibling;               
+                htmlChildNode = htmlChildNode.NextSibling;
                 htmlChildNodeName = htmlChildNode == null ? null : htmlChildNode.LocalName.ToLower();
             }
 
@@ -1242,13 +1270,13 @@ namespace HTMLConverter
 
                     // Advance
                     htmlChildNode = htmlChildNode.NextSibling;
-                    
+
                 }
                 else if (htmlChildNode.LocalName.ToLower() == "td")
                 {
                     // Tr element is not present. We create one and add td elements to it
                     XmlElement xamlTableRowElement = xamlTableBodyElement.OwnerDocument.CreateElement(null, Xaml_TableRow, _xamlNamespace);
-                    
+
                     // This is incorrect formatting and the column starts should not be set in this case
                     Debug.Assert(columnStarts == null);
 
@@ -1258,7 +1286,7 @@ namespace HTMLConverter
                         xamlTableBodyElement.AppendChild(xamlTableRowElement);
                     }
                 }
-                else 
+                else
                 {
                     // Not a tr or td  element. Ignore it.
                     // TODO: consider better recovery here
@@ -1334,7 +1362,7 @@ namespace HTMLConverter
                         Debug.Assert(columnIndex + columnSpan < columnStarts.Count);
 
                         xamlTableCellElement.SetAttribute(Xaml_TableCell_ColumnSpan, columnSpan.ToString());
-                        
+
                         // Apply row span
                         for (int spannedColumnIndex = columnIndex; spannedColumnIndex < columnIndex + columnSpan; spannedColumnIndex++)
                         {
@@ -1522,7 +1550,7 @@ namespace HTMLConverter
             ClearActiveRowSpans(activeRowSpans);
 
             XmlNode htmlChildNode = htmlTbodyElement.FirstChild;
-          
+
             // Analyze tr elements
             while (htmlChildNode != null && columnWidthsAvailable)
             {
@@ -1795,7 +1823,7 @@ namespace HTMLConverter
             return spannedColumnIndex;
         }
 
-        
+
         /// <summary>
         /// Used for clearing activeRowSpans array in the beginning/end of each tbody
         /// </summary>
@@ -1842,7 +1870,7 @@ namespace HTMLConverter
         {
             double columnWidth;
             double nextColumnStart;
-            
+
             // Parameter validation
             Debug.Assert(htmlTDElement.LocalName.ToLower() == "td" || htmlTDElement.LocalName.ToLower() == "th");
             Debug.Assert(columnStart >= 0);
@@ -1918,7 +1946,7 @@ namespace HTMLConverter
             columnSpan = 0;
             subColumnWidth = 0;
 
-            while (columnSpanningValue <  columnWidth && columnSpanningIndex < columnStarts.Count - 1)
+            while (columnSpanningValue < columnWidth && columnSpanningIndex < columnStarts.Count - 1)
             {
                 subColumnWidth = (double)columnStarts[columnSpanningIndex + 1] - (double)columnStarts[columnSpanningIndex];
                 Debug.Assert(subColumnWidth > 0);
@@ -2265,7 +2293,7 @@ namespace HTMLConverter
                     xamlElement.SetAttribute(property.Name, stringValue);
                 }
             }
-            catch(Exception)
+            catch (Exception)
             {
             }
         }
@@ -2623,11 +2651,11 @@ namespace HTMLConverter
 
         public const string Xaml_FontSize = "FontSize";
         public const string Xaml_FontSize_XXLarge = "22pt"; // "XXLarge";
-        public const string Xaml_FontSize_XLarge  = "20pt"; // "XLarge";
-        public const string Xaml_FontSize_Large   = "18pt"; // "Large";
-        public const string Xaml_FontSize_Medium  = "16pt"; // "Medium";
-        public const string Xaml_FontSize_Small   = "12pt"; // "Small";
-        public const string Xaml_FontSize_XSmall  = "10pt"; // "XSmall";
+        public const string Xaml_FontSize_XLarge = "20pt"; // "XLarge";
+        public const string Xaml_FontSize_Large = "18pt"; // "Large";
+        public const string Xaml_FontSize_Medium = "16pt"; // "Medium";
+        public const string Xaml_FontSize_Small = "12pt"; // "Small";
+        public const string Xaml_FontSize_XSmall = "10pt"; // "XSmall";
         public const string Xaml_FontSize_XXSmall = "8pt"; // "XXSmall";
 
         public const string Xaml_FontWeight = "FontWeight";
