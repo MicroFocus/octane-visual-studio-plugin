@@ -166,6 +166,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             { "work_item", "owner_work_item" },
             { "test", "owner_test" },
+            { "run", "owner_run" },
             { "requirement", "owner_requirement" }
         };
 
