@@ -200,45 +200,55 @@
                                 </Style>
                             </DockPanel.Style>
 
-                            <TextBlock DockPanel.Dock="Top">Comments:</TextBlock>
+                            <StackPanel Orientation="Horizontal">
+                                <Border BorderThickness="1,0,0,0"
+                                        BorderBrush="#FFC5C5C5"
+                                        Margin="3,0,3,0"
+                                        Width="1"
+                                        Background="White"/>
 
-                            <ListView x:Name="results" ItemsSource="{Binding Comments}"
-                                    Background="{DynamicResource VsBrush.Window}"
-                                    Foreground="{DynamicResource VsBrush.WindowText}"
-                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                    ScrollViewer.CanContentScroll="False"
-                                    BorderThickness="0">
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="{x:Type ListViewItem}">
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                    <ContentPresenter />
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Margin="0 5 0 5">
-                                            <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                                                <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
-                                                <TextBlock Text="{Binding Author}"/>
-                                                <TextBlock Text=":"/>
-                                            </StackPanel>
-                                            <FlowDocumentScrollViewer
-                                                HorizontalScrollBarVisibility="Disabled"
-                                                VerticalScrollBarVisibility="Disabled"
-                                                Margin="-5 0 -5 0"
-                                                Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                                                PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
-                                            <Separator/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                <DockPanel>
+                                    <TextBlock DockPanel.Dock="Top">Comments:</TextBlock>
+
+                                    <ListView x:Name="results" ItemsSource="{Binding Comments}"
+                                        Background="{DynamicResource VsBrush.Window}"
+                                        Foreground="{DynamicResource VsBrush.WindowText}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        ScrollViewer.CanContentScroll="False"
+                                        BorderThickness="0">
+                                        <ListView.ItemContainerStyle>
+                                            <Style TargetType="{x:Type ListViewItem}">
+                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                            <ContentPresenter />
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ListView.ItemContainerStyle>
+                                        <ListView.ItemTemplate>
+                                            <DataTemplate>
+                                                <StackPanel Margin="0 5 0 5">
+                                                    <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                                        <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
+                                                        <TextBlock Text="{Binding Author}"/>
+                                                        <TextBlock Text=":"/>
+                                                    </StackPanel>
+                                                    <FlowDocumentScrollViewer
+                                                    HorizontalScrollBarVisibility="Disabled"
+                                                    VerticalScrollBarVisibility="Disabled"
+                                                    Margin="-5 0 -5 0"
+                                                    Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
+                                                    PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
+                                                    <Separator/>
+                                                </StackPanel>
+                                            </DataTemplate>
+                                        </ListView.ItemTemplate>
+                                    </ListView>
+                                </DockPanel>
+                            </StackPanel>
                         </DockPanel>
 
                     </Grid>
