@@ -157,7 +157,7 @@
             </DockPanel.Style>
 
             <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="24" Height="24" Command="{Binding RefreshCommand}">
+                <Button Width="24" Height="24" Command="{Binding RefreshCommand}" ToolTip="Refresh view">
                     <!--This text-block show the reload sign as unicode character-->
                     <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
                 </Button>
@@ -206,7 +206,7 @@
             </DockPanel.Style>
 
             <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="24" Height="24" Command="{Binding RefreshCommand}">
+                <Button Width="24" Height="24" Command="{Binding RefreshCommand}" ToolTip="Refresh view">
                     <!--This text-block show the reload sign as unicode character-->
                     <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
                 </Button>

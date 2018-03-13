@@ -158,6 +158,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             CommentSectionVisibility = !CommentSectionVisibility;
             NotifyPropertyChanged("CommentSectionVisibility");
+            NotifyPropertyChanged("ShowCommentTooltip");
+        }
+
+        public string ShowCommentTooltip
+        {
+            get { return CommentSectionVisibility ? "Hide comments" : "Show comments"; }
         }
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
