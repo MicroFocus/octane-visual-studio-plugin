@@ -16,7 +16,6 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
-using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Linq;
 
@@ -24,24 +23,31 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 {
     public class FieldGetterViewModel
     {
-        private readonly OctaneItemViewModel itemViewModel;
-        private readonly string fieldName;
-        private readonly string fieldLabel;
+        private readonly BaseEntity _parentEntity;
+        private readonly string _fieldName;
+        private readonly string _fieldLabel;
         private readonly string emptyPlaceholder;
         private readonly Func<BaseEntity, object> customContentFunc;
 
-        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, FieldInfo fieldInfo)
+        public FieldGetterViewModel(BaseEntity entity, string fieldName, string fieldValue)
         {
-            this.itemViewModel = itemViewModel;
-            fieldName = fieldInfo.Name;
-            fieldLabel = fieldInfo.Title;
+            _parentEntity = entity;
+            _fieldName = fieldName;
+            _fieldLabel = fieldValue;
+        }
+
+        public FieldGetterViewModel(BaseEntity entity, FieldInfo fieldInfo)
+        {
+            _parentEntity = entity;
+            _fieldName = fieldInfo.Name;
+            _fieldLabel = fieldInfo.Title;
             emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             customContentFunc = fieldInfo.ContentFunc;
         }
 
         public string Label
         {
-            get { return fieldLabel; }
+            get { return _fieldLabel; }
         }
 
         public bool HideLabel
@@ -54,9 +60,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             get
             {
                 if (customContentFunc != null)
-                    return customContentFunc(itemViewModel.Entity);
+                    return customContentFunc(_parentEntity);
 
-                object value = itemViewModel.Entity.GetValue(fieldName);
+                object value = _parentEntity.GetValue(_fieldName);
                 switch (value)
                 {
                     case null:

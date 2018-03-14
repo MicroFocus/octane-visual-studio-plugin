@@ -32,16 +32,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             topFields = new List<FieldGetterViewModel>();
             bottomFields = new List<FieldGetterViewModel>();
 
-            subTitleField = new FieldGetterViewModel(this, myWorkMetadata.GetSubTitleFieldInfo(entity));
+            subTitleField = new FieldGetterViewModel(Entity, myWorkMetadata.GetSubTitleFieldInfo(entity));
 
             foreach (FieldInfo fieldInfo in myWorkMetadata.GetTopFieldsInfo(entity))
             {
-                topFields.Add(new FieldGetterViewModel(this, fieldInfo));
+                topFields.Add(new FieldGetterViewModel(Entity, fieldInfo));
             }
 
             foreach (FieldInfo fieldInfo in myWorkMetadata.GetBottomFieldsInfo(entity))
             {
-                bottomFields.Add(new FieldGetterViewModel(this, fieldInfo));
+                bottomFields.Add(new FieldGetterViewModel(Entity, fieldInfo));
             }
         }
 

@@ -216,8 +216,8 @@
                                                 <ColumnDefinition Width="*"/>
                                                 <ColumnDefinition Width="4*"/>
                                             </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{Binding Name}" FontWeight="Bold" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Value}" TextTrimming="CharacterEllipsis"/>
+                                            <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Content}" TextTrimming="CharacterEllipsis"/>
                                         </Grid>
                                     </DataTemplate>
                                 </ListView.ItemTemplate>

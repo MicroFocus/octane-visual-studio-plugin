@@ -16,7 +16,6 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
-using MicroFocus.Adm.Octane.VisualStudio.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -35,7 +34,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
-        private ObservableCollection<EntityField> _fields;
+        private readonly ObservableCollection<FieldGetterViewModel> _fields;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
@@ -44,7 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
-            _fields = new ObservableCollection<EntityField>();
+            _fields = new ObservableCollection<FieldGetterViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
 
@@ -70,10 +69,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 Entity = await _octaneService.FindEntity(Entity, fields.Select(fm => fm.name).ToList());
 
+                _fields.Clear();
                 foreach (var field in fields.Where(f => f.name != "description"))
                 {
-                    var value = Entity.GetValue(field.name);
-                    _fields.Add(new EntityField(field.label, value?.ToString() ?? string.Empty));
+                    _fields.Add(new FieldGetterViewModel(Entity, field.name, field.label));
                 }
 
                 if (EntitySupportsComments)
@@ -90,7 +89,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged();
         }
 
-        public IEnumerable<EntityField> Fields
+        public IEnumerable<FieldGetterViewModel> Fields
         {
             get { return _fields; }
         }
