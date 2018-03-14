@@ -81,6 +81,7 @@
     <Compile Include="Common\HTMLConverter\HtmlSchema.cs" />
     <Compile Include="Common\HTMLConverter\HtmlTokenType.cs" />
     <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
+    <Compile Include="Model\EntityField.cs" />
     <Compile Include="ViewModel\CommentViewModel.cs" />
     <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />

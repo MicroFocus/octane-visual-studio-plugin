@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.Model;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -34,6 +35,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
+        private ObservableCollection<EntityField> _fields;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
@@ -42,6 +44,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
+            _fields = new ObservableCollection<EntityField>();
 
             Mode = DetailsWindowMode.LoadingItem;
 
@@ -61,7 +64,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             try
             {
                 await _octaneService.Connect();
-                Entity = await _octaneService.FindEntity(Entity);
+
+                var fieldsMetadata = await _octaneService.GetFieldsMetadata(Utility.GetConcreteEntityType(Entity));
+                var fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
+
+                Entity = await _octaneService.FindEntity(Entity, fields.Select(fm => fm.name).ToList());
+
+                foreach (var field in fields.Where(f => f.name != "description"))
+                {
+                    var value = Entity.GetValue(field.name);
+                    _fields.Add(new EntityField(field.label, value?.ToString() ?? string.Empty));
+                }
 
                 if (EntitySupportsComments)
                     await RetrieveComments();
@@ -75,6 +88,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 ErrorMessage = ex.Message;
             }
             NotifyPropertyChanged();
+        }
+
+        public IEnumerable<EntityField> Fields
+        {
+            get { return _fields; }
         }
 
         public string ErrorMessage { get; private set; }
