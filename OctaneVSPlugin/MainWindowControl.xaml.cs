@@ -35,6 +35,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private MainWindowPackage package;
 
         private readonly MenuItem viewDetailsMenuItem;
+        private readonly MenuItem viewTaskParentDetailsMenuItem;
+        private readonly MenuItem viewCommentParentDetailsMenuItem;
         private readonly MenuItem openInBrowserMenuItem;
         private readonly MenuItem copyCommitMessageMenuItem;
         private readonly MenuItem gherkinTestMenuItem;
@@ -54,6 +56,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 Header = "View details (DblClick)",
                 Command = new DelegatedCommand(ViewDetails)
+            };
+
+            viewTaskParentDetailsMenuItem = new MenuItem
+            {
+                Header = "View parent details (DblClick)",
+                Command = new DelegatedCommand(ViewTaskParentDetails)
+            };
+
+            viewCommentParentDetailsMenuItem = new MenuItem
+            {
+                Header = "View parent details (DblClick)",
+                Command = new DelegatedCommand(ViewCommentParentDetails)
             };
 
             openInBrowserMenuItem = new MenuItem
@@ -115,22 +129,66 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             try
             {
                 var selectedEntity = GetSelectedEntity();
-                if (selectedEntity.TypeName == "feature" || selectedEntity.TypeName == "epic")
-                {
-                    OpenInBrowserInternal(selectedEntity.Id, "work_item");
-                    return;
-                }
-
-                var entity = await viewModel.GetItem(selectedEntity);
-
-                ToolWindowPane window = CreateDetailsWindow(entity);
-                IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+                await ViewEntityDetailsInternal(selectedEntity);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
+        }
+
+
+
+        private async void ViewTaskParentDetails(object param)
+        {
+            try
+            {
+                if (SelectedItem.Entity.TypeName != "task")
+                {
+                    throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
+                }
+                var selectedEntity = (BaseEntity)SelectedItem.Entity.GetValue("story");
+
+                await ViewEntityDetailsInternal(selectedEntity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async void ViewCommentParentDetails(object param)
+        {
+            try
+            {
+                var commentViewModel = SelectedItem as CommentViewModel;
+                if (commentViewModel == null)
+                {
+                    throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
+                }
+                var selectedEntity = commentViewModel.ParentEntity;
+
+                await ViewEntityDetailsInternal(selectedEntity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private async System.Threading.Tasks.Task ViewEntityDetailsInternal(BaseEntity entity)
+        {
+            if (entity.TypeName == "feature" || entity.TypeName == "epic")
+            {
+                OpenInBrowserInternal(entity.Id, "work_item");
+                return;
+            }
+
+            var item = await viewModel.GetItem(entity);
+
+            ToolWindowPane window = CreateDetailsWindow(item);
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
         }
 
         private ToolWindowPane CreateDetailsWindow(OctaneItemViewModel item)
@@ -234,13 +292,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             try
             {
-                var selectedEntity = GetSelectedEntity();
-                if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+                // view details
+                if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(SelectedItem.Entity)))
                 {
-                    viewDetailsMenuItem.Header = !(SelectedItem is CommentViewModel)
-                        ? "View details (DblClick)"
-                        : "View parent details (DblClick)";
                     cm.Items.Add(viewDetailsMenuItem);
+                }
+
+                // view parent details
+                var selectedEntity = SelectedItem.Entity;
+                var taskParentEntity = GetTaskParentEntity(selectedEntity);
+                if (selectedEntity.TypeName == "task" && taskParentEntity != null
+                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(taskParentEntity)))
+                {
+                    cm.Items.Add(viewTaskParentDetailsMenuItem);
+                }
+
+                var commentParentEntity = GetCommentParentEntity(SelectedItem);
+                if (commentParentEntity != null &&
+                    DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(commentParentEntity)))
+                {
+                    cm.Items.Add(viewCommentParentDetailsMenuItem);
                 }
 
                 cm.Items.Add(openInBrowserMenuItem);
@@ -270,6 +341,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
 
             return selectedEntity;
+        }
+
+        private BaseEntity GetCommentParentEntity(OctaneItemViewModel selectedItem)
+        {
+            if (selectedItem is CommentViewModel commentViewModel)
+            {
+                return commentViewModel.ParentEntity;
+            }
+
+            return null;
+        }
+
+        private BaseEntity GetTaskParentEntity(BaseEntity entity)
+        {
+            if (entity.TypeName == "task")
+            {
+                return (BaseEntity)SelectedItem.Entity.GetValue("story");
+            }
+
+            return null;
         }
     }
 }
