@@ -135,14 +135,14 @@
 
                             <StackPanel Grid.Column="0" Orientation="Horizontal">
 
-                                <Border BorderThickness="1" Height="50" Width="50" DockPanel.Dock="Left" Margin="0 0 5 0">
+                                <Border BorderThickness="1" Height="40" Width="40" DockPanel.Dock="Left" Margin="0 0 5 0">
                                     <Border.Background>
                                         <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
                                     </Border.Background>
                                     <TextBlock Foreground="White" FontWeight="Bold" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
                                 </Border>
 
-                                <Grid>
+                                <Grid VerticalAlignment="Center">
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
                                         <RowDefinition />
@@ -185,9 +185,9 @@
                         <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
                             <Grid>
                                 <StackPanel Orientation="Vertical">
-                                    <Separator/>
+                                    <Separator Margin="0 15 0 15"/>
 
-                                    <ListView ItemsSource="{Binding Fields}" Margin="0 10 0 10"
+                                    <ListView ItemsSource="{Binding Fields}"
                                             Background="{DynamicResource VsBrush.Window}"
                                             Foreground="{DynamicResource VsBrush.WindowText}"
                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"
@@ -225,7 +225,7 @@
                                         </ListView.ItemTemplate>
                                     </ListView>
 
-                                    <Separator/>
+                                    <Separator Margin="0 15 0 15"/>
                                     <TextBlock  DockPanel.Dock="Top">Description:</TextBlock>
                                     <!--WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/-->
                                     <FlowDocumentScrollViewer
