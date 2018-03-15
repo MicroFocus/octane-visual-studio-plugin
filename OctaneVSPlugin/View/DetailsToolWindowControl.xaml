@@ -143,10 +143,6 @@
                                 </Border>
 
                                 <Grid VerticalAlignment="Center">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition />
-                                        <RowDefinition />
-                                    </Grid.RowDefinitions>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="Auto" />
@@ -226,14 +222,16 @@
                                     </ListView>
 
                                     <Separator Margin="0 15 0 15"/>
-                                    <TextBlock  DockPanel.Dock="Top">Description:</TextBlock>
+                                    <TextBlock  DockPanel.Dock="Top" Margin="0 0 0 10">Description:</TextBlock>
                                     <!--WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/-->
-                                    <FlowDocumentScrollViewer
+                                    <Border BorderThickness="1" Background="Transparent" BorderBrush="Silver">
+                                        <FlowDocumentScrollViewer
                                         HorizontalScrollBarVisibility="Disabled"
                                         VerticalScrollBarVisibility="Disabled"
                                         Margin="-5 0 -5 0"
                                         Document="{Binding Description, Converter={StaticResource HtmlToFlowDocumentConverter}}"
                                         PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
+                                    </Border>
                                 </StackPanel>
                             </Grid>
                         </ScrollViewer>
