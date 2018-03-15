@@ -30,6 +30,9 @@
     <UserControl.Resources>
         <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        <ControlTemplate x:Key="NoScroll">
+            <ItemsPresenter></ItemsPresenter>
+        </ControlTemplate>
     </UserControl.Resources>
 
     <Border Padding="10">
@@ -179,53 +182,56 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
 
-                        <Grid Grid.Column="0" >
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="Auto"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
 
-                            <ListView Grid.Row="0" ItemsSource="{Binding Fields}" Margin="0 10 0 10"
-                                    Background="{DynamicResource VsBrush.Window}"
-                                    Foreground="{DynamicResource VsBrush.WindowText}"
-                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                    ScrollViewer.CanContentScroll="False"
-                                    BorderThickness="0">
-                                <ListView.ItemsPanel>
-                                    <ItemsPanelTemplate>
-                                        <UniformGrid Columns="2"/>
-                                    </ItemsPanelTemplate>
-                                </ListView.ItemsPanel>
-                                <ListView.ItemContainerStyle>
-                                    <Style TargetType="{x:Type ListViewItem}">
-                                        <Setter Property="Background" Value="Transparent" />
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                    <ContentPresenter />
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </Style>
-                                </ListView.ItemContainerStyle>
-                                <ListView.ItemTemplate>
-                                    <DataTemplate>
-                                        <Grid Margin="0 3 5 3">
-                                            <Grid.ColumnDefinitions>
-                                                <ColumnDefinition Width="*"/>
-                                                <ColumnDefinition Width="4*"/>
-                                            </Grid.ColumnDefinitions>
-                                            <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" />
-                                            <TextBlock Grid.Column="1" Text="{Binding Content}" TextTrimming="CharacterEllipsis"/>
-                                        </Grid>
-                                    </DataTemplate>
-                                </ListView.ItemTemplate>
-                            </ListView>
+                                <ListView Grid.Row="0" ItemsSource="{Binding Fields}" Margin="0 10 0 10"
+                                            Background="{DynamicResource VsBrush.Window}"
+                                            Foreground="{DynamicResource VsBrush.WindowText}"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                            ScrollViewer.CanContentScroll="False"
+                                            BorderThickness="0"
+                                            Template="{StaticResource NoScroll}">
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <UniformGrid Columns="2"/>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="{x:Type ListViewItem}">
+                                            <Setter Property="Background" Value="Transparent" />
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                        <ContentPresenter />
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid Margin="0 3 5 3">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="4*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Content}" TextTrimming="CharacterEllipsis"/>
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
 
-                            <TextBlock Grid.Row="1" DockPanel.Dock="Top">Description:</TextBlock>
-                            <WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/>
-                        </Grid>
+                                <TextBlock Grid.Row="1" DockPanel.Dock="Top">Description:</TextBlock>
+                                <WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/>
+                            </Grid>
+                        </ScrollViewer>
 
                         <DockPanel Grid.Column="1" Width="300" Margin="5 0 0 0">
                             <DockPanel.Style>
@@ -288,7 +294,6 @@
 
                     </Grid>
                 </Grid>
-
             </DockPanel>
         </Grid>
     </Border>
