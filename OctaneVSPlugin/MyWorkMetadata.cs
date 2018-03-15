@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -151,7 +152,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 "task",
                 "T",
                 Color.FromRgb(137, 204, 174),
-                FieldAtSubTitle(Task.STORY_FIELD, "Story"),
+                FieldAtSubTitle(Task.STORY_FIELD, string.Empty, string.Empty, entity =>
+                {
+                    var parentEntity = entity.GetValue("story") as BaseEntity;
+                    if (parentEntity == null)
+                        return string.Empty;
+
+                    var sb = new StringBuilder("Task of ")
+                        .Append(EntityNames.GetDisplayName(Utility.GetConcreteEntityType(parentEntity)).ToLower())
+                        .Append(" ")
+                        .Append(parentEntity.Id.ToString())
+                        .Append(": ")
+                        .Append(parentEntity.Name);
+                    return sb.ToString();
+                }),
                 FieldAtTop(Task.OWNER_FIELD, "Owner"),
                 FieldAtTop(Task.PHASE_FIELD, "Phase"),
                 FieldAtTop(Task.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName),
