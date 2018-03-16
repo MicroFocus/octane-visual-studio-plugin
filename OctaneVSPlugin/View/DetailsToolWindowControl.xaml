@@ -154,12 +154,37 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
-                                <Button x:Name="CustomizeFieldsButton"
-                                        Width="30" Height="30"
-                                        HorizontalAlignment="Left" VerticalAlignment="Center"
-                                        ToolTip="Customize fields">
-                                    <Image Source="/octane-visual-studio-plugin;component/Resources/customize-fields.png"></Image>
-                                </Button>
+                                <ToggleButton x:Name="CustomizeFieldsButton" 
+                                              Width="30" Height="30"
+                                              HorizontalAlignment="Left" VerticalAlignment="Center"
+                                              ToolTip="Customize fields">
+                                    <ToggleButton.Template>
+                                        <ControlTemplate TargetType="ToggleButton">
+                                            <Image Source="/octane-visual-studio-plugin;component/Resources/customize-fields.png"/>
+                                        </ControlTemplate>
+                                    </ToggleButton.Template>
+                                </ToggleButton>
+                                <Popup Width="200" Height="150"
+                                       Placement="Bottom" 
+                                       PlacementTarget="{Binding ElementName=CustomizeFieldsButton}"
+                                       IsOpen="{Binding IsChecked, ElementName=CustomizeFieldsButton}"  StaysOpen="False">
+                                    <Grid>
+                                        <ListView Width="250" Height="150"
+                                                 ItemsSource="{Binding AllEntityFields}"
+                                                 HorizontalAlignment="Left" VerticalAlignment="Top" >
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Orientation="Horizontal">
+                                                        <CheckBox IsChecked="{Binding IsSelected}"
+                                                                  VerticalAlignment="Center"
+                                                                  Command="{Binding DataContext.CheckboxChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
+                                                        <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </Grid>
+                                </Popup>
                                 <Button x:Name="ShowCommentsButton"
                                         Margin="5 0 0 0"
                                         Width="30" Height="30"
@@ -190,7 +215,7 @@
                                 <StackPanel Orientation="Vertical">
                                     <Separator Margin="0 15 0 15"/>
 
-                                    <ListView ItemsSource="{Binding Fields}"
+                                    <ListView ItemsSource="{Binding VisibleFields}"
                                             Background="{DynamicResource VsBrush.Window}"
                                             Foreground="{DynamicResource VsBrush.WindowText}"
                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled"

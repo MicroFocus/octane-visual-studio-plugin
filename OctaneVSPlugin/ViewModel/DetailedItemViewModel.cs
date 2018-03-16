@@ -34,16 +34,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
-        private readonly ObservableCollection<FieldGetterViewModel> _fields;
+        private ObservableCollection<FieldGetterViewModel> _visibleFields;
+        private readonly ObservableCollection<FieldGetterViewModel> _allEntityFields;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
         {
             RefreshCommand = new DelegatedCommand(Refresh);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+            CheckboxChangeCommand = new DelegatedCommand(CheckboxChange);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
-            _fields = new ObservableCollection<FieldGetterViewModel>();
+            _visibleFields = new ObservableCollection<FieldGetterViewModel>();
+            _allEntityFields = new ObservableCollection<FieldGetterViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
 
@@ -69,10 +72,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 Entity = await _octaneService.FindEntity(Entity, fields.Select(fm => fm.name).ToList());
 
-                _fields.Clear();
+                _allEntityFields.Clear();
                 foreach (var field in fields.Where(f => f.name != "description"))
                 {
-                    _fields.Add(new FieldGetterViewModel(Entity, field.name, field.label));
+                    var fieldViewModel = new FieldGetterViewModel(Entity, field.name, field.label, true);
+
+                    _visibleFields.Add(fieldViewModel);
+                    _allEntityFields.Add(fieldViewModel);
                 }
 
                 if (EntitySupportsComments)
@@ -89,9 +95,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged();
         }
 
-        public IEnumerable<FieldGetterViewModel> Fields
+        public IEnumerable<FieldGetterViewModel> AllEntityFields
         {
-            get { return _fields; }
+            get { return _allEntityFields; }
+        }
+
+        public IEnumerable<FieldGetterViewModel> VisibleFields
+        {
+            get { return _visibleFields; }
+        }
+
+        public ICommand CheckboxChangeCommand { get; }
+
+        private void CheckboxChange(object param)
+        {
+            _visibleFields.Clear();
+            foreach (var field in _allEntityFields.Where(f => f.IsSelected))
+            {
+                _visibleFields.Add(field);
+            }
+
+            NotifyPropertyChanged("VisibleFields");
         }
 
         public string ErrorMessage { get; private set; }

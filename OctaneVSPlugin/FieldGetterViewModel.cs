@@ -26,14 +26,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private readonly BaseEntity _parentEntity;
         private readonly string _fieldName;
         private readonly string _fieldLabel;
+        private readonly bool _isSelected;
         private readonly string emptyPlaceholder;
         private readonly Func<BaseEntity, object> customContentFunc;
 
-        public FieldGetterViewModel(BaseEntity entity, string fieldName, string fieldValue)
+        public FieldGetterViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected)
         {
             _parentEntity = entity;
             _fieldName = fieldName;
             _fieldLabel = fieldValue;
+            IsSelected = isSelected;
         }
 
         public FieldGetterViewModel(BaseEntity entity, FieldInfo fieldInfo)
@@ -54,6 +56,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             get { return string.IsNullOrEmpty(Label); }
         }
+
+        public bool IsSelected { get; set; }
 
         public object Content
         {
