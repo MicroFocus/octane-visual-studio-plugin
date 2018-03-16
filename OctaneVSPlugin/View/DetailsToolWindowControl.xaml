@@ -154,7 +154,14 @@
                             </StackPanel>
 
                             <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
+                                <Button x:Name="CustomizeFieldsButton"
+                                        Width="30" Height="30"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        ToolTip="Customize fields">
+                                    <Image Source="/octane-visual-studio-plugin;component/Resources/customize-fields.png"></Image>
+                                </Button>
                                 <Button x:Name="ShowCommentsButton"
+                                        Margin="5 0 0 0"
                                         Width="30" Height="30"
                                         HorizontalAlignment="Left" VerticalAlignment="Center"
                                         Command="{Binding ToggleCommentSectionCommand}"
