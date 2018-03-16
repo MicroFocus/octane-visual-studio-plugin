@@ -190,12 +190,21 @@
                                             </ListView.ItemContainerStyle>
                                             <ListView.ItemTemplate>
                                                 <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal">
+                                                    <StackPanel Orientation="Horizontal" x:Name="Element" Margin="0 2 0 2">
                                                         <CheckBox IsChecked="{Binding IsSelected}"
+                                                                  Margin="2 0 2 0"
                                                                   VerticalAlignment="Center"
                                                                   Command="{Binding DataContext.CheckboxChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
                                                         <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
                                                     </StackPanel>
+                                                    <DataTemplate.Triggers>
+                                                        <DataTrigger 
+                                                            Binding="{Binding Path=DataContext.IsSelected, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                            Value="True">
+                                                            <Setter Property="Background" TargetName="Element"  Value="DodgerBlue">
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                    </DataTemplate.Triggers>
                                                 </DataTemplate>
                                             </ListView.ItemTemplate>
                                         </ListView>
