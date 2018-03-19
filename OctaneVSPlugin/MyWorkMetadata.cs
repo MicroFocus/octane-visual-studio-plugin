@@ -56,7 +56,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// Most of the entites are aggregated entities with sub-types, for the exceptions listed
         /// here the Subtype field is not fetched.
         /// </summary>
-        private readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
+        private static readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
 
         public MyWorkMetadata()
         {
@@ -304,9 +304,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// <summary>
         /// Get indication if the entity is simple or aggregate.
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        private bool IsAggregateEntity(Type entityType)
+        public static bool IsAggregateEntity(Type entityType)
         {
             return -1 == Array.IndexOf<Type>(EntitiesWithoutSubtype, entityType);
         }

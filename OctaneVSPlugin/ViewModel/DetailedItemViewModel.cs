@@ -80,7 +80,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 var updatedFields = fields.Select(fm => fm.name).ToList();
                 // TODO - investigate why not all entities receive the subtype field by default
-                updatedFields.Add(CommonFields.SUB_TYPE);
+                if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))
+                {
+                    updatedFields.Add(CommonFields.SUB_TYPE);
+                }
+
                 Entity = await _octaneService.FindEntity(Entity, updatedFields);
 
                 _allEntityFields.Clear();
