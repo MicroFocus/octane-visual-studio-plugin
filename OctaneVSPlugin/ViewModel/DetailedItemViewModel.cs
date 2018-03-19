@@ -143,8 +143,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
-
-
         public ICommand CheckboxChangeCommand { get; }
 
         private void CheckboxChange(object param)
