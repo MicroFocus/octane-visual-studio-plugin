@@ -61,19 +61,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 OctaneMyItemsViewModel.Instance.Package.AlmPassword);
         }
 
+        private static readonly Dictionary<string, List<FieldMetadata>> FieldsCache = new Dictionary<string, List<FieldMetadata>>();
+
         public async void Initialize()
         {
             try
             {
                 await _octaneService.Connect();
 
-                var fieldsMetadata = await _octaneService.GetFieldsMetadata(Utility.GetConcreteEntityType(Entity));
-                var fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
+                var entityType = Utility.GetConcreteEntityType(Entity);
+                List<FieldMetadata> fields;
+                if (!FieldsCache.TryGetValue(entityType, out fields))
+                {
+                    var fieldsMetadata = await _octaneService.GetFieldsMetadata(entityType);
+                    fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
+                    FieldsCache[entityType] = fields;
+                }
 
-                Entity = await _octaneService.FindEntity(Entity, fields.Select(fm => fm.name).ToList());
+                var updatedFields = fields.Select(fm => fm.name).ToList();
+                // TODO - investigate why not all entities receive the subtype field by default
+                updatedFields.Add(CommonFields.SUB_TYPE);
+                Entity = await _octaneService.FindEntity(Entity, updatedFields);
 
                 _allEntityFields.Clear();
-                foreach (var field in fields.Where(f => f.name != "description"))
+                // we want to filter out description because it will be shown separately
+                // and subtype because it is only used internally
+                foreach (var field in fields.Where(f => f.name != CommonFields.DESCRIPTION && f.name != CommonFields.SUB_TYPE))
                 {
                     var fieldViewModel = new FieldGetterViewModel(Entity, field.name, field.label, true);
 
