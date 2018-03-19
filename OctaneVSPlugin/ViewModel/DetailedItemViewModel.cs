@@ -36,6 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private ObservableCollection<FieldGetterViewModel> _visibleFields;
         private readonly ObservableCollection<FieldGetterViewModel> _allEntityFields;
+        private readonly ObservableCollection<FieldGetterViewModel> _displayedEntityFields;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
@@ -47,6 +48,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             _commentViewModels = new ObservableCollection<CommentViewModel>();
             _visibleFields = new ObservableCollection<FieldGetterViewModel>();
             _allEntityFields = new ObservableCollection<FieldGetterViewModel>();
+            _displayedEntityFields = new ObservableCollection<FieldGetterViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
 
@@ -96,6 +98,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     _visibleFields.Add(fieldViewModel);
                     _allEntityFields.Add(fieldViewModel);
+                    _displayedEntityFields.Add(fieldViewModel);
                 }
 
                 if (EntitySupportsComments)
@@ -112,15 +115,35 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged();
         }
 
-        public IEnumerable<FieldGetterViewModel> AllEntityFields
+        public IEnumerable<FieldGetterViewModel> DisplayedEntityFields
         {
-            get { return _allEntityFields; }
+            get { return _displayedEntityFields; }
         }
 
         public IEnumerable<FieldGetterViewModel> VisibleFields
         {
             get { return _visibleFields; }
         }
+
+        private string _filter;
+
+        public string Filter
+        {
+            get { return _filter; }
+            set
+            {
+                _filter = value.ToLowerInvariant();
+
+                _displayedEntityFields.Clear();
+                foreach (var field in _allEntityFields.Where(f => f.Label.ToLowerInvariant().Contains(_filter)))
+                {
+                    _displayedEntityFields.Add(field);
+                }
+                NotifyPropertyChanged("DisplayedEntityFields");
+            }
+        }
+
+
 
         public ICommand CheckboxChangeCommand { get; }
 

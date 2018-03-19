@@ -175,10 +175,12 @@
                                             <RowDefinition></RowDefinition>
                                         </Grid.RowDefinitions>
 
-                                        <TextBox Grid.Row="0" Margin="5 5 5 5"/>
+                                        <TextBox Grid.Row="0" Margin="5 5 5 5" 
+                                                 Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}">
+                                        </TextBox>
 
                                         <ListView Grid.Row="1"
-                                                  ItemsSource="{Binding AllEntityFields}"
+                                                  ItemsSource="{Binding DisplayedEntityFields}"
                                                   HorizontalAlignment="Stretch" VerticalAlignment="Top"
                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
