@@ -170,7 +170,15 @@
                                        IsOpen="{Binding IsChecked, ElementName=CustomizeFieldsButton}"
                                        StaysOpen="False">
                                     <Grid>
-                                        <ListView ItemsSource="{Binding AllEntityFields}"
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition></RowDefinition>
+                                        </Grid.RowDefinitions>
+
+                                        <TextBox Grid.Row="0" Margin="5 5 5 5"/>
+
+                                        <ListView Grid.Row="1"
+                                                  ItemsSource="{Binding AllEntityFields}"
                                                   HorizontalAlignment="Stretch" VerticalAlignment="Top"
                                                   ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                   ScrollViewer.VerticalScrollBarVisibility="Auto"
