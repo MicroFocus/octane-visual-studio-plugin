@@ -21,6 +21,138 @@
                 "team",
                 "blocked_reason"
             ]
+        },
+        {
+            "Key": "story",
+            "Value": [
+                "creation_time",
+                "last_modified",
+                "story_points",
+                "item_origin",
+                "last_runs",
+                "parent",
+                "product_areas",
+                "release",
+                "sprint",
+                "team",
+                "blocked",
+                "blocked_reason"
+            ]
+        },
+        {
+            "Key": "quality_story",
+            "Value": [
+                "creation_time",
+                "last_modified",
+                "story_points",
+                "item_origin",
+                "parent",
+                "product_areas",
+                "release",
+                "sprint",
+                "team",
+                "quality_story_type",
+                "blocked",
+                "blocked_reason"
+            ]
+        },
+        {
+            "Key": "test_manual",
+            "Value": [
+                "test_type",
+                "testing_tool_type",
+                "estimated_duration",
+                "created",
+                "last_modified",
+                "covered_content",
+                "product_areas",
+                "automation_status"
+            ]
+        },
+        {
+            "Key": "gherkin_test",
+            "Value": [
+                "test_type",
+                "testing_tool_type",
+                "estimated_duration",
+                "created",
+                "last_modified",
+                "covered_content",
+                "product_areas",
+                "automation_status"
+            ]
+        },
+        {
+            "Key": "test_automated",
+            "Value": [
+                "framework",
+                "testing_tool_type",
+                "test_level",
+                "test_type",
+                "scm_repository",
+                "product_areas",
+                "covered_content",
+                "executable"
+            ]
+        },
+        {
+            "Key": "test_suite",
+            "Value": [
+                "test_type",
+                "testing_tool_type",
+                "estimated_duration",
+                "created",
+                "last_modified",
+                "covered_content",
+                "product_areas",
+                "automation_status"
+            ]
+        },
+        {
+            "Key": "run_manual",
+            "Value": [
+                "test_name",
+                "native_status",
+                "started",
+                "duration",
+                "content",
+                "release",
+                "last_modified",
+                "draft_run"
+            ]
+        },
+        {
+            "Key": "run_suite",
+            "Value": [
+                "test_name",
+                "native_status",
+                "started",
+                "steps_num",
+                "release",
+                "draft_run",
+                "last_modified",
+                "default_taxonomies"
+            ]
+        },
+        {
+            "Key": "task",
+            "Value": [
+                "story",
+                "creation_time",
+                "last_modified",
+                "item_type",
+                "estimated_hours",
+                "invested_hours",
+                "remaining_hours"
+            ]
+        },
+        {
+            "Key": "requirement_document",
+            "Value": [
+                "release",
+                "creation_time",
+                "last_modified"
+            ]
         }
     ]
 }
