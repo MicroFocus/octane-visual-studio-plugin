@@ -98,21 +98,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             }
         }
 
-        public bool IsFieldVisible(string entityType, string fieldName)
+        /// <summary>
+        /// Returns all the visible fields for the given entity type
+        /// </summary>
+        public HashSet<string> GetVisibleFieldsForEntity(string entityType)
         {
-            if (_cache == null)
-                return false;
+            var emptyHashSetresult = new HashSet<string>();
+            if (_cache == null || string.IsNullOrEmpty(entityType))
+                return emptyHashSetresult;
 
             HashSet<string> visibleFields;
-            if (!_cache.data.TryGetValue(entityType, out visibleFields))
-                return false;
-
-            return visibleFields.Contains(fieldName);
+            return !_cache.data.TryGetValue(entityType, out visibleFields)
+                ? emptyHashSetresult
+                : visibleFields;
         }
 
-        public void SetFieldVisibility(string entityType, List<FieldGetterViewModel> allFields)
+        /// <summary>
+        /// Updates the cache with the current visible fields for the given entity type
+        /// </summary>
+        public void UpdateVisibleFieldsForEntity(string entityType, List<FieldGetterViewModel> allFields)
         {
-            if (_cache == null)
+            if (_cache == null || string.IsNullOrEmpty(entityType) || allFields == null)
                 return;
 
             HashSet<string> visibleFields;

@@ -92,11 +92,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 _allEntityFields.Clear();
                 _visibleFields.Clear();
                 _displayedEntityFields.Clear();
+
+                var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
                 // we want to filter out description because it will be shown separately
                 // and subtype because it is only used internally
                 foreach (var field in fields.Where(f => f.name != CommonFields.DESCRIPTION && f.name != CommonFields.SUB_TYPE))
                 {
-                    var fieldViewModel = new FieldGetterViewModel(Entity, field.name, field.label, FieldsCache.Instance.IsFieldVisible(entityType, field.name));
+                    var fieldViewModel = new FieldGetterViewModel(Entity, field.name, field.label, visibleFieldsHashSet.Contains(field.name));
 
                     _allEntityFields.Add(fieldViewModel);
                     _displayedEntityFields.Add(fieldViewModel);
@@ -150,7 +152,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void CheckboxChange(object param)
         {
-            FieldsCache.Instance.SetFieldVisibility(Utility.GetConcreteEntityType(Entity), _allEntityFields);
+            FieldsCache.Instance.UpdateVisibleFieldsForEntity(Utility.GetConcreteEntityType(Entity), _allEntityFields);
             UpdateVisibleFields();
 
             NotifyPropertyChanged("VisibleFields");
