@@ -44,6 +44,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             RefreshCommand = new DelegatedCommand(Refresh);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
             CheckboxChangeCommand = new DelegatedCommand(CheckboxChange);
+            ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
             _visibleFields = new ObservableCollection<FieldGetterViewModel>();
@@ -165,6 +166,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 _visibleFields.Add(field);
             }
+
+        }
+
+        public ICommand ResetFieldsCustomizationCommand { get; }
+
+        private void ResetFieldsCustomization(object param)
+        {
 
         }
 

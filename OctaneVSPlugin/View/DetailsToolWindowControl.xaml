@@ -164,62 +164,72 @@
                                         </ControlTemplate>
                                     </ToggleButton.Template>
                                 </ToggleButton>
-                                <Popup Width="200" Height="150"
+                                <Popup Width="200" Height="250"
                                        Placement="Bottom" 
                                        PlacementTarget="{Binding ElementName=CustomizeFieldsButton}"
                                        IsOpen="{Binding IsChecked, ElementName=CustomizeFieldsButton}"
                                        StaysOpen="False">
-                                    <Grid>
-                                        <Grid.RowDefinitions>
-                                            <RowDefinition Height="Auto"/>
-                                            <RowDefinition></RowDefinition>
-                                        </Grid.RowDefinitions>
+                                    <Border BorderThickness="1" Background="Transparent" BorderBrush="Silver">
+                                        <Grid Background="{DynamicResource VsBrush.Window}">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
 
-                                        <TextBox Grid.Row="0" Margin="5 5 5 5" 
-                                                 Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
-                                                 view:FocusBehavior.IsFocus="True">
-                                        </TextBox>
+                                            <TextBox Grid.Row="0" Margin="5 5 5 5" 
+                                                     Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
+                                                     view:FocusBehavior.IsFocus="True">
+                                            </TextBox>
 
-                                        <ListView Grid.Row="1"
-                                                  ItemsSource="{Binding DisplayedEntityFields}"
-                                                  HorizontalAlignment="Stretch" VerticalAlignment="Top"
-                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                  Background="{DynamicResource VsBrush.Window}"
-                                                  Foreground="{DynamicResource VsBrush.WindowText}">
-                                            <ListView.ItemContainerStyle>
-                                                <Style TargetType="{x:Type ListViewItem}">
-                                                    <Setter Property="Background" Value="Transparent" />
-                                                    <Setter Property="Template">
-                                                        <Setter.Value>
-                                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                                <ContentPresenter />
-                                                            </ControlTemplate>
-                                                        </Setter.Value>
-                                                    </Setter>
-                                                </Style>
-                                            </ListView.ItemContainerStyle>
-                                            <ListView.ItemTemplate>
-                                                <DataTemplate>
-                                                    <StackPanel Orientation="Horizontal" x:Name="Element" Margin="0 2 0 2">
-                                                        <CheckBox IsChecked="{Binding IsSelected}"
-                                                                  Margin="2 0 2 0"
-                                                                  VerticalAlignment="Center"
-                                                                  Command="{Binding DataContext.CheckboxChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
-                                                        <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
-                                                    </StackPanel>
-                                                    <DataTemplate.Triggers>
-                                                        <DataTrigger 
-                                                            Binding="{Binding Path=DataContext.IsSelected, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                            Value="True">
-                                                            <Setter Property="Background" TargetName="Element"  Value="DodgerBlue">
-                                                            </Setter>
-                                                        </DataTrigger>
-                                                    </DataTemplate.Triggers>
-                                                </DataTemplate>
-                                            </ListView.ItemTemplate>
-                                        </ListView>
-                                    </Grid>
+                                            <ListView Grid.Row="1"
+                                                      ItemsSource="{Binding DisplayedEntityFields}"
+                                                      HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                      Background="{DynamicResource VsBrush.Window}"
+                                                      Foreground="{DynamicResource VsBrush.WindowText}"
+                                                      Margin="3 0 3 0">
+                                                <ListView.ItemContainerStyle>
+                                                    <Style TargetType="{x:Type ListViewItem}">
+                                                        <Setter Property="Background" Value="Transparent" />
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                                    <ContentPresenter />
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </Style>
+                                                </ListView.ItemContainerStyle>
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Orientation="Horizontal" x:Name="Element" Margin="0 2 0 2">
+                                                            <CheckBox IsChecked="{Binding IsSelected}"
+                                                                      Margin="2 0 2 0"
+                                                                      VerticalAlignment="Center"
+                                                                      Command="{Binding DataContext.CheckboxChangeCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
+                                                            <TextBlock Text="{Binding Label}" VerticalAlignment="Center" />
+                                                        </StackPanel>
+                                                        <DataTemplate.Triggers>
+                                                            <DataTrigger 
+                                                                Binding="{Binding Path=DataContext.IsSelected, RelativeSource={RelativeSource TemplatedParent}}" 
+                                                                Value="True">
+                                                                <Setter Property="Background" TargetName="Element"  Value="DodgerBlue">
+                                                                </Setter>
+                                                            </DataTrigger>
+                                                        </DataTemplate.Triggers>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                            <Button Grid.Row="2" x:Name="ResetFieldsCustomizationButton"
+                                                    Margin="5 5 5 5"
+                                                    Width="40" Height="25"
+                                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                    Content="Reset"
+                                                    Command="{Binding ResetFieldsCustomizationCommand}"/>
+                                        </Grid>
+                                    </Border>
                                 </Popup>
                                 <Button x:Name="ShowCommentsButton"
                                         Margin="5 0 0 0"
@@ -294,11 +304,11 @@
                                     <!--WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/-->
                                     <Border BorderThickness="1" Background="Transparent" BorderBrush="Silver">
                                         <FlowDocumentScrollViewer
-                                        HorizontalScrollBarVisibility="Disabled"
-                                        VerticalScrollBarVisibility="Disabled"
-                                        Margin="-5 0 -5 0"
-                                        Document="{Binding Description, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                                        PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
+                                            HorizontalScrollBarVisibility="Disabled"
+                                            VerticalScrollBarVisibility="Disabled"
+                                            Margin="-5 0 -5 0"
+                                            Document="{Binding Description, Converter={StaticResource HtmlToFlowDocumentConverter}}"
+                                            PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
                                     </Border>
                                 </StackPanel>
                             </Grid>
