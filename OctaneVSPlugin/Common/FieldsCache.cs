@@ -35,11 +35,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
         private static readonly DataContractJsonSerializer _serializer = new DataContractJsonSerializer(typeof(Metadata));
 
-        private static Metadata _cache = null;
+        private static Metadata _defaultFieldsCache = null;
+        private static Metadata _persistedFieldsCache = null;
 
         private FieldsCache()
         {
             DeserializeDefaultFieldsMetadata();
+            DeserializePersistedFieldsMetadata();
         }
 
         public static FieldsCache Instance
@@ -61,14 +63,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             }
         }
 
-        private static void Serialize()
+        private static string Serialize()
         {
-            MemoryStream myms = new MemoryStream();
-            _serializer.WriteObject(myms, _cache);
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                _serializer.WriteObject(memoryStream, _persistedFieldsCache);
 
-            myms.Position = 0;
-            StreamReader sr = new StreamReader(myms);
-            var json = sr.ReadToEnd();
+                memoryStream.Position = 0;
+                using (StreamReader sr = new StreamReader(memoryStream))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
         }
 
         private static Metadata Deserialize(string json)
@@ -82,7 +88,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             }
             catch (Exception)
             {
-                return null;
+                return new Metadata
+                {
+                    data = new Dictionary<string, HashSet<string>>(),
+                    version = 1
+                };
             }
         }
 
@@ -94,7 +104,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             using (StreamReader reader = new StreamReader(stream))
             {
                 string result = reader.ReadToEnd();
-                _cache = Deserialize(result);
+                _defaultFieldsCache = Deserialize(result);
+            }
+        }
+
+        private static void DeserializePersistedFieldsMetadata()
+        {
+            var persistedJson = OctanePluginSettings.Default.EntityFields;
+            _persistedFieldsCache = Deserialize(persistedJson);
+        }
+
+        private static void PersistFieldsMetadata()
+        {
+            try
+            {
+                OctanePluginSettings.Default.EntityFields = Serialize();
+                OctanePluginSettings.Default.Save();
+            }
+            catch (Exception)
+            {
             }
         }
 
@@ -103,13 +131,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         public HashSet<string> GetVisibleFieldsForEntity(string entityType)
         {
-            var emptyHashSetresult = new HashSet<string>();
-            if (_cache == null || string.IsNullOrEmpty(entityType))
-                return emptyHashSetresult;
+            var emptyHashSet = new HashSet<string>();
+            if (string.IsNullOrEmpty(entityType))
+                return emptyHashSet;
 
             HashSet<string> visibleFields;
-            return !_cache.data.TryGetValue(entityType, out visibleFields)
-                ? emptyHashSetresult
+            return !_persistedFieldsCache.data.TryGetValue(entityType, out visibleFields)
+                ? !_defaultFieldsCache.data.TryGetValue(entityType, out visibleFields)
+                    ? emptyHashSet
+                    : visibleFields
                 : visibleFields;
         }
 
@@ -118,14 +148,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         public void UpdateVisibleFieldsForEntity(string entityType, List<FieldGetterViewModel> allFields)
         {
-            if (_cache == null || string.IsNullOrEmpty(entityType) || allFields == null)
+            if (string.IsNullOrEmpty(entityType) || allFields == null)
                 return;
 
             HashSet<string> visibleFields;
-            if (!_cache.data.TryGetValue(entityType, out visibleFields))
+            if (!_persistedFieldsCache.data.TryGetValue(entityType, out visibleFields))
             {
                 visibleFields = new HashSet<string>();
-                _cache.data[entityType] = visibleFields;
+                _persistedFieldsCache.data[entityType] = visibleFields;
             }
 
             visibleFields.Clear();
@@ -134,6 +164,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             {
                 visibleFields.Add(field.Name);
             }
+
+            PersistFieldsMetadata();
         }
 
         #region Data contracts

@@ -83,6 +83,11 @@
     <Compile Include="Common\HTMLConverter\HtmlTokenType.cs" />
     <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
     <Compile Include="Model\EntityField.cs" />
+    <Compile Include="OctanePluginSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OctanePluginSettings.settings</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\CommentViewModel.cs" />
     <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
@@ -129,6 +134,10 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Key.snk" />
+    <None Include="OctanePluginSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OctanePluginSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
