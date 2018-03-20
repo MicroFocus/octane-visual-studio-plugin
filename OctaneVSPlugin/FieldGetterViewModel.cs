@@ -52,6 +52,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             get { return _fieldLabel; }
         }
 
+        public string Name
+        {
+            get { return _fieldName; }
+        }
+
         public bool HideLabel
         {
             get { return string.IsNullOrEmpty(Label); }

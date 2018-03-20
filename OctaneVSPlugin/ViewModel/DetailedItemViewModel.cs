@@ -34,8 +34,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
-        private ObservableCollection<FieldGetterViewModel> _visibleFields;
-        private readonly ObservableCollection<FieldGetterViewModel> _allEntityFields;
+        private readonly ObservableCollection<FieldGetterViewModel> _visibleFields;
+        private readonly List<FieldGetterViewModel> _allEntityFields;
         private readonly ObservableCollection<FieldGetterViewModel> _displayedEntityFields;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
@@ -47,7 +47,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
             _visibleFields = new ObservableCollection<FieldGetterViewModel>();
-            _allEntityFields = new ObservableCollection<FieldGetterViewModel>();
+            _allEntityFields = new List<FieldGetterViewModel>();
             _displayedEntityFields = new ObservableCollection<FieldGetterViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
@@ -63,7 +63,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 OctaneMyItemsViewModel.Instance.Package.AlmPassword);
         }
 
-        private static readonly Dictionary<string, List<FieldMetadata>> FieldsCache = new Dictionary<string, List<FieldMetadata>>();
+        private static readonly Dictionary<string, List<FieldMetadata>> CurrentFieldsCache = new Dictionary<string, List<FieldMetadata>>();
 
         public async void Initialize()
         {
@@ -73,11 +73,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 var entityType = Utility.GetConcreteEntityType(Entity);
                 List<FieldMetadata> fields;
-                if (!FieldsCache.TryGetValue(entityType, out fields))
+                if (!CurrentFieldsCache.TryGetValue(entityType, out fields))
                 {
                     var fieldsMetadata = await _octaneService.GetFieldsMetadata(entityType);
                     fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
-                    FieldsCache[entityType] = fields;
+                    CurrentFieldsCache[entityType] = fields;
                 }
 
                 var updatedFields = fields.Select(fm => fm.name).ToList();
@@ -90,16 +90,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Entity = await _octaneService.FindEntity(Entity, updatedFields);
 
                 _allEntityFields.Clear();
+                _visibleFields.Clear();
+                _displayedEntityFields.Clear();
                 // we want to filter out description because it will be shown separately
                 // and subtype because it is only used internally
                 foreach (var field in fields.Where(f => f.name != CommonFields.DESCRIPTION && f.name != CommonFields.SUB_TYPE))
                 {
-                    var fieldViewModel = new FieldGetterViewModel(Entity, field.name, field.label, true);
+                    var fieldViewModel = new FieldGetterViewModel(Entity, field.name, field.label, FieldsCache.Instance.IsFieldVisible(entityType, field.name));
 
-                    _visibleFields.Add(fieldViewModel);
                     _allEntityFields.Add(fieldViewModel);
                     _displayedEntityFields.Add(fieldViewModel);
                 }
+
+                UpdateVisibleFields();
 
                 if (EntitySupportsComments)
                     await RetrieveComments();
@@ -147,13 +150,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void CheckboxChange(object param)
         {
+            FieldsCache.Instance.SetFieldVisibility(Utility.GetConcreteEntityType(Entity), _allEntityFields);
+            UpdateVisibleFields();
+
+            NotifyPropertyChanged("VisibleFields");
+        }
+
+        private void UpdateVisibleFields()
+        {
             _visibleFields.Clear();
             foreach (var field in _allEntityFields.Where(f => f.IsSelected))
             {
                 _visibleFields.Add(field);
             }
 
-            NotifyPropertyChanged("VisibleFields");
         }
 
         public string ErrorMessage { get; private set; }

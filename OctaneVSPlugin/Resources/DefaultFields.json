@@ -1,0 +1,26 @@
+{
+    "version": 1,
+    "data": [
+        {
+            "Key": "defect",
+            "Value": [
+                "parent",
+                "last_modified",
+                "severity",
+                "detected_in_release",
+                "creation_time",
+                "priority",
+                "closed_on",
+                "story_points",
+                "product_areas",
+                "sprint",
+                "release",
+                "blocked",
+                "defect_type",
+                "taxonomies",
+                "team",
+                "blocked_reason"
+            ]
+        }
+    ]
+}
