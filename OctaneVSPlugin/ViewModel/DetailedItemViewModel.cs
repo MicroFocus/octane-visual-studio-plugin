@@ -36,7 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private readonly ObservableCollection<FieldViewModel> _visibleFields;
         private readonly List<FieldViewModel> _allEntityFields;
-        private readonly ObservableCollection<FieldViewModel> _displayedEntityFields;
+        private ObservableCollection<FieldViewModel> _displayedEntityFields;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
@@ -173,7 +173,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void ResetFieldsCustomization(object param)
         {
+            var entityType = Utility.GetConcreteEntityType(Entity);
+            FieldsCache.Instance.ResetVisibleFieldsForEntity(entityType);
 
+            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
+
+            var newDisplayedEntityFields = new List<FieldViewModel>();
+            foreach (var field in _displayedEntityFields)
+            {
+                field.IsSelected = persistedVisibleFields.Contains(field.Name);
+                newDisplayedEntityFields.Add(field);
+            }
+
+            _displayedEntityFields = new ObservableCollection<FieldViewModel>(newDisplayedEntityFields);
+
+            UpdateVisibleFields();
+
+            NotifyPropertyChanged("DisplayedEntityFields");
+            NotifyPropertyChanged("VisibleFields");
         }
 
         public string ErrorMessage { get; private set; }

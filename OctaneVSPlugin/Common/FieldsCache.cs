@@ -169,6 +169,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             PersistFieldsMetadata();
         }
 
+        /// <summary>
+        /// Reset to the default visible fields for the given entity
+        /// </summary>
+        public void ResetVisibleFieldsForEntity(string entityType)
+        {
+            if (string.IsNullOrEmpty(entityType))
+                return;
+
+            if (!_persistedFieldsCache.data.ContainsKey(entityType))
+                return;
+
+            HashSet<string> defaultVisibleFields;
+            if (!_defaultFieldsCache.data.TryGetValue(entityType, out defaultVisibleFields))
+                return;
+
+            _persistedFieldsCache.data[entityType] = new HashSet<string>(defaultVisibleFields);
+
+            PersistFieldsMetadata();
+        }
+
         #region Data contracts
 
         [DataContract]
