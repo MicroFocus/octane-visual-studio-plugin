@@ -22,26 +22,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     public class OctaneItemViewModel : BaseItemViewModel
     {
-        private readonly List<FieldGetterViewModel> topFields;
-        private readonly List<FieldGetterViewModel> bottomFields;
-        private readonly FieldGetterViewModel subTitleField;
+        private readonly List<FieldViewModel> topFields;
+        private readonly List<FieldViewModel> bottomFields;
+        private readonly FieldViewModel subTitleField;
 
         public OctaneItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
         {
-            topFields = new List<FieldGetterViewModel>();
-            bottomFields = new List<FieldGetterViewModel>();
+            topFields = new List<FieldViewModel>();
+            bottomFields = new List<FieldViewModel>();
 
-            subTitleField = new FieldGetterViewModel(Entity, myWorkMetadata.GetSubTitleFieldInfo(entity));
+            subTitleField = new FieldViewModel(Entity, myWorkMetadata.GetSubTitleFieldInfo(entity));
 
             foreach (FieldInfo fieldInfo in myWorkMetadata.GetTopFieldsInfo(entity))
             {
-                topFields.Add(new FieldGetterViewModel(Entity, fieldInfo));
+                topFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
 
             foreach (FieldInfo fieldInfo in myWorkMetadata.GetBottomFieldsInfo(entity))
             {
-                bottomFields.Add(new FieldGetterViewModel(Entity, fieldInfo));
+                bottomFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
         }
 
@@ -71,7 +71,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return MyWorkMetadata.IsSupportCopyCommitMessage(Entity); }
         }
 
-        public FieldGetterViewModel SubTitleField
+        public FieldViewModel SubTitleField
         {
             get { return subTitleField; }
         }
@@ -91,7 +91,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
-        private IEnumerable<object> FieldsWithSeparators(List<FieldGetterViewModel> fields)
+        private IEnumerable<object> FieldsWithSeparators(List<FieldViewModel> fields)
         {
             // Handle the case there are no fields so we don't need any seperators.
             if (fields.Count == 0)
@@ -99,7 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 yield break;
             }
 
-            foreach (FieldGetterViewModel field in fields.Take(fields.Count - 1))
+            foreach (FieldViewModel field in fields.Take(fields.Count - 1))
             {
                 yield return field;
                 yield return SeparatorViewModel.Make();

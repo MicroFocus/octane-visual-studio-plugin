@@ -19,18 +19,20 @@ using MicroFocus.Adm.Octane.Api.Core.Services;
 using System;
 using System.Linq;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
-    public class FieldGetterViewModel
+    /// <summary>
+    /// View model representation for an entity field
+    /// </summary>
+    public class FieldViewModel
     {
         private readonly BaseEntity _parentEntity;
         private readonly string _fieldName;
         private readonly string _fieldLabel;
-        private readonly bool _isSelected;
         private readonly string emptyPlaceholder;
         private readonly Func<BaseEntity, object> customContentFunc;
 
-        public FieldGetterViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected)
+        public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected)
         {
             _parentEntity = entity;
             _fieldName = fieldName;
@@ -38,7 +40,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             IsSelected = isSelected;
         }
 
-        public FieldGetterViewModel(BaseEntity entity, FieldInfo fieldInfo)
+        public FieldViewModel(BaseEntity entity, FieldInfo fieldInfo)
         {
             _parentEntity = entity;
             _fieldName = fieldInfo.Name;

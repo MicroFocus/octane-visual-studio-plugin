@@ -34,9 +34,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
-        private readonly ObservableCollection<FieldGetterViewModel> _visibleFields;
-        private readonly List<FieldGetterViewModel> _allEntityFields;
-        private readonly ObservableCollection<FieldGetterViewModel> _displayedEntityFields;
+        private readonly ObservableCollection<FieldViewModel> _visibleFields;
+        private readonly List<FieldViewModel> _allEntityFields;
+        private readonly ObservableCollection<FieldViewModel> _displayedEntityFields;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
@@ -47,9 +47,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
-            _visibleFields = new ObservableCollection<FieldGetterViewModel>();
-            _allEntityFields = new List<FieldGetterViewModel>();
-            _displayedEntityFields = new ObservableCollection<FieldGetterViewModel>();
+            _visibleFields = new ObservableCollection<FieldViewModel>();
+            _allEntityFields = new List<FieldViewModel>();
+            _displayedEntityFields = new ObservableCollection<FieldViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
 
@@ -99,7 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 // and subtype because it is only used internally
                 foreach (var field in fields.Where(f => f.name != CommonFields.DESCRIPTION && f.name != CommonFields.SUB_TYPE))
                 {
-                    var fieldViewModel = new FieldGetterViewModel(Entity, field.name, field.label, visibleFieldsHashSet.Contains(field.name));
+                    var fieldViewModel = new FieldViewModel(Entity, field.name, field.label, visibleFieldsHashSet.Contains(field.name));
 
                     _allEntityFields.Add(fieldViewModel);
                     _displayedEntityFields.Add(fieldViewModel);
@@ -121,12 +121,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged();
         }
 
-        public IEnumerable<FieldGetterViewModel> DisplayedEntityFields
+        public IEnumerable<FieldViewModel> DisplayedEntityFields
         {
             get { return _displayedEntityFields; }
         }
 
-        public IEnumerable<FieldGetterViewModel> VisibleFields
+        public IEnumerable<FieldViewModel> VisibleFields
         {
             get { return _visibleFields; }
         }

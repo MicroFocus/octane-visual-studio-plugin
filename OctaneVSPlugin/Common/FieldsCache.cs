@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -146,7 +147,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// <summary>
         /// Updates the cache with the current visible fields for the given entity type
         /// </summary>
-        public void UpdateVisibleFieldsForEntity(string entityType, List<FieldGetterViewModel> allFields)
+        public void UpdateVisibleFieldsForEntity(string entityType, List<FieldViewModel> allFields)
         {
             if (string.IsNullOrEmpty(entityType) || allFields == null)
                 return;

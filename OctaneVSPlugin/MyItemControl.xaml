@@ -21,12 +21,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
+             xmlns:viewModel="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.ViewModel"
              mc:Ignorable="d" 
              d:DesignHeight="70" d:DesignWidth="500">
 
     <UserControl.Resources>
 
-        <DataTemplate DataType="{x:Type local:FieldGetterViewModel}">
+        <DataTemplate DataType="{x:Type viewModel:FieldViewModel}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
