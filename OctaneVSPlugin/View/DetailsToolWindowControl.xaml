@@ -286,6 +286,7 @@
                             <Grid>
                                 <StackPanel Orientation="Vertical">
                                     <Separator Margin="0 15 0 15"/>
+                                    <TextBlock  DockPanel.Dock="Top" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">General</TextBlock>
 
                                     <ListView ItemsSource="{Binding VisibleFields}"
                                             Background="{DynamicResource VsBrush.Window}"
@@ -326,7 +327,7 @@
                                     </ListView>
 
                                     <Separator Margin="0 15 0 15"/>
-                                    <TextBlock  DockPanel.Dock="Top" Margin="0 0 0 10">Description:</TextBlock>
+                                    <TextBlock  DockPanel.Dock="Top" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Description</TextBlock>
                                     <!--WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/-->
                                     <Border BorderThickness="1" Background="Transparent" BorderBrush="Silver">
                                         <FlowDocumentScrollViewer
