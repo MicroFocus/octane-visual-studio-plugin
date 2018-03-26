@@ -160,7 +160,18 @@
                                               ToolTip="Customize fields">
                                     <ToggleButton.Template>
                                         <ControlTemplate TargetType="ToggleButton">
-                                            <Image Source="/octane-visual-studio-plugin;component/Resources/customize-fields.png"/>
+                                            <Image>
+                                                <Image.Style>
+                                                    <Style TargetType="{x:Type Image}">
+                                                        <Setter Property="Source" Value="/octane-visual-studio-plugin;component/Resources/customize-fields-off.png"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}" Value="False">
+                                                                <Setter Property="Source" Value="/octane-visual-studio-plugin;component/Resources/customize-fields-on.png"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Image.Style>
+                                            </Image>
                                         </ControlTemplate>
                                     </ToggleButton.Template>
                                 </ToggleButton>

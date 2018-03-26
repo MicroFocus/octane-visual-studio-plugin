@@ -34,7 +34,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
-        private readonly ObservableCollection<FieldViewModel> _visibleFields;
+        private ObservableCollection<FieldViewModel> _visibleFields;
         private readonly List<FieldViewModel> _allEntityFields;
         private ObservableCollection<FieldViewModel> _displayedEntityFields;
 
@@ -153,20 +153,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void CheckboxChange(object param)
         {
-            FieldsCache.Instance.UpdateVisibleFieldsForEntity(Utility.GetConcreteEntityType(Entity), _allEntityFields);
-            UpdateVisibleFields();
+            var entityType = Utility.GetConcreteEntityType(Entity);
 
-            NotifyPropertyChanged("VisibleFields");
+            FieldsCache.Instance.UpdateVisibleFieldsForEntity(entityType, _allEntityFields);
+            UpdateVisibleFields();
         }
 
         private void UpdateVisibleFields()
         {
-            _visibleFields.Clear();
+            var newVisibleFields = new List<FieldViewModel>();
             foreach (var field in _allEntityFields.Where(f => f.IsSelected))
             {
-                _visibleFields.Add(field);
+                newVisibleFields.Add(field);
             }
 
+            _visibleFields = new ObservableCollection<FieldViewModel>(newVisibleFields);
+
+            OnlyDefaultFieldsAreShown = FieldsCache.Instance.AreSameFieldsAsDefaultFields(Utility.GetConcreteEntityType(Entity), newVisibleFields);
+
+            NotifyPropertyChanged("OnlyDefaultFieldsAreShown");
+            NotifyPropertyChanged("VisibleFields");
         }
 
         public ICommand ResetFieldsCustomizationCommand { get; }
@@ -190,8 +196,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             UpdateVisibleFields();
 
             NotifyPropertyChanged("DisplayedEntityFields");
-            NotifyPropertyChanged("VisibleFields");
         }
+
+        public bool OnlyDefaultFieldsAreShown { get; private set; }
 
         public string ErrorMessage { get; private set; }
 

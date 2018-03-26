@@ -153,7 +153,8 @@
       <SubType>Designer</SubType>
     </VSCTCompile>
     <Resource Include="Resources\comments.png" />
-    <Resource Include="Resources\customize-fields.png" />
+    <Resource Include="Resources\customize-fields-off.png" />
+    <Resource Include="Resources\customize-fields-on.png" />
     <Content Include="Resources\MainWindowCommand.png" />
     <Content Include="Resources\MainWindowPackage.ico" />
     <Resource Include="Resources\octane-logo.png" />

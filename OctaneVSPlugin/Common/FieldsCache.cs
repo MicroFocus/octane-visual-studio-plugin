@@ -128,6 +128,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         }
 
         /// <summary>
+        /// Check whether the input fields are the same as the default fields for the given entity type
+        /// </summary>
+        public bool AreSameFieldsAsDefaultFields(string entityType, List<FieldViewModel> visibleFields)
+        {
+            if (string.IsNullOrEmpty(entityType))
+                return false;
+
+            HashSet<string> defaultVisibleFields;
+            if (!_defaultFieldsCache.data.TryGetValue(entityType, out defaultVisibleFields))
+                return false;
+
+            if (visibleFields.Count != defaultVisibleFields.Count)
+                return false;
+
+            return visibleFields.All(f => defaultVisibleFields.Contains(f.Name));
+        }
+
+        /// <summary>
         /// Returns all the visible fields for the given entity type
         /// </summary>
         public HashSet<string> GetVisibleFieldsForEntity(string entityType)
