@@ -155,7 +155,7 @@
 
                             <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
                                 <ToggleButton x:Name="CustomizeFieldsButton" 
-                                              Width="30" Height="30"
+                                              Width="20" Height="20"
                                               HorizontalAlignment="Left" VerticalAlignment="Center"
                                               ToolTip="Customize fields">
                                     <ToggleButton.Template>
@@ -250,6 +250,8 @@
                                                     Margin="5 5 5 5"
                                                     Width="40" Height="25"
                                                     HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                    Background="{DynamicResource VsBrush.Window}"
+                                                    Foreground="{DynamicResource VsBrush.WindowText}"
                                                     Content="Reset"
                                                     Command="{Binding ResetFieldsCustomizationCommand}"/>
                                         </Grid>
