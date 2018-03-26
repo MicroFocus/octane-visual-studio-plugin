@@ -184,7 +184,7 @@
                                         <Grid Background="{DynamicResource VsBrush.Window}">
                                             <Grid.RowDefinitions>
                                                 <RowDefinition Height="Auto"/>
-                                                <RowDefinition></RowDefinition>
+                                                <RowDefinition/>
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
@@ -219,7 +219,7 @@
 
                                             <ListView Grid.Row="1"
                                                       ItemsSource="{Binding DisplayedEntityFields}"
-                                                      HorizontalAlignment="Stretch" VerticalAlignment="Top"
+                                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                       ScrollViewer.VerticalScrollBarVisibility="Auto"
                                                       Background="{DynamicResource VsBrush.Window}"
