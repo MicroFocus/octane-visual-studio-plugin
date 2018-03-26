@@ -155,7 +155,7 @@
 
                             <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
                                 <ToggleButton x:Name="CustomizeFieldsButton" 
-                                              Width="20" Height="20"
+                                              Width="25" Height="25"
                                               HorizontalAlignment="Left" VerticalAlignment="Center"
                                               ToolTip="Customize fields">
                                     <ToggleButton.Template>
@@ -280,19 +280,28 @@
                                     </Border>
                                 </Popup>
                                 <Button x:Name="ShowCommentsButton"
-                                        Margin="5 0 0 0"
-                                        Width="30" Height="30"
+                                        Margin="8 0 0 0"
+                                        Width="25" Height="25"
+                                        BorderThickness="0"
+                                        Background="{DynamicResource VsBrush.Window}"
                                         HorizontalAlignment="Left" VerticalAlignment="Center"
                                         Command="{Binding ToggleCommentSectionCommand}"
                                         Visibility="{Binding Path=EntitySupportsComments, Converter={StaticResource BoolToVisConverter}}"
                                         ToolTip="{Binding ShowCommentTooltip}">
-                                    <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png"></Image>
+                                    <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png"/>
                                 </Button>
-                                <Button Width="30" Height="30" Command="{Binding RefreshCommand}" Margin="5 0 0 0" ToolTip="Refresh details">
+                                <Button Width="25" Height="25" 
+                                        BorderThickness="0"
+                                        Background="{DynamicResource VsBrush.Window}"
+                                        Command="{Binding RefreshCommand}"
+                                        Margin="5 0 0 0"
+                                        ToolTip="Refresh details">
                                     <!--This text-block show the reload sign as unicode character-->
-                                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
+                                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                                               FontWeight="Bold" FontSize="24"
+                                               Foreground="LightSkyBlue"
+                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Button>
-
                             </StackPanel>
                             
                         </Grid>
