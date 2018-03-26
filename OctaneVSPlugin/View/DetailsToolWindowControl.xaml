@@ -177,10 +177,34 @@
                                                 <RowDefinition Height="Auto"/>
                                             </Grid.RowDefinitions>
 
-                                            <TextBox Grid.Row="0" Margin="5 5 5 5" 
-                                                     Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
-                                                     view:FocusBehavior.IsFocus="True">
-                                            </TextBox>
+                                            <Grid Grid.Row="0">
+                                                <TextBox x:Name="SearchFieldsTextBox"
+                                                         VerticalAlignment="Center"
+                                                         HorizontalAlignment="Stretch"
+                                                         Background="{DynamicResource VsBrush.Window}"
+                                                         Foreground="{DynamicResource VsBrush.WindowText}"
+                                                         Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
+                                                         view:FocusBehavior.IsFocus="True"
+                                                         Margin="5"/>
+                                                <TextBlock IsHitTestVisible="False"
+                                                           Text="Search fields"
+                                                           VerticalAlignment="Center"
+                                                           HorizontalAlignment="Left"
+                                                           Margin="9 0 0 0"
+                                                           Background="{DynamicResource VsBrush.Window}"
+                                                           Foreground="DarkGray">
+                                                    <TextBlock.Style>
+                                                        <Style TargetType="{x:Type TextBlock}">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding Text, ElementName=SearchFieldsTextBox}" Value="">
+                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </TextBlock.Style>
+                                                </TextBlock>
+                                            </Grid>
 
                                             <ListView Grid.Row="1"
                                                       ItemsSource="{Binding DisplayedEntityFields}"
