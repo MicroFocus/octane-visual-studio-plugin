@@ -264,7 +264,18 @@
                                                     Background="{DynamicResource VsBrush.Window}"
                                                     Foreground="{DynamicResource VsBrush.WindowText}"
                                                     Content="Reset"
-                                                    Command="{Binding ResetFieldsCustomizationCommand}"/>
+                                                    Command="{Binding ResetFieldsCustomizationCommand}">
+                                                <Button.Style>
+                                                    <Style TargetType="{x:Type Button}">
+                                                        <Setter Property="IsEnabled" Value="True"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}" Value="True">
+                                                                <Setter Property="IsEnabled" Value="False"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                            </Button>
                                         </Grid>
                                     </Border>
                                 </Popup>
