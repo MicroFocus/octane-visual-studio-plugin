@@ -111,7 +111,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     await RetrieveComments();
 
                 Mode = DetailsWindowMode.ItemLoaded;
-                NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
@@ -119,6 +118,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 ErrorMessage = ex.Message;
             }
             NotifyPropertyChanged();
+        }
+
+        public void RefreshFields()
+        {
+            var entityType = Utility.GetConcreteEntityType(Entity);
+
+            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
+
+            var newDisplayedEntityFields = new List<FieldViewModel>();
+            foreach (var field in _allEntityFields)
+            {
+                field.IsSelected = persistedVisibleFields.Contains(field.Name);
+                newDisplayedEntityFields.Add(field);
+            }
+
+            _displayedEntityFields = new ObservableCollection<FieldViewModel>(newDisplayedEntityFields);
+
+            UpdateVisibleFields();
+
+            NotifyPropertyChanged("DisplayedEntityFields");
         }
 
         public IEnumerable<FieldViewModel> DisplayedEntityFields
@@ -182,20 +201,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             var entityType = Utility.GetConcreteEntityType(Entity);
             FieldsCache.Instance.ResetVisibleFieldsForEntity(entityType);
 
-            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
-
-            var newDisplayedEntityFields = new List<FieldViewModel>();
-            foreach (var field in _displayedEntityFields)
-            {
-                field.IsSelected = persistedVisibleFields.Contains(field.Name);
-                newDisplayedEntityFields.Add(field);
-            }
-
-            _displayedEntityFields = new ObservableCollection<FieldViewModel>(newDisplayedEntityFields);
-
-            UpdateVisibleFields();
-
-            NotifyPropertyChanged("DisplayedEntityFields");
+            RefreshFields();
         }
 
         public bool OnlyDefaultFieldsAreShown { get; private set; }
