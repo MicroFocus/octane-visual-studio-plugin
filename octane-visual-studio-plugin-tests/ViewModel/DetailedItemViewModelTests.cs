@@ -16,7 +16,6 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Tests;
-using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq;
@@ -24,33 +23,26 @@ using System.Linq;
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 {
     [TestClass]
-    public class DetailedItemViewModelTests : BaseTest
+    public class DetailedItemViewModelTests : BaseOctanePluginTest
     {
-        private readonly MyWorkMetadata _workMetadata = new MyWorkMetadata();
+        private static Story _story;
 
-        [AssemblyInitialize]
-        public static void AssemblyInitialize(TestContext context)
+        [ClassInitialize]
+        public static void ClassInit(TestContext context)
         {
-            InitConnection(context);
+            _story = StoryUtilities.CreateStory(entityService, workspaceContext);
+        }
 
-            OctaneConfiguration.Url = host;
-            OctaneConfiguration.Username = userName;
-            OctaneConfiguration.Password = password;
-            OctaneConfiguration.WorkSpaceId = workspaceContext.WorkspaceId;
-            OctaneConfiguration.SharedSpaceId = sharedSpaceContext.SharedSpaceId;
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            entityService.DeleteById<Story>(workspaceContext, _story.Id);
         }
 
         [TestMethod]
         public void DetailedItemViewModelTests_Test()
         {
-            var entity = new Story()
-            {
-                Id = "1002",
-                SubType = WorkItem.SUBTYPE_STORY
-            };
-
-            var viewModel = new DetailedItemViewModel(entity, _workMetadata);
-
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
             Assert.AreEqual(DetailsWindowMode.ItemLoaded, viewModel.Mode, "Detailed item should have been loaded");
@@ -59,19 +51,34 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_Filter()
         {
-            var entity = new Story()
-            {
-                Id = "1002",
-                SubType = WorkItem.SUBTYPE_STORY
-            };
-
-            var viewModel = new DetailedItemViewModel(entity, _workMetadata);
-
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
             viewModel.Filter = "creat";
 
             Assert.AreEqual(1, viewModel.DisplayedEntityFields.Count());
+        }
+
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_CheckVisibleFields()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            var displayedEntityFields = viewModel.DisplayedEntityFields.ToList();
+
+            var x = displayedEntityFields.Count(f => f.IsSelected);
+
+            foreach (var field in displayedEntityFields)
+            {
+                field.IsSelected = true;
+                viewModel.CheckboxChangeCommand.Execute(null);
+            }
+
+            var expectedVisibleFields = displayedEntityFields.Where(f => f.IsSelected).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).ToList();
+            CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields);
         }
     }
 
