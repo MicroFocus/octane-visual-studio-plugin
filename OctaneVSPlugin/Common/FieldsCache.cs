@@ -112,7 +112,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         private static void DeserializePersistedFieldsMetadata()
         {
             var persistedJson = OctanePluginSettings.Default.EntityFields;
-            _persistedFieldsCache = Deserialize(persistedJson);
+            _persistedFieldsCache = Deserialize(persistedJson) ?? new Metadata
+            {
+                data = new Dictionary<string, HashSet<string>>(),
+                version = 1
+            };
         }
 
         private static void PersistFieldsMetadata()
@@ -130,19 +134,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// <summary>
         /// Check whether the input fields are the same as the default fields for the given entity type
         /// </summary>
-        public bool AreSameFieldsAsDefaultFields(string entityType, List<FieldViewModel> visibleFields)
+        public bool AreSameFieldsAsDefaultFields(string entityType, List<FieldViewModel> fields)
         {
-            if (string.IsNullOrEmpty(entityType))
+            if (string.IsNullOrEmpty(entityType) || fields == null)
                 return false;
 
             HashSet<string> defaultVisibleFields;
             if (!_defaultFieldsCache.data.TryGetValue(entityType, out defaultVisibleFields))
                 return false;
 
-            if (visibleFields.Count != defaultVisibleFields.Count)
+            if (fields.Count != defaultVisibleFields.Count)
                 return false;
 
-            return visibleFields.All(f => defaultVisibleFields.Contains(f.Name));
+            return fields.All(f => defaultVisibleFields.Contains(f.Name) && f.IsSelected);
         }
 
         /// <summary>
@@ -188,7 +192,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         }
 
         /// <summary>
-        /// Reset to the default visible fields for the given entity
+        /// Reset to the default visible fields for the given entity type
         /// </summary>
         public void ResetVisibleFieldsForEntity(string entityType)
         {
@@ -210,7 +214,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         #region Data contracts
 
         [DataContract]
-        private class Metadata
+        public class Metadata
         {
             [DataMember]
             public int version;
