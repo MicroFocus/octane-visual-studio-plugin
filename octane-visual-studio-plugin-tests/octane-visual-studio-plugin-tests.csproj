@@ -39,12 +39,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSTest.TestFramework.1.2.0\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\MSTest.TestFramework.1.2.0\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
-    </Reference>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
@@ -58,11 +53,17 @@
     <Compile Include="Utilities\ExposedObject.cs" />
     <Compile Include="Utilities\ExposedObjectHelper.cs" />
     <Compile Include="Utilities\Utility.cs" />
+    <Compile Include="ViewModel\DetailedItemViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\alm-octane-csharp-rest-sdk\OctaneSdkTests\OctaneSdkTest.csproj">
+      <Project>{e4f5b839-ecbb-421b-a231-0062a6ee7fea}</Project>
+      <Name>OctaneSdkTest</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\alm-octane-csharp-rest-sdk\OctaneSdk\OctaneSdk.csproj">
       <Project>{344d2ea6-c3e6-4a67-95c1-51b5e7647e89}</Project>
       <Name>OctaneSdk</Name>

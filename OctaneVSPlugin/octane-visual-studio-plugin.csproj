@@ -82,6 +82,7 @@
     <Compile Include="Common\HTMLConverter\HtmlSchema.cs" />
     <Compile Include="Common\HTMLConverter\HtmlTokenType.cs" />
     <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
+    <Compile Include="Common\OctaneConfiguration.cs" />
     <Compile Include="Model\EntityField.cs" />
     <Compile Include="OctanePluginSettings.Designer.cs">
       <AutoGen>True</AutoGen>

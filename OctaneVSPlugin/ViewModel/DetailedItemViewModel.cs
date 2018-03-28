@@ -57,16 +57,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 EntitySupportsComments = true;
 
             _octaneService = new OctaneServices(
-                OctaneMyItemsViewModel.Instance.Package.AlmUrl,
-                OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
-                OctaneMyItemsViewModel.Instance.Package.WorkSpaceId,
-                OctaneMyItemsViewModel.Instance.Package.AlmUsername,
-                OctaneMyItemsViewModel.Instance.Package.AlmPassword);
+                OctaneConfiguration.Url,
+                OctaneConfiguration.SharedSpaceId,
+                OctaneConfiguration.WorkSpaceId,
+                OctaneConfiguration.Username,
+                OctaneConfiguration.Password);
         }
 
         private static readonly Dictionary<string, List<FieldMetadata>> CurrentFieldsCache = new Dictionary<string, List<FieldMetadata>>();
 
-        public async void Initialize()
+        public async System.Threading.Tasks.Task Initialize()
         {
             try
             {
