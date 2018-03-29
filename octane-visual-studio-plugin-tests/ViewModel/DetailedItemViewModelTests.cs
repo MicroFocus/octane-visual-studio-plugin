@@ -193,26 +193,61 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
         #endregion
 
+        #region VisibleFields
+
         [TestMethod]
-        public void DetailedItemViewModelTests_CheckVisibleFields()
+        public void DetailedItemViewModelTests_VisibleFields_ShowHideFields_ShowSelectedFields()
         {
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            var displayedEntityFields = viewModel.FilteredEntityFields.ToList();
+            var releaseField = viewModel.FilteredEntityFields.FirstOrDefault(f => f.Label == "Release");
+            releaseField.IsSelected = false;
+            viewModel.CheckboxChangeCommand.Execute(null);
 
-            var x = displayedEntityFields.Count(f => f.IsSelected);
+            var commitersField = viewModel.FilteredEntityFields.FirstOrDefault(f => f.Label == "Committers");
+            commitersField.IsSelected = true;
+            viewModel.CheckboxChangeCommand.Execute(null);
 
-            foreach (var field in displayedEntityFields)
+            var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_VisibleFields_ShowAllFields_ShowSelectedFields()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            foreach (var field in viewModel.FilteredEntityFields)
             {
                 field.IsSelected = true;
                 viewModel.CheckboxChangeCommand.Execute(null);
             }
 
-            var expectedVisibleFields = displayedEntityFields.Where(f => f.IsSelected).ToList();
-            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).ToList();
-            CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields);
+            var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
         }
-    }
 
+        [TestMethod]
+        public void DetailedItemViewModelTests_VisibleFields_HideAllFields_ShowSelectedFields()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            foreach (var field in viewModel.FilteredEntityFields)
+            {
+                field.IsSelected = false;
+                viewModel.CheckboxChangeCommand.Execute(null);
+            }
+
+            var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
+        }
+
+        #endregion
+    }
 }

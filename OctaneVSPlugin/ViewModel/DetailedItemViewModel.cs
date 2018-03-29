@@ -34,7 +34,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
-        private ObservableCollection<FieldViewModel> _visibleFields;
         private readonly List<FieldViewModel> _allEntityFields;
 
         private string _filter = string.Empty;
@@ -48,7 +47,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
-            _visibleFields = new ObservableCollection<FieldViewModel>();
             _allEntityFields = new List<FieldViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
@@ -90,7 +88,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Entity = await _octaneService.FindEntity(Entity, updatedFields);
 
                 _allEntityFields.Clear();
-                _visibleFields.Clear();
 
                 var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
                 // we want to filter out description because it will be shown separately
@@ -101,8 +98,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     _allEntityFields.Add(fieldViewModel);
                 }
-
-                UpdateVisibleFields();
 
                 if (EntitySupportsComments)
                     await RetrieveComments();
@@ -145,7 +140,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public IEnumerable<FieldViewModel> VisibleFields
         {
-            get { return _visibleFields; }
+            get
+            {
+                NotifyPropertyChanged("OnlyDefaultFieldsAreShown");
+                return new ObservableCollection<FieldViewModel>(_allEntityFields.Where(f => f.IsSelected));
+            }
         }
 
         #region FieldCustomization
@@ -182,22 +181,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             var entityType = Utility.GetConcreteEntityType(Entity);
 
             FieldsCache.Instance.UpdateVisibleFieldsForEntity(entityType, _allEntityFields);
-            UpdateVisibleFields();
-        }
 
-        private void UpdateVisibleFields()
-        {
-            var newVisibleFields = new List<FieldViewModel>();
-            foreach (var field in _allEntityFields.Where(f => f.IsSelected))
-            {
-                newVisibleFields.Add(field);
-            }
-
-            _visibleFields = new ObservableCollection<FieldViewModel>(newVisibleFields);
-
-            OnlyDefaultFieldsAreShown = FieldsCache.Instance.AreSameFieldsAsDefaultFields(Utility.GetConcreteEntityType(Entity), newVisibleFields);
-
-            NotifyPropertyChanged("OnlyDefaultFieldsAreShown");
             NotifyPropertyChanged("VisibleFields");
         }
 
@@ -211,7 +195,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             RefreshFields();
         }
 
-        public bool OnlyDefaultFieldsAreShown { get; private set; }
+        /// <summary>
+        /// Flag specifying whether only the default fields for the current entity are selected and shown in the view
+        /// </summary>
+        public bool OnlyDefaultFieldsAreShown
+        {
+            get
+            {
+                return FieldsCache.Instance.AreSameFieldsAsDefaultFields(Utility.GetConcreteEntityType(Entity),
+                    _allEntityFields.Where(f => f.IsSelected).ToList());
+            }
+        }
 
         #endregion
 
