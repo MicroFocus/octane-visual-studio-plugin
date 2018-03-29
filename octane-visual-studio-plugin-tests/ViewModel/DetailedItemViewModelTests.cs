@@ -16,10 +16,13 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Tests;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using Utility = MicroFocus.Adm.Octane.VisualStudio.Common.Utility;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 {
@@ -73,7 +76,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             viewModel.RefreshCommand.Execute(null);
 
-            TestUtilities.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 5000,
+            TestUtilities.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 30000,
                 "Timeout while refreshing the entity");
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
@@ -90,14 +93,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             foreach (var field in viewModel.FilteredEntityFields)
             {
                 field.IsSelected = true;
-                viewModel.CheckboxChangeCommand.Execute(null);
+                viewModel.ToggleEntityFieldVisibilityCommand.Execute(null);
             }
 
             var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
 
             viewModel.RefreshCommand.Execute(null);
 
-            TestUtilities.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 5000,
+            TestUtilities.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 30000,
                 "Timeout while refreshing the entity");
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
@@ -201,16 +204,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            var releaseField = viewModel.FilteredEntityFields.FirstOrDefault(f => f.Label == "Release");
-            releaseField.IsSelected = false;
-            viewModel.CheckboxChangeCommand.Execute(null);
-
-            var commitersField = viewModel.FilteredEntityFields.FirstOrDefault(f => f.Label == "Committers");
-            commitersField.IsSelected = true;
-            viewModel.CheckboxChangeCommand.Execute(null);
+            ChangeFieldVisibility(viewModel, "Committers", false);
+            ChangeFieldVisibility(viewModel, "Committers", true);
 
             var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
-            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
             CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
         }
 
@@ -223,11 +221,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             foreach (var field in viewModel.FilteredEntityFields)
             {
                 field.IsSelected = true;
-                viewModel.CheckboxChangeCommand.Execute(null);
+                viewModel.ToggleEntityFieldVisibilityCommand.Execute(null);
             }
 
             var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
-            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
             CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
         }
 
@@ -240,14 +238,89 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             foreach (var field in viewModel.FilteredEntityFields)
             {
                 field.IsSelected = false;
-                viewModel.CheckboxChangeCommand.Execute(null);
+                viewModel.ToggleEntityFieldVisibilityCommand.Execute(null);
             }
 
             var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
-            var actualVisibleFields = viewModel.VisibleFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
             CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
         }
 
         #endregion
+
+        #region DefaultFields
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_ResetFieldsCustomizationCommand_AllFieldsAreVisible_ReturnToDefault()
+        {
+            ValidateResetCommand(true);
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_ResetFieldsCustomizationCommand_NoFieldIsVisible_ReturnToDefault()
+        {
+            ValidateResetCommand(false);
+        }
+
+        private void ValidateResetCommand(bool allFieldsVisible)
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "Only default fields should be visible when detailed item is initialized");
+
+            foreach (var field in viewModel.FilteredEntityFields)
+            {
+                field.IsSelected = allFieldsVisible;
+                viewModel.ToggleEntityFieldVisibilityCommand.Execute(null);
+            }
+
+            Assert.IsFalse(viewModel.OnlyDefaultFieldsAreShown, "Visible fields should be different than default fields");
+
+            viewModel.ResetFieldsCustomizationCommand.Execute(null);
+
+            var dynamicFieldsCache = ExposedClass.From(typeof(FieldsCache));
+            var cache = dynamicFieldsCache._defaultFieldsCache as FieldsCache.Metadata;
+
+            var persistedVisibleFields = cache.data[Utility.GetConcreteEntityType(_story)];
+
+            Assert.AreEqual(persistedVisibleFields.Count, viewModel.VisibleFields.Count(), "Inconsistent number of visible fields");
+            foreach (var field in viewModel.VisibleFields)
+            {
+                Assert.IsTrue(persistedVisibleFields.Contains(field.Name), $"Field {field.Name} should be visible");
+            }
+
+            Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "Only default fields should be visible after reset command");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_OnlyDefaultFieldsAreShown_ToggleShowingOnlyDefaultFields_True()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "Only default fields should be visible when detailed item is initialized");
+
+            ChangeFieldVisibility(viewModel, "Release", false);
+            Assert.IsFalse(viewModel.OnlyDefaultFieldsAreShown, "Not all default fields are visible");
+
+            ChangeFieldVisibility(viewModel, "Release", true);
+            Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "All default fields should be visible");
+
+            ChangeFieldVisibility(viewModel, "Committers", true);
+            Assert.IsFalse(viewModel.OnlyDefaultFieldsAreShown, "More fields than the default fields are visible");
+
+            ChangeFieldVisibility(viewModel, "Committers", false);
+            Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "All default fields should be visible");
+        }
+
+        #endregion
+
+        private void ChangeFieldVisibility(DetailedItemViewModel viewModel, string fieldLabel, bool visibility)
+        {
+            var field = viewModel.FilteredEntityFields.FirstOrDefault(f => f.Label == fieldLabel);
+            field.IsSelected = visibility;
+            viewModel.ToggleEntityFieldVisibilityCommand.Execute(null);
+        }
     }
 }

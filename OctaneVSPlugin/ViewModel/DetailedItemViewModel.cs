@@ -43,7 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             RefreshCommand = new DelegatedCommand(Refresh);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
-            CheckboxChangeCommand = new DelegatedCommand(CheckboxChange);
+            ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
@@ -138,6 +138,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             //NotifyPropertyChanged("FilteredEntityFields");
         }
 
+        /// <summary>
+        /// Entity fields shown in the main section of the detailed item view
+        /// </summary>
         public IEnumerable<FieldViewModel> VisibleFields
         {
             get
@@ -174,9 +177,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
-        public ICommand CheckboxChangeCommand { get; }
+        /// <summary>
+        /// Command for handling the visibility change of an entity field
+        /// </summary>
+        public ICommand ToggleEntityFieldVisibilityCommand { get; }
 
-        private void CheckboxChange(object param)
+        private void ToggleEntityFieldVisibility(object param)
         {
             var entityType = Utility.GetConcreteEntityType(Entity);
 
@@ -185,6 +191,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged("VisibleFields");
         }
 
+        /// <summary>
+        /// Command for reseting the visible fields to the defaults for the current entity
+        /// </summary>
         public ICommand ResetFieldsCustomizationCommand { get; }
 
         private void ResetFieldsCustomization(object param)
@@ -192,7 +201,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             var entityType = Utility.GetConcreteEntityType(Entity);
             FieldsCache.Instance.ResetVisibleFieldsForEntity(entityType);
 
-            RefreshFields();
+            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
+            foreach (var field in _allEntityFields)
+            {
+                field.IsSelected = persistedVisibleFields.Contains(field.Name);
+            }
+
+            NotifyPropertyChanged("FilteredEntityFields");
+            NotifyPropertyChanged("VisibleFields");
         }
 
         /// <summary>
