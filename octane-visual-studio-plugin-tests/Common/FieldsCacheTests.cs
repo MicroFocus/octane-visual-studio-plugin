@@ -12,25 +12,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
     /// Test class for <see cref="FieldsCache"/>
     /// </summary>
     [TestClass]
-    public class FieldsCacheTests
+    public class FieldsCacheTests : BaseOctanePluginTest
     {
-        private dynamic _persistedFieldsCache;
-
-        [TestInitialize]
-        public void TestInitialize()
-        {
-            var instance = FieldsCache.Instance;
-
-            _persistedFieldsCache = Utilities.Utility.Clone(ExposedClass.From(typeof(FieldsCache))._persistedFieldsCache as FieldsCache.Metadata);
-        }
-
-        [TestCleanup]
-        public void TestCleanup()
-        {
-            ExposedClass.From(typeof(FieldsCache))._persistedFieldsCache = _persistedFieldsCache;
-            ExposedClass.From(typeof(FieldsCache)).PersistFieldsMetadata();
-        }
-
         #region GetVisibleFieldsForEntity
 
         [TestMethod]

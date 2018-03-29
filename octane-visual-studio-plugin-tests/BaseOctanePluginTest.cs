@@ -16,7 +16,9 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Tests;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 {
@@ -26,6 +28,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
     public abstract class BaseOctanePluginTest : BaseTest
     {
         protected readonly MyWorkMetadata MyWorkMetadata = new MyWorkMetadata();
+        private dynamic _persistedFieldsCache;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
@@ -37,6 +40,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
             OctaneConfiguration.Password = password;
             OctaneConfiguration.WorkSpaceId = workspaceContext.WorkspaceId;
             OctaneConfiguration.SharedSpaceId = sharedSpaceContext.SharedSpaceId;
+        }
+
+        [TestInitialize]
+        public void TestInitialize()
+        {
+            var instance = FieldsCache.Instance;
+
+            var dynamicFieldsCache = ExposedClass.From(typeof(FieldsCache));
+            var cache = dynamicFieldsCache._persistedFieldsCache as FieldsCache.Metadata;
+            _persistedFieldsCache = Utilities.Utility.Clone(cache);
+            dynamicFieldsCache._persistedFieldsCache = new FieldsCache.Metadata
+            {
+                data = new Dictionary<string, HashSet<string>>(),
+                version = 1
+            };
+        }
+
+        [TestCleanup]
+        public void TestCleanup()
+        {
+            ExposedClass.From(typeof(FieldsCache))._persistedFieldsCache = _persistedFieldsCache;
+            ExposedClass.From(typeof(FieldsCache)).PersistFieldsMetadata();
         }
     }
 }

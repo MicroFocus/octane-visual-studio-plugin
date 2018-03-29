@@ -60,6 +60,52 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
         #endregion
 
+        #region RefreshCommand
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_RefreshCommand_RefreshWithoutAnyChanges_Success()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
+
+            viewModel.RefreshCommand.Execute(null);
+
+            TestUtilities.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 5000,
+                "Timeout while refreshing the entity");
+
+            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
+
+            CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_RefreshCommand_RefreshAfterChangingVisibleFields_Succes()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            foreach (var field in viewModel.DisplayedEntityFields)
+            {
+                field.IsSelected = true;
+                viewModel.CheckboxChangeCommand.Execute(null);
+            }
+
+            var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
+
+            viewModel.RefreshCommand.Execute(null);
+
+            TestUtilities.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 5000,
+                "Timeout while refreshing the entity");
+
+            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
+
+            CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
+        }
+
+        #endregion
+
         [TestMethod]
         public void DetailedItemViewModelTests_Test()
         {

@@ -274,14 +274,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public bool CommentSectionVisibility { get; set; }
 
+        #region Refresh
+
         public ICommand RefreshCommand { get; }
 
         private void Refresh(object param)
         {
             Mode = DetailsWindowMode.LoadingItem;
-            NotifyPropertyChanged();
+            NotifyPropertyChanged("Mode");
+
             Initialize();
         }
+
+        #endregion
 
         public ICommand ToggleCommentSectionCommand { get; }
 
