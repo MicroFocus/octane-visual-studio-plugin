@@ -36,7 +36,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private ObservableCollection<FieldViewModel> _visibleFields;
         private readonly List<FieldViewModel> _allEntityFields;
-        private ObservableCollection<FieldViewModel> _displayedEntityFields;
+
+        private string _filter = string.Empty;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
@@ -49,7 +50,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             _commentViewModels = new ObservableCollection<CommentViewModel>();
             _visibleFields = new ObservableCollection<FieldViewModel>();
             _allEntityFields = new List<FieldViewModel>();
-            _displayedEntityFields = new ObservableCollection<FieldViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
 
@@ -91,7 +91,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 _allEntityFields.Clear();
                 _visibleFields.Clear();
-                _displayedEntityFields.Clear();
 
                 var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
                 // we want to filter out description because it will be shown separately
@@ -101,7 +100,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     var fieldViewModel = new FieldViewModel(Entity, field.name, field.label, visibleFieldsHashSet.Contains(field.name));
 
                     _allEntityFields.Add(fieldViewModel);
-                    _displayedEntityFields.Add(fieldViewModel);
                 }
 
                 UpdateVisibleFields();
@@ -126,27 +124,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public void RefreshFields()
         {
-            var entityType = Utility.GetConcreteEntityType(Entity);
+            // TODO revisit - implement Observer?
+            //var entityType = Utility.GetConcreteEntityType(Entity);
 
-            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
+            //var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
 
-            var newDisplayedEntityFields = new List<FieldViewModel>();
-            foreach (var field in _allEntityFields)
-            {
-                field.IsSelected = persistedVisibleFields.Contains(field.Name);
-                newDisplayedEntityFields.Add(field);
-            }
+            //var newDisplayedEntityFields = new List<FieldViewModel>();
+            //foreach (var field in _allEntityFields)
+            //{
+            //    field.IsSelected = persistedVisibleFields.Contains(field.Name);
+            //    newDisplayedEntityFields.Add(field);
+            //}
 
-            _displayedEntityFields = new ObservableCollection<FieldViewModel>(newDisplayedEntityFields);
+            //_filteredEntityFields = new ObservableCollection<FieldViewModel>(newDisplayedEntityFields);
 
-            UpdateVisibleFields();
+            //UpdateVisibleFields();
 
-            NotifyPropertyChanged("DisplayedEntityFields");
-        }
-
-        public IEnumerable<FieldViewModel> DisplayedEntityFields
-        {
-            get { return _displayedEntityFields; }
+            //NotifyPropertyChanged("FilteredEntityFields");
         }
 
         public IEnumerable<FieldViewModel> VisibleFields
@@ -154,21 +148,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return _visibleFields; }
         }
 
-        private string _filter;
+        #region FieldCustomization
 
+        /// <summary>
+        /// Entity fields shown in the field customization control after the search filter has been applied
+        /// </summary>
+        public IEnumerable<FieldViewModel> FilteredEntityFields
+        {
+            get
+            {
+                return new ObservableCollection<FieldViewModel>(
+                    _allEntityFields.Where(f => f.Label.ToLowerInvariant().Contains(_filter)));
+            }
+        }
+
+        /// <summary>
+        /// Search filter applied on the entity fields
+        /// </summary>
         public string Filter
         {
             get { return _filter; }
             set
             {
-                _filter = value.ToLowerInvariant();
-
-                _displayedEntityFields.Clear();
-                foreach (var field in _allEntityFields.Where(f => f.Label.ToLowerInvariant().Contains(_filter)))
-                {
-                    _displayedEntityFields.Add(field);
-                }
-                NotifyPropertyChanged("DisplayedEntityFields");
+                _filter = value?.ToLowerInvariant() ?? string.Empty;
+                NotifyPropertyChanged("FilteredEntityFields");
             }
         }
 
@@ -209,6 +212,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         public bool OnlyDefaultFieldsAreShown { get; private set; }
+
+        #endregion
 
         public string ErrorMessage { get; private set; }
 

@@ -223,7 +223,7 @@
                                             </Grid>
 
                                             <ListView Grid.Row="1"
-                                                      ItemsSource="{Binding DisplayedEntityFields}"
+                                                      ItemsSource="{Binding FilteredEntityFields}"
                                                       HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                                                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                                       ScrollViewer.VerticalScrollBarVisibility="Auto"

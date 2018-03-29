@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Tests;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
@@ -86,7 +87,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            foreach (var field in viewModel.DisplayedEntityFields)
+            foreach (var field in viewModel.FilteredEntityFields)
             {
                 field.IsSelected = true;
                 viewModel.CheckboxChangeCommand.Execute(null);
@@ -106,26 +107,91 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
         #endregion
 
+        #region Filter
+
         [TestMethod]
-        public void DetailedItemViewModelTests_Test()
+        public void DetailedItemViewModelTests_Filter_NullFilter_ReturnAllFields()
         {
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            Assert.AreEqual(DetailsWindowMode.ItemLoaded, viewModel.Mode, "Detailed item should have been loaded");
+            var expectedFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
+
+            viewModel.Filter = null;
+
+            var actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
+
+            CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields, "Mismathed filtered fields");
         }
 
         [TestMethod]
-        public void DetailedItemViewModelTests_Filter()
+        public void DetailedItemViewModelTests_Filter_EmptyFilter_ReturnAllFields()
         {
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            viewModel.Filter = "creat";
+            var expectedFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
 
-            Assert.AreEqual(1, viewModel.DisplayedEntityFields.Count());
+            viewModel.Filter = string.Empty;
+
+            var actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
+
+            CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields, "Mismathed filtered fields");
         }
 
+        [TestMethod]
+        public void DetailedItemViewModelTests_Filter_FilterDoesntMatchAnyItem_ReturnEmptyList()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            viewModel.Filter = "FilterDoesntMatchAnyItem";
+
+            var actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
+
+            Assert.AreEqual(0, actualFilteredFields.Count,
+                "Filter that doesn't match any item should return an empty search result");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_Filter_FilterPartialMatch_ReturnMatchList()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            var expectedFilteredFields = new List<string> { "Creation time", "Feature", "Release", "Team", "Blocked reason" };
+            viewModel.Filter = "ea";
+            var actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Label).ToList();
+            CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields,
+                $"Mismathed filtered fields for filter '{viewModel.Filter}'");
+
+            expectedFilteredFields = new List<string> { "Creation time", "Feature", };
+            viewModel.Filter = "eat";
+            actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Label).ToList();
+            CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields,
+                $"Mismathed filtered fields for filter '{viewModel.Filter}'");
+
+            expectedFilteredFields = new List<string> { "Feature" };
+            viewModel.Filter = "feature";
+            actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Label).ToList();
+            CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields,
+                $"Mismathed filtered fields for filter '{viewModel.Filter}'");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_Filter_FilterIgnoreCase_ReturnMatchList()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            var expectedFilteredFields = new List<string> { "Creation time", "Feature", };
+            viewModel.Filter = "EaT";
+            var actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Label).ToList();
+            CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields,
+                $"Mismathed filtered fields for filter 'EaT'");
+        }
+
+        #endregion
 
         [TestMethod]
         public void DetailedItemViewModelTests_CheckVisibleFields()
@@ -133,7 +199,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            var displayedEntityFields = viewModel.DisplayedEntityFields.ToList();
+            var displayedEntityFields = viewModel.FilteredEntityFields.ToList();
 
             var x = displayedEntityFields.Count(f => f.IsSelected);
 
