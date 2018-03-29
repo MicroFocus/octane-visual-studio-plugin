@@ -22,6 +22,9 @@ using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 {
+    /// <summary>
+    /// Test class for <see cref="DetailedItemViewModel"/>
+    /// </summary>
     [TestClass]
     public class DetailedItemViewModelTests : BaseOctanePluginTest
     {
@@ -38,6 +41,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         {
             entityService.DeleteById<Story>(workspaceContext, _story.Id);
         }
+
+        #region EntitySupportsComments
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_EntitySupportsComments_EntitySupportsComments_True()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            Assert.IsTrue(viewModel.EntitySupportsComments, "Entity should support comments");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_EntitySupportsComments_EntityDoesntSupportComments_False()
+        {
+            var viewModel = new DetailedItemViewModel(new Task(), MyWorkMetadata);
+            Assert.IsFalse(viewModel.EntitySupportsComments, "Entity shouldn't support comments");
+        }
+
+        #endregion
 
         [TestMethod]
         public void DetailedItemViewModelTests_Test()

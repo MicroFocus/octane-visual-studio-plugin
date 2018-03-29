@@ -53,8 +53,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             Mode = DetailsWindowMode.LoadingItem;
 
-            if (EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity)))
-                EntitySupportsComments = true;
+            EntitySupportsComments = EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity));
 
             _octaneService = new OctaneServices(
                 OctaneConfiguration.Url,
@@ -119,6 +118,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             NotifyPropertyChanged();
         }
+
+        /// <summary>
+        /// Flag specifying whether the current entity supports comments
+        /// </summary>
+        public bool EntitySupportsComments { get; }
 
         public void RefreshFields()
         {
@@ -248,8 +252,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         public DetailsWindowMode Mode { get; private set; }
-
-        public bool EntitySupportsComments { get; }
 
         private static readonly HashSet<string> EntityTypesSupportingComments = new HashSet<string>
         {
