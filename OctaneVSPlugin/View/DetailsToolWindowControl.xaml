@@ -72,9 +72,16 @@
                     </Grid.RowDefinitions>
 
                     <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
-                        <Button Width="30" Height="30" Command="{Binding RefreshCommand}" ToolTip="Refresh details" >
+                        <Button Width="25" Height="25" 
+                                BorderThickness="0"
+                                Background="{DynamicResource VsBrush.Window}"
+                                Command="{Binding RefreshCommand}"
+                                ToolTip="Refresh details">
                             <!--This text-block show the reload sign as unicode character-->
-                            <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
+                            <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                                       FontWeight="Bold" FontSize="24"
+                                       Foreground="LightSkyBlue"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Button>
 
                     </StackPanel>
