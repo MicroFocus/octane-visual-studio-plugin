@@ -206,7 +206,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            ChangeFieldVisibility(viewModel, "Committers", false);
+            ChangeFieldVisibility(viewModel, "Release", false);
             ChangeFieldVisibility(viewModel, "Committers", true);
 
             var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
@@ -246,6 +246,31 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
             CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_VisibleFields_MultipleEntitiesOfSameTime_ChangesAreReflectedInAllEntities()
+        {
+            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            viewModel.Initialize().Wait();
+
+            var secondStory = StoryUtilities.CreateStory(entityService, workspaceContext);
+            try
+            {
+                var secondViewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+                secondViewModel.Initialize().Wait();
+
+                ChangeFieldVisibility(viewModel, "Release", false);
+                ChangeFieldVisibility(viewModel, "Committers", true);
+
+                var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
+                var actualVisibleFields = secondViewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+                CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
+            }
+            finally
+            {
+                entityService.DeleteById<Story>(workspaceContext, secondStory.Id);
+            }
         }
 
         #endregion
