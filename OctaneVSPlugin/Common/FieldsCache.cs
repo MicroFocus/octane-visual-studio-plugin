@@ -188,6 +188,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 visibleFields.Add(field.Name);
             }
 
+            Notify(entityType);
             PersistFieldsMetadata();
         }
 
@@ -208,6 +209,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             _persistedFieldsCache.data[entityType] = new HashSet<string>(defaultVisibleFields);
 
+            Notify(entityType);
             PersistFieldsMetadata();
         }
 
@@ -224,5 +226,60 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         }
 
         #endregion
+
+        private readonly Dictionary<string, List<IFieldsObserver>> _fieldsObservers = new Dictionary<string, List<IFieldsObserver>>();
+
+        /// <summary>
+        /// Register the given observer
+        /// </summary>
+        public void Attach(IFieldsObserver observer)
+        {
+            if (observer == null)
+                return;
+
+            List<IFieldsObserver> observers;
+            if (!_fieldsObservers.TryGetValue(observer.EntityType, out observers))
+            {
+                observers = new List<IFieldsObserver>();
+                _fieldsObservers[observer.EntityType] = observers;
+            }
+
+            // since we are using the same window for displaying
+            var existingObserver = observers.FirstOrDefault(o => o.Id == observer.Id);
+            if (existingObserver != null)
+                observers.Remove(existingObserver);
+
+            observers.Add(observer);
+        }
+
+        /// <summary>
+        /// Unregister the given observer
+        /// </summary>
+        public void Detach(IFieldsObserver observer)
+        {
+            if (observer == null)
+                return;
+
+            List<IFieldsObserver> observers;
+            if (!_fieldsObservers.TryGetValue(observer.EntityType, out observers))
+                return;
+
+            observers.Remove(observer);
+
+            if (observers.Count == 0)
+                _fieldsObservers.Remove(observer.EntityType);
+        }
+
+        private void Notify(string entityType)
+        {
+            List<IFieldsObserver> observers;
+            if (!_fieldsObservers.TryGetValue(entityType, out observers))
+                return;
+
+            foreach (var observer in observers)
+            {
+                observer.UpdateFields();
+            }
+        }
     }
 }

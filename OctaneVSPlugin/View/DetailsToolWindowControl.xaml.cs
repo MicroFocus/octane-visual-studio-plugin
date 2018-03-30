@@ -97,21 +97,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             if (((Control)sender).Parent is UIElement parent)
                 parent.RaiseEvent(eventArg);
         }
-
-        private void MyToolWindow_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            if ((bool)e.NewValue == false)
-                return;
-
-            var control = sender as OctaneToolWindowControl;
-            if (control == null)
-                return;
-
-            var detailedItemViewModel = control.DataContext as DetailedItemViewModel;
-            if (detailedItemViewModel == null)
-                return;
-
-            detailedItemViewModel.RefreshFields();
-        }
     }
 }

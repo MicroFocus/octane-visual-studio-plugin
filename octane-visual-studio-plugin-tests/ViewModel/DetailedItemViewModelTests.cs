@@ -58,7 +58,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_EntitySupportsComments_EntityDoesntSupportComments_False()
         {
-            var viewModel = new DetailedItemViewModel(new Task(), MyWorkMetadata);
+            var task = new Task("1001");
+            task.SetValue(WorkItem.SUBTYPE_FIELD, "task");
+            var viewModel = new DetailedItemViewModel(task, MyWorkMetadata);
             Assert.IsFalse(viewModel.EntitySupportsComments, "Entity shouldn't support comments");
         }
 

@@ -29,7 +29,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// Detailed view model for an entity
     /// </summary>
-    public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged
+    public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged, IFieldsObserver
     {
         private readonly OctaneServices _octaneService;
 
@@ -59,6 +59,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 OctaneConfiguration.WorkSpaceId,
                 OctaneConfiguration.Username,
                 OctaneConfiguration.Password);
+
+            Id = (long)entity.Id;
+            EntityType = Utility.GetConcreteEntityType(Entity);
+            FieldsCache.Instance.Attach(this);
         }
 
         private static readonly Dictionary<string, List<FieldMetadata>> CurrentFieldsCache = new Dictionary<string, List<FieldMetadata>>();
@@ -69,13 +73,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 await _octaneService.Connect();
 
-                var entityType = Utility.GetConcreteEntityType(Entity);
                 List<FieldMetadata> fields;
-                if (!CurrentFieldsCache.TryGetValue(entityType, out fields))
+                if (!CurrentFieldsCache.TryGetValue(EntityType, out fields))
                 {
-                    var fieldsMetadata = await _octaneService.GetFieldsMetadata(entityType);
+                    var fieldsMetadata = await _octaneService.GetFieldsMetadata(EntityType);
                     fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
-                    CurrentFieldsCache[entityType] = fields;
+                    CurrentFieldsCache[EntityType] = fields;
                 }
 
                 var updatedFields = fields.Select(fm => fm.name).ToList();
@@ -89,7 +92,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 _allEntityFields.Clear();
 
-                var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
+                var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(EntityType);
                 // we want to filter out description because it will be shown separately
                 // and subtype because it is only used internally
                 foreach (var field in fields.Where(f => f.name != CommonFields.DESCRIPTION && f.name != CommonFields.SUB_TYPE))
@@ -117,26 +120,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public bool EntitySupportsComments { get; }
 
-        public void RefreshFields()
+        #region IFieldsObserver
+
+        /// <inheritdoc />
+        public long Id { get; }
+
+        /// <inheritdoc />
+        public string EntityType { get; }
+
+        /// <inheritdoc />
+        public void UpdateFields()
         {
-            // TODO revisit - implement Observer?
-            //var entityType = Utility.GetConcreteEntityType(Entity);
+            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(EntityType);
+            foreach (var field in _allEntityFields)
+            {
+                field.IsSelected = persistedVisibleFields.Contains(field.Name);
+            }
 
-            //var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
-
-            //var newDisplayedEntityFields = new List<FieldViewModel>();
-            //foreach (var field in _allEntityFields)
-            //{
-            //    field.IsSelected = persistedVisibleFields.Contains(field.Name);
-            //    newDisplayedEntityFields.Add(field);
-            //}
-
-            //_filteredEntityFields = new ObservableCollection<FieldViewModel>(newDisplayedEntityFields);
-
-            //UpdateVisibleFields();
-
-            //NotifyPropertyChanged("FilteredEntityFields");
+            NotifyPropertyChanged("FilteredEntityFields");
+            NotifyPropertyChanged("VisibleFields");
         }
+
+        #endregion
 
         /// <summary>
         /// Entity fields shown in the main section of the detailed item view
@@ -184,11 +189,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void ToggleEntityFieldVisibility(object param)
         {
-            var entityType = Utility.GetConcreteEntityType(Entity);
-
-            FieldsCache.Instance.UpdateVisibleFieldsForEntity(entityType, _allEntityFields);
-
-            NotifyPropertyChanged("VisibleFields");
+            FieldsCache.Instance.UpdateVisibleFieldsForEntity(EntityType, _allEntityFields);
         }
 
         /// <summary>
@@ -198,17 +199,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void ResetFieldsCustomization(object param)
         {
-            var entityType = Utility.GetConcreteEntityType(Entity);
-            FieldsCache.Instance.ResetVisibleFieldsForEntity(entityType);
-
-            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(entityType);
-            foreach (var field in _allEntityFields)
-            {
-                field.IsSelected = persistedVisibleFields.Contains(field.Name);
-            }
-
-            NotifyPropertyChanged("FilteredEntityFields");
-            NotifyPropertyChanged("VisibleFields");
+            FieldsCache.Instance.ResetVisibleFieldsForEntity(EntityType);
         }
 
         /// <summary>
@@ -218,7 +209,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                return FieldsCache.Instance.AreSameFieldsAsDefaultFields(Utility.GetConcreteEntityType(Entity),
+                return FieldsCache.Instance.AreSameFieldsAsDefaultFields(EntityType,
                     _allEntityFields.Where(f => f.IsSelected).ToList());
             }
         }

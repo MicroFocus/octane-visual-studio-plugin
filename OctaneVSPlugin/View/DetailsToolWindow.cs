@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
@@ -88,6 +89,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         public static bool IsEntityTypeSupported(string type)
         {
             return supportedEntityTypes.Contains(type);
+        }
+
+        protected override void OnClose()
+        {
+            var control = Content as OctaneToolWindowControl;
+            if (control == null)
+                return;
+
+            var detailedItemViewModel = control.DataContext as DetailedItemViewModel;
+            if (detailedItemViewModel == null)
+                return;
+
+            FieldsCache.Instance.Detach(detailedItemViewModel);
         }
     }
 }

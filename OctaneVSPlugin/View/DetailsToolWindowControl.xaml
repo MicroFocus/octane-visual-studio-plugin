@@ -25,8 +25,7 @@
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="600"
-             Name="MyToolWindow" 
-             IsVisibleChanged="MyToolWindow_IsVisibleChanged">
+             Name="MyToolWindow">
 
     <UserControl.Resources>
         <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
