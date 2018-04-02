@@ -65,22 +65,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             FieldsCache.Instance.Attach(this);
         }
 
-        private static readonly Dictionary<string, List<FieldMetadata>> CurrentFieldsCache = new Dictionary<string, List<FieldMetadata>>();
-
         public async System.Threading.Tasks.Task Initialize()
         {
             try
             {
                 await _octaneService.Connect();
 
-                List<FieldMetadata> fields;
-                if (!CurrentFieldsCache.TryGetValue(EntityType, out fields))
-                {
-                    var fieldsMetadata = await _octaneService.GetFieldsMetadata(EntityType);
-                    fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
-                    CurrentFieldsCache[EntityType] = fields;
-                }
-
+                List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(EntityType);
                 var updatedFields = fields.Select(fm => fm.name).ToList();
                 // TODO - investigate why not all entities receive the subtype field by default
                 if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))

@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Linq;
 
@@ -72,6 +73,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (customContentFunc != null)
                     return customContentFunc(_parentEntity);
+
+                var formattedValue = FieldsMetadataService.GetFormattedValue(_parentEntity, _fieldName);
+                if (formattedValue != null)
+                    return formattedValue;
 
                 object value = _parentEntity.GetValue(_fieldName);
                 switch (value)

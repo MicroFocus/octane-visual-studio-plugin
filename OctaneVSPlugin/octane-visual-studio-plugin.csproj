@@ -75,6 +75,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\FieldsCache.cs" />
+    <Compile Include="Common\FieldsMetadataService.cs" />
     <Compile Include="Common\HTMLConverter\HtmlCssParser.cs" />
     <Compile Include="Common\HTMLConverter\HtmlFromXamlConverter.cs" />
     <Compile Include="Common\HTMLConverter\HtmlLexicalAnalyzer.cs" />
