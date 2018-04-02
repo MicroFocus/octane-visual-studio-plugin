@@ -187,7 +187,8 @@
                                     </ToggleButton.Template>
                                 </ToggleButton>
                                 <Popup Width="200" Height="250"
-                                       Placement="Bottom" 
+                                       Placement="Bottom"
+                                       HorizontalOffset="-175"
                                        PlacementTarget="{Binding ElementName=CustomizeFieldsButton}"
                                        IsOpen="{Binding IsChecked, ElementName=CustomizeFieldsButton}"
                                        StaysOpen="False">
