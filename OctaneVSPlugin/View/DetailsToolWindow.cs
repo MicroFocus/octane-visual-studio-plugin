@@ -74,6 +74,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             this.Content = detailsControl;
         }
 
+        /// <inheritdoc/>
+        protected override void OnClose()
+        {
+            DetailsWindowManager.UnregisterDetailsWindow(this);
+            base.OnClose();
+        }
+
         internal void LoadEntity(BaseEntity entity)
         {
             var viewModel = new DetailedItemViewModel(entity, new MyWorkMetadata());

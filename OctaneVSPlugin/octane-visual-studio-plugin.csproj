@@ -121,6 +121,7 @@
     <Compile Include="CommonFields.cs" />
     <Compile Include="Common\Utility.cs" />
     <Compile Include="ViewModel\DetailsWindowMode.cs" />
+    <Compile Include="View\DetailsWindowManager.cs" />
     <Compile Include="View\HtmlToFlowDocumentConverter.cs" />
   </ItemGroup>
   <ItemGroup>
