@@ -39,6 +39,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             base.OnApply(e);
 
+            FieldsMetadataService.Reset();
+
             // After settings are applied we notify the main ViewModel to allow it to refresh.
             if (OctaneMyItemsViewModel.Instance != null)
             {

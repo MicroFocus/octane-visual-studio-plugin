@@ -32,9 +32,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         private static readonly Dictionary<string, Func<object, object>> Converter = new Dictionary<string, Func<object, object>>();
 
-        /// <summary>
-        /// 
-        /// </summary>
         private static readonly Dictionary<Tuple<string, string>, FieldMetadata> MetadataCache = new Dictionary<Tuple<string, string>, FieldMetadata>();
 
         /// <summary>
@@ -42,7 +39,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         private static readonly Dictionary<string, List<FieldMetadata>> FieldMetadataCache = new Dictionary<string, List<FieldMetadata>>();
 
-        private static string _currentOctaneUrl;
         private static OctaneServices _octaneService;
 
         static FieldsMetadataService()
@@ -50,9 +46,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             Converter.Add("date_time", value => DateTime.Parse(value.ToString()).ToString("MM/dd/yyyy HH:mm:ss"));
         }
 
+        /// <summary>
+        /// Reset the service
+        /// </summary>
+        internal static void Reset()
+        {
+            _octaneService = null;
+
+            MetadataCache.Clear();
+            FieldMetadataCache.Clear();
+        }
+
+        /// <summary>
+        /// Return the list of field metadata for the given entity type
+        /// </summary>
         internal static async Task<List<FieldMetadata>> GetFieldMetadata(string entityType)
         {
-            if (_currentOctaneUrl != OctaneConfiguration.Url)
+            if (_octaneService == null)
             {
                 _octaneService = new OctaneServices(
                     OctaneConfiguration.Url,
@@ -62,11 +72,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                     OctaneConfiguration.Password);
 
                 await _octaneService.Connect();
-
-                MetadataCache.Clear();
-                FieldMetadataCache.Clear();
-
-                _currentOctaneUrl = OctaneConfiguration.Url;
             }
 
             List<FieldMetadata> fields;
@@ -91,6 +96,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             }
         }
 
+        /// <summary>
+        /// Return the formatted value for the given entity property using the property datatype
+        /// </summary>
         internal static object GetFormattedValue(BaseEntity entity, string propertyName)
         {
             try
