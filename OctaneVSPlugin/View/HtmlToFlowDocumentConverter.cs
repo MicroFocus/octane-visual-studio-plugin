@@ -21,7 +21,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             if (value == null)
                 return null;
 
-            var xaml = HtmlToXamlConverter.ConvertHtmlToXaml(value.ToString(), false);
+            try
+            {
+                return ConvertHtmlToFlowDocument(value.ToString());
+            }
+            catch
+            {
+                try
+                {
+                    // if there was an issue trying to convert the original html code
+                    // we show the user an error message
+                    return ConvertHtmlToFlowDocument("<html><body><p><span style=\"color:#e74c3c;\">Unable to obtain information</span></p></body></html>");
+                }
+                catch
+                {
+                    // if we really can't convert to FlowDocument, don't show anything
+                    return null;
+                }
+            }
+        }
+
+        private FlowDocument ConvertHtmlToFlowDocument(string html)
+        {
+            var xaml = HtmlToXamlConverter.ConvertHtmlToXaml(html, false);
 
             var flowDocument = new FlowDocument();
             using (var stream = new MemoryStream((new UTF8Encoding()).GetBytes(xaml)))
