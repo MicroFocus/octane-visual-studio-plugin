@@ -1,17 +1,33 @@
-﻿using Hpe.Nga.Api.Core.Connector;
-using Hpe.Nga.Api.Core.Entities;
-using Hpe.Nga.Api.Core.Services;
-using Hpe.Nga.Api.Core.Services.Query;
-using Hpe.Nga.Api.Core.Services.RequestContext;
+﻿/*!
+* (c) 2016-2018 EntIT Software LLC, a Micro Focus company
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
+
+using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
+using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System;
-
+using OctaneTask = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 using Task = System.Threading.Tasks.Task;
-using OctaneTask = Hpe.Nga.Api.Core.Entities.Task; 
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Responsible for interacting with Octane API.
@@ -89,11 +105,7 @@ namespace Hpe.Nga.Octane.VisualStudio
 
         public async Task<IList<BaseEntity>> GetMyItems(MyWorkMetadata itemFetchInfo)
         {
-            // get the id of the logged in user
-            QueryPhrase ownerQuery = new LogicalQueryPhrase("email", this.user);
-            EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
-            WorkspaceUser owner = ownerQueryResult.data.FirstOrDefault();
-
+            var owner = await GetWorkspaceUser();
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
                 BuildUserItemCriteria(owner), BuildUserItemFields());
 
@@ -111,10 +123,48 @@ namespace Hpe.Nga.Octane.VisualStudio
             return result;
         }
 
+        private IList<QueryPhrase> BuildCommentsCriteria(WorkspaceUser user)
+        {
+            return new List<QueryPhrase>
+            {
+                new CrossQueryPhrase("mention_user", new LogicalQueryPhrase("id", user.Id))
+            };
+        }
+
+        private readonly List<string> commentFields = new List<string>
+        {
+            Comment.AUTHOR_FIELD,
+            Comment.OWNER_WORK_FIELD,
+            Comment.OWNER_TEST_FIELD,
+            Comment.OWNER_RUN_FIELD,
+            Comment.OWNER_REQUIREMENT_FIELD,
+            Comment.TEXT_FIELD
+        };
+
+        public async Task<IList<BaseEntity>> GetMyCommentItems()
+        {
+            var owner = await GetWorkspaceUser();
+            EntityListResult<Comment> comments = await es.GetAsync<Comment>(workspaceContext, BuildCommentsCriteria(owner), commentFields);
+            return comments.BaseEntities.ToList();
+        }
+
+        private async Task<WorkspaceUser> GetWorkspaceUser()
+        {
+            QueryPhrase ownerQuery = new LogicalQueryPhrase("email", user);
+            EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
+            return ownerQueryResult.data.FirstOrDefault();
+        }
+
+        public async Task<BaseEntity> FindEntity(BaseEntity entityModel)
+        {
+            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), null);
+            return entity;
+        }
+
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
             List<UserItem> userItems,
             Func<UserItem, BaseEntity> getReferenceEntityFunc,
-            MyWorkMetadata itemFetchInfo) 
+            MyWorkMetadata itemFetchInfo)
             where TEntity : BaseEntity
         {
             LogicalQueryPhrase idCriteria = BuildCriteria(userItems, getReferenceEntityFunc);

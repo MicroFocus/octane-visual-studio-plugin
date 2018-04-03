@@ -1,11 +1,29 @@
-﻿using System.Linq;
-using System.Collections.Generic;
-using System;
-using System.Windows.Media;
-using Hpe.Nga.Api.Core.Entities;
-using System.Diagnostics;
+﻿/*!
+* (c) 2016-2018 EntIT Software LLC, a Micro Focus company
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-namespace Hpe.Nga.Octane.VisualStudio
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Windows.Media;
+
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// This is one-stop-shop for entity information to fetch and display.
@@ -39,7 +57,7 @@ namespace Hpe.Nga.Octane.VisualStudio
         /// Most of the entites are aggregated entities with sub-types, for the exceptions listed
         /// here the Subtype field is not fetched.
         /// </summary>
-        private readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task) };
+        private readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
 
         public MyWorkMetadata()
         {
@@ -67,7 +85,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
@@ -80,7 +98,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
@@ -92,22 +110,22 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.STEPS_NUM, "Steps"),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
-            AddSubType<Test>("gherkin_test",
+            AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "GT", Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author"),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
-            AddSubType<Run>("run_suite",
+            AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "SR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
@@ -115,7 +133,7 @@ namespace Hpe.Nga.Octane.VisualStudio
                 FieldAtBottom(CommonFields.STARTED, "Started")
                 );
 
-            AddSubType<Run>("run_manual",
+            AddSubType<Run>(RunManual.SUBTYPE_RUN_MANUAL,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "MR", Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
@@ -127,21 +145,51 @@ namespace Hpe.Nga.Octane.VisualStudio
                 COMMIT_MESSAGE_NOT_APPLICABLE,
                 "R", Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.AUTHOR, "Author")
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName)
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 "task",
                 "T",
                 Color.FromRgb(137, 204, 174),
-                FieldAtSubTitle(Task.STORY_FIELD, "Story"),
+                FieldAtSubTitle(Task.STORY_FIELD, string.Empty, string.Empty, entity =>
+                {
+                    var parentEntity = entity.GetValue("story") as BaseEntity;
+                    if (parentEntity == null)
+                        return string.Empty;
+
+                    var sb = new StringBuilder("Task of ")
+                        .Append(EntityNames.GetDisplayName(Utility.GetConcreteEntityType(parentEntity)).ToLower())
+                        .Append(" ")
+                        .Append(parentEntity.Id.ToString())
+                        .Append(": ")
+                        .Append(parentEntity.Name);
+                    return sb.ToString();
+                }),
                 FieldAtTop(Task.OWNER_FIELD, "Owner"),
                 FieldAtTop(Task.PHASE_FIELD, "Phase"),
-                FieldAtTop(Task.AUTHOR_FIELD, "Author"),
+                FieldAtTop(Task.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName),
                 FieldAtBottom(Task.INVESTED_HOURS_FIELD, "Invested Hours"),
                 FieldAtBottom(Task.REMAINING_HOURS_FIELD, "Remaining Hours"),
                 FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
                 );
+
+            AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
+                COMMIT_MESSAGE_NOT_APPLICABLE,
+                "C", Color.FromRgb(234, 179, 124),
+                FieldAtSubTitle(Comment.TEXT_FIELD, string.Empty, string.Empty, entity =>
+                {
+                    var text = entity.GetStringValue(Comment.TEXT_FIELD);
+                    var doc = NSoup.Parse.Parser.Parse(text, "US-ASCII");
+                    return doc.Text().ToString();
+                }),
+                FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName)
+                );
+        }
+
+        private object GetAuthorFullName(BaseEntity entity)
+        {
+            return Utility.GetPropertyOfChildEntity(entity, Comment.AUTHOR_FIELD, BaseUserEntity.FULL_NAME_FIELD);
         }
 
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)
@@ -219,14 +267,14 @@ namespace Hpe.Nga.Octane.VisualStudio
             return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.Bottom);
         }
 
-        private FieldInfo FieldAtTop(string field, string title, string emptyPlaceholder = "")
+        private FieldInfo FieldAtTop(string field, string title, string emptyPlaceholder = "", Func<BaseEntity, object> contentFunc = null)
         {
-            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.Top);
+            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.Top, contentFunc);
         }
 
-        private FieldInfo FieldAtSubTitle(string field, string title, string emptyPlaceholder = "")
+        private FieldInfo FieldAtSubTitle(string field, string title, string emptyPlaceholder = "", Func<BaseEntity, object> contentFunc = null)
         {
-            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.SubTitle);
+            return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.SubTitle, contentFunc);
         }
 
         /// <summary>

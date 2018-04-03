@@ -1,15 +1,26 @@
-﻿//------------------------------------------------------------------------------
-// <copyright file="DetailsToolWindow.cs" company="Company">
-//     Copyright (c) Company.  All rights reserved.
-// </copyright>
-//------------------------------------------------------------------------------
+﻿/*!
+* (c) 2016-2018 EntIT Software LLC, a Micro Focus company
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
-namespace Hpe.Nga.Octane.VisualStudio
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using Microsoft.VisualStudio.Shell;
+using System.Collections.Generic;
+using System.Runtime.InteropServices;
+
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
-    using System;
-    using System.Runtime.InteropServices;
-    using Microsoft.VisualStudio.Shell;
-
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
@@ -25,6 +36,28 @@ namespace Hpe.Nga.Octane.VisualStudio
     public class DetailsToolWindow : ToolWindowPane
     {
         private readonly OctaneToolWindowControl detailsControl;
+
+        private static readonly HashSet<string> supportedEntityTypes = new HashSet<string>
+        {
+            // work item
+            WorkItem.SUBTYPE_DEFECT,
+            WorkItem.SUBTYPE_STORY,
+            WorkItem.SUBTYPE_QUALITY_STORY,
+
+            // task
+            "task",
+
+            // test
+            TestGherkin.SUBTYPE_GHERKIN_TEST,
+            Test.SUBTYPE_MANUAL_TEST,
+
+            // run
+            RunManual.SUBTYPE_RUN_MANUAL,
+            RunSuite.SUBTYPE_RUN_SUITE,
+
+            // requirement
+            Requirement.SUBTYPE_DOCUMENT
+        };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DetailsToolWindow"/> class.
@@ -44,6 +77,14 @@ namespace Hpe.Nga.Octane.VisualStudio
         {
             this.Caption = string.Format("Item #{0}", itemViewModel.ID);
             detailsControl.DataContext = itemViewModel;
+        }
+
+        /// <summary>
+        /// Returns whether the given type can be shown by the details window.
+        /// </summary>
+        public static bool IsEntityTypeSupported(string type)
+        {
+            return supportedEntityTypes.Contains(type);
         }
     }
 }

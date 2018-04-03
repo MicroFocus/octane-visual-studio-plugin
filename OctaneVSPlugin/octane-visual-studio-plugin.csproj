@@ -44,7 +44,7 @@
     <ProjectGuid>{95ADAD0B-A1FF-4BE8-AE43-300204E3E667}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Hpe.Nga.Octane.VisualStudio</RootNamespace>
+    <RootNamespace>MicroFocus.Adm.Octane.VisualStudio</RootNamespace>
     <AssemblyName>octane-visual-studio-plugin</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
@@ -74,6 +74,8 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="CommentViewModel.cs" />
+    <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
     <Compile Include="DelegatedCommand.cs" />
     <Compile Include="EntityComparerByLastModified.cs" />
@@ -108,11 +110,14 @@
     <Compile Include="SeparatorViewModel.cs" />
     <Compile Include="MyWorkMetadata.cs" />
     <Compile Include="CommonFields.cs" />
+    <Compile Include="Common\Utility.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Key.snk" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -169,8 +174,8 @@
     <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Hpe.Nga.Api.Core, Version=12.55.5.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Hpe.Nga.Api.Core.12.55.5\lib\net45\Hpe.Nga.Api.Core.dll</HintPath>
+    <Reference Include="MicroFocus.Adm.Octane.Api.Core, Version=12.55.21.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MicroFocus.Adm.Octane.Api.Core.12.55.21\lib\net45\MicroFocus.Adm.Octane.Api.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
@@ -247,6 +252,9 @@
     <Reference Include="Microsoft.VisualStudio.Utilities, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.VisualStudio.Utilities.14.3.25407\lib\net45\Microsoft.VisualStudio.Utilities.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="NSoup, Version=0.8.0.0, Culture=neutral, PublicKeyToken=6d44e53f0a65e802, processorArchitecture=MSIL">
+      <HintPath>..\packages\NSoup.0.8.0\lib\net40\NSoup.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />

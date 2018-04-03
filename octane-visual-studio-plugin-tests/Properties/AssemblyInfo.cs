@@ -1,4 +1,4 @@
-﻿/*!
+/*!
 * (c) 2016-2018 EntIT Software LLC, a Micro Focus company
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,32 +17,19 @@
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-// General Information about an assembly is controlled through the following 
-// set of attributes. Change these attribute values to modify the information
-// associated with an assembly.
-[assembly: AssemblyTitle("MicroFocus.Adm.Octane.VisualStudio")]
+[assembly: AssemblyTitle("MicroFocus.Adm.Octane.VisualStudio.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MicroFocus")]
-[assembly: AssemblyProduct("MicroFocus.Adm.Octane.VisualStudio")]
+[assembly: AssemblyProduct("MicroFocus.Adm.Octane.VisualStudio.Tests")]
 [assembly: AssemblyCopyright("Copyright © MicroFocus 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-// Setting ComVisible to false makes the types in this assembly not visible 
-// to COM components.  If you need to access a type in this assembly from 
-// COM, set the ComVisible attribute to true on that type.
 [assembly: ComVisible(false)]
 
-// Version information for an assembly consists of the following four values:
-//
-//      Major Version
-//      Minor Version 
-//      Build Number
-//      Revision
-//
-// You can specify all the values or you can default the Build and Revision Numbers 
-// by using the '*' as shown below:
+[assembly: Guid("03a92195-e4c0-4e3b-bcbc-c49d9e1170f9")]
+
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

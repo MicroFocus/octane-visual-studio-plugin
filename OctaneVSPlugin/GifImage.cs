@@ -4,7 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
-namespace Hpe.Nga.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Helper class for animating a gif as WPF's MediaElement doesn't support this yet
