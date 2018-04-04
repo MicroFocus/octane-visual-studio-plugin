@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.ComponentModel;
@@ -34,9 +35,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private string user = string.Empty;
         private string password = string.Empty;
 
+        /// <inheritdoc/>
         protected override void OnApply(PageApplyEventArgs e)
         {
             base.OnApply(e);
+
+            // close all opened details windows so that we don't have details windows
+            // for entities from different workspaces
+            DetailsWindowManager.CloseAllDetailsWindows();
 
             // After settings are applied we notify the main ViewModel to allow it to refresh.
             if (OctaneMyItemsViewModel.Instance != null)

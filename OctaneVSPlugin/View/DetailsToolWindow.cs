@@ -65,7 +65,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         public DetailsToolWindow() : base(null)
         {
-            this.Caption = "OctaneToolWindow";
+            Caption = "Loading entity...";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -74,11 +74,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             this.Content = detailsControl;
         }
 
+        /// <inheritdoc/>
+        protected override void OnClose()
+        {
+            DetailsWindowManager.UnregisterDetailsWindow(this);
+            base.OnClose();
+        }
+
+        /// <summary>
+        /// Load the necessary information for the given entity
+        /// </summary>
         internal void LoadEntity(BaseEntity entity)
         {
-            var viewModel = new DetailedItemViewModel(entity, new MyWorkMetadata());
+            var metadata = new MyWorkMetadata();
+            var viewModel = new DetailedItemViewModel(entity, metadata);
             viewModel.Initialize();
-            Caption = $"Item #{viewModel.ID}";
+            Caption = $"{metadata.GetIconText(entity)} {viewModel.ID}";
             detailsControl.DataContext = viewModel;
         }
 

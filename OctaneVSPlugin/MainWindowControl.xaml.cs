@@ -186,33 +186,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 return;
             }
 
-            DetailsToolWindow window = CreateDetailsWindow(entity);
+            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(package, entity);
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
             window.LoadEntity(entity);
-        }
-
-        private DetailsToolWindow CreateDetailsWindow(BaseEntity entity)
-        {
-            // Create the window with the first free ID.   
-            DetailsToolWindow toolWindow = (DetailsToolWindow)package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(entity), true);
-            if (toolWindow?.Frame == null)
-            {
-                throw new NotSupportedException("Cannot create tool window");
-            }
-
-            return toolWindow;
-        }
-
-        /// <summary>
-        /// Octane treat WorkItem ID as long (64 bit) and Visual Studio needs int (32 bit) to identify tool windows.
-        /// This function safely convert long to int.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        private int GetItemIDAsInt(BaseEntity item)
-        {
-            return item.GetHashCode();
         }
 
         private void CopyCommitMessage(object sender)
