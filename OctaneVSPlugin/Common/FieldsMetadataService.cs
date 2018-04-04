@@ -138,7 +138,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             internal List<FieldMetadata> GetFieldMetadataList(BaseEntity entity)
             {
-                return null;
+                var entityType = Utility.GetConcreteEntityType(entity);
+                List<FieldMetadata> result;
+                _fieldListDictionary.TryGetValue(entityType, out result);
+                return result;
             }
 
             internal FieldMetadata GetFieldMetadata(BaseEntity entity, string propertyName)
