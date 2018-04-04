@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="BaseOctanePluginTest.cs" />
     <Compile Include="Common\FieldsCacheTests.cs" />
+    <Compile Include="Common\FieldsMetadataServiceTests.cs" />
     <Compile Include="Common\UtilityTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestUtilities.cs" />

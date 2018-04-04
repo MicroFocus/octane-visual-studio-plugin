@@ -71,7 +71,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 await _octaneService.Connect();
 
-                List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(EntityType);
+                List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
                 var updatedFields = fields.Select(fm => fm.name).ToList();
                 // TODO - investigate why not all entities receive the subtype field by default
                 if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))

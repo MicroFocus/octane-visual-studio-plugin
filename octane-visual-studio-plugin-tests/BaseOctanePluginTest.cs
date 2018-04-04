@@ -55,6 +55,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
                 data = new Dictionary<string, HashSet<string>>(),
                 version = 1
             };
+
+            TestInitializeInternal();
+        }
+
+        protected virtual void TestInitializeInternal()
+        {
         }
 
         [TestCleanup]

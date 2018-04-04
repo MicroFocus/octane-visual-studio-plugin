@@ -32,12 +32,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         private static readonly Dictionary<string, Func<object, object>> Converter = new Dictionary<string, Func<object, object>>();
 
-        private static readonly Dictionary<Tuple<string, string>, FieldMetadata> MetadataCache = new Dictionary<Tuple<string, string>, FieldMetadata>();
-
-        /// <summary>
-        /// Dictionary containing the field metadata for each entity type
-        /// </summary>
-        private static readonly Dictionary<string, List<FieldMetadata>> FieldMetadataCache = new Dictionary<string, List<FieldMetadata>>();
+        private static readonly MetadataCache Cache = new MetadataCache();
 
         private static OctaneServices _octaneService;
 
@@ -53,15 +48,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         {
             _octaneService = null;
 
-            MetadataCache.Clear();
-            FieldMetadataCache.Clear();
+            Cache.Clear();
         }
 
         /// <summary>
         /// Return the list of field metadata for the given entity type
         /// </summary>
-        internal static async Task<List<FieldMetadata>> GetFieldMetadata(string entityType)
+        internal static async Task<List<FieldMetadata>> GetFieldMetadata(BaseEntity entity)
         {
+            if (entity == null)
+                return new List<FieldMetadata>();
+
             if (_octaneService == null)
             {
                 _octaneService = new OctaneServices(
@@ -74,50 +71,84 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 await _octaneService.Connect();
             }
 
-            List<FieldMetadata> fields;
-            if (!FieldMetadataCache.TryGetValue(entityType, out fields))
+            List<FieldMetadata> fields = Cache.GetFieldMetadataList(entity);
+            if (fields == null)
             {
+                var entityType = Utility.GetConcreteEntityType(entity);
                 var fieldsMetadata = await _octaneService.GetFieldsMetadata(entityType);
                 fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
 
-                RegisterFieldMetadataForEntityType(entityType, fields);
+                Cache.Add(entity, fields);
             }
 
             return fields;
         }
 
-        private static void RegisterFieldMetadataForEntityType(string entityType,
-            List<FieldMetadata> entityFieldMetadata)
-        {
-            FieldMetadataCache[entityType] = entityFieldMetadata;
-            foreach (var fieldMetadata in entityFieldMetadata)
-            {
-                MetadataCache[new Tuple<string, string>(entityType, fieldMetadata.name)] = fieldMetadata;
-            }
-        }
-
         /// <summary>
-        /// Return the formatted value for the given entity property using the property datatype
+        /// Return the formatted value for the given entity field using the property datatype
         /// </summary>
-        internal static object GetFormattedValue(BaseEntity entity, string propertyName)
+        internal static object GetFormattedValue(BaseEntity entity, string fieldName)
         {
+            if (entity == null || string.IsNullOrEmpty(fieldName))
+                return null;
+
             try
             {
-                var entityType = Utility.GetConcreteEntityType(entity);
-                FieldMetadata fieldMetadata;
-                if (!MetadataCache.TryGetValue(new Tuple<string, string>(entityType, propertyName), out fieldMetadata))
+                FieldMetadata fieldMetadata = Cache.GetFieldMetadata(entity, fieldName);
+                if (fieldMetadata == null)
                     return null;
 
                 Func<object, object> func;
                 if (!Converter.TryGetValue(fieldMetadata.field_type, out func))
                     return null;
 
-                var value = entity.GetValue(propertyName);
+                var value = entity.GetValue(fieldName);
                 return func(value);
             }
             catch (Exception)
             {
                 return null;
+            }
+        }
+
+        private class MetadataCache
+        {
+            private readonly Dictionary<Tuple<string, string>, FieldMetadata> _fieldMetadataDictionary = new Dictionary<Tuple<string, string>, FieldMetadata>();
+
+            /// <summary>
+            /// Dictionary containing the field metadata for each entity type
+            /// </summary>
+            private readonly Dictionary<string, List<FieldMetadata>> _fieldListDictionary = new Dictionary<string, List<FieldMetadata>>();
+
+            internal void Clear()
+            {
+                _fieldMetadataDictionary.Clear();
+                _fieldListDictionary.Clear();
+            }
+
+            internal void Add(BaseEntity entity, List<FieldMetadata> entityFieldMetadata)
+            {
+                var entityType = Utility.GetConcreteEntityType(entity);
+                _fieldListDictionary[entityType] = entityFieldMetadata;
+                foreach (var fieldMetadata in entityFieldMetadata)
+                {
+                    _fieldMetadataDictionary[new Tuple<string, string>(entityType, fieldMetadata.name)] = fieldMetadata;
+                }
+            }
+
+            internal List<FieldMetadata> GetFieldMetadataList(BaseEntity entity)
+            {
+                return null;
+            }
+
+            internal FieldMetadata GetFieldMetadata(BaseEntity entity, string propertyName)
+            {
+                var entityType = Utility.GetConcreteEntityType(entity);
+
+                FieldMetadata fieldMetadata;
+                if (!_fieldMetadataDictionary.TryGetValue(new Tuple<string, string>(entityType, propertyName), out fieldMetadata))
+                    return null;
+                return fieldMetadata;
             }
         }
     }
