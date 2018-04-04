@@ -66,7 +66,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         public DetailsToolWindow() : base(null)
         {
-            this.Caption = "OctaneToolWindow";
+            Caption = "Loading entity...";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -75,23 +75,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             this.Content = detailsControl;
         }
 
-        internal void LoadEntity(BaseEntity entity)
-        {
-            var viewModel = new DetailedItemViewModel(entity, new MyWorkMetadata());
-            viewModel.Initialize();
-            Caption = $"Item #{viewModel.ID}";
-            detailsControl.DataContext = viewModel;
-        }
-
-        /// <summary>
-        /// Returns whether the given type can be shown by the details window.
-        /// </summary>
-        public static bool IsEntityTypeSupported(string type)
-        {
-            return supportedEntityTypes.Contains(type);
-        }
-
+        /// <inheritdoc/>
         protected override void OnClose()
+        {
+            DetachViewModelFromFieldsCache();
+            DetailsWindowManager.UnregisterDetailsWindow(this);
+            base.OnClose();
+        }
+
+        private void DetachViewModelFromFieldsCache()
         {
             var control = Content as OctaneToolWindowControl;
             if (control == null)
@@ -102,6 +94,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 return;
 
             FieldsCache.Instance.Detach(detailedItemViewModel);
+        }
+
+        /// <summary>
+        /// Load the necessary information for the given entity
+        /// </summary>
+        internal void LoadEntity(BaseEntity entity)
+        {
+            var metadata = new MyWorkMetadata();
+            var viewModel = new DetailedItemViewModel(entity, metadata);
+            viewModel.Initialize();
+            Caption = $"{metadata.GetIconText(entity)} {viewModel.ID}";
+            detailsControl.DataContext = viewModel;
+        }
+
+        /// <summary>
+        /// Returns whether the given type can be shown by the details window.
+        /// </summary>
+        public static bool IsEntityTypeSupported(string type)
+        {
+            return supportedEntityTypes.Contains(type);
         }
     }
 }
