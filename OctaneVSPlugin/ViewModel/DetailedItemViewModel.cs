@@ -156,7 +156,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get
             {
                 return new ObservableCollection<FieldViewModel>(
-                    _allEntityFields.Where(f => f.Label.ToLowerInvariant().Contains(_filter)));
+                    _allEntityFields.Where(f => f.Label.ToLowerInvariant().Contains(_filter))
+                                    .OrderBy(f => f.Label));
             }
         }
 
