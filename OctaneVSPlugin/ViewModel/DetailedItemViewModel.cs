@@ -229,6 +229,34 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        /// <summary>
+        /// Flag specifiying whether we need to show the phase section in the UI or not
+        /// </summary>
+        public bool ShowPhase
+        {
+            get { return !(Entity is Run); }
+        }
+
+        /// <summary>
+        /// Current phase for the entity
+        /// </summary>
+        public string Phase
+        {
+            get
+            {
+                if (Mode == DetailsWindowMode.ItemLoaded)
+                {
+                    var phaseEntity = Entity.GetValue(CommonFields.PHASE) as BaseEntity;
+                    if (phaseEntity == null)
+                        return string.Empty;
+
+                    return phaseEntity.Name;
+                }
+
+                return string.Empty;
+            }
+        }
+
         public override string Description
         {
             get { return Mode != DetailsWindowMode.LoadingItem ? Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty : string.Empty; }

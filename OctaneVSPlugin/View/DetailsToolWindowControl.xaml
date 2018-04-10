@@ -165,8 +165,16 @@
                             </Grid>
 
                             <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
+                                <StackPanel x:Name="PhaseSection" Orientation="Horizontal"
+                                            Visibility="{Binding Path=ShowPhase, Converter={StaticResource BoolToVisConverter}}">
+                                    <TextBlock Text="Phase:"
+                                               VerticalAlignment="Center" FontWeight="Bold" />
+                                    <TextBlock Text="{Binding Phase}"
+                                               VerticalAlignment="Center" Margin="5 0 0 0" />
+                                </StackPanel>
                                 <ToggleButton x:Name="CustomizeFieldsButton" 
                                               Width="25" Height="25"
+                                              Margin="40 0 0 0"
                                               HorizontalAlignment="Left" VerticalAlignment="Center"
                                               ToolTip="Customize fields">
                                     <ToggleButton.Template>
