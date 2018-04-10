@@ -159,7 +159,13 @@
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBlock Text="{Binding ID, FallbackValue=123}" Grid.Row="0" Grid.Column="0" Margin="0 0 5 0" FontSize="20" VerticalAlignment="Center"/>
+                                    <TextBox Grid.Row="0" Grid.Column="0" 
+                                             IsReadOnly="True" 
+                                             Margin="0 0 5 0" FontSize="20" VerticalAlignment="Center"
+                                             Text="{Binding ID, FallbackValue=123, Mode=OneWay}"
+                                             Background="{DynamicResource VsBrush.Window}"
+                                             Foreground="{DynamicResource VsBrush.WindowText}"
+                                             BorderThickness="0"/>
                                     <TextBlock Text="{Binding Title, FallbackValue=__Item with name__}" Grid.Row="0" Grid.Column="1" FontSize="20" TextTrimming="CharacterEllipsis"/>
                                 </Grid>
                             </Grid>
