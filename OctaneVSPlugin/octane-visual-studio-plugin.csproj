@@ -134,6 +134,7 @@
     <Compile Include="View\DetailsWindowManager.cs" />
     <Compile Include="View\FocusBehavior.cs" />
     <Compile Include="View\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="View\TextBlockService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
