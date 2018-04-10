@@ -149,7 +149,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
-                "task",
+                Task.TYPE_TASK,
                 "T",
                 Color.FromRgb(137, 204, 174),
                 FieldAtSubTitle(Task.STORY_FIELD, string.Empty, string.Empty, entity =>

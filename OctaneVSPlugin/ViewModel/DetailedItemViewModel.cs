@@ -84,9 +84,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 _allEntityFields.Clear();
 
                 var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(EntityType);
-                // we want to filter out description because it will be shown separately
-                // and subtype because it is only used internally
-                foreach (var field in fields.Where(f => f.name != CommonFields.DESCRIPTION && f.name != CommonFields.SUB_TYPE))
+                var fieldsToHideHashSet = FieldsCache.GetFieldsToHide(Entity);
+                foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.name)))
                 {
                     var fieldViewModel = new FieldViewModel(Entity, field.name, field.label, visibleFieldsHashSet.Contains(field.name));
 

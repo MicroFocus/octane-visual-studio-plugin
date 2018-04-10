@@ -47,7 +47,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             WorkItem.SUBTYPE_QUALITY_STORY,
 
             // task
-            "task",
+            Api.Core.Entities.Task.TYPE_TASK,
 
             // test
             TestGherkin.SUBTYPE_GHERKIN_TEST,

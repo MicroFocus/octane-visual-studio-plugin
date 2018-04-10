@@ -4,6 +4,8 @@
         {
             "Key": "defect",
             "Value": [
+                "detected_by",
+                "owner",
                 "parent",
                 "last_modified",
                 "severity",
@@ -25,6 +27,8 @@
         {
             "Key": "story",
             "Value": [
+                "author",
+                "owner",
                 "creation_time",
                 "last_modified",
                 "story_points",
@@ -42,6 +46,8 @@
         {
             "Key": "quality_story",
             "Value": [
+                "author",
+                "owner",
                 "creation_time",
                 "last_modified",
                 "story_points",
@@ -59,6 +65,8 @@
         {
             "Key": "test_manual",
             "Value": [
+                "designer",
+                "owner",
                 "test_type",
                 "testing_tool_type",
                 "estimated_duration",
@@ -72,6 +80,8 @@
         {
             "Key": "gherkin_test",
             "Value": [
+                "designer",
+                "owner",
                 "test_type",
                 "testing_tool_type",
                 "estimated_duration",
@@ -111,19 +121,25 @@
         {
             "Key": "run_manual",
             "Value": [
+                "author",
+                "taxonomies",
+                "run_by",
                 "test_name",
                 "native_status",
                 "started",
                 "duration",
-                "content",
+                "steps_num",
                 "release",
                 "last_modified",
-                "draft_run"
+                "draft_run",
+                "previous_release"
             ]
         },
         {
             "Key": "run_suite",
             "Value": [
+                "author",
+                "default_run_by",
                 "test_name",
                 "native_status",
                 "started",
@@ -137,6 +153,8 @@
         {
             "Key": "task",
             "Value": [
+                "author",
+                "owner",
                 "story",
                 "creation_time",
                 "last_modified",
@@ -149,6 +167,8 @@
         {
             "Key": "requirement_document",
             "Value": [
+                "author",
+                "owner",
                 "release",
                 "creation_time",
                 "last_modified"

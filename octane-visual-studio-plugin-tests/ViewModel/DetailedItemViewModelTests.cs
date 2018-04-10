@@ -164,7 +164,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
             viewModel.Initialize().Wait();
 
-            var expectedFilteredFields = new List<string> { "Creation time", "Feature", "Release", "Team", "Blocked reason" };
+            var expectedFilteredFields = new List<string> { "Blocked reason", "Creation time", "Feature", "Release", "Team" };
             viewModel.Filter = "ea";
             var actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Label).ToList();
             CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields,
@@ -209,8 +209,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             ChangeFieldVisibility(viewModel, "Release", false);
             ChangeFieldVisibility(viewModel, "Committers", true);
 
-            var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
-            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
+            var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).OrderBy(f => f).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).OrderBy(f => f).ToList();
             CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
         }
 
@@ -226,8 +226,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 viewModel.ToggleEntityFieldVisibilityCommand.Execute(null);
             }
 
-            var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
-            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
+            var expectedVisibleFields = viewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).OrderBy(f => f).ToList();
+            var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).OrderBy(f => f).ToList();
             CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
         }
 
@@ -263,8 +263,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 ChangeFieldVisibility(viewModel, "Release", false);
                 ChangeFieldVisibility(viewModel, "Committers", true);
 
-                var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
-                var actualVisibleFields = secondViewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).ToList();
+                var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).OrderBy(f => f).ToList();
+                var actualVisibleFields = secondViewModel.FilteredEntityFields.Where(f => f.IsSelected).Select(f => f.Name).OrderBy(f => f).ToList();
                 CollectionAssert.AreEqual(expectedVisibleFields, actualVisibleFields, "Mismathed visible fields");
             }
             finally

@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -188,8 +189,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 visibleFields.Add(field.Name);
             }
 
-            Notify(entityType);
             PersistFieldsMetadata();
+            Notify(entityType);
         }
 
         /// <summary>
@@ -209,8 +210,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             _persistedFieldsCache.data[entityType] = new HashSet<string>(defaultVisibleFields);
 
-            Notify(entityType);
             PersistFieldsMetadata();
+            Notify(entityType);
         }
 
         #region Data contracts
@@ -281,5 +282,143 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 observer.UpdateFields();
             }
         }
+
+        #region FieldsToHide
+
+        /// <summary>
+        /// Returns hashset of fields that shouldn't be visible
+        /// </summary>
+        public static HashSet<string> GetFieldsToHide(BaseEntity entity)
+        {
+            if (entity == null)
+                return new HashSet<string>();
+
+            HashSet<string> result;
+            if (!FieldsToHideDictionary.TryGetValue(Utility.GetConcreteEntityType(entity), out result))
+            {
+                return new HashSet<string>();
+            }
+            return result;
+        }
+
+        private static readonly Dictionary<string, HashSet<string>> FieldsToHideDictionary = new Dictionary<string, HashSet<string>>
+        {
+            { WorkItem.SUBTYPE_STORY, new HashSet<string>
+                        {
+                            CommonFields.NAME,
+                            CommonFields.PHASE,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HAS_ATTACHMENTS,
+                            CommonFields.NEW_TASKS,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { WorkItem.SUBTYPE_QUALITY_STORY, new HashSet<string>
+                        {
+                            CommonFields.NAME,
+                            CommonFields.PHASE,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HAS_ATTACHMENTS,
+                            CommonFields.NEW_TASKS,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { WorkItem.SUBTYPE_DEFECT, new HashSet<string>
+                        {
+                            CommonFields.NAME,
+                            CommonFields.PHASE,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HAS_ATTACHMENTS,
+                            CommonFields.NEW_TASKS,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { Task.TYPE_TASK, new HashSet<string>
+                        {
+                            CommonFields.NAME,
+                            CommonFields.PHASE,
+                            BaseEntity.ID_FIELD,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { TestGherkin.SUBTYPE_GHERKIN_TEST, new HashSet<string>
+                        {
+                            CommonFields.CREATION_TIME,
+                            CommonFields.NAME,
+                            CommonFields.PHASE,
+                            BaseEntity.ID_FIELD,
+                            TestGherkin.TEST_STATUS_FIELD,
+                            TestGherkin.IDENTITY_HASH_FIELD,
+                            CommonFields.HAS_ATTACHMENTS,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { Requirement.SUBTYPE_DOCUMENT, new HashSet<string>
+                        {
+                            CommonFields.NAME,
+                            CommonFields.PHASE,
+                            BaseEntity.ID_FIELD,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { Test.SUBTYPE_MANUAL_TEST, new HashSet<string>
+                        {
+                            CommonFields.CREATION_TIME,
+                            CommonFields.NAME,
+                            CommonFields.PHASE,
+                            BaseEntity.ID_FIELD,
+                            TestGherkin.TEST_STATUS_FIELD,
+                            CommonFields.HAS_ATTACHMENTS,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { RunManual.SUBTYPE_RUN_MANUAL, new HashSet<string>
+                        {
+                            CommonFields.NAME,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HAS_ATTACHMENTS,
+                            RunManual.HAS_VISUAL_COVERAGE_FIELD,
+                            Run.TEST_FIELD,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            },
+            { RunSuite.SUBTYPE_RUN_SUITE, new HashSet<string>
+                        {
+                            CommonFields.NAME,
+                            BaseEntity.ID_FIELD,
+                            Run.TEST_FIELD,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.DESCRIPTION,
+                            CommonFields.SUB_TYPE
+                        }
+            }
+        };
+
+        #endregion
     }
 }

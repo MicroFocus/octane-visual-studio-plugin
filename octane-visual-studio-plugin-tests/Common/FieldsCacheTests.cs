@@ -49,7 +49,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
         {
             Dictionary<string, HashSet<string>> _defaultFieldsDictionary;
             _defaultFieldsDictionary = ExposedClass.From(typeof(FieldsCache))._defaultFieldsCache.data;
-            ValidateFieldsInCache("task", _defaultFieldsDictionary["task"].ToList());
+            ValidateFieldsInCache(Task.TYPE_TASK, _defaultFieldsDictionary[Task.TYPE_TASK].ToList());
         }
 
         [TestMethod]
@@ -111,6 +111,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             Assert.IsFalse(FieldsCache.Instance.AreSameFieldsAsDefaultFields("requirement_document",
                 new List<FieldViewModel>
                 {
+                    new FieldViewModel(entity, "author", "author", true),
+                    new FieldViewModel(entity, "owner", "owner", true),
                     new FieldViewModel(entity, "release", "release", true),
                     new FieldViewModel(entity, "creation_time", "creation_time", false),
                     new FieldViewModel(entity, "last_modified", "last_modified", true)
@@ -125,6 +127,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             Assert.IsTrue(FieldsCache.Instance.AreSameFieldsAsDefaultFields("requirement_document",
                 new List<FieldViewModel>
                 {
+                    new FieldViewModel(entity, "author", "author", true),
+                    new FieldViewModel(entity, "owner", "owner", true),
                     new FieldViewModel(entity, "release", "release", true),
                     new FieldViewModel(entity, "creation_time", "creation_time", true),
                     new FieldViewModel(entity, "last_modified", "last_modified", true)
@@ -152,7 +156,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
                 new List<FieldViewModel> { new FieldViewModel(entity, "name", "label", true) });
 
             FieldsCache.Instance.ResetVisibleFieldsForEntity(Requirement.SUBTYPE_DOCUMENT);
-            ValidateFieldsInCache(Requirement.SUBTYPE_DOCUMENT, new List<string> { "release", "creation_time", "last_modified" });
+
+            Dictionary<string, HashSet<string>> _defaultFieldsDictionary;
+            _defaultFieldsDictionary = ExposedClass.From(typeof(FieldsCache))._defaultFieldsCache.data;
+            ValidateFieldsInCache(Requirement.SUBTYPE_DOCUMENT, _defaultFieldsDictionary[Requirement.SUBTYPE_DOCUMENT].ToList());
         }
 
         [TestMethod]

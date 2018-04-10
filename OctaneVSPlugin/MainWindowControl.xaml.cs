@@ -145,7 +145,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             try
             {
-                if (SelectedItem.Entity.TypeName != "task")
+                if (SelectedItem.Entity.TypeName != Api.Core.Entities.Task.TYPE_TASK)
                 {
                     throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
                 }
@@ -277,7 +277,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 // view parent details
                 var selectedEntity = SelectedItem.Entity;
                 var taskParentEntity = GetTaskParentEntity(selectedEntity);
-                if (selectedEntity.TypeName == "task" && taskParentEntity != null
+                if (selectedEntity.TypeName == Api.Core.Entities.Task.TYPE_TASK && taskParentEntity != null
                     && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(taskParentEntity)))
                 {
                     cm.Items.Add(viewTaskParentDetailsMenuItem);
@@ -331,7 +331,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private BaseEntity GetTaskParentEntity(BaseEntity entity)
         {
-            if (entity.TypeName == "task")
+            if (entity.TypeName == Api.Core.Entities.Task.TYPE_TASK)
             {
                 return (BaseEntity)SelectedItem.Entity.GetValue("story");
             }
