@@ -160,6 +160,7 @@
     <Resource Include="Resources\comments.png" />
     <Resource Include="Resources\customize-fields-off.png" />
     <Resource Include="Resources\customize-fields-on.png" />
+    <Resource Include="Resources\browser.png" />
     <Content Include="Resources\MainWindowCommand.png" />
     <Content Include="Resources\MainWindowPackage.ico" />
     <Resource Include="Resources\octane-logo.png" />

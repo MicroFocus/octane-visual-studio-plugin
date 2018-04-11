@@ -338,6 +338,15 @@
                                                Foreground="LightSkyBlue"
                                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Button>
+                                <Button x:Name="OpenInBrowserButton"
+                                        Margin="5 0 0 0"
+                                        Width="25" Height="25"
+                                        BorderThickness="0"
+                                        Background="{DynamicResource VsBrush.Window}"
+                                        Command="{Binding OpenInBrowserCommand}"
+                                        ToolTip="Open in browser">
+                                    <Image Source="/octane-visual-studio-plugin;component/Resources/browser.png"/>
+                                </Button>
                             </StackPanel>
                             
                         </Grid>

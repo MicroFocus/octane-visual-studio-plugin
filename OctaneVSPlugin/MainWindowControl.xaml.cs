@@ -109,21 +109,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             try
             {
-                var selectedEntity = GetSelectedEntity();
-                OpenInBrowserInternal(selectedEntity.Id, Utility.GetBaseEntityType(selectedEntity));
+                Utility.OpenInBrowser(GetSelectedEntity());
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void OpenInBrowserInternal(EntityId id, string type)
-        {
-            var url = $"{package.AlmUrl}/ui/entity-navigation?p={package.SharedSpaceId}/{package.WorkSpaceId}&entityType={type}&id={id}";
-
-            // Open the URL in the user's default browser.
-            System.Diagnostics.Process.Start(url);
         }
 
         private async void ViewDetails(object param)
@@ -138,8 +129,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-
 
         private async void ViewTaskParentDetails(object param)
         {
@@ -182,7 +171,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             if (entity.TypeName == "feature" || entity.TypeName == "epic")
             {
-                OpenInBrowserInternal(entity.Id, "work_item");
+                Utility.OpenInBrowser(entity);
                 return;
             }
 

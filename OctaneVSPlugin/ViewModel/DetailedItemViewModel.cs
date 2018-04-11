@@ -42,6 +42,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             : base(entity, myWorkMetadata)
         {
             RefreshCommand = new DelegatedCommand(Refresh);
+            OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
@@ -309,6 +310,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged("Mode");
 
             Initialize();
+        }
+
+        #endregion
+
+        #region OpenInBrowser
+
+        public ICommand OpenInBrowserCommand { get; }
+
+        private void OpenInBrowser(object param)
+        {
+            Utility.OpenInBrowser(Entity);
         }
 
         #endregion
