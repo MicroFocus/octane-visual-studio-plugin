@@ -73,7 +73,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 await _octaneService.Connect();
 
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
-                var updatedFields = fields.Select(fm => fm.name).ToList();
+                var updatedFields = fields.Select(fm => fm.Name).ToList();
                 // TODO - investigate why not all entities receive the subtype field by default
                 if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))
                 {
@@ -86,9 +86,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(EntityType);
                 var fieldsToHideHashSet = FieldsCache.GetFieldsToHide(Entity);
-                foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.name)))
+                foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
                 {
-                    var fieldViewModel = new FieldViewModel(Entity, field.name, field.label, visibleFieldsHashSet.Contains(field.name));
+                    var fieldViewModel = new FieldViewModel(Entity, field.Name, field.Label, visibleFieldsHashSet.Contains(field.Name));
 
                     _allEntityFields.Add(fieldViewModel);
                 }

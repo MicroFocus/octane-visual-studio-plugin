@@ -76,7 +76,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             {
                 var entityType = Utility.GetConcreteEntityType(entity);
                 var fieldsMetadata = await _octaneService.GetFieldsMetadata(entityType);
-                fields = fieldsMetadata.Where(fm => fm.visible_in_ui).ToList();
+                fields = fieldsMetadata.Where(fm => fm.VisibleInUI).ToList();
 
                 Cache.Add(entity, fields);
             }
@@ -99,7 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                     return null;
 
                 Func<object, object> func;
-                if (!Converter.TryGetValue(fieldMetadata.field_type, out func))
+                if (!Converter.TryGetValue(fieldMetadata.FieldType, out func))
                     return null;
 
                 var value = entity.GetValue(fieldName);
@@ -132,7 +132,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 _fieldListDictionary[entityType] = entityFieldMetadata;
                 foreach (var fieldMetadata in entityFieldMetadata)
                 {
-                    _fieldMetadataDictionary[new Tuple<string, string>(entityType, fieldMetadata.name)] = fieldMetadata;
+                    _fieldMetadataDictionary[new Tuple<string, string>(entityType, fieldMetadata.Name)] = fieldMetadata;
                 }
             }
 
