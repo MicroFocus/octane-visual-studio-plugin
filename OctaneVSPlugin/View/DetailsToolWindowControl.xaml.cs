@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -58,9 +59,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 return;
 
             string octaneImageBaseUrl = string.Format("{0}/api/shared_spaces/{1}/workspaces/{2}/attachments/",
-                OctaneMyItemsViewModel.Instance.Package.AlmUrl,
-                OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
-                OctaneMyItemsViewModel.Instance.Package.WorkSpaceId);
+                OctaneConfiguration.Url,
+                OctaneConfiguration.SharedSpaceId,
+                OctaneConfiguration.WorkSpaceId);
 
             string htmlWithImageUrls = itemViewModel.Description.Replace("file://[IMAGE_BASE_PATH_PLACEHOLDER]", octaneImageBaseUrl);
 
