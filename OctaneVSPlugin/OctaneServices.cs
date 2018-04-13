@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OctaneTask = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -110,14 +109,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
                 BuildUserItemCriteria(owner), BuildUserItemFields());
 
-            var collector = new EntitiesCollector(this, userItems, itemFetchInfo);
-
-            collector.Add<WorkItem>(userItem => userItem.WorkItem);
-            collector.Add<Test>(userItem => userItem.Test);
-            collector.Add<Run>(userItem => userItem.Run);
-            collector.Add<Requirement>(userItem => userItem.Requirement);
-            collector.Add<OctaneTask>(userItem => userItem.Task);
-
+            var collector = new MyWorkEntitiesCollector(this, userItems, itemFetchInfo);
             List<BaseEntity> result = await collector.GetAllEntities();
             result.Sort(entityComparer);
 

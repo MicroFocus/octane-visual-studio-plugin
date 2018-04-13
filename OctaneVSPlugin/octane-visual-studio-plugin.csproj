@@ -75,6 +75,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Common\Collector\EntitiesCollector.cs" />
+    <Compile Include="Common\Collector\MyWorkEntitiesCollector.cs" />
     <Compile Include="Common\FieldsCache.cs" />
     <Compile Include="Common\FieldsMetadataService.cs" />
     <Compile Include="Common\HTMLConverter\HtmlCssParser.cs" />
