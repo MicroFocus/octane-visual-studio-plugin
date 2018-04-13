@@ -20,6 +20,7 @@ using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -189,7 +190,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return comments?.data;
         }
 
-        private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
+        public Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
             List<UserItem> userItems,
             Func<UserItem, BaseEntity> getReferenceEntityFunc,
             MyWorkMetadata itemFetchInfo)
@@ -239,54 +240,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result?.data;
         }
 
-        private class EntitiesCollector
-        {
-            private readonly OctaneServices octaneService;
-            private readonly EntityListResult<UserItem> userItems;
-            private readonly MyWorkMetadata itemFetchInfo;
 
-            private List<Task<GenericEntityListResult>> fetchTasks;
-
-            public EntitiesCollector(OctaneServices octaneService, EntityListResult<UserItem> userItems, MyWorkMetadata itemFetchInfo)
-            {
-                this.octaneService = octaneService;
-                this.userItems = userItems;
-                this.itemFetchInfo = itemFetchInfo;
-
-                fetchTasks = new List<Task<GenericEntityListResult>>();
-            }
-
-            public async Task<List<BaseEntity>> GetAllEntities()
-            {
-                await Task.WhenAll(fetchTasks.ToArray());
-
-                var allEntities =
-                    from task in fetchTasks
-                    let result = task.Result.BaseEntities
-                    select result;
-
-                // Flat the result list and materialize it with ToList.
-                return allEntities.SelectMany(x => x).ToList();
-            }
-
-            public void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc) where TEntityType : BaseEntity
-            {
-                var tcs = new TaskCompletionSource<GenericEntityListResult>();
-
-                Task<EntityListResult<TEntityType>> fetchTask = octaneService.FetchEntities<TEntityType>(
-                    userItems.data,
-                    getReferenceEntityFunc,
-                    itemFetchInfo);
-
-                // This trick turns a Task<EntityListResult<TEntity>> to generic Task<GenericEntityListResult>.
-                // This allows us to later aggregate all the fetched entities without caring about the specific type of each one.
-                fetchTask.ContinueWith((result) =>
-                {
-                    tcs.TrySetResult(fetchTask.Result);
-                });
-
-                fetchTasks.Add(tcs.Task);
-            }
-        }
     }
 }
