@@ -22,6 +22,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
+             xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -212,8 +213,42 @@
                 </Style>
             </DockPanel.Style>
 
-            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="25" Height="25" 
+            <Grid DockPanel.Dock="Top"  Margin="5 5 5 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" HorizontalAlignment="Right">
+                    <TextBox x:Name="SearchEntityTextBox"
+                             VerticalAlignment="Center"
+                             HorizontalAlignment="Stretch"
+                             Width="150"
+                             Background="{DynamicResource VsBrush.Window}"
+                             Foreground="{DynamicResource VsBrush.WindowText}"
+                             Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
+                             view:FocusBehavior.IsFocus="True"
+                             Margin="5"/>
+                    <TextBlock IsHitTestVisible="False"
+                               Text="Search backlog items"
+                               VerticalAlignment="Center"
+                               HorizontalAlignment="Left"
+                               Margin="9 0 0 0"
+                               Background="{DynamicResource VsBrush.Window}"
+                               Foreground="DarkGray">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Text, ElementName=SearchEntityTextBox}" Value="">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+                <Button Grid.Column="1" Width="25" Height="25"  HorizontalAlignment="Right"
                         BorderThickness="0"
                         Background="{DynamicResource VsBrush.Window}"
                         Command="{Binding RefreshCommand}"
@@ -224,7 +259,8 @@
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
-            </StackPanel>
+            </Grid>
+            
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
                     Background="{DynamicResource VsBrush.Window}"
                     Foreground="{DynamicResource VsBrush.WindowText}"
