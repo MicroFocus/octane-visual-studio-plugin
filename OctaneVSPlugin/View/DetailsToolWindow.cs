@@ -104,7 +104,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             var metadata = new MyWorkMetadata();
             var viewModel = new DetailedItemViewModel(entity, metadata);
             viewModel.Initialize();
-            Caption = $"{metadata.GetIconText(entity)} {viewModel.ID}";
+            Caption = $"{EntityNames.GetInitials(Utility.GetConcreteEntityType(entity))} {viewModel.ID}";
             detailsControl.DataContext = viewModel;
         }
 

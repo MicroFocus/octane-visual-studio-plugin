@@ -66,21 +66,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             subTypesByEntityType = new Dictionary<Type, HashSet<string>>();
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT,
-                    "defect",
-                    "D", Color.FromRgb(190, 102, 92),
-                    FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),
-                    FieldAtTop(CommonFields.OWNER, "Owner"),
-                    FieldAtTop(CommonFields.DETECTED_BY, "Detected By"),
-                    FieldAtTop(CommonFields.STORY_POINTS, "SP"),
-                    FieldAtTop(CommonFields.SEVERITY, "Severity"),
-                    FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
-                    FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
-                    FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
-                    );
+                "defect",
+                EntityNames.GetInitials(WorkItem.SUBTYPE_DEFECT), Color.FromRgb(190, 102, 92),
+                FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),
+                FieldAtTop(CommonFields.OWNER, "Owner"),
+                FieldAtTop(CommonFields.DETECTED_BY, "Detected By"),
+                FieldAtTop(CommonFields.STORY_POINTS, "SP"),
+                FieldAtTop(CommonFields.SEVERITY, "Severity"),
+                FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
+                FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
+                FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
+                );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY,
                 "user story",
-                "US", Color.FromRgb(218, 199, 120),
+                EntityNames.GetInitials(WorkItem.SUBTYPE_STORY), Color.FromRgb(218, 199, 120),
                 FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
@@ -93,7 +93,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY,
                 "quality story",
-                "QS", Color.FromRgb(95, 112, 118),
+                EntityNames.GetInitials(WorkItem.SUBTYPE_QUALITY_STORY), Color.FromRgb(95, 112, 118),
                 FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
@@ -104,9 +104,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
-            AddSubType<Test>("test_manual",
+            AddSubType<Test>(Test.SUBTYPE_MANUAL_TEST,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "MT", Color.FromRgb(96, 121, 141),
+                EntityNames.GetInitials(Test.SUBTYPE_MANUAL_TEST), Color.FromRgb(96, 121, 141),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
@@ -117,7 +117,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "GT", Color.FromRgb(120, 196, 192),
+                EntityNames.GetInitials(TestGherkin.SUBTYPE_GHERKIN_TEST), Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
@@ -127,7 +127,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "SR", Color.FromRgb(133, 169, 188),
+                EntityNames.GetInitials(RunSuite.SUBTYPE_RUN_SUITE), Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(CommonFields.STARTED, "Started")
@@ -135,7 +135,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Run>(RunManual.SUBTYPE_RUN_MANUAL,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "MR", Color.FromRgb(133, 169, 188),
+                EntityNames.GetInitials(RunManual.SUBTYPE_RUN_MANUAL), Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(CommonFields.STARTED, "Started")
@@ -143,14 +143,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "R", Color.FromRgb(215, 194, 56),
+                EntityNames.GetInitials(Requirement.SUBTYPE_DOCUMENT), Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
-                Task.TYPE_TASK,
-                "T",
+                "task",
+                EntityNames.GetInitials(Task.TYPE_TASK),
                 Color.FromRgb(137, 204, 174),
                 FieldAtSubTitle(Task.STORY_FIELD, string.Empty, string.Empty, entity =>
                 {
@@ -176,7 +176,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "C", Color.FromRgb(234, 179, 124),
+                EntityNames.GetInitials("comment"), Color.FromRgb(234, 179, 124),
                 FieldAtSubTitle(Comment.TEXT_FIELD, string.Empty, string.Empty, entity =>
                 {
                     return Utility.StripHtml(entity.GetStringValue(Comment.TEXT_FIELD));

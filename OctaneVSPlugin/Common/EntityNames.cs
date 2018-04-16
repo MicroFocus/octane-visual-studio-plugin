@@ -45,6 +45,34 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { Requirement.SUBTYPE_DOCUMENT, "Requirement" }
         };
 
+        private static readonly Dictionary<string, string> Initials = new Dictionary<string, string>
+        {
+            // work item
+            { WorkItem.SUBTYPE_DEFECT, "D" },
+            { WorkItem.SUBTYPE_STORY, "US" },
+            { WorkItem.SUBTYPE_QUALITY_STORY, "QS" },
+
+            // task
+            { Task.TYPE_TASK, "T" },
+
+            // test
+            { Test.SUBTYPE_MANUAL_TEST, "MT" },
+            { TestGherkin.SUBTYPE_GHERKIN_TEST, "GT" },
+            { TestAutomated.SUBTYPE_TEST_AUTOMATED, "AT" },
+            { TestSuite.SUBTYPE_TEST_SUITE, "TS" },
+
+            // run
+            { RunManual.SUBTYPE_RUN_MANUAL, "MR" },
+            { RunAutomated.SUBTYPE_RUN_AUTOMATED, "AR" },
+            { RunSuite.SUBTYPE_RUN_SUITE, "SR" },
+
+            // requirement
+            { Requirement.SUBTYPE_DOCUMENT, "R" },
+
+            // comment
+            { "comment", "C" }
+        };
+
         /// <summary>
         /// Returns the display name for the given type.
         /// If the type isn't recognized, the input is returned.
@@ -52,6 +80,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         public static string GetDisplayName(string type)
         {
             return DisplayNames.TryGetValue(type, out var displayName) ? displayName : type;
+        }
+
+        /// <summary>
+        /// Get initials for given entity type
+        /// </summary>
+        public static string GetInitials(string type)
+        {
+            return Initials.TryGetValue(type, out var displayName) ? displayName : type;
         }
     }
 }
