@@ -228,7 +228,11 @@
                              Foreground="{DynamicResource VsBrush.WindowText}"
                              Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
                              view:FocusBehavior.IsFocus="True"
-                             Margin="5"/>
+                             Margin="5">
+                        <TextBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
+                        </TextBox.InputBindings>
+                    </TextBox>
                     <TextBlock IsHitTestVisible="False"
                                Text="Search backlog items"
                                VerticalAlignment="Center"

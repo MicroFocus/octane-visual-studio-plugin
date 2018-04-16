@@ -53,6 +53,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             refreshCommand = new DelegatedCommand(Refresh);
             openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
+            SearchCommand = new DelegatedCommand(SearchInternal);
+
             myItems = new ObservableCollection<OctaneItemViewModel>();
             mode = MainWindowMode.FirstTime;
         }
@@ -204,6 +206,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        public string SearchFilter { get; set; }
 
+        public ICommand SearchCommand { get; }
+
+        private async void SearchInternal(object parameter)
+        {
+            if (string.IsNullOrEmpty(SearchFilter))
+                return;
+
+            OctaneServices octane = new OctaneServices(OctaneConfiguration.Url,
+                OctaneConfiguration.SharedSpaceId,
+                OctaneConfiguration.WorkSpaceId,
+                OctaneConfiguration.Username,
+                OctaneConfiguration.Password);
+            await octane.Connect();
+
+            var results = await octane.SearchEntities(SearchFilter, 100);
+        }
     }
 }
