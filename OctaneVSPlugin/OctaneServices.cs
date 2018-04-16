@@ -116,6 +116,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result;
         }
 
+        public async Task<IList<BaseEntity>> SearchEntities(string searchString, int limitPerType)
+        {
+            var collector = new SearchEntitiesCollector(this, searchString, limitPerType);
+            List<BaseEntity> result = await collector.GetAllEntities();
+            return result;
+        }
+
+        public Task<EntityListResult<TEntity>> SearchEntitiesByType<TEntity>(string searchString, int limit)
+            where TEntity : BaseEntity
+        {
+            return es.Search<TEntity>(workspaceContext, searchString, limit);
+        }
+
         private IList<QueryPhrase> BuildCommentsCriteria(WorkspaceUser user)
         {
             return new List<QueryPhrase>
