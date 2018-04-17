@@ -226,11 +226,11 @@
                              Width="150"
                              Background="{DynamicResource VsBrush.Window}"
                              Foreground="{DynamicResource VsBrush.WindowText}"
-                             Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
+                             Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}"
                              view:FocusBehavior.IsFocus="True"
                              Margin="5">
                         <TextBox.InputBindings>
-                            <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
+                            <KeyBinding Command="{Binding SearchCommand, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}" Key="Return" />
                         </TextBox.InputBindings>
                     </TextBox>
                     <TextBlock IsHitTestVisible="False"

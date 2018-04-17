@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using Microsoft.VisualStudio.PlatformUI;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
@@ -53,6 +54,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             InitializeComponent();
             viewModel = new OctaneMyItemsViewModel();
             DataContext = viewModel;
+
+            SearchCommand = new DelegateCommand(SearchInternal);
 
             viewDetailsMenuItem = new MenuItem
             {
@@ -103,6 +106,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 return (OctaneItemViewModel)results.SelectedItem;
             }
+        }
+
+        public string SearchFilter { get; set; }
+
+        public ICommand SearchCommand { get; }
+
+        private async void SearchInternal(object parameter)
+        {
+            if (string.IsNullOrEmpty(SearchFilter))
+                return;
+
+            SearchToolWindow searchWindow = (SearchToolWindow)package.FindToolWindow(typeof(SearchToolWindow), 100000, true);
+            if (searchWindow?.Frame == null)
+            {
+                throw new NotSupportedException("Cannot create search tool window");
+            }
+            IVsWindowFrame searchWindowFrame = (IVsWindowFrame)searchWindow.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(searchWindowFrame.Show());
         }
 
         private void OpenInBrowser(object param)
