@@ -10,33 +10,29 @@
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
              d:DesignHeight="300" d:DesignWidth="300"
-             Name="MyToolWindow">
-    <Grid>
-        <StackPanel Orientation="Vertical">
-            <TextBlock Margin="10" HorizontalAlignment="Center">SearchToolWindow</TextBlock>
-            <Button Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
+             Name="SearchWindow">
 
-        </StackPanel>
-        <ListBox x:Name="results" ItemsSource="{Binding SearchItems}"
-                 Background="{DynamicResource VsBrush.Window}"
-                 Foreground="{DynamicResource VsBrush.WindowText}"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                 BorderThickness="0">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <view:SearchItemControl />
-                </DataTemplate>
-            </ListBox.ItemTemplate>
+    <Border Padding="10">
+        <Grid>
+            <ListBox x:Name="results" ItemsSource="{Binding SearchItems}"
+                     Background="{DynamicResource VsBrush.Window}"
+                     Foreground="{DynamicResource VsBrush.WindowText}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     BorderThickness="0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <view:SearchItemControl />
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
 
-            <!--
-                    Set the horizontal content alignment to stretch so the item will have the full width of the list box.
-                    This allows the MyItemControl to align the top and bottom fields to the right.
-                -->
-            <ListBox.ItemContainerStyle>
-                <Style TargetType="ListBoxItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListBox.ItemContainerStyle>
-        </ListBox>
-    </Grid>
+                <!-- Set the horizontal content alignment to stretch so the item will have the full width of the list box.
+                     This allows the MyItemControl to align the top and bottom fields to the right. -->
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Grid>
+    </Border>
 </UserControl>
