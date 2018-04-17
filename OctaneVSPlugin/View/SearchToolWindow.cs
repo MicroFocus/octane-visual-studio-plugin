@@ -52,8 +52,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         internal void Search(string searchFilter)
         {
             Caption = $"\"{searchFilter}\"";
-            var viewModel = new SearchItemsViewModel();
-            viewModel.Search(searchFilter);
+            var viewModel = new SearchItemsViewModel(searchFilter);
+            viewModel.Search();
             _searchControl.DataContext = viewModel;
         }
     }

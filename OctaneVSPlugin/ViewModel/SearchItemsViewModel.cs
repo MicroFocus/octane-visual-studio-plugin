@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -26,11 +27,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     public class SearchItemsViewModel : INotifyPropertyChanged
     {
         private readonly OctaneServices _octaneService;
+        private string _searchFilter = string.Empty;
+        private readonly IList<BaseItemViewModel> _searchResults = new List<BaseItemViewModel>();
 
-        private IList<BaseItemViewModel> _searchResults = new List<BaseItemViewModel>();
-
-        public SearchItemsViewModel()
+        public SearchItemsViewModel(string searchFilter)
         {
+            _searchFilter = searchFilter;
+
+            RefreshCommand = new DelegatedCommand(Refresh);
+
+            Mode = WindowMode.Loading;
+
             _octaneService = new OctaneServices(
                 OctaneConfiguration.Url,
                 OctaneConfiguration.SharedSpaceId,
@@ -39,34 +46,73 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 OctaneConfiguration.Password);
         }
 
-        public async Task Search(string searchFilter)
+        /// <summary>
+        /// Search for all entities satisfying the criteria
+        /// </summary>
+        public async Task Search()
         {
             try
             {
+                _searchResults.Clear();
+
+                if (string.IsNullOrEmpty(_searchFilter))
+                {
+                    Mode = WindowMode.Loaded;
+                    return;
+                }
+
                 await _octaneService.Connect();
-                var results = await _octaneService.SearchEntities(searchFilter, 5);
+                var results = await _octaneService.SearchEntities(_searchFilter, 5);
                 var metadata = new MyWorkMetadata();
                 foreach (var entity in results)
                 {
                     _searchResults.Add(new BaseItemViewModel(entity, metadata));
                 }
+
+                Mode = WindowMode.Loaded;
             }
             catch (Exception ex)
             {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
             }
-            NotifyPropertyChanged();
+            finally
+            {
+                NotifyPropertyChanged();
+            }
         }
+
+        /// <summary>
+        /// The current mode of the view model
+        /// </summary>
+        public WindowMode Mode { get; private set; }
+
+        /// <summary>
+        /// Message displayed to the user in case of error
+        /// </summary>
+        public string ErrorMessage { get; private set; }
 
         /// <summary>
         /// Entity fields shown in the main section of the detailed item view
         /// </summary>
         public IEnumerable<BaseItemViewModel> SearchItems
         {
-            get
-            {
-                return new ObservableCollection<BaseItemViewModel>(_searchResults);
-            }
+            get { return new ObservableCollection<BaseItemViewModel>(_searchResults); }
         }
+
+        #region Refresh
+
+        public ICommand RefreshCommand { get; }
+
+        private void Refresh(object param)
+        {
+            Mode = WindowMode.Loading;
+            NotifyPropertyChanged("Mode");
+
+            Search();
+        }
+
+        #endregion
 
         #region INotifyPropertyChanged
 
