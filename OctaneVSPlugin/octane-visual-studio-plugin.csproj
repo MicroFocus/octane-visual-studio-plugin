@@ -136,6 +136,10 @@
     <Compile Include="View\DetailsWindowManager.cs" />
     <Compile Include="View\FocusBehavior.cs" />
     <Compile Include="View\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="View\SearchToolWindow.cs" />
+    <Compile Include="View\SearchToolWindowControl.xaml.cs">
+      <DependentUpon>SearchToolWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TextBlockService.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -192,6 +196,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DetailsToolWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SearchToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
