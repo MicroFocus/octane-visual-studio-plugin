@@ -40,7 +40,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         public SearchToolWindow() : base(null)
         {
-            Caption = "SearchToolWindow";
+            Caption = "Searching...";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -51,6 +51,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         internal void Search(string searchFilter)
         {
+            Caption = $"\"{searchFilter}\"";
             var viewModel = new SearchItemsViewModel();
             viewModel.Search(searchFilter);
             _searchControl.DataContext = viewModel;
