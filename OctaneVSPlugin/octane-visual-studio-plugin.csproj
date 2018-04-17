@@ -120,6 +120,7 @@
       <DependentUpon>MainWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindowPackage.cs" />
+    <Compile Include="ViewModel\SearchItemsViewModel.cs" />
     <Compile Include="View\DetailsToolWindow.cs" />
     <Compile Include="View\DetailsToolWindowControl.xaml.cs">
       <DependentUpon>DetailsToolWindowControl.xaml</DependentUpon>

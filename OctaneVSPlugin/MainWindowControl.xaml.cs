@@ -124,6 +124,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             IVsWindowFrame searchWindowFrame = (IVsWindowFrame)searchWindow.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(searchWindowFrame.Show());
+            searchWindow.Search(SearchFilter);
         }
 
         private void OpenInBrowser(object param)

@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.Runtime.InteropServices;
 
@@ -33,6 +34,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     [Guid("a01ef1da-eec6-4128-a474-7dd4f2d4c72d")]
     public class SearchToolWindow : ToolWindowPane
     {
+        private readonly SearchToolWindowControl _searchControl;
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchToolWindow"/> class.
         /// </summary>
@@ -43,7 +45,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            Content = new SearchToolWindowControl();
+            _searchControl = new SearchToolWindowControl();
+            Content = _searchControl;
+        }
+
+        internal void Search(string searchFilter)
+        {
+            var viewModel = new SearchItemsViewModel();
+            viewModel.Search(searchFilter);
+            _searchControl.DataContext = viewModel;
         }
     }
 }

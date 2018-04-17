@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
+             xmlns:visualStudio="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
@@ -13,6 +14,28 @@
         <StackPanel Orientation="Vertical">
             <TextBlock Margin="10" HorizontalAlignment="Center">SearchToolWindow</TextBlock>
             <Button Content="Click me!" Click="button1_Click" Width="120" Height="80" Name="button1"/>
+
         </StackPanel>
+        <ListBox x:Name="results" ItemsSource="{Binding SearchItems}"
+                 Background="{DynamicResource VsBrush.Window}"
+                 Foreground="{DynamicResource VsBrush.WindowText}"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                 BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <visualStudio:MyItemControl />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+
+            <!--
+                    Set the horizontal content alignment to stretch so the item will have the full width of the list box.
+                    This allows the MyItemControl to align the top and bottom fields to the right.
+                -->
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="ListBoxItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
     </Grid>
 </UserControl>
