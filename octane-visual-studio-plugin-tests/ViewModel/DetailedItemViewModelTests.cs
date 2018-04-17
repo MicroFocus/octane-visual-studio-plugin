@@ -78,7 +78,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             viewModel.RefreshCommand.Execute(null);
 
-            Utilities.Utility.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 30000,
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded, 30000,
                 "Timeout while refreshing the entity");
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
@@ -102,7 +102,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             viewModel.RefreshCommand.Execute(null);
 
-            Utilities.Utility.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 30000,
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded, 30000,
                 "Timeout while refreshing the entity");
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();

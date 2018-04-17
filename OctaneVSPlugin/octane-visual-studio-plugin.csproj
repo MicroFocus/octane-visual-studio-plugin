@@ -133,7 +133,7 @@
     <Compile Include="MyWorkMetadata.cs" />
     <Compile Include="CommonFields.cs" />
     <Compile Include="Common\Utility.cs" />
-    <Compile Include="ViewModel\DetailsWindowMode.cs" />
+    <Compile Include="ViewModel\WindowMode.cs" />
     <Compile Include="View\DetailsWindowManager.cs" />
     <Compile Include="View\FocusBehavior.cs" />
     <Compile Include="View\HtmlToFlowDocumentConverter.cs" />
