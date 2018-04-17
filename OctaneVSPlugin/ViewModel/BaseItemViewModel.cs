@@ -22,11 +22,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// Base class for an entity view model
     /// </summary>
-    public abstract class BaseItemViewModel
+    public class BaseItemViewModel
     {
         protected readonly MyWorkMetadata MyWorkMetadata;
 
-        protected BaseItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
+        public BaseItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
         {
             Entity = entity;
             MyWorkMetadata = myWorkMetadata;

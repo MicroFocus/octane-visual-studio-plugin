@@ -123,10 +123,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result;
         }
 
-        public Task<EntityListResult<TEntity>> SearchEntitiesByType<TEntity>(string searchString, int limit)
+        public Task<EntityListResult<TEntity>> SearchEntitiesByType<TEntity>(string searchString, int limit, string type)
             where TEntity : BaseEntity
         {
-            return es.Search<TEntity>(workspaceContext, searchString, limit);
+            return es.Search<TEntity>(workspaceContext, searchString, limit, type);
         }
 
         private IList<QueryPhrase> BuildCommentsCriteria(WorkspaceUser user)

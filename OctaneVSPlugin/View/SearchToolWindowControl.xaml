@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
              xmlns:visualStudio="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
+             xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
@@ -23,7 +24,7 @@
                  BorderThickness="0">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <visualStudio:MyItemControl />
+                    <view:SearchItemControl />
                 </DataTemplate>
             </ListBox.ItemTemplate>
 

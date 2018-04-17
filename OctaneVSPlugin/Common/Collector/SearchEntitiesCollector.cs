@@ -32,8 +32,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
 
         protected override void PrepareCollectorTasks()
         {
-            RegisterCollectorTask(Service.SearchEntitiesByType<Defect>(_searchString, _limitPerType));
-            RegisterCollectorTask(Service.SearchEntitiesByType<Story>(_searchString, _limitPerType));
+            RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_DEFECT));
+            RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_STORY));
         }
     }
 }

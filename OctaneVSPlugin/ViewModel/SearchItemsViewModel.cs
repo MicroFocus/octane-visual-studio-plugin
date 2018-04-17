@@ -27,7 +27,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         private readonly OctaneServices _octaneService;
 
-        private IList<DetailedItemViewModel> _searchResults = new List<DetailedItemViewModel>();
+        private IList<BaseItemViewModel> _searchResults = new List<BaseItemViewModel>();
 
         public SearchItemsViewModel()
         {
@@ -44,11 +44,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             try
             {
                 await _octaneService.Connect();
-                var results = await _octaneService.SearchEntities(searchFilter, 100);
+                var results = await _octaneService.SearchEntities(searchFilter, 5);
                 var metadata = new MyWorkMetadata();
                 foreach (var entity in results)
                 {
-                    _searchResults.Add(new DetailedItemViewModel(entity, metadata));
+                    _searchResults.Add(new BaseItemViewModel(entity, metadata));
                 }
             }
             catch (Exception ex)
@@ -60,11 +60,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// <summary>
         /// Entity fields shown in the main section of the detailed item view
         /// </summary>
-        public IEnumerable<DetailedItemViewModel> SearchItems
+        public IEnumerable<BaseItemViewModel> SearchItems
         {
             get
             {
-                return new ObservableCollection<DetailedItemViewModel>(_searchResults);
+                return new ObservableCollection<BaseItemViewModel>(_searchResults);
             }
         }
 
