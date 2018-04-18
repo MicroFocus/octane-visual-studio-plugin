@@ -66,6 +66,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 var metadata = new MyWorkMetadata();
                 foreach (var entity in results)
                 {
+                    // TODO - invetigate showing in bold the matching sections in Name and Description
+                    entity.Name = CleanHighlightedCode(entity.Name);
+                    entity.SetValue(CommonFields.DESCRIPTION, CleanHighlightedCode(entity.GetStringValue(CommonFields.DESCRIPTION)));
+
                     _searchResults.Add(new BaseItemViewModel(entity, metadata));
                 }
 
@@ -80,6 +84,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 NotifyPropertyChanged();
             }
+        }
+
+        private string CleanHighlightedCode(string value)
+        {
+            return value.Replace("<em>", string.Empty).Replace("</em>", string.Empty);
         }
 
         /// <summary>
