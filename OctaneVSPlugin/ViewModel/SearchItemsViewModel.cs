@@ -88,6 +88,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private string CleanHighlightedCode(string value)
         {
+            if (value == null)
+                return string.Empty;
+
             return value.Replace("<em>", string.Empty).Replace("</em>", string.Empty);
         }
 
