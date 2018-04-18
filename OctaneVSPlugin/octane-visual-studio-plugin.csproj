@@ -96,7 +96,7 @@
     <Compile Include="ViewModel\CommentViewModel.cs" />
     <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
-    <Compile Include="DelegatedCommand.cs" />
+    <Compile Include="Common\DelegatedCommand.cs" />
     <Compile Include="ViewModel\BaseItemViewModel.cs" />
     <Compile Include="ViewModel\DetailedItemViewModel.cs" />
     <Compile Include="EntityComparerByLastModified.cs" />
