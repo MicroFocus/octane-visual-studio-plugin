@@ -16,7 +16,6 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
-using octane_visual_studio_plugin;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,7 +30,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private DelegatedCommand refreshCommand;
         private DelegatedCommand openOctaneOptionsDialogCommand;
-        private MainWindowPackage package;
 
         private MainWindowMode mode;
         private ObservableCollection<OctaneItemViewModel> myItems;
@@ -105,7 +103,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void OpenOctaneOptionsDialog(object parameter)
         {
-            package.ShowOptionPage(typeof(OptionsPage));
+            MainWindow.PluginPackage.ShowOptionPage(typeof(OptionsPage));
         }
 
         /// <summary>
@@ -165,17 +163,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
-        internal void SetPackage(MainWindowPackage package)
-        {
-            this.package = package;
-            LoadMyItems();
-        }
-
-        internal MainWindowPackage Package
-        {
-            get { return package; }
-        }
-
         private void NotifyPropertyChanged(string propName)
         {
             if (PropertyChanged != null)
@@ -204,7 +191,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 throw new Exception("Fail to get test script", ex);
             }
         }
-
-
     }
 }

@@ -19,9 +19,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using octane_visual_studio_plugin;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -35,7 +33,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     public partial class MainWindowControl : UserControl
     {
         private readonly OctaneMyItemsViewModel viewModel;
-        private MainWindowPackage package;
 
         private readonly MenuItem viewDetailsMenuItem;
         private readonly MenuItem viewTaskParentDetailsMenuItem;
@@ -94,10 +91,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             };
         }
 
-        public void SetPackage(MainWindowPackage package)
+        /// <summary>
+        /// Initialize the data for the control
+        /// </summary>
+        internal void Initialize()
         {
-            this.package = package;
-            viewModel.SetPackage(package);
+            viewModel.LoadMyItems();
         }
 
         private OctaneItemViewModel SelectedItem
@@ -112,12 +111,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public ICommand SearchCommand { get; }
 
-        private async void SearchInternal(object parameter)
+        private void SearchInternal(object parameter)
         {
             if (string.IsNullOrEmpty(SearchFilter))
                 return;
 
-            SearchToolWindow searchWindow = (SearchToolWindow)package.FindToolWindow(typeof(SearchToolWindow), 100000, true);
+            // Compute unique ID for search window
+            SearchToolWindow searchWindow = (SearchToolWindow)MainWindow.PluginPackage.FindToolWindow(typeof(SearchToolWindow), 100000, true);
             if (searchWindow?.Frame == null)
             {
                 throw new NotSupportedException("Cannot create search tool window");
@@ -197,7 +197,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 return;
             }
 
-            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(package, entity);
+            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(MainWindow.PluginPackage, entity);
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
             window.LoadEntity(entity);
@@ -263,7 +263,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 Test test = (Test)SelectedItem.Entity;
                 string script = await viewModel.GetGherkinScript(test);
 
-                package.CreateFile(test.Name, script);
+                MainWindow.PluginPackage.CreateFile(test.Name, script);
             }
             catch (Exception ex)
             {
