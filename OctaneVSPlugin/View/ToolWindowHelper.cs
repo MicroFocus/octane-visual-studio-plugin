@@ -49,6 +49,37 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         }
 
         /// <summary>
+        /// Download the gherkin script for the selected item if possible
+        /// </summary>
+        internal static async void DownloadGherkinScript(BaseItemViewModel selectedItem)
+        {
+            try
+            {
+                if (selectedItem?.Entity == null)
+                    return;
+
+                var test = selectedItem.Entity as Test;
+                if (test == null)
+                    return;
+
+                OctaneServices octane = new OctaneServices(
+                    OctaneConfiguration.Url,
+                    OctaneConfiguration.SharedSpaceId,
+                    OctaneConfiguration.WorkSpaceId,
+                    OctaneConfiguration.Username,
+                    OctaneConfiguration.Password);
+                await octane.Connect();
+
+                var testScript = await octane.GetTestScript(test.Id);
+                MainWindow.PluginPackage.CreateFile(test.Name, testScript.Script);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
         /// Construct the context menu for the given selected item
         /// </summary>
         internal static void ConstructContextMenu(ContextMenu cm, BaseItemViewModel selectedItem,

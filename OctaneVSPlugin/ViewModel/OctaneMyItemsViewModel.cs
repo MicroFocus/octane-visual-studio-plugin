@@ -170,26 +170,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
-
-        public async System.Threading.Tasks.Task<string> GetGherkinScript(Test test)
-        {
-            try
-            {
-                OctaneServices octane = new OctaneServices(
-                    OctaneConfiguration.Url,
-                    OctaneConfiguration.SharedSpaceId,
-                    OctaneConfiguration.WorkSpaceId,
-                    OctaneConfiguration.Username,
-                    OctaneConfiguration.Password);
-                await octane.Connect();
-
-                TestScript testScript = await octane.GetTestScript(test.Id);
-                return testScript.Script;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Fail to get test script", ex);
-            }
-        }
     }
 }

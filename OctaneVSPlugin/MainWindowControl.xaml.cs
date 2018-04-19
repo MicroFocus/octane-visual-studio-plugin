@@ -62,6 +62,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
+        #region Search
+
         public string SearchFilter { get; set; }
 
         public ICommand SearchCommand { get; }
@@ -71,7 +73,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (string.IsNullOrEmpty(SearchFilter))
                 return;
 
-            // Compute unique ID for search window
+            // TODO Compute unique ID for search window
             SearchToolWindow searchWindow = (SearchToolWindow)MainWindow.PluginPackage.FindToolWindow(typeof(SearchToolWindow), 100000, true);
             if (searchWindow?.Frame == null)
             {
@@ -81,6 +83,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(searchWindowFrame.Show());
             searchWindow.Search(SearchFilter);
         }
+
+        #endregion
 
         private void OpenInBrowser(object param)
         {
@@ -204,19 +208,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        private async void DownloadGherkinScript(object sender)
+        private void DownloadGherkinScript(object sender)
         {
-            try
-            {
-                Test test = (Test)SelectedItem.Entity;
-                string script = await _viewModel.GetGherkinScript(test);
-
-                MainWindow.PluginPackage.CreateFile(test.Name, script);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.DownloadGherkinScript(SelectedItem);
         }
 
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
