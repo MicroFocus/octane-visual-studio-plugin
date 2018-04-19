@@ -17,6 +17,7 @@
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -29,6 +30,84 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     internal static class ToolWindowHelper
     {
         internal const string AppName = "ALM Octane";
+
+        /// <summary>
+        /// View given entity's details in a new window
+        /// </summary>
+        public static void ViewDetails(BaseEntity entity)
+        {
+            try
+            {
+                if (entity == null)
+                    return;
+
+                ViewEntityDetailsInternal(entity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// View given item's parent details in a new window
+        /// </summary>
+        public static void ViewTaskParentDetails(BaseItemViewModel selectedItem)
+        {
+            try
+            {
+                if (selectedItem?.Entity == null)
+                    return;
+
+                if (selectedItem.Entity.TypeName != Task.TYPE_TASK)
+                {
+                    throw new Exception($"Unrecognized type {selectedItem.Entity.TypeName}.");
+                }
+                var selectedEntity = (BaseEntity)selectedItem.Entity.GetValue("story");
+
+                ViewEntityDetailsInternal(selectedEntity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// View given item's parent details in a new window
+        /// </summary>
+        public static void ViewCommentParentDetails(BaseItemViewModel selectedItem)
+        {
+            try
+            {
+                var commentViewModel = selectedItem as CommentViewModel;
+                if (commentViewModel == null)
+                {
+                    throw new Exception($"Unrecognized type {selectedItem.Entity.TypeName}.");
+                }
+                var selectedEntity = commentViewModel.ParentEntity;
+
+                ViewEntityDetailsInternal(selectedEntity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void ViewEntityDetailsInternal(BaseEntity entity)
+        {
+            if (entity.TypeName == "feature" || entity.TypeName == "epic")
+            {
+                Utility.OpenInBrowser(entity);
+                return;
+            }
+
+            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(MainWindow.PluginPackage, entity);
+            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            window.LoadEntity(entity);
+        }
 
         /// <summary>
         /// Open the given entity in the browser

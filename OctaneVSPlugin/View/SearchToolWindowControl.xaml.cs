@@ -38,6 +38,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             get { return (BaseItemViewModel)SearchResults.SelectedItem; }
         }
 
+        private void ViewDetails(object param)
+        {
+            ToolWindowHelper.ViewDetails(SelectedItem?.Entity);
+        }
+
+        private void ViewTaskParentDetails(object param)
+        {
+            ToolWindowHelper.ViewTaskParentDetails(SelectedItem);
+        }
+
         private void OpenInBrowser(object param)
         {
             ToolWindowHelper.OpenInBrowser(SelectedItem?.Entity);
@@ -51,7 +61,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         private void SearchResults_ContextMenuOpened(object sender, RoutedEventArgs e)
         {
             ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
-                null, null, null,
+                ViewDetails, ViewTaskParentDetails, null,
                 OpenInBrowser, null, DownloadGherkinScript);
         }
     }

@@ -91,68 +91,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             ToolWindowHelper.OpenInBrowser(GetSelectedEntity());
         }
 
-        private async void ViewDetails(object param)
+        private void ViewDetails(object param)
         {
-            try
-            {
-                var selectedEntity = GetSelectedEntity();
-                await ViewEntityDetailsInternal(selectedEntity);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.ViewDetails(GetSelectedEntity());
         }
 
-        private async void ViewTaskParentDetails(object param)
+        private void ViewTaskParentDetails(object param)
         {
-            try
-            {
-                if (SelectedItem.Entity.TypeName != Api.Core.Entities.Task.TYPE_TASK)
-                {
-                    throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
-                }
-                var selectedEntity = (BaseEntity)SelectedItem.Entity.GetValue("story");
-
-                await ViewEntityDetailsInternal(selectedEntity);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.ViewTaskParentDetails(SelectedItem);
         }
 
-        private async void ViewCommentParentDetails(object param)
+        private void ViewCommentParentDetails(object param)
         {
-            try
-            {
-                var commentViewModel = SelectedItem as CommentViewModel;
-                if (commentViewModel == null)
-                {
-                    throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
-                }
-                var selectedEntity = commentViewModel.ParentEntity;
-
-                await ViewEntityDetailsInternal(selectedEntity);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private async System.Threading.Tasks.Task ViewEntityDetailsInternal(BaseEntity entity)
-        {
-            if (entity.TypeName == "feature" || entity.TypeName == "epic")
-            {
-                Utility.OpenInBrowser(entity);
-                return;
-            }
-
-            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(MainWindow.PluginPackage, entity);
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
-            window.LoadEntity(entity);
+            ToolWindowHelper.ViewCommentParentDetails(SelectedItem);
         }
 
         private void CopyCommitMessage(object sender)
