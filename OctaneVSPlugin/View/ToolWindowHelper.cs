@@ -31,6 +31,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         internal const string AppName = "ALM Octane";
 
         /// <summary>
+        /// Open the given entity in the browser
+        /// </summary>
+        internal static void OpenInBrowser(BaseEntity entity)
+        {
+            try
+            {
+                if (entity == null)
+                    return;
+
+                Utility.OpenInBrowser(entity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
         /// Construct the context menu for the given selected item
         /// </summary>
         internal static void ConstructContextMenu(ContextMenu cm, BaseItemViewModel selectedItem,

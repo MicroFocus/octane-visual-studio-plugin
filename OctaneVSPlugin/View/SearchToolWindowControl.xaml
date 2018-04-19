@@ -102,11 +102,14 @@
                         </Style.Triggers>
                     </Style>
                 </DockPanel.Style>
-                <ListBox x:Name="results" ItemsSource="{Binding SearchItems}"
+                <ListBox x:Name="SearchResults" ItemsSource="{Binding SearchItems}"
                          Background="{DynamicResource VsBrush.Window}"
                          Foreground="{DynamicResource VsBrush.WindowText}"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                          BorderThickness="0">
+                    <ListBox.ContextMenu>
+                        <ContextMenu Name="SearchResultsContextMenu" Opened="SearchResults_ContextMenuOpened" />
+                    </ListBox.ContextMenu>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <view:SearchItemControl />

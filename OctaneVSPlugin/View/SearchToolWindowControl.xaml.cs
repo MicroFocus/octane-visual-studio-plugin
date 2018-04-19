@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-using System.Diagnostics.CodeAnalysis;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -30,21 +30,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         public SearchToolWindowControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
         }
 
-        /// <summary>
-        /// Handles click on the button by displaying a message box.
-        /// </summary>
-        /// <param name="sender">The event sender.</param>
-        /// <param name="e">The event args.</param>
-        [SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions", Justification = "Sample code")]
-        [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Default event handler naming pattern")]
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private BaseItemViewModel SelectedItem
         {
-            MessageBox.Show(
-                string.Format(System.Globalization.CultureInfo.CurrentUICulture, "Invoked '{0}'", this.ToString()),
-                "SearchToolWindow");
+            get { return (BaseItemViewModel)SearchResults.SelectedItem; }
+        }
+
+        private void OpenInBrowser(object param)
+        {
+            ToolWindowHelper.OpenInBrowser(SelectedItem?.Entity);
+        }
+
+        private void SearchResults_ContextMenuOpened(object sender, RoutedEventArgs e)
+        {
+            ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
+                null, null, null,
+                OpenInBrowser, null, null);
         }
     }
 }

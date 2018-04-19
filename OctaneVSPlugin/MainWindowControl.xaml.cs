@@ -84,14 +84,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private void OpenInBrowser(object param)
         {
-            try
-            {
-                Utility.OpenInBrowser(GetSelectedEntity());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.OpenInBrowser(GetSelectedEntity());
         }
 
         private async void ViewDetails(object param)
