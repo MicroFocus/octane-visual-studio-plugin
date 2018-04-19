@@ -145,6 +145,7 @@
       <DependentUpon>SearchToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TextBlockService.cs" />
+    <Compile Include="View\ToolWindowHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

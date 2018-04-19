@@ -32,16 +32,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// </summary>
     public partial class MainWindowControl : UserControl
     {
-        private readonly OctaneMyItemsViewModel viewModel;
-
-        private readonly MenuItem viewDetailsMenuItem;
-        private readonly MenuItem viewTaskParentDetailsMenuItem;
-        private readonly MenuItem viewCommentParentDetailsMenuItem;
-        private readonly MenuItem openInBrowserMenuItem;
-        private readonly MenuItem copyCommitMessageMenuItem;
-        private readonly MenuItem gherkinTestMenuItem;
-
-        private const string AppName = "ALM Octane";
+        private readonly OctaneMyItemsViewModel _viewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowControl"/> class.
@@ -49,46 +40,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public MainWindowControl()
         {
             InitializeComponent();
-            viewModel = new OctaneMyItemsViewModel();
-            DataContext = viewModel;
+            _viewModel = new OctaneMyItemsViewModel();
+            DataContext = _viewModel;
 
             SearchCommand = new DelegateCommand(SearchInternal);
-
-            viewDetailsMenuItem = new MenuItem
-            {
-                Header = "View details (DblClick)",
-                Command = new DelegatedCommand(ViewDetails)
-            };
-
-            viewTaskParentDetailsMenuItem = new MenuItem
-            {
-                Header = "View parent details (DblClick)",
-                Command = new DelegatedCommand(ViewTaskParentDetails)
-            };
-
-            viewCommentParentDetailsMenuItem = new MenuItem
-            {
-                Header = "View parent details (DblClick)",
-                Command = new DelegatedCommand(ViewCommentParentDetails)
-            };
-
-            openInBrowserMenuItem = new MenuItem
-            {
-                Header = "Open in Browser (Alt + DblClick)",
-                Command = new DelegatedCommand(OpenInBrowser)
-            };
-
-            copyCommitMessageMenuItem = new MenuItem
-            {
-                Header = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)",
-                Command = new DelegatedCommand(CopyCommitMessage)
-            };
-
-            gherkinTestMenuItem = new MenuItem
-            {
-                Header = "Download Script",
-                Command = new DelegatedCommand(DownloadGherkinScript)
-            };
         }
 
         /// <summary>
@@ -96,7 +51,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         internal void Initialize()
         {
-            viewModel.LoadMyItems();
+            _viewModel.LoadMyItems();
         }
 
         private OctaneItemViewModel SelectedItem
@@ -135,7 +90,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -148,7 +103,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -166,7 +121,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -185,7 +140,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -215,7 +170,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to obtain commit message.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to obtain commit message.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -252,7 +207,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to process double click operation.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to process double click operation.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -261,62 +216,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             try
             {
                 Test test = (Test)SelectedItem.Entity;
-                string script = await viewModel.GetGherkinScript(test);
+                string script = await _viewModel.GetGherkinScript(test);
 
                 MainWindow.PluginPackage.CreateFile(test.Name, script);
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
         {
-            var cm = (ContextMenu)sender;
-
-            cm.Items.Clear();
-
-            try
-            {
-                // view details
-                if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(SelectedItem.Entity)))
-                {
-                    cm.Items.Add(viewDetailsMenuItem);
-                }
-
-                // view parent details
-                var selectedEntity = SelectedItem.Entity;
-                var taskParentEntity = GetTaskParentEntity(selectedEntity);
-                if (selectedEntity.TypeName == Api.Core.Entities.Task.TYPE_TASK && taskParentEntity != null
-                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(taskParentEntity)))
-                {
-                    cm.Items.Add(viewTaskParentDetailsMenuItem);
-                }
-
-                var commentParentEntity = GetCommentParentEntity(SelectedItem);
-                if (commentParentEntity != null &&
-                    DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(commentParentEntity)))
-                {
-                    cm.Items.Add(viewCommentParentDetailsMenuItem);
-                }
-
-                cm.Items.Add(openInBrowserMenuItem);
-
-                if (SelectedItem.IsSupportCopyCommitMessage)
-                {
-                    cm.Items.Add(copyCommitMessageMenuItem);
-                }
-
-                if (SelectedItem.SubType == TestGherkin.SUBTYPE_GHERKIN_TEST)
-                {
-                    cm.Items.Add(gherkinTestMenuItem);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to show context menu.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
+                ViewDetails, ViewTaskParentDetails, ViewCommentParentDetails,
+                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript);
         }
 
         private BaseEntity GetSelectedEntity()
@@ -328,26 +242,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
 
             return selectedEntity;
-        }
-
-        private BaseEntity GetCommentParentEntity(OctaneItemViewModel selectedItem)
-        {
-            if (selectedItem is CommentViewModel commentViewModel)
-            {
-                return commentViewModel.ParentEntity;
-            }
-
-            return null;
-        }
-
-        private BaseEntity GetTaskParentEntity(BaseEntity entity)
-        {
-            if (entity.TypeName == Api.Core.Entities.Task.TYPE_TASK)
-            {
-                return (BaseEntity)SelectedItem.Entity.GetValue("story");
-            }
-
-            return null;
         }
     }
 }
