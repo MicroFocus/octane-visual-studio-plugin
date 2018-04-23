@@ -14,6 +14,7 @@ namespace HTMLConverter
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using System.Windows; // DependencyProperty
     using System.Windows.Documents; // TextElement
@@ -23,6 +24,7 @@ namespace HTMLConverter
     /// HtmlToXamlConverter is a static class that takes an HTML string
     /// and converts it into XAML
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class HtmlToXamlConverter
     {
         // ---------------------------------------------------------------------
