@@ -103,7 +103,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         {
             var viewModel = new DetailedItemViewModel(entity);
             viewModel.Initialize();
-            Caption = $"{EntityNames.GetInitials(Utility.GetConcreteEntityType(entity))} {viewModel.ID}";
+
+            var entityInformation = EntityRegistry.GetEntityInformation(viewModel.Entity);
+            Caption = $"{entityInformation?.ShortLabel} {viewModel.ID}";
             detailsControl.DataContext = viewModel;
         }
 
