@@ -91,14 +91,60 @@
                 </Grid>
             </DockPanel>
 
-            <DockPanel x:Name="ShowDetailedView">
+            <DockPanel x:Name="NoItemsPanel">
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="Loaded">
-                                <Setter Property="Visibility" Value="Visible" />
-                            </DataTrigger>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Mode}" Value="Loaded" />
+                                    <Condition Binding="{Binding SearchItems.Count}" Value="0" />
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Viewbox Grid.Row="0" MaxHeight="200">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/no-items-to-display.png" />
+                        </StackPanel>
+
+                    </Viewbox>
+
+                    <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
+                        There are no items to display.
+                    </TextBlock>
+                </Grid>
+            </DockPanel>
+
+            <DockPanel x:Name="ShowSearchResultsView">
+                <DockPanel.Resources>
+                    <visualStudio:GreaterThanValueConverter x:Key="GreaterThanValueConverter" />
+                </DockPanel.Resources>
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Mode}" Value="Loaded" />
+                                    <Condition Binding="{Binding SearchItems.Count, Converter={StaticResource GreaterThanValueConverter}}" Value="True" />
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
                         </Style.Triggers>
                     </Style>
                 </DockPanel.Style>
