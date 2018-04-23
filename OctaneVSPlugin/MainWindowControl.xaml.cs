@@ -15,7 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.PlatformUI;
@@ -122,41 +121,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        private void results_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void results_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (SelectedItem == null)
-                return;
-
-            try
-            {
-                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                    {
-                        CopyCommitMessage(sender);
-                    }
-                    else
-                    {
-                        OpenInBrowser(sender);
-                    }
-                }
-                else
-                {
-                    var selectedEntity = GetSelectedEntity();
-                    if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
-                    {
-                        ViewDetails(sender);
-                    }
-                    else
-                    {
-                        OpenInBrowser(sender);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to process double click operation.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.HandleDoubleClickOnItem(GetSelectedEntity(), CopyCommitMessage);
         }
 
         private void DownloadGherkinScript(object sender)
@@ -173,7 +140,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private BaseEntity GetSelectedEntity()
         {
-            var selectedEntity = SelectedItem.Entity;
+            var selectedEntity = SelectedItem?.Entity;
             if (SelectedItem is CommentViewModel commentViewModel)
             {
                 selectedEntity = commentViewModel.ParentEntity;

@@ -38,6 +38,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             get { return (BaseItemViewModel)SearchResults.SelectedItem; }
         }
 
+        private void SearchItems_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            ToolWindowHelper.HandleDoubleClickOnItem(SelectedItem?.Entity);
+        }
+
         private void ViewDetails(object param)
         {
             ToolWindowHelper.ViewDetails(SelectedItem?.Entity);

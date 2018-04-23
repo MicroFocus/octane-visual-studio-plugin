@@ -21,6 +21,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -30,6 +31,45 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     internal static class ToolWindowHelper
     {
         internal const string AppName = "ALM Octane";
+
+        /// <summary>
+        /// Handle double-click event on a backlog item
+        /// </summary>
+        public static void HandleDoubleClickOnItem(BaseEntity entity, Action<object> copyCommitMessageDelegate = null)
+        {
+            try
+            {
+                if (entity == null)
+                    return;
+
+                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
+                {
+                    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
+                    {
+                        copyCommitMessageDelegate?.Invoke(null);
+                    }
+                    else
+                    {
+                        OpenInBrowser(entity);
+                    }
+                }
+                else
+                {
+                    if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(entity)))
+                    {
+                        ViewDetails(entity);
+                    }
+                    else
+                    {
+                        OpenInBrowser(entity);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to process double click operation.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
 
         /// <summary>
         /// View given entity's details in a new window

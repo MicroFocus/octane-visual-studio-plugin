@@ -103,6 +103,7 @@
                     </Style>
                 </DockPanel.Style>
                 <ListBox x:Name="SearchResults" ItemsSource="{Binding SearchItems}"
+                         MouseDoubleClick="SearchItems_MouseDoubleClick"
                          Background="{DynamicResource VsBrush.Window}"
                          Foreground="{DynamicResource VsBrush.WindowText}"
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
