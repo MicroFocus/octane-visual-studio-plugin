@@ -34,15 +34,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
         {
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_DEFECT));
 
-            //RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestSuite.SUBTYPE_TEST_SUITE));
+            RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestSuite.SUBTYPE_TEST_SUITE));
             RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, Test.SUBTYPE_MANUAL_TEST));
-            //RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestAutomated.SUBTYPE_TEST_AUTOMATED));
+            RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestAutomated.SUBTYPE_TEST_AUTOMATED));
             RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestGherkin.SUBTYPE_GHERKIN_TEST));
 
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_STORY));
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_QUALITY_STORY));
-            /*RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_EPIC));
-            RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_FEATURE));*/
+            RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_EPIC));
+            RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_FEATURE));
 
             RegisterCollectorTask(Service.SearchEntitiesByType<Task>(_searchString, _limitPerType, Task.TYPE_TASK));
 
