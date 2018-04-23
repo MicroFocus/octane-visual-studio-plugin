@@ -27,7 +27,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
     /// </summary>
     public abstract class BaseOctanePluginTest : BaseTest
     {
-        protected readonly MyWorkMetadata MyWorkMetadata = new MyWorkMetadata();
         private dynamic _persistedFieldsCache;
 
         [AssemblyInitialize]

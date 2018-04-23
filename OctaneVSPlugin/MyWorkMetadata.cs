@@ -29,13 +29,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// </summary>
     public class MyWorkMetadata
     {
+        private static MyWorkMetadata _metadata;
+        private static readonly object _obj = new object();
+
         /// <summary>
         /// One stop shop for entities fields required for fetch and display them.
         /// </summary>
         private Dictionary<Type, Dictionary<string, FieldInfo[]>> _entitiesFieldsFetchInfo;
-
-        // Cache subtypes
-        private Dictionary<Type, HashSet<string>> subTypesByEntityType;
 
         // Cache fields
         private Dictionary<Type, List<string>> fieldsByEntityType;
@@ -45,6 +45,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         private const string SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER = "SimpleEntity";
 
+        public static MyWorkMetadata Instance
+        {
+            get
+            {
+                if (_metadata == null)
+                {
+                    lock (_obj)
+                    {
+                        if (_metadata == null)
+                        {
+                            _metadata = new MyWorkMetadata();
+                        }
+                    }
+                }
+
+                return _metadata;
+            }
+        }
+
         /// <summary>
         /// Array of entity types that do not have sub-types.
         /// 
@@ -53,11 +72,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         private static readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
 
-        public MyWorkMetadata()
+        private MyWorkMetadata()
         {
             _entitiesFieldsFetchInfo = new Dictionary<Type, Dictionary<string, FieldInfo[]>>();
             fieldsByEntityType = new Dictionary<Type, List<string>>();
-            subTypesByEntityType = new Dictionary<Type, HashSet<string>>();
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT,
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),

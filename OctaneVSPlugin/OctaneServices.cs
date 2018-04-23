@@ -103,13 +103,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return idPhrase;
         }
 
-        public async Task<IList<BaseEntity>> GetMyItems(MyWorkMetadata itemFetchInfo)
+        public async Task<IList<BaseEntity>> GetMyItems()
         {
             var owner = await GetWorkspaceUser();
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
                 BuildUserItemCriteria(owner), BuildUserItemFields());
 
-            var collector = new MyWorkEntitiesCollector(this, userItems, itemFetchInfo);
+            var collector = new MyWorkEntitiesCollector(this, userItems, MyWorkMetadata.Instance);
             List<BaseEntity> result = await collector.GetAllEntities();
             result.Sort(entityComparer);
 

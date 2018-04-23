@@ -216,10 +216,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 var viewModels = new List<CommentViewModel>();
                 var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
-                var metadata = new MyWorkMetadata();
                 foreach (var comment in commentEntities)
                 {
-                    viewModels.Add(new CommentViewModel(comment, metadata));
+                    viewModels.Add(new CommentViewModel(comment));
                 }
 
                 _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => c.CreationTime));

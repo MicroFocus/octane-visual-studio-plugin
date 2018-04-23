@@ -26,8 +26,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         private readonly Comment commentEntity;
 
-        public CommentViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
-            : base(entity, myWorkMetadata)
+        public CommentViewModel(BaseEntity entity)
+            : base(entity)
         {
             commentEntity = (Comment)entity;
             ParentEntity = GetOwnerEntity();

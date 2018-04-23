@@ -34,8 +34,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private MainWindowMode mode;
         private ObservableCollection<OctaneItemViewModel> myItems;
 
-        private MyWorkMetadata myWorkMetadata;
-
         /// <summary>
         /// Store the exception message from load items.
         /// </summary>
@@ -46,8 +44,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public OctaneMyItemsViewModel()
         {
             instance = this;
-
-            myWorkMetadata = new MyWorkMetadata();
 
             refreshCommand = new DelegatedCommand(Refresh);
             openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
@@ -142,16 +138,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 myItems.Clear();
 
-                IList<BaseEntity> items = await octane.GetMyItems(myWorkMetadata);
+                IList<BaseEntity> items = await octane.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
-                    myItems.Add(new OctaneItemViewModel(entity, myWorkMetadata));
+                    myItems.Add(new OctaneItemViewModel(entity));
                 }
 
                 IList<BaseEntity> comments = await octane.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
-                    myItems.Add(new CommentViewModel(comment, myWorkMetadata));
+                    myItems.Add(new CommentViewModel(comment));
                 }
 
                 Mode = MainWindowMode.ItemsLoaded;

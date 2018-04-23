@@ -26,24 +26,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly List<FieldViewModel> bottomFields;
         private readonly FieldViewModel subTitleField;
 
-        private readonly MyWorkMetadata _myWorkMetadata;
-
-        public OctaneItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
+        public OctaneItemViewModel(BaseEntity entity)
             : base(entity)
         {
-            _myWorkMetadata = myWorkMetadata;
-
             topFields = new List<FieldViewModel>();
             bottomFields = new List<FieldViewModel>();
 
-            subTitleField = new FieldViewModel(Entity, _myWorkMetadata.GetSubTitleFieldInfo(entity));
+            subTitleField = new FieldViewModel(Entity, MyWorkMetadata.Instance.GetSubTitleFieldInfo(entity));
 
-            foreach (FieldInfo fieldInfo in _myWorkMetadata.GetTopFieldsInfo(entity))
+            foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetTopFieldsInfo(entity))
             {
                 topFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
 
-            foreach (FieldInfo fieldInfo in _myWorkMetadata.GetBottomFieldsInfo(entity))
+            foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetBottomFieldsInfo(entity))
             {
                 bottomFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
