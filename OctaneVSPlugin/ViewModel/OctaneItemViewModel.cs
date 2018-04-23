@@ -26,20 +26,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly List<FieldViewModel> bottomFields;
         private readonly FieldViewModel subTitleField;
 
+        private readonly MyWorkMetadata _myWorkMetadata;
+
         public OctaneItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
-            : base(entity, myWorkMetadata)
+            : base(entity)
         {
+            _myWorkMetadata = myWorkMetadata;
+
             topFields = new List<FieldViewModel>();
             bottomFields = new List<FieldViewModel>();
 
-            subTitleField = new FieldViewModel(Entity, myWorkMetadata.GetSubTitleFieldInfo(entity));
+            subTitleField = new FieldViewModel(Entity, _myWorkMetadata.GetSubTitleFieldInfo(entity));
 
-            foreach (FieldInfo fieldInfo in myWorkMetadata.GetTopFieldsInfo(entity))
+            foreach (FieldInfo fieldInfo in _myWorkMetadata.GetTopFieldsInfo(entity))
             {
                 topFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
 
-            foreach (FieldInfo fieldInfo in myWorkMetadata.GetBottomFieldsInfo(entity))
+            foreach (FieldInfo fieldInfo in _myWorkMetadata.GetBottomFieldsInfo(entity))
             {
                 bottomFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
@@ -61,14 +65,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                string message = string.Format("{0} #{1}: ", MyWorkMetadata.GetCommitMessageTypeName(Entity), ID);
+                string message = string.Format("{0} #{1}: ", EntityInformation.CommitMessage, ID);
                 return message;
             }
         }
 
         public bool IsSupportCopyCommitMessage
         {
-            get { return MyWorkMetadata.IsSupportCopyCommitMessage(Entity); }
+            get { return EntityInformation.IsCopyCommitMessageSupported; }
         }
 
         public FieldViewModel SubTitleField

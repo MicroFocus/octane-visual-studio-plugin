@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -24,16 +25,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// </summary>
     public class BaseItemViewModel
     {
-        protected readonly MyWorkMetadata MyWorkMetadata;
+        protected readonly EntityInformation EntityInformation;
 
-        public BaseItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
+        public BaseItemViewModel(BaseEntity entity)
         {
             Entity = entity;
-            MyWorkMetadata = myWorkMetadata;
+            EntityInformation = EntityRegistry.GetEntityInformation(entity);
         }
 
+        /// <summary>
+        /// Entity associated with the current view model
+        /// </summary>
         public BaseEntity Entity { get; protected set; }
 
+        /// <summary>
+        /// Entity ID associated witht he current view model
+        /// </summary>
         public EntityId ID { get { return Entity.Id; } }
 
         public virtual string Title { get { return Entity.Name; } }
@@ -45,12 +52,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public virtual string IconText
         {
-            get { return MyWorkMetadata.GetIconText(Entity); }
+            get { return EntityInformation.ShortLabel; }
         }
 
         public virtual Color IconBackgroundColor
         {
-            get { return MyWorkMetadata.GetIconColor(Entity); }
+            get { return EntityInformation.LabelColor; }
         }
     }
 }

@@ -58,7 +58,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
         [TestMethod]
         public void FieldsMetadataServiceTests_GetFormattedValue_EntityInCache_ReturnsMetadata()
         {
-            var viewModel = new DetailedItemViewModel(_story, new MyWorkMetadata());
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             var metadata = FieldsMetadataService.GetFieldMetadata(viewModel.Entity).Result;

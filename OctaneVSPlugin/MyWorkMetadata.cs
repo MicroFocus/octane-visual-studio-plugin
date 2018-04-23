@@ -191,32 +191,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return GetFieldInfoByType(entity.GetType(), subType, FieldPosition.Bottom);
         }
 
-        internal string GetIconText(BaseEntity entity)
-        {
-            return GetEntitySubTypeInfo(entity).IconInfo.ShortLabel;
-        }
-
-        internal Color GetIconColor(BaseEntity entity)
-        {
-            return GetEntitySubTypeInfo(entity).IconInfo.LabelColor;
-        }
-
-        internal bool IsSupportCopyCommitMessage(BaseEntity entity)
-        {
-            return COMMIT_MESSAGE_NOT_APPLICABLE != GetEntitySubTypeInfo(entity).CommitMessageTypeName;
-        }
-
-        internal string GetCommitMessageTypeName(BaseEntity entity)
-        {
-            return GetEntitySubTypeInfo(entity).CommitMessageTypeName;
-        }
-
-        private ItemSubTypeInfo GetEntitySubTypeInfo(BaseEntity entity)
-        {
-            string subType = GetEntitySubType(entity);
-            return entitiesFetchInfo[entity.GetType()][subType];
-        }
-
         internal IEnumerable<FieldInfo> GetTopFieldsInfo(BaseEntity entity)
         {
             string subType = GetEntitySubType(entity);

@@ -63,14 +63,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 await _octaneService.Connect();
                 var results = await _octaneService.SearchEntities(_searchFilter, 5);
-                var metadata = new MyWorkMetadata();
                 foreach (var entity in results)
                 {
                     // TODO - invetigate showing in bold the matching sections in Name and Description
                     entity.Name = CleanHighlightedCode(entity.Name);
                     entity.SetValue(CommonFields.DESCRIPTION, CleanHighlightedCode(entity.GetStringValue(CommonFields.DESCRIPTION)));
 
-                    _searchResults.Add(new BaseItemViewModel(entity, metadata));
+                    _searchResults.Add(new BaseItemViewModel(entity));
                 }
 
                 Mode = WindowMode.Loaded;

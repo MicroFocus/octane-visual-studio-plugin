@@ -22,11 +22,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     public static class EntityRegistry
     {
-        /// <summary>
-        /// Placeholder value for entities that should not support copy of commit message.
-        /// </summary>
-        private const string CommitMessageNotApplicable = "";
-
         private static readonly Dictionary<string, EntityInformation> Registry = new Dictionary<string, EntityInformation>
         {
             { WorkItem.SUBTYPE_DEFECT, new EntityInformation("Defect", "defect", "D", Color.FromRgb(190, 102, 92)) },
@@ -35,19 +30,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { WorkItem.SUBTYPE_EPIC, new EntityInformation("Epic", "epic", "E", Color.FromRgb(202, 170, 209)) },
             { WorkItem.SUBTYPE_FEATURE, new EntityInformation("Feature", "feature", "F", Color.FromRgb(226, 132, 90)) },
 
-            { Test.SUBTYPE_MANUAL_TEST, new EntityInformation("Manual Test", CommitMessageNotApplicable, "MT", Color.FromRgb(96, 121, 141)) },
-            { TestGherkin.SUBTYPE_GHERKIN_TEST, new EntityInformation("Gherkin Test", CommitMessageNotApplicable, "GT", Color.FromRgb(120, 196, 192)) },
-            { TestAutomated.SUBTYPE_TEST_AUTOMATED, new EntityInformation("Automated Test", CommitMessageNotApplicable, "AT", Color.FromRgb(135, 123, 117)) },
+            { Test.SUBTYPE_MANUAL_TEST, new EntityInformation("Manual Test", EntityInformation.CommitMessageNotApplicable, "MT", Color.FromRgb(96, 121, 141)) },
+            { TestGherkin.SUBTYPE_GHERKIN_TEST, new EntityInformation("Gherkin Test", EntityInformation.CommitMessageNotApplicable, "GT", Color.FromRgb(120, 196, 192)) },
+            { TestAutomated.SUBTYPE_TEST_AUTOMATED, new EntityInformation("Automated Test", EntityInformation.CommitMessageNotApplicable, "AT", Color.FromRgb(135, 123, 117)) },
 
-            { TestSuite.SUBTYPE_TEST_SUITE, new EntityInformation("Test Suite", CommitMessageNotApplicable, "TS", Color.FromRgb(133, 114, 147)) },
-            { RunSuite.SUBTYPE_RUN_SUITE, new EntityInformation("Test Suite Run", CommitMessageNotApplicable, "SR", Color.FromRgb(133, 169, 188)) },
-            { RunManual.SUBTYPE_RUN_MANUAL, new EntityInformation("Manual Test Run", CommitMessageNotApplicable, "MR", Color.FromRgb(133, 169, 188)) },
+            { TestSuite.SUBTYPE_TEST_SUITE, new EntityInformation("Test Suite", EntityInformation.CommitMessageNotApplicable, "TS", Color.FromRgb(133, 114, 147)) },
+            { RunSuite.SUBTYPE_RUN_SUITE, new EntityInformation("Test Suite Run", EntityInformation.CommitMessageNotApplicable, "SR", Color.FromRgb(133, 169, 188)) },
+            { RunManual.SUBTYPE_RUN_MANUAL, new EntityInformation("Manual Test Run", EntityInformation.CommitMessageNotApplicable, "MR", Color.FromRgb(133, 169, 188)) },
 
-            { Requirement.SUBTYPE_DOCUMENT, new EntityInformation("Requirement", CommitMessageNotApplicable, "R", Color.FromRgb(215, 194, 56)) },
+            { Requirement.SUBTYPE_DOCUMENT, new EntityInformation("Requirement", EntityInformation.CommitMessageNotApplicable, "R", Color.FromRgb(215, 194, 56)) },
 
             { Task.TYPE_TASK, new EntityInformation("Task",  Task.TYPE_TASK, "T", Color.FromRgb(137, 204, 174)) },
 
-            { "comment", new EntityInformation("Comment", CommitMessageNotApplicable, "C", Color.FromRgb(234, 179, 124)) }
+            { "comment", new EntityInformation("Comment", EntityInformation.CommitMessageNotApplicable, "C", Color.FromRgb(234, 179, 124)) }
         };
 
         public static EntityInformation GetEntityInformation(BaseEntity entity)
@@ -65,17 +60,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
     public class EntityInformation
     {
+        /// <summary>
+        /// Placeholder value for entities that should not support copy of commit message.
+        /// </summary>
+        public const string CommitMessageNotApplicable = "";
+
         public string DisplayName { get; }
-        public string CommitMessageTypeName { get; }
+        public string CommitMessage { get; }
         public string ShortLabel { get; }
         public Color LabelColor { get; }
 
-        public EntityInformation(string displayName, string commitMessageTypeName, string shortLabel, Color labelColor)
+        public EntityInformation(string displayName, string commitMessage, string shortLabel, Color labelColor)
         {
             DisplayName = displayName;
-            CommitMessageTypeName = commitMessageTypeName;
+            CommitMessage = commitMessage;
             ShortLabel = shortLabel;
             LabelColor = labelColor;
+        }
+
+        internal bool IsCopyCommitMessageSupported
+        {
+            get { return CommitMessageNotApplicable != CommitMessage; }
         }
     }
 }

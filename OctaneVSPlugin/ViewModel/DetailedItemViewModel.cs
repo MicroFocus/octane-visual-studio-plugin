@@ -38,8 +38,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private string _filter = string.Empty;
 
-        public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
-            : base(entity, myWorkMetadata)
+        public DetailedItemViewModel(BaseEntity entity)
+            : base(entity)
         {
             RefreshCommand = new DelegatedCommand(Refresh);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
@@ -216,9 +216,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 var viewModels = new List<CommentViewModel>();
                 var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
+                var metadata = new MyWorkMetadata();
                 foreach (var comment in commentEntities)
                 {
-                    viewModels.Add(new CommentViewModel(comment, MyWorkMetadata));
+                    viewModels.Add(new CommentViewModel(comment, metadata));
                 }
 
                 _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => c.CreationTime));
@@ -264,12 +265,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public override string IconText
         {
-            get { return Mode != WindowMode.Loading ? MyWorkMetadata.GetIconText(Entity) : null; }
+            get { return Mode != WindowMode.Loading ? EntityInformation.ShortLabel : null; }
         }
 
         public override Color IconBackgroundColor
         {
-            get { return Mode != WindowMode.Loading ? MyWorkMetadata.GetIconColor(Entity) : new Color(); }
+            get { return Mode != WindowMode.Loading ? EntityInformation.LabelColor : new Color(); }
         }
 
         public IEnumerable<CommentViewModel> Comments
