@@ -47,8 +47,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (ParentEntity == null)
                     return "Unable to determine the comment's owner entity";
 
+                var parentEntityInformation = EntityRegistry.GetEntityInformation(ParentEntity);
+                if (parentEntityInformation == null)
+                    return string.Empty;
+
                 var sb = new StringBuilder("Comment on ")
-                    .Append(EntityNames.GetDisplayName(ParentEntity.TypeName).ToLower())
+                    .Append(parentEntityInformation.DisplayName.ToLower())
                     .Append(": ")
                     .Append(ParentEntity.Id.ToString())
                     .Append(" ")

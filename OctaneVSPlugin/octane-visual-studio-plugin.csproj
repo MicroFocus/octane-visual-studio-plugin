@@ -95,7 +95,6 @@
       <DependentUpon>OctanePluginSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\CommentViewModel.cs" />
-    <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
     <Compile Include="Common\DelegatedCommand.cs" />
     <Compile Include="ViewModel\BaseItemViewModel.cs" />
