@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -60,7 +62,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             if (double.IsInfinity(textBlock.MaxWidth))
                 return width < textBlock.DesiredSize.Width;
             else
-                return width >= textBlock.MaxWidth;
+            {
+                var typeface = new Typeface(textBlock.FontFamily, textBlock.FontStyle, textBlock.FontWeight, textBlock.FontStretch);
+                // FormattedText is used to measure the whole width of the text held up by this container.
+                var formmatedText = new FormattedText(textBlock.Text, Thread.CurrentThread.CurrentCulture,
+                    textBlock.FlowDirection, typeface, textBlock.FontSize, textBlock.Foreground);
+
+                return formmatedText.Width > width;
+            }
         }
     }
 }
