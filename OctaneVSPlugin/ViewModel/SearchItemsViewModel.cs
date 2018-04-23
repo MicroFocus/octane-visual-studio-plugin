@@ -66,8 +66,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 foreach (var entity in results)
                 {
                     // TODO - invetigate showing in bold the matching sections in Name and Description
-                    entity.Name = CleanHighlightedCode(entity.Name);
-                    entity.SetValue(CommonFields.DESCRIPTION, CleanHighlightedCode(entity.GetStringValue(CommonFields.DESCRIPTION)));
+                    entity.Name = Utility.StripHtml(entity.Name);
+                    entity.SetValue(CommonFields.DESCRIPTION, Utility.StripHtml(entity.GetStringValue(CommonFields.DESCRIPTION)));
 
                     _searchResults.Add(new BaseItemViewModel(entity));
                 }
@@ -83,14 +83,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 NotifyPropertyChanged();
             }
-        }
-
-        private string CleanHighlightedCode(string value)
-        {
-            if (value == null)
-                return string.Empty;
-
-            return value.Replace("<em>", string.Empty).Replace("</em>", string.Empty);
         }
 
         /// <summary>
