@@ -29,45 +29,74 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// Detailed view model for an entity
     /// </summary>
-    public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged
+    public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged, IFieldsObserver
     {
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
+        private readonly List<FieldViewModel> _allEntityFields;
+
+        private string _filter = string.Empty;
 
         public DetailedItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
             : base(entity, myWorkMetadata)
         {
             RefreshCommand = new DelegatedCommand(Refresh);
+            OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+            ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
+            ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
+            _allEntityFields = new List<FieldViewModel>();
 
             Mode = DetailsWindowMode.LoadingItem;
 
-            if (EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity)))
-                EntitySupportsComments = true;
+            EntitySupportsComments = EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity));
 
             _octaneService = new OctaneServices(
-                OctaneMyItemsViewModel.Instance.Package.AlmUrl,
-                OctaneMyItemsViewModel.Instance.Package.SharedSpaceId,
-                OctaneMyItemsViewModel.Instance.Package.WorkSpaceId,
-                OctaneMyItemsViewModel.Instance.Package.AlmUsername,
-                OctaneMyItemsViewModel.Instance.Package.AlmPassword);
+                OctaneConfiguration.Url,
+                OctaneConfiguration.SharedSpaceId,
+                OctaneConfiguration.WorkSpaceId,
+                OctaneConfiguration.Username,
+                OctaneConfiguration.Password);
+
+            Id = (long)entity.Id;
+            EntityType = Utility.GetConcreteEntityType(Entity);
+            FieldsCache.Instance.Attach(this);
         }
 
-        public async void Initialize()
+        public async System.Threading.Tasks.Task Initialize()
         {
             try
             {
                 await _octaneService.Connect();
-                Entity = await _octaneService.FindEntity(Entity);
+
+                List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
+                var updatedFields = fields.Select(fm => fm.Name).ToList();
+                // TODO - investigate why not all entities receive the subtype field by default
+                if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))
+                {
+                    updatedFields.Add(CommonFields.SUB_TYPE);
+                }
+
+                Entity = await _octaneService.FindEntity(Entity, updatedFields);
+
+                _allEntityFields.Clear();
+
+                var visibleFieldsHashSet = FieldsCache.Instance.GetVisibleFieldsForEntity(EntityType);
+                var fieldsToHideHashSet = FieldsCache.GetFieldsToHide(Entity);
+                foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
+                {
+                    var fieldViewModel = new FieldViewModel(Entity, field.Name, field.Label, visibleFieldsHashSet.Contains(field.Name));
+
+                    _allEntityFields.Add(fieldViewModel);
+                }
 
                 if (EntitySupportsComments)
                     await RetrieveComments();
 
                 Mode = DetailsWindowMode.ItemLoaded;
-                NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
@@ -76,6 +105,108 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             NotifyPropertyChanged();
         }
+
+        /// <summary>
+        /// Flag specifying whether the current entity supports comments
+        /// </summary>
+        public bool EntitySupportsComments { get; }
+
+        #region IFieldsObserver
+
+        /// <inheritdoc />
+        public long Id { get; }
+
+        /// <inheritdoc />
+        public string EntityType { get; }
+
+        /// <inheritdoc />
+        public void UpdateFields()
+        {
+            var persistedVisibleFields = FieldsCache.Instance.GetVisibleFieldsForEntity(EntityType);
+            foreach (var field in _allEntityFields)
+            {
+                field.IsSelected = persistedVisibleFields.Contains(field.Name);
+            }
+
+            NotifyPropertyChanged("FilteredEntityFields");
+            NotifyPropertyChanged("VisibleFields");
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Entity fields shown in the main section of the detailed item view
+        /// </summary>
+        public IEnumerable<FieldViewModel> VisibleFields
+        {
+            get
+            {
+                NotifyPropertyChanged("OnlyDefaultFieldsAreShown");
+                return new ObservableCollection<FieldViewModel>(_allEntityFields.Where(f => f.IsSelected));
+            }
+        }
+
+        #region FieldCustomization
+
+        /// <summary>
+        /// Entity fields shown in the field customization control after the search filter has been applied
+        /// </summary>
+        public IEnumerable<FieldViewModel> FilteredEntityFields
+        {
+            get
+            {
+                return new ObservableCollection<FieldViewModel>(
+                    _allEntityFields.Where(f => f.Label.ToLowerInvariant().Contains(_filter))
+                                    .OrderBy(f => f.Label));
+            }
+        }
+
+        /// <summary>
+        /// Search filter applied on the entity fields
+        /// </summary>
+        public string Filter
+        {
+            get { return _filter; }
+            set
+            {
+                _filter = value?.ToLowerInvariant() ?? string.Empty;
+                NotifyPropertyChanged("FilteredEntityFields");
+            }
+        }
+
+        /// <summary>
+        /// Command for handling the visibility change of an entity field
+        /// </summary>
+        public ICommand ToggleEntityFieldVisibilityCommand { get; }
+
+        private void ToggleEntityFieldVisibility(object param)
+        {
+            FieldsCache.Instance.UpdateVisibleFieldsForEntity(EntityType, _allEntityFields);
+        }
+
+        /// <summary>
+        /// Command for reseting the visible fields to the defaults for the current entity
+        /// </summary>
+        public ICommand ResetFieldsCustomizationCommand { get; }
+
+        private void ResetFieldsCustomization(object param)
+        {
+            FieldsCache.Instance.ResetVisibleFieldsForEntity(EntityType);
+        }
+
+        /// <summary>
+        /// Flag specifying whether only the default fields for the current entity are selected and shown in the view
+        /// </summary>
+        public bool OnlyDefaultFieldsAreShown
+        {
+            get
+            {
+                return FieldsCache.Instance.AreSameFieldsAsDefaultFields(EntityType,
+                    _allEntityFields.Where(f => f.IsSelected).ToList());
+            }
+        }
+
+        #endregion
 
         public string ErrorMessage { get; private set; }
 
@@ -95,6 +226,34 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             catch (Exception)
             {
                 _commentViewModels.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Flag specifiying whether we need to show the phase section in the UI or not
+        /// </summary>
+        public bool ShowPhase
+        {
+            get { return !(Entity is Run); }
+        }
+
+        /// <summary>
+        /// Current phase for the entity
+        /// </summary>
+        public string Phase
+        {
+            get
+            {
+                if (Mode == DetailsWindowMode.ItemLoaded)
+                {
+                    var phaseEntity = Entity.GetValue(CommonFields.PHASE) as BaseEntity;
+                    if (phaseEntity == null)
+                        return string.Empty;
+
+                    return phaseEntity.Name;
+                }
+
+                return string.Empty;
             }
         }
 
@@ -120,8 +279,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public DetailsWindowMode Mode { get; private set; }
 
-        public bool EntitySupportsComments { get; }
-
         private static readonly HashSet<string> EntityTypesSupportingComments = new HashSet<string>
         {
             // work item
@@ -143,14 +300,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public bool CommentSectionVisibility { get; set; }
 
+        #region Refresh
+
         public ICommand RefreshCommand { get; }
 
         private void Refresh(object param)
         {
             Mode = DetailsWindowMode.LoadingItem;
-            NotifyPropertyChanged();
+            NotifyPropertyChanged("Mode");
+
             Initialize();
         }
+
+        #endregion
+
+        #region OpenInBrowser
+
+        public ICommand OpenInBrowserCommand { get; }
+
+        private void OpenInBrowser(object param)
+        {
+            Utility.OpenInBrowser(Entity);
+        }
+
+        #endregion
 
         public ICommand ToggleCommentSectionCommand { get; }
 

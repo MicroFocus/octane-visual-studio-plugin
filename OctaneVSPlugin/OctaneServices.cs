@@ -156,9 +156,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return ownerQueryResult.data.FirstOrDefault();
         }
 
-        public async Task<BaseEntity> FindEntity(BaseEntity entityModel)
+        public async Task<BaseEntity> FindEntity(BaseEntity entityModel, IList<string> fields)
         {
-            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), null);
+            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), fields);
             return entity;
         }
 
@@ -228,6 +228,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 UserItem.TASK_REFERENCE
             };
             return fields.ToList();
+        }
+
+        /// <summary>
+        /// Return the fields' metadata for the given entity type
+        /// </summary>
+        public async Task<List<FieldMetadata>> GetFieldsMetadata(string entityType)
+        {
+            var result = await es.GetFieldsMetadataAsync(workspaceContext, entityType);
+            return result?.data;
         }
 
         private class EntitiesCollector

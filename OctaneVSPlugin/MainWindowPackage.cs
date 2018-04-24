@@ -81,6 +81,9 @@ namespace octane_visual_studio_plugin
             MainWindowCommand.Initialize(this);
             base.Initialize();
             OctaneCommand.Initialize(this);
+
+            var optionsPage = (OptionsPage)GetDialogPage(typeof(OptionsPage));
+            optionsPage.LoadSettingsFromStorage();
         }
 
         #endregion
@@ -93,31 +96,6 @@ namespace octane_visual_studio_plugin
             //var commit = repositoryGraph.GetCommit(commitId);
             //// commit.Message;
             //IVsScc
-        }
-
-        internal OptionsPage Options
-        {
-            get { return (OptionsPage)GetDialogPage(typeof(OptionsPage)); }
-        }
-
-        internal string AlmUrl
-        {
-            get { return Options.Url; }
-        }
-
-        internal string AlmUsername
-        {
-            get { return Options.User; }
-        }
-
-        internal string AlmPassword
-        {
-            get { return Options.Password; }
-        }
-
-        internal long SharedSpaceId
-        {
-            get { return Options.SsId; }
         }
 
         internal void CreateFile(string fileName, string content)
@@ -133,11 +111,6 @@ namespace octane_visual_studio_plugin
             textSel.Insert(content);
 
             textSel.GotoLine(1);
-        }
-
-        internal long WorkSpaceId
-        {
-            get { return Options.WsId; }
         }
     }
 }

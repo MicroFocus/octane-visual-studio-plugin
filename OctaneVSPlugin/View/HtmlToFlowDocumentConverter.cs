@@ -1,5 +1,5 @@
 ﻿using HTMLConverter;
-using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -90,7 +90,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
                 else
                 {
-                    uri = OctaneMyItemsViewModel.Instance.Package.AlmUrl + hyperLink.NavigateUri;
+                    uri = OctaneConfiguration.Url + hyperLink.NavigateUri;
                 }
 
                 Process.Start(new ProcessStartInfo(uri));

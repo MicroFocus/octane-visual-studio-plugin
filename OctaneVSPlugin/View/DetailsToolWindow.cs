@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
@@ -46,7 +47,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             WorkItem.SUBTYPE_QUALITY_STORY,
 
             // task
-            "task",
+            Api.Core.Entities.Task.TYPE_TASK,
 
             // test
             TestGherkin.SUBTYPE_GHERKIN_TEST,
@@ -65,7 +66,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         public DetailsToolWindow() : base(null)
         {
-            Caption = "Loading entity...";
+            Caption = "Loading backlog item...";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -77,8 +78,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <inheritdoc/>
         protected override void OnClose()
         {
+            DetachViewModelFromFieldsCache();
             DetailsWindowManager.UnregisterDetailsWindow(this);
             base.OnClose();
+        }
+
+        private void DetachViewModelFromFieldsCache()
+        {
+            var control = Content as OctaneToolWindowControl;
+            if (control == null)
+                return;
+
+            var detailedItemViewModel = control.DataContext as DetailedItemViewModel;
+            if (detailedItemViewModel == null)
+                return;
+
+            FieldsCache.Instance.Detach(detailedItemViewModel);
         }
 
         /// <summary>
@@ -89,7 +104,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             var metadata = new MyWorkMetadata();
             var viewModel = new DetailedItemViewModel(entity, metadata);
             viewModel.Initialize();
-            Caption = $"{metadata.GetIconText(entity)} {viewModel.ID}";
+            Caption = $"{EntityNames.GetInitials(Utility.GetConcreteEntityType(entity))} {viewModel.ID}";
             detailsControl.DataContext = viewModel;
         }
 

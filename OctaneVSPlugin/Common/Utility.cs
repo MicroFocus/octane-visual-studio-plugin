@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
+using System.Diagnostics;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
@@ -84,6 +85,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             var subtype = entity.GetStringValue(WorkItem.SUBTYPE_FIELD);
             return !string.IsNullOrEmpty(subtype) ? subtype : entity.TypeName;
+        }
+
+        /// <summary>
+        /// Open in the system's default browser the given entity
+        /// </summary>
+        public static void OpenInBrowser(BaseEntity entity)
+        {
+            if (entity == null)
+                return;
+
+            var url = $"{OctaneConfiguration.Url}/ui/entity-navigation?p={OctaneConfiguration.SharedSpaceId}/{OctaneConfiguration.WorkSpaceId}&entityType={Utility.GetBaseEntityType(entity)}&id={entity.Id}";
+
+            // Open the URL in the user's default browser.
+            Process.Start(url);
         }
     }
 }
