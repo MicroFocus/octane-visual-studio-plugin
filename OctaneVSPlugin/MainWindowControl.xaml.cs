@@ -169,7 +169,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private async System.Threading.Tasks.Task ViewEntityDetailsInternal(BaseEntity entity)
         {
-            if (entity.TypeName == "feature" || entity.TypeName == "epic")
+            if (entity.TypeName == WorkItem.SUBTYPE_FEATURE || entity.TypeName == WorkItem.SUBTYPE_EPIC)
             {
                 Utility.OpenInBrowser(entity);
                 return;
