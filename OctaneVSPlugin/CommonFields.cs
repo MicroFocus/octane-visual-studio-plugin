@@ -41,5 +41,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public const string STARTED = "started";
         public const string TEST_TYPE = "test_type";
         public const string LAST_MODIFIED = "last_modified";
+        public const string CREATION_TIME = "creation_time";
+        public const string HAS_ATTACHMENTS = "has_attachments";
+        public const string NEW_TASKS = "new_tasks";
     }
 }

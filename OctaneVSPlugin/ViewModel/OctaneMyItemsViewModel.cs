@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using octane_visual_studio_plugin;
 using System;
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     public class OctaneMyItemsViewModel : INotifyPropertyChanged
     {
@@ -116,7 +117,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         internal async void LoadMyItems()
         {
-            if (string.IsNullOrEmpty(package.AlmUrl))
+            if (string.IsNullOrEmpty(OctaneConfiguration.Url))
             {
                 // No URL which means it's the first time use.
                 Mode = MainWindowMode.FirstTime;
@@ -133,7 +134,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             try
             {
-                OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
+                OctaneServices octane = new OctaneServices(OctaneConfiguration.Url,
+                    OctaneConfiguration.SharedSpaceId,
+                    OctaneConfiguration.WorkSpaceId,
+                    OctaneConfiguration.Username,
+                    OctaneConfiguration.Password);
                 await octane.Connect();
 
                 myItems.Clear();
@@ -182,7 +187,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             try
             {
-                OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
+                OctaneServices octane = new OctaneServices(
+                    OctaneConfiguration.Url,
+                    OctaneConfiguration.SharedSpaceId,
+                    OctaneConfiguration.WorkSpaceId,
+                    OctaneConfiguration.Username,
+                    OctaneConfiguration.Password);
                 await octane.Connect();
 
                 TestScript testScript = await octane.GetTestScript(test.Id);
@@ -194,13 +204,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        internal async System.Threading.Tasks.Task<OctaneItemViewModel> GetItem(BaseEntity entityModel)
-        {
-            OctaneServices octane = new OctaneServices(package.AlmUrl, package.SharedSpaceId, package.WorkSpaceId, package.AlmUsername, package.AlmPassword);
-            await octane.Connect();
 
-            var entity = await octane.FindEntity(entityModel);
-            return new OctaneItemViewModel(entity, myWorkMetadata);
-        }
     }
 }

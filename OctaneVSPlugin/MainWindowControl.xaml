@@ -157,9 +157,16 @@
             </DockPanel.Style>
 
             <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="24" Height="24" Command="{Binding RefreshCommand}">
+                <Button Width="25" Height="25" 
+                        BorderThickness="0"
+                        Background="{DynamicResource VsBrush.Window}"
+                        Command="{Binding RefreshCommand}"
+                        ToolTip="Refresh view">
                     <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
+                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                               FontWeight="Bold" FontSize="24"
+                               Foreground="LightSkyBlue"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
             </StackPanel>
 
@@ -206,9 +213,16 @@
             </DockPanel.Style>
 
             <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="24" Height="24" Command="{Binding RefreshCommand}">
+                <Button Width="25" Height="25" 
+                        BorderThickness="0"
+                        Background="{DynamicResource VsBrush.Window}"
+                        Command="{Binding RefreshCommand}"
+                        ToolTip="Refresh view">
                     <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3" FontWeight="Bold" FontSize="18" />
+                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                               FontWeight="Bold" FontSize="24"
+                               Foreground="LightSkyBlue"
+                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
             </StackPanel>
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"

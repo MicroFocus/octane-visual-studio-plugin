@@ -74,12 +74,30 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="CommentViewModel.cs" />
+    <Compile Include="Common\FieldsCache.cs" />
+    <Compile Include="Common\FieldsMetadataService.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlCssParser.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlFromXamlConverter.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlLexicalAnalyzer.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlParser.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlSchema.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlTokenType.cs" />
+    <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
+    <Compile Include="Common\IFieldsObserver.cs" />
+    <Compile Include="Common\OctaneConfiguration.cs" />
+    <Compile Include="OctanePluginSettings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>OctanePluginSettings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\CommentViewModel.cs" />
     <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
     <Compile Include="DelegatedCommand.cs" />
+    <Compile Include="ViewModel\BaseItemViewModel.cs" />
+    <Compile Include="ViewModel\DetailedItemViewModel.cs" />
     <Compile Include="EntityComparerByLastModified.cs" />
-    <Compile Include="FieldGetterViewModel.cs" />
+    <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
     <Compile Include="GifImage.cs" />
@@ -90,8 +108,8 @@
       <DependentUpon>MyItemControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="OctaneCommand.cs" />
-    <Compile Include="OctaneItemViewModel.cs" />
-    <Compile Include="OctaneMyItemsViewModel.cs" />
+    <Compile Include="ViewModel\OctaneItemViewModel.cs" />
+    <Compile Include="ViewModel\OctaneMyItemsViewModel.cs" />
     <Compile Include="OctaneServices.cs" />
     <Compile Include="MainWindow.cs" />
     <Compile Include="MainWindowCommand.cs" />
@@ -99,8 +117,8 @@
       <DependentUpon>MainWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindowPackage.cs" />
-    <Compile Include="DetailsToolWindow.cs" />
-    <Compile Include="DetailsToolWindowControl.xaml.cs">
+    <Compile Include="View\DetailsToolWindow.cs" />
+    <Compile Include="View\DetailsToolWindowControl.xaml.cs">
       <DependentUpon>DetailsToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="OptionsPage.cs">
@@ -111,13 +129,23 @@
     <Compile Include="MyWorkMetadata.cs" />
     <Compile Include="CommonFields.cs" />
     <Compile Include="Common\Utility.cs" />
+    <Compile Include="ViewModel\DetailsWindowMode.cs" />
+    <Compile Include="View\DetailsWindowManager.cs" />
+    <Compile Include="View\FocusBehavior.cs" />
+    <Compile Include="View\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="View\TextBlockService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="Key.snk" />
+    <None Include="OctanePluginSettings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>OctanePluginSettings.Designer.cs</LastGenOutput>
+    </None>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <EmbeddedResource Include="Resources\DefaultFields.json" />
     <None Include="source.extension.vsixmanifest">
       <SubType>Designer</SubType>
     </None>
@@ -128,6 +156,10 @@
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
     </VSCTCompile>
+    <Resource Include="Resources\comments.png" />
+    <Resource Include="Resources\customize-fields-off.png" />
+    <Resource Include="Resources\customize-fields-on.png" />
+    <Resource Include="Resources\browser.png" />
     <Content Include="Resources\MainWindowCommand.png" />
     <Content Include="Resources\MainWindowPackage.ico" />
     <Resource Include="Resources\octane-logo.png" />
@@ -156,7 +188,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="DetailsToolWindowControl.xaml">
+    <Page Include="View\DetailsToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,8 +206,8 @@
     <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="MicroFocus.Adm.Octane.Api.Core, Version=12.55.21.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MicroFocus.Adm.Octane.Api.Core.12.55.21\lib\net45\MicroFocus.Adm.Octane.Api.Core.dll</HintPath>
+    <Reference Include="MicroFocus.Adm.Octane.Api.Core, Version=12.55.25.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MicroFocus.Adm.Octane.Api.Core.12.55.25\lib\net45\MicroFocus.Adm.Octane.Api.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
@@ -265,6 +297,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Design" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />

@@ -17,78 +17,61 @@
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Media;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
-    public class OctaneItemViewModel
+    public class OctaneItemViewModel : BaseItemViewModel
     {
-        protected readonly BaseEntity entity;
-        private readonly MyWorkMetadata myWorkMetadata;
-
-        private readonly List<FieldGetterViewModel> topFields;
-        private readonly List<FieldGetterViewModel> bottomFields;
-        private readonly FieldGetterViewModel subTitleField;
+        private readonly List<FieldViewModel> topFields;
+        private readonly List<FieldViewModel> bottomFields;
+        private readonly FieldViewModel subTitleField;
 
         public OctaneItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
+            : base(entity, myWorkMetadata)
         {
-            this.entity = entity;
-            this.myWorkMetadata = myWorkMetadata;
+            topFields = new List<FieldViewModel>();
+            bottomFields = new List<FieldViewModel>();
 
-            topFields = new List<FieldGetterViewModel>();
-            bottomFields = new List<FieldGetterViewModel>();
-
-            subTitleField = new FieldGetterViewModel(this, myWorkMetadata.GetSubTitleFieldInfo(entity));
+            subTitleField = new FieldViewModel(Entity, myWorkMetadata.GetSubTitleFieldInfo(entity));
 
             foreach (FieldInfo fieldInfo in myWorkMetadata.GetTopFieldsInfo(entity))
             {
-                topFields.Add(new FieldGetterViewModel(this, fieldInfo));
+                topFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
 
             foreach (FieldInfo fieldInfo in myWorkMetadata.GetBottomFieldsInfo(entity))
             {
-                bottomFields.Add(new FieldGetterViewModel(this, fieldInfo));
+                bottomFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
         }
 
-        public BaseEntity Entity { get { return entity; } }
-
-        public EntityId ID { get { return entity.Id; } }
-
         public virtual bool VisibleID { get { return true; } }
-
-        public virtual string Title { get { return entity.Name; } }
 
         public string TypeName
         {
-            get { return entity.TypeName; }
+            get { return Entity.TypeName; }
         }
 
         public string SubType
         {
-            get { return entity.GetStringValue(CommonFields.SUB_TYPE); }
-        }
-
-        public string Description
-        {
-            get { return entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty; }
+            get { return Entity.GetStringValue(CommonFields.SUB_TYPE); }
         }
 
         public string CommitMessage
         {
             get
             {
-                string message = string.Format("{0} #{1}: ", myWorkMetadata.GetCommitMessageTypeName(entity), ID);
+                string message = string.Format("{0} #{1}: ", MyWorkMetadata.GetCommitMessageTypeName(Entity), ID);
                 return message;
             }
         }
 
         public bool IsSupportCopyCommitMessage
         {
-            get { return myWorkMetadata.IsSupportCopyCommitMessage(entity); }
+            get { return MyWorkMetadata.IsSupportCopyCommitMessage(Entity); }
         }
 
-        public FieldGetterViewModel SubTitleField
+        public FieldViewModel SubTitleField
         {
             get { return subTitleField; }
         }
@@ -108,7 +91,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        private IEnumerable<object> FieldsWithSeparators(List<FieldGetterViewModel> fields)
+        private IEnumerable<object> FieldsWithSeparators(List<FieldViewModel> fields)
         {
             // Handle the case there are no fields so we don't need any seperators.
             if (fields.Count == 0)
@@ -116,31 +99,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 yield break;
             }
 
-            foreach (FieldGetterViewModel field in fields.Take(fields.Count - 1))
+            foreach (FieldViewModel field in fields.Take(fields.Count - 1))
             {
                 yield return field;
                 yield return SeparatorViewModel.Make();
             }
 
             yield return fields.Last();
-        }
-
-        public string IconText
-        {
-            get
-            {
-                string iconText = myWorkMetadata.GetIconText(entity);
-                return iconText;
-            }
-        }
-
-        public Color IconBackgroundColor
-        {
-            get
-            {
-                Color bgc = myWorkMetadata.GetIconColor(entity);
-                return bgc;
-            }
         }
     }
 }

@@ -14,6 +14,9 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.ComponentModel;
 
@@ -33,9 +36,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private string user = string.Empty;
         private string password = string.Empty;
 
+        /// <inheritdoc/>
         protected override void OnApply(PageApplyEventArgs e)
         {
             base.OnApply(e);
+
+            // close all opened details windows so that we don't have details windows
+            // for entities from different workspaces
+            DetailsWindowManager.CloseAllDetailsWindows();
+
+            FieldsMetadataService.Reset();
 
             // After settings are applied we notify the main ViewModel to allow it to refresh.
             if (OctaneMyItemsViewModel.Instance != null)
@@ -50,7 +60,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public string Url
         {
             get { return url; }
-            set { url = value; }
+            set
+            {
+                url = value;
+                OctaneConfiguration.Url = url;
+            }
         }
 
         [Category(category)]
@@ -58,7 +72,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public int SsId
         {
             get { return ssid; }
-            set { ssid = value; }
+            set
+            {
+                ssid = value;
+                OctaneConfiguration.SharedSpaceId = ssid;
+            }
         }
 
         [Category(category)]
@@ -66,7 +84,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public int WsId
         {
             get { return wsid; }
-            set { wsid = value; }
+            set
+            {
+                wsid = value;
+                OctaneConfiguration.WorkSpaceId = wsid;
+            }
         }
 
 
@@ -75,7 +97,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public string User
         {
             get { return user; }
-            set { user = value; }
+            set
+            {
+                user = value;
+                OctaneConfiguration.Username = user;
+            }
         }
 
         [Category(category)]
@@ -83,13 +109,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         [PasswordPropertyText(true)]
         public string Password
         {
-            get
-            {
-                return password;
-            }
+            get { return password; }
             set
             {
                 password = value;
+                OctaneConfiguration.Password = password;
             }
         }
 
@@ -112,17 +136,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private void EncryptPassword()
         {
-            if (password != null)
+            if (Password != null)
             {
-                password = DataProtector.Protect(password);
+                Password = DataProtector.Protect(Password);
             }
         }
 
         private void DecryptPassword()
         {
-            if (password != null)
+            if (Password != null)
             {
-                password = DataProtector.Unprotect(password);
+                Password = DataProtector.Unprotect(Password);
             }
         }
 

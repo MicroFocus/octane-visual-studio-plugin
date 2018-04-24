@@ -57,7 +57,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// Most of the entites are aggregated entities with sub-types, for the exceptions listed
         /// here the Subtype field is not fetched.
         /// </summary>
-        private readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
+        private static readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
 
         public MyWorkMetadata()
         {
@@ -66,26 +66,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             subTypesByEntityType = new Dictionary<Type, HashSet<string>>();
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT,
-                    "defect",
-                    "D", Color.FromRgb(190, 102, 92),
-                    FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),
-                    FieldAtTop(CommonFields.OWNER, "Owner"),
-                    FieldAtTop(CommonFields.DETECTED_BY, "Detected By"),
-                    FieldAtTop(CommonFields.STORY_POINTS, "SP"),
-                    FieldAtTop(CommonFields.SEVERITY, "Severity"),
-                    FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
-                    FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
-                    FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
-                    );
+                "defect",
+                EntityNames.GetInitials(WorkItem.SUBTYPE_DEFECT), Color.FromRgb(190, 102, 92),
+                FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),
+                FieldAtTop(CommonFields.OWNER, "Owner"),
+                FieldAtTop(CommonFields.DETECTED_BY, "Detected By"),
+                FieldAtTop(CommonFields.STORY_POINTS, "SP"),
+                FieldAtTop(CommonFields.SEVERITY, "Severity"),
+                FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
+                FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
+                FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
+                );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY,
                 "user story",
-                "US", Color.FromRgb(218, 199, 120),
+                EntityNames.GetInitials(WorkItem.SUBTYPE_STORY), Color.FromRgb(218, 199, 120),
                 FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
@@ -93,41 +93,41 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY,
                 "quality story",
-                "QS", Color.FromRgb(95, 112, 118),
+                EntityNames.GetInitials(WorkItem.SUBTYPE_QUALITY_STORY), Color.FromRgb(95, 112, 118),
                 FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
                 FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
                 FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
                 );
 
-            AddSubType<Test>("test_manual",
+            AddSubType<Test>(Test.SUBTYPE_MANUAL_TEST,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "MT", Color.FromRgb(96, 121, 141),
+                EntityNames.GetInitials(Test.SUBTYPE_MANUAL_TEST), Color.FromRgb(96, 121, 141),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.STEPS_NUM, "Steps"),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
             AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "GT", Color.FromRgb(120, 196, 192),
+                EntityNames.GetInitials(TestGherkin.SUBTYPE_GHERKIN_TEST), Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
                 );
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "SR", Color.FromRgb(133, 169, 188),
+                EntityNames.GetInitials(RunSuite.SUBTYPE_RUN_SUITE), Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(CommonFields.STARTED, "Started")
@@ -135,7 +135,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Run>(RunManual.SUBTYPE_RUN_MANUAL,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "MR", Color.FromRgb(133, 169, 188),
+                EntityNames.GetInitials(RunManual.SUBTYPE_RUN_MANUAL), Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(CommonFields.STARTED, "Started")
@@ -143,14 +143,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "R", Color.FromRgb(215, 194, 56),
+                EntityNames.GetInitials(Requirement.SUBTYPE_DOCUMENT), Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, GetAuthorFullName)
+                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 "task",
-                "T",
+                EntityNames.GetInitials(Task.TYPE_TASK),
                 Color.FromRgb(137, 204, 174),
                 FieldAtSubTitle(Task.STORY_FIELD, string.Empty, string.Empty, entity =>
                 {
@@ -168,7 +168,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 }),
                 FieldAtTop(Task.OWNER_FIELD, "Owner"),
                 FieldAtTop(Task.PHASE_FIELD, "Phase"),
-                FieldAtTop(Task.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName),
+                FieldAtTop(Task.AUTHOR_FIELD, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(Task.INVESTED_HOURS_FIELD, "Invested Hours"),
                 FieldAtBottom(Task.REMAINING_HOURS_FIELD, "Remaining Hours"),
                 FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
@@ -176,20 +176,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 COMMIT_MESSAGE_NOT_APPLICABLE,
-                "C", Color.FromRgb(234, 179, 124),
+                EntityNames.GetInitials("comment"), Color.FromRgb(234, 179, 124),
                 FieldAtSubTitle(Comment.TEXT_FIELD, string.Empty, string.Empty, entity =>
                 {
-                    var text = entity.GetStringValue(Comment.TEXT_FIELD);
-                    var doc = NSoup.Parse.Parser.Parse(text, "US-ASCII");
-                    return doc.Text().ToString();
+                    return Utility.StripHtml(entity.GetStringValue(Comment.TEXT_FIELD));
                 }),
-                FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, GetAuthorFullName)
+                FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
-        }
-
-        private object GetAuthorFullName(BaseEntity entity)
-        {
-            return Utility.GetPropertyOfChildEntity(entity, Comment.AUTHOR_FIELD, BaseUserEntity.FULL_NAME_FIELD);
         }
 
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)
@@ -325,9 +318,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// <summary>
         /// Get indication if the entity is simple or aggregate.
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
-        private bool IsAggregateEntity(Type entityType)
+        public static bool IsAggregateEntity(Type entityType)
         {
             return -1 == Array.IndexOf<Type>(EntitiesWithoutSubtype, entityType);
         }

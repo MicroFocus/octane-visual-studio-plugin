@@ -16,6 +16,8 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
@@ -107,21 +109,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             try
             {
-                var selectedEntity = GetSelectedEntity();
-                OpenInBrowserInternal(selectedEntity.Id, Utility.GetBaseEntityType(selectedEntity));
+                Utility.OpenInBrowser(GetSelectedEntity());
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private void OpenInBrowserInternal(EntityId id, string type)
-        {
-            var url = $"{package.AlmUrl}/ui/entity-navigation?p={package.SharedSpaceId}/{package.WorkSpaceId}&entityType={type}&id={id}";
-
-            // Open the URL in the user's default browser.
-            System.Diagnostics.Process.Start(url);
         }
 
         private async void ViewDetails(object param)
@@ -137,13 +130,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-
-
         private async void ViewTaskParentDetails(object param)
         {
             try
             {
-                if (SelectedItem.Entity.TypeName != "task")
+                if (SelectedItem.Entity.TypeName != Api.Core.Entities.Task.TYPE_TASK)
                 {
                     throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
                 }
@@ -178,42 +169,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private async System.Threading.Tasks.Task ViewEntityDetailsInternal(BaseEntity entity)
         {
-            if (entity.TypeName == "feature" || entity.TypeName == "epic")
+            if (entity.TypeName == WorkItem.SUBTYPE_FEATURE || entity.TypeName == WorkItem.SUBTYPE_EPIC)
             {
-                OpenInBrowserInternal(entity.Id, "work_item");
+                Utility.OpenInBrowser(entity);
                 return;
             }
 
-            var item = await viewModel.GetItem(entity);
-
-            ToolWindowPane window = CreateDetailsWindow(item);
+            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(package, entity);
             IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
             Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
-        }
-
-        private ToolWindowPane CreateDetailsWindow(OctaneItemViewModel item)
-        {
-            // Create the window with the first free ID.   
-            DetailsToolWindow toolWindow = (DetailsToolWindow)package.FindToolWindow(typeof(DetailsToolWindow), GetItemIDAsInt(item), true);
-            if (toolWindow?.Frame == null)
-            {
-                throw new NotSupportedException("Cannot create tool window");
-            }
-
-            toolWindow.SetWorkItem(item);
-
-            return toolWindow;
-        }
-
-        /// <summary>
-        /// Octane treat WorkItem ID as long (64 bit) and Visual Studio needs int (32 bit) to identify tool windows.
-        /// This function safely convert long to int.
-        /// </summary>
-        /// <param name="item"></param>
-        /// <returns></returns>
-        private int GetItemIDAsInt(OctaneItemViewModel item)
-        {
-            return item.GetHashCode();
+            window.LoadEntity(entity);
         }
 
         private void CopyCommitMessage(object sender)
@@ -301,7 +266,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 // view parent details
                 var selectedEntity = SelectedItem.Entity;
                 var taskParentEntity = GetTaskParentEntity(selectedEntity);
-                if (selectedEntity.TypeName == "task" && taskParentEntity != null
+                if (selectedEntity.TypeName == Api.Core.Entities.Task.TYPE_TASK && taskParentEntity != null
                     && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(taskParentEntity)))
                 {
                     cm.Items.Add(viewTaskParentDetailsMenuItem);
@@ -355,7 +320,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private BaseEntity GetTaskParentEntity(BaseEntity entity)
         {
-            if (entity.TypeName == "task")
+            if (entity.TypeName == Api.Core.Entities.Task.TYPE_TASK)
             {
                 return (BaseEntity)SelectedItem.Entity.GetValue("story");
             }

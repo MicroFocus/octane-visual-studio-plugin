@@ -16,31 +16,48 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Linq;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
-    public class FieldGetterViewModel
+    /// <summary>
+    /// View model representation for an entity field
+    /// </summary>
+    public class FieldViewModel
     {
-        private readonly OctaneItemViewModel itemViewModel;
-        private readonly string fieldName;
-        private readonly string fieldLabel;
+        private readonly BaseEntity _parentEntity;
+        private readonly string _fieldName;
+        private readonly string _fieldLabel;
         private readonly string emptyPlaceholder;
         private readonly Func<BaseEntity, object> customContentFunc;
 
-        public FieldGetterViewModel(OctaneItemViewModel itemViewModel, FieldInfo fieldInfo)
+        public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected)
         {
-            this.itemViewModel = itemViewModel;
-            fieldName = fieldInfo.Name;
-            fieldLabel = fieldInfo.Title;
+            _parentEntity = entity;
+            _fieldName = fieldName;
+            _fieldLabel = fieldValue;
+            IsSelected = isSelected;
+        }
+
+        public FieldViewModel(BaseEntity entity, FieldInfo fieldInfo)
+        {
+            _parentEntity = entity;
+            _fieldName = fieldInfo.Name;
+            _fieldLabel = fieldInfo.Title;
             emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             customContentFunc = fieldInfo.ContentFunc;
         }
 
         public string Label
         {
-            get { return fieldLabel; }
+            get { return _fieldLabel; }
+        }
+
+        public string Name
+        {
+            get { return _fieldName; }
         }
 
         public bool HideLabel
@@ -48,14 +65,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             get { return string.IsNullOrEmpty(Label); }
         }
 
+        public bool IsSelected { get; set; }
+
         public object Content
         {
             get
             {
                 if (customContentFunc != null)
-                    return customContentFunc(itemViewModel.Entity);
+                    return customContentFunc(_parentEntity);
 
-                object value = itemViewModel.Entity.GetValue(fieldName);
+                var formattedValue = FieldsMetadataService.GetFormattedValue(_parentEntity, _fieldName);
+                if (formattedValue != null)
+                    return formattedValue;
+
+                object value = _parentEntity.GetValue(_fieldName);
                 switch (value)
                 {
                     case null:

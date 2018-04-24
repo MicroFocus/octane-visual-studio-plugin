@@ -138,6 +138,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Comment.OWNER_TEST_FIELD,
             Comment.OWNER_RUN_FIELD,
             Comment.OWNER_REQUIREMENT_FIELD,
+            Comment.CREATION_TIME_FIELD,
             Comment.TEXT_FIELD
         };
 
@@ -155,10 +156,37 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return ownerQueryResult.data.FirstOrDefault();
         }
 
-        public async Task<BaseEntity> FindEntity(BaseEntity entityModel)
+        public async Task<BaseEntity> FindEntity(BaseEntity entityModel, IList<string> fields)
         {
-            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), null);
+            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), fields);
             return entity;
+        }
+
+        private readonly Dictionary<string, string> commentSupport = new Dictionary<string, string>
+        {
+            { "work_item", "owner_work_item" },
+            { "test", "owner_test" },
+            { "run", "owner_run" },
+            { "requirement", "owner_requirement" }
+        };
+
+        /// <summary>
+        /// Retrieves a list of all the comments attached to the given entity
+        /// </summary>
+        public async Task<List<Comment>> GetAttachedCommentsToEntity(BaseEntity entity)
+        {
+            if (string.IsNullOrEmpty(entity.AggregateType))
+                return new List<Comment>();
+
+            if (!commentSupport.TryGetValue(entity.AggregateType, out var type))
+                return new List<Comment>();
+
+            var query = new List<QueryPhrase>
+            {
+                new CrossQueryPhrase(type, new LogicalQueryPhrase("id", entity.Id))
+            };
+            var comments = await es.GetAsync<Comment>(workspaceContext, query, commentFields);
+            return comments?.data;
         }
 
         private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
@@ -200,6 +228,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 UserItem.TASK_REFERENCE
             };
             return fields.ToList();
+        }
+
+        /// <summary>
+        /// Return the fields' metadata for the given entity type
+        /// </summary>
+        public async Task<List<FieldMetadata>> GetFieldsMetadata(string entityType)
+        {
+            var result = await es.GetFieldsMetadataAsync(workspaceContext, entityType);
+            return result?.data;
         }
 
         private class EntitiesCollector
