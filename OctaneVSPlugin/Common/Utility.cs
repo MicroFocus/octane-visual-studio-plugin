@@ -60,7 +60,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             if (text == null)
                 return string.Empty;
 
-            var doc = NSoup.Parse.Parser.Parse(text, "US-ASCII");
+            var doc = NSoup.Parse.Parser.Parse(text, OctaneConfiguration.Url);
             return doc.Text();
         }
 

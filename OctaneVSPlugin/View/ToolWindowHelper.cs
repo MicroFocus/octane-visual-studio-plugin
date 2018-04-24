@@ -137,7 +137,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private static void ViewEntityDetailsInternal(BaseEntity entity)
         {
-            if (entity.TypeName == "feature" || entity.TypeName == "epic")
+            if (entity.TypeName == WorkItem.SUBTYPE_FEATURE || entity.TypeName == WorkItem.SUBTYPE_EPIC)
             {
                 Utility.OpenInBrowser(entity);
                 return;
