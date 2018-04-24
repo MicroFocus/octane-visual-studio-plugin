@@ -57,7 +57,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         public static string StripHtml(string text)
         {
-            var doc = NSoup.Parse.Parser.Parse(text, "US-ASCII");
+            var doc = NSoup.Parse.Parser.Parse(text, OctaneConfiguration.Url);
             return doc.Text();
         }
 
