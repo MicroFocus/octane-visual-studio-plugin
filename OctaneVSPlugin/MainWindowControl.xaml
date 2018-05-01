@@ -506,7 +506,7 @@
                     </Grid.ColumnDefinitions>
                     <Grid>
                         <ComboBox x:Name="SearchHistoryComboBox" Style="{DynamicResource ComboBoxStyle1}"
-                                  HorizontalAlignment="Left" VerticalAlignment="Top"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center"
                                   Width="180"
                                   IsEditable="True"
                                   Text="{Binding SearchFilter, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}, UpdateSourceTrigger=PropertyChanged}"
@@ -531,7 +531,10 @@
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Visibility" Value="Collapsed"/>
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding Text, ElementName=SearchEntityTextBox}" Value="">
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchHistoryComboBox}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchHistoryComboBox}" Value="{x:Null}">
                                             <Setter Property="Visibility" Value="Visible"/>
                                         </DataTrigger>
                                     </Style.Triggers>
