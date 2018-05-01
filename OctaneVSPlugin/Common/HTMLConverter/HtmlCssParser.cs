@@ -280,7 +280,7 @@ namespace HTMLConverter
                 string number = styleValue.Substring(startIndex, nextIndex - startIndex);
 
                 string unit = ParseWordEnumeration(_fontSizeUnits, styleValue, ref nextIndex);
-                if (unit == null)
+                if (unit == null || unit == "em")
                 {
                     unit = "px"; // Assuming pixels by default
                 }
