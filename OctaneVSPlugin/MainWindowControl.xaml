@@ -509,15 +509,15 @@
                                   HorizontalAlignment="Left" VerticalAlignment="Center"
                                   Width="180"
                                   IsEditable="True"
-                                  Text="{Binding SearchFilter, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}, UpdateSourceTrigger=PropertyChanged}"
+                                  Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
                                   Background="{DynamicResource VsBrush.Window}"
                                   Foreground="{DynamicResource VsBrush.WindowText}"
-                                  ItemsSource="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Window}}, Path=SearchHistory}">
+                                  ItemsSource="{Binding SearchHistory}">
                             <!--<ComboBox.Resources>
                                 <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF2E2E2E" />
                             </ComboBox.Resources>-->
                             <ComboBox.InputBindings>
-                                <KeyBinding Command="{Binding SearchCommand, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}" Key="Return" />
+                                <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
                             </ComboBox.InputBindings>
                         </ComboBox>
                         <TextBlock IsHitTestVisible="False"
@@ -544,7 +544,7 @@
                     </Grid>
                     <Button Grid.Column="1" x:Name="SearchButton"
                             ToolTip="Search"
-                            Command="{Binding SearchCommand, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}"
+                            Command="{Binding SearchCommand}"
                             BorderThickness="0"
                             HorizontalAlignment="Right" VerticalAlignment="Center"
                             Background="{DynamicResource VsBrush.Window}"

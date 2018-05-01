@@ -16,10 +16,14 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
+using Microsoft.VisualStudio.PlatformUI;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -45,6 +49,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             instance = this;
 
+            SearchCommand = new DelegateCommand(SearchInternal);
             refreshCommand = new DelegatedCommand(Refresh);
             openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
 
@@ -66,6 +71,52 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 NotifyPropertyChanged("Mode");
             }
         }
+
+        #region Search
+
+        public string SearchFilter { get; set; }
+
+        public ICommand SearchCommand { get; }
+
+        private void SearchInternal(object parameter)
+        {
+            if (string.IsNullOrEmpty(SearchFilter))
+                return;
+
+            var oldHistory = _searchHistory.ToList();
+
+            _searchHistory.Clear();
+            _searchHistory.Add(SearchFilter);
+
+            oldHistory.Remove(SearchFilter);
+
+            _searchHistory.AddRange(oldHistory.Take(MaxSearchHistorySize));
+            NotifyPropertyChanged("SearchHistory");
+
+            // TODO Compute unique ID for search window
+            SearchToolWindow searchWindow = (SearchToolWindow)MainWindow.PluginPackage.FindToolWindow(typeof(SearchToolWindow), 100000, true);
+            if (searchWindow?.Frame == null)
+            {
+                throw new NotSupportedException("Cannot create search tool window");
+            }
+            IVsWindowFrame searchWindowFrame = (IVsWindowFrame)searchWindow.Frame;
+            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(searchWindowFrame.Show());
+            searchWindow.Search(SearchFilter);
+        }
+
+        private const int MaxSearchHistorySize = 4;
+        // TODO replace with persisted history
+        private static List<string> _searchHistory = new List<string> { "a", "b", "c" };
+
+        public IEnumerable<string> SearchHistory
+        {
+            get
+            {
+                return new ObservableCollection<string>(_searchHistory);
+            }
+        }
+
+        #endregion
 
         public ICommand RefreshCommand
         {
