@@ -190,6 +190,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
+    <Resource Include="Resources\search.png" />
     <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>

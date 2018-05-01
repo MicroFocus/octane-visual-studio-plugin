@@ -219,38 +219,53 @@
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0" HorizontalAlignment="Right">
-                    <TextBox x:Name="SearchEntityTextBox"
-                             VerticalAlignment="Center"
-                             HorizontalAlignment="Stretch"
-                             Width="150"
-                             Background="{DynamicResource VsBrush.Window}"
-                             Foreground="{DynamicResource VsBrush.WindowText}"
-                             Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}"
-                             view:FocusBehavior.IsFocus="True"
-                             Margin="5">
-                        <TextBox.InputBindings>
-                            <KeyBinding Command="{Binding SearchCommand, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}" Key="Return" />
-                        </TextBox.InputBindings>
-                    </TextBox>
-                    <TextBlock IsHitTestVisible="False"
-                               Text="Search backlog items"
-                               VerticalAlignment="Center"
-                               HorizontalAlignment="Left"
-                               Margin="9 0 0 0"
-                               Background="{DynamicResource VsBrush.Window}"
-                               Foreground="DarkGray">
-                        <TextBlock.Style>
-                            <Style TargetType="{x:Type TextBlock}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding Text, ElementName=SearchEntityTextBox}" Value="">
-                                        <Setter Property="Visibility" Value="Visible"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBlock.Style>
-                    </TextBlock>
+                <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="1 0 5 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <TextBox x:Name="SearchEntityTextBox"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Stretch"
+                                 Width="180" 
+                                 Background="{DynamicResource VsBrush.Window}"
+                                 Foreground="{DynamicResource VsBrush.WindowText}"
+                                 Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}"
+                                 view:FocusBehavior.IsFocus="True"
+                                 Margin="5">
+                            <TextBox.InputBindings>
+                                <KeyBinding Command="{Binding SearchCommand, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}" Key="Return" />
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <TextBlock IsHitTestVisible="False"
+                                   Text="Search backlog items"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="9 0 0 0"
+                                   Background="{DynamicResource VsBrush.Window}"
+                                   Foreground="DarkGray">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchEntityTextBox}" Value="">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                    <Button Grid.Column="1" x:Name="SearchButton"
+                            ToolTip="Search"
+                            Command="{Binding SearchCommand, RelativeSource={RelativeSource AncestorType={x:Type local:MainWindowControl}}}"
+                            BorderThickness="0"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Background="{DynamicResource VsBrush.Window}"
+                            Width="25" Height="25">
+                        <Image Source="/octane-visual-studio-plugin;component/Resources/search.png"/>
+                    </Button>
                 </Grid>
                 <Button Grid.Column="1" Width="25" Height="25"  HorizontalAlignment="Right"
                         BorderThickness="0"
