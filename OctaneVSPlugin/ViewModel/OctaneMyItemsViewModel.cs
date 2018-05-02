@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
@@ -43,6 +44,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         private string lastExceptionMessage;
 
+        private const int MaxSearchHistorySize = 4;
+        private readonly List<string> _searchHistory;
+
         public event PropertyChangedEventHandler PropertyChanged;
 
         public OctaneMyItemsViewModel()
@@ -52,6 +56,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SearchCommand = new DelegateCommand(SearchInternal);
             refreshCommand = new DelegatedCommand(Refresh);
             openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
+
+            try
+            {
+                _searchHistory = OctanePluginSettings.Default.SearchHistory.Cast<string>().ToList();
+            }
+            catch (Exception)
+            {
+                _searchHistory = new List<string>();
+            }
 
             myItems = new ObservableCollection<OctaneItemViewModel>();
             mode = MainWindowMode.FirstTime;
@@ -83,15 +96,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             if (string.IsNullOrEmpty(SearchFilter))
                 return;
 
-            var oldHistory = _searchHistory.ToList();
-
-            _searchHistory.Clear();
-            _searchHistory.Add(SearchFilter);
-
-            oldHistory.Remove(SearchFilter);
-
-            _searchHistory.AddRange(oldHistory.Take(MaxSearchHistorySize));
-            NotifyPropertyChanged("SearchHistory");
+            UpdateSearchHistory();
 
             // TODO Compute unique ID for search window
             SearchToolWindow searchWindow = (SearchToolWindow)MainWindow.PluginPackage.FindToolWindow(typeof(SearchToolWindow), 100000, true);
@@ -104,9 +109,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             searchWindow.Search(SearchFilter);
         }
 
-        private const int MaxSearchHistorySize = 4;
-        // TODO replace with persisted history
-        private static List<string> _searchHistory = new List<string> { "a", "b", "c" };
+        private void UpdateSearchHistory()
+        {
+            var oldHistory = _searchHistory.ToList();
+
+            _searchHistory.Clear();
+            _searchHistory.Add(SearchFilter);
+
+            oldHistory.Remove(SearchFilter);
+
+            _searchHistory.AddRange(oldHistory.Take(MaxSearchHistorySize));
+
+            try
+            {
+                var sc = new StringCollection();
+                sc.AddRange(_searchHistory.ToArray());
+                OctanePluginSettings.Default.SearchHistory = sc;
+                OctanePluginSettings.Default.Save();
+            }
+            catch (Exception)
+            {
+            }
+
+            NotifyPropertyChanged("SearchHistory");
+        }
 
         public IEnumerable<string> SearchHistory
         {
