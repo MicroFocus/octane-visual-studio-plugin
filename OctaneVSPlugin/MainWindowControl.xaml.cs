@@ -46,7 +46,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         internal void Initialize()
         {
-            _viewModel.LoadMyItems();
+            _viewModel.LoadMyItemsAsync();
         }
 
         private OctaneItemViewModel SelectedItem

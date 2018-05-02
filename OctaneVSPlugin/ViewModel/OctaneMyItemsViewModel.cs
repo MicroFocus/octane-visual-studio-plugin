@@ -29,33 +29,32 @@ using System.Windows.Input;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
+    /// <summary>
+    /// View model for entities directly related to the current user
+    /// </summary>
     public class OctaneMyItemsViewModel : INotifyPropertyChanged
     {
-        private static OctaneMyItemsViewModel instance;
-
-        private DelegatedCommand refreshCommand;
-        private DelegatedCommand openOctaneOptionsDialogCommand;
-
-        private MainWindowMode mode;
-        private ObservableCollection<OctaneItemViewModel> myItems;
+        private MainWindowMode _mode;
+        private readonly ObservableCollection<OctaneItemViewModel> _myItems;
 
         /// <summary>
-        /// Store the exception message from load items.
+        /// Store the exception message from the loading items operation
         /// </summary>
-        private string lastExceptionMessage;
+        private string _lastExceptionMessage;
 
         private const int MaxSearchHistorySize = 4;
         private readonly List<string> _searchHistory;
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public OctaneMyItemsViewModel()
         {
-            instance = this;
+            Instance = this;
 
             SearchCommand = new DelegateCommand(SearchInternal);
-            refreshCommand = new DelegatedCommand(Refresh);
-            openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
+            RefreshCommand = new DelegatedCommand(Refresh);
+            OpenOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
 
             try
             {
@@ -66,27 +65,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 _searchHistory = new List<string>();
             }
 
-            myItems = new ObservableCollection<OctaneItemViewModel>();
-            mode = MainWindowMode.FirstTime;
+            _myItems = new ObservableCollection<OctaneItemViewModel>();
+            _mode = MainWindowMode.FirstTime;
         }
 
-        public static OctaneMyItemsViewModel Instance
-        {
-            get { return instance; }
-        }
+        public static OctaneMyItemsViewModel Instance { get; private set; }
 
+        /// <summary>
+        /// Current state of the view model
+        /// </summary>
         public MainWindowMode Mode
         {
-            get { return mode; }
+            get { return _mode; }
             private set
             {
-                mode = value;
+                _mode = value;
                 NotifyPropertyChanged("Mode");
             }
         }
 
         #region Search
 
+        /// <summary>
+        /// Current search filter
+        /// </summary>
         public string SearchFilter { get; set; }
 
         public ICommand SearchCommand { get; }
@@ -134,6 +136,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged("SearchHistory");
         }
 
+        /// <summary>
+        /// Enumeration of the last searches
+        /// </summary>
         public IEnumerable<string> SearchHistory
         {
             get
@@ -144,35 +149,41 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #endregion
 
-        public ICommand RefreshCommand
-        {
-            get { return refreshCommand; }
-        }
-
-        public ICommand OpenOctaneOptionsDialogCommand
-        {
-            get { return openOctaneOptionsDialogCommand; }
-        }
-
+        /// <summary>
+        /// Enumeration containing entities related to the current user
+        /// </summary>
         public IEnumerable<OctaneItemViewModel> MyItems
         {
-            get { return myItems; }
+            get { return _myItems; }
         }
 
+        /// <summary>
+        /// Error message
+        /// </summary>
         public string LastExceptionMessage
         {
-            get { return lastExceptionMessage; }
+            get { return _lastExceptionMessage; }
             set
             {
-                lastExceptionMessage = value;
+                _lastExceptionMessage = value;
                 NotifyPropertyChanged("LastExceptionMessage");
             }
         }
 
+        /// <summary>
+        /// Refresh command
+        /// </summary>
+        public ICommand RefreshCommand { get; }
+
         private void Refresh(object parameter)
         {
-            LoadMyItems();
+            LoadMyItemsAsync();
         }
+
+        /// <summary>
+        /// Command for opening the ALM Octane options dialog
+        /// </summary>
+        public ICommand OpenOctaneOptionsDialogCommand { get; }
 
         private void OpenOctaneOptionsDialog(object parameter)
         {
@@ -180,14 +191,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         /// <summary>
-        /// This method is called after the options are changed.
+        /// Retrieve all the entities related to the current user
         /// </summary>
-        internal void OptionsChanged()
-        {
-            LoadMyItems();
-        }
-
-        internal async void LoadMyItems()
+        internal async void LoadMyItemsAsync()
         {
             if (string.IsNullOrEmpty(OctaneConfiguration.Url))
             {
@@ -213,18 +219,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     OctaneConfiguration.Password);
                 await octane.Connect();
 
-                myItems.Clear();
+                _myItems.Clear();
 
                 IList<BaseEntity> items = await octane.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
-                    myItems.Add(new OctaneItemViewModel(entity));
+                    _myItems.Add(new OctaneItemViewModel(entity));
                 }
 
                 IList<BaseEntity> comments = await octane.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
-                    myItems.Add(new CommentViewModel(comment));
+                    _myItems.Add(new CommentViewModel(comment));
                 }
 
                 Mode = MainWindowMode.ItemsLoaded;
@@ -236,6 +242,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void NotifyPropertyChanged(string propName)
         {
             if (PropertyChanged != null)
@@ -243,5 +253,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
+
+        #endregion
     }
 }
