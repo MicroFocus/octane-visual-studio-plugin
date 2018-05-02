@@ -513,9 +513,6 @@
                                   Background="{DynamicResource VsBrush.Window}"
                                   Foreground="{DynamicResource VsBrush.WindowText}"
                                   ItemsSource="{Binding SearchHistory}">
-                            <!--<ComboBox.Resources>
-                                <SolidColorBrush x:Key="{x:Static SystemColors.WindowBrushKey}" Color="#FF2E2E2E" />
-                            </ComboBox.Resources>-->
                             <ComboBox.InputBindings>
                                 <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
                             </ComboBox.InputBindings>
@@ -524,7 +521,7 @@
                                    Text="Search backlog items"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
-                                   Margin="9 0 0 0"
+                                   Margin="7 0 0 0"
                                    Background="{DynamicResource VsBrush.Window}"
                                    Foreground="DarkGray">
                             <TextBlock.Style>
@@ -548,7 +545,8 @@
                             BorderThickness="0"
                             HorizontalAlignment="Right" VerticalAlignment="Center"
                             Background="{DynamicResource VsBrush.Window}"
-                            Width="25" Height="25">
+                            Width="25" Height="25"
+                            Margin="5 0 0 0">
                         <Image Source="/octane-visual-studio-plugin;component/Resources/search.png"/>
                     </Button>
                 </Grid>
