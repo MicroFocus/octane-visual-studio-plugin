@@ -151,9 +151,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private async Task<WorkspaceUser> GetWorkspaceUser()
         {
-            QueryPhrase ownerQuery = new LogicalQueryPhrase("email", user);
+            QueryPhrase ownerQuery = new LogicalQueryPhrase("name", user);
             EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
-            return ownerQueryResult.data.FirstOrDefault();
+            var workspaceUser = ownerQueryResult.data.FirstOrDefault();
+            if (workspaceUser == null)
+                throw new Exception($"Unable to find a user with the name \"{user}\"");
+            return workspaceUser;
         }
 
         public async Task<BaseEntity> FindEntity(BaseEntity entityModel, IList<string> fields)
