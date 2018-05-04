@@ -57,6 +57,7 @@
     <Compile Include="Utilities\ExposedClass.cs" />
     <Compile Include="Utilities\ExposedObject.cs" />
     <Compile Include="Utilities\ExposedObjectHelper.cs" />
+    <Compile Include="Utilities\StoryUtilities.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="ViewModel\DetailedItemViewModelTests.cs" />
   </ItemGroup>
