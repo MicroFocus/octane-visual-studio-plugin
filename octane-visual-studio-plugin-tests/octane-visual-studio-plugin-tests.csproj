@@ -44,6 +44,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml" />
@@ -66,10 +67,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\alm-octane-csharp-rest-sdk\OctaneSdkTests\OctaneSdkTest.csproj">
-      <Project>{e4f5b839-ecbb-421b-a231-0062a6ee7fea}</Project>
-      <Name>OctaneSdkTest</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OctaneVSPlugin\octane-visual-studio-plugin.csproj">
       <Project>{95adad0b-a1ff-4be8-ae43-300204e3e667}</Project>
       <Name>octane-visual-studio-plugin</Name>

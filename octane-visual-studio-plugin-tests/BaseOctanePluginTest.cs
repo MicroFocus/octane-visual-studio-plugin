@@ -14,30 +14,59 @@
 * limitations under the License.
 */
 
-using MicroFocus.Adm.Octane.Api.Core.Tests;
+using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
+using System.Configuration;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 {
     /// <summary>
     /// Base test class for plugin tests
     /// </summary>
-    public abstract class BaseOctanePluginTest : BaseTest
+    [TestClass]
+    public abstract class BaseOctanePluginTest
     {
         private dynamic _persistedFieldsCache;
+
+        protected static RestConnector RestConnector = new RestConnector();
+        protected static EntityService EntityService = new EntityService(RestConnector);
+
+        protected static WorkspaceContext WorkspaceContext;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
-            InitConnection(context);
+            var ignoreServerCertificateValidation = ConfigurationManager.AppSettings["ignoreServerCertificateValidation"];
+            if (ignoreServerCertificateValidation != null && ignoreServerCertificateValidation.ToLower().Equals("true"))
+            {
+                NetworkSettings.IgnoreServerCertificateValidation();
+            }
+            NetworkSettings.EnableAllSecurityProtocols();
 
-            OctaneConfiguration.Url = host;
-            OctaneConfiguration.Username = userName;
-            OctaneConfiguration.Password = password;
-            OctaneConfiguration.WorkSpaceId = workspaceContext.WorkspaceId;
+            OctaneConfiguration.Url = ConfigurationManager.AppSettings["webAppUrl"];
+            // If webAppUrl is empty we do not try to connect.
+            if (string.IsNullOrWhiteSpace(OctaneConfiguration.Url))
+                return;
+
+            OctaneConfiguration.Username = ConfigurationManager.AppSettings["userName"];
+            OctaneConfiguration.Password = ConfigurationManager.AppSettings["password"];
+            var connectionInfo = new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password);
+
+            RestConnector.Connect(OctaneConfiguration.Url, connectionInfo);
+
+
+            var sharedSpaceId = int.Parse(ConfigurationManager.AppSettings["sharedSpaceId"]);
+            var workspaceId = int.Parse(ConfigurationManager.AppSettings["workspaceId"]);
+
+            WorkspaceContext = new WorkspaceContext(sharedSpaceId, workspaceId);
+            OctaneConfiguration.WorkSpaceId = WorkspaceContext.WorkspaceId;
+
+            var sharedSpaceContext = new SharedSpaceContext(sharedSpaceId);
             OctaneConfiguration.SharedSpaceId = sharedSpaceContext.SharedSpaceId;
         }
 

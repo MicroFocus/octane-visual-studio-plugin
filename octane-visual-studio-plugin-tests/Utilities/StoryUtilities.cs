@@ -16,10 +16,11 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
-using MicroFocus.Adm.Octane.Api.Core.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
 {
@@ -31,20 +32,36 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         private static Phase _phaseNew;
         private static WorkItemRoot _workItemRoot;
 
-        private static Phase GetPhaseNew(EntityService entityService, WorkspaceContext workspaceContext)
+        private static Phase GetPhaseForEntityByLogicalName(EntityService entityService, WorkspaceContext workspaceContext, String entityTypeName, String logicalName)
         {
-            if (_phaseNew == null)
-                _phaseNew = TestHelper.GetPhaseForEntityByLogicalName(entityService, workspaceContext, WorkItem.SUBTYPE_STORY, "phase.story.new");
+            var byEntityPhrase = new LogicalQueryPhrase(Phase.ENTITY_FIELD, entityTypeName);
+            var byNamePhrase = new LogicalQueryPhrase(Phase.LOGICAL_NAME_FIELD, logicalName);
+            var queryPhrases = new List<QueryPhrase> { byEntityPhrase, byNamePhrase };
 
-            return _phaseNew;
+            EntityListResult<Phase> result = entityService.Get<Phase>(workspaceContext, queryPhrases, null);
+            Assert.AreEqual(1, result.total_count, $"There should only be one phase with the logical name \"{logicalName }\" for type \"{entityService}\"");
+            return result.data[0];
         }
 
         private static WorkItemRoot GetWorkItemRoot(EntityService entityService, WorkspaceContext workspaceContext)
         {
             if (_workItemRoot == null)
-                _workItemRoot = TestHelper.GetWorkItemRoot(entityService, workspaceContext);
+            {
+                List<String> fields = new List<String>() { Phase.NAME_FIELD };
+                EntityListResult<WorkItemRoot> result = entityService.Get<WorkItemRoot>(workspaceContext, null, fields);
+                Assert.AreEqual(1, result.total_count);
+                _workItemRoot = result.data[0];
+            }
 
             return _workItemRoot;
+        }
+
+        private static Phase GetPhaseNew(EntityService entityService, WorkspaceContext workspaceContext)
+        {
+            if (_phaseNew == null)
+                _phaseNew = GetPhaseForEntityByLogicalName(entityService, workspaceContext, WorkItem.SUBTYPE_STORY, "phase.story.new");
+
+            return _phaseNew;
         }
 
         /// <summary>
@@ -60,8 +77,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
                 Parent = GetWorkItemRoot(entityService, workspaceContext)
             };
 
-            var createdStory = entityService.Create(workspaceContext, story, TestHelper.NameSubtypeFields);
-            Assert.AreEqual<String>(name, createdStory.Name, "Newly created story doesn't have the expected name");
+            var createdStory = entityService.Create(workspaceContext, story, new[] { "name", "subtype" });
+            Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");
             Assert.IsFalse(string.IsNullOrEmpty(createdStory.Id), "Newly created story should have a valid ID");
             return createdStory;
         }

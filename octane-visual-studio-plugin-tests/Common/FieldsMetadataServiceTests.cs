@@ -33,13 +33,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _story = StoryUtilities.CreateStory(entityService, workspaceContext);
+            _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            entityService.DeleteById<Story>(workspaceContext, _story.Id);
+            EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
         }
 
         protected override void TestInitializeInternal()

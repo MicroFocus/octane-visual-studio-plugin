@@ -15,7 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Tests;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
@@ -37,13 +36,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _story = StoryUtilities.CreateStory(entityService, workspaceContext);
+            _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            entityService.DeleteById<Story>(workspaceContext, _story.Id);
+            EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
         }
 
         #region EntitySupportsComments
@@ -254,7 +253,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
-            var secondStory = StoryUtilities.CreateStory(entityService, workspaceContext);
+            var secondStory = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
             try
             {
                 var secondViewModel = new DetailedItemViewModel(_story);
@@ -269,7 +268,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             }
             finally
             {
-                entityService.DeleteById<Story>(workspaceContext, secondStory.Id);
+                EntityService.DeleteById<Story>(WorkspaceContext, secondStory.Id);
             }
         }
 
