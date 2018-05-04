@@ -48,14 +48,14 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Text="{Binding ID, FallbackValue=Test}" Margin="0 0 5 0" />
+                    <TextBlock Text="{Binding ID, FallbackValue=ID}" Margin="0 0 5 0" />
                     <TextBlock Grid.Column="1"
-                               Text="{Binding Title, FallbackValue=Im im number 1 with very very very long title and many many more things like this and that}"
+                               Text="{Binding Title, FallbackValue=Unable to obtain information}"
                                TextTrimming="CharacterEllipsis" FontWeight="Bold" />
                 </Grid>
 
                 <TextBlock Grid.Row="1"
-                           Text="{Binding Description, FallbackValue=Subtitle field sldkfj slkdfjlsdkjflskd jflsdkj}"
+                           Text="{Binding Description, FallbackValue=Unable to obtain information}"
                            TextTrimming="CharacterEllipsis"/>
             </Grid>
         </DockPanel>
