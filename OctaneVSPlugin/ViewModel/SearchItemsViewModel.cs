@@ -62,7 +62,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 await _octaneService.Connect();
-                var results = await _octaneService.SearchEntities(_searchFilter, 5);
+                var results = await _octaneService.SearchEntities(_searchFilter, 20);
                 foreach (var entity in results)
                 {
                     // TODO - invetigate showing in bold the matching sections in Name and Description
