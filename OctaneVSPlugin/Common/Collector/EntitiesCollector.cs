@@ -62,7 +62,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             // This allows us to later aggregate all the fetched entities without caring about the specific type of each one.
             collectorTask.ContinueWith(result =>
             {
-                tcs.TrySetResult(collectorTask.Result);
+                if (result.IsFaulted || result.IsCanceled)
+                {
+                    // return an empty list in case something went wrong with the collector task
+                    tcs.TrySetResult(new EntityListResult<TEntityType>());
+                }
+                else
+                {
+                    tcs.TrySetResult(collectorTask.Result);
+                }
             });
 
             _fetchTasks.Add(tcs.Task);
