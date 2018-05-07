@@ -126,7 +126,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public Task<EntityListResult<TEntity>> SearchEntitiesByType<TEntity>(string searchString, int limit, string type)
             where TEntity : BaseEntity
         {
-            return es.SearchAsync<TEntity>(workspaceContext, searchString, limit, type);
+            return es.SearchAsync<TEntity>(workspaceContext, searchString, new List<string> { type }, limit);
         }
 
         private IList<QueryPhrase> BuildCommentsCriteria(WorkspaceUser user)
