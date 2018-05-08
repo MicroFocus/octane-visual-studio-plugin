@@ -59,7 +59,37 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new SearchItemsViewModel("");
             viewModel.Search().Wait();
 
-            Assert.AreEqual(0, viewModel.SearchItems.Count());
+            Assert.AreEqual(0, viewModel.SearchItems.Count(), "Searching for empty string should return nothing.");
+        }
+
+        [TestMethod]
+        public void SearchItemsViewModelTests_Search_QuoteFilter_Success()
+        {
+            SearchSpecialCharacters("\"");
+        }
+
+        [TestMethod]
+        public void SearchItemsViewModelTests_Search_DoubleQuoteFilter_Success()
+        {
+            SearchSpecialCharacters("\"\"");
+        }
+
+        private static void SearchSpecialCharacters(string filter)
+        {
+            var story = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story" + filter);
+            try
+            {
+                var viewModel = new SearchItemsViewModel(filter);
+                Utility.WaitUntil(() =>
+                {
+                    viewModel.Search().Wait();
+                    return viewModel.SearchItems.Count(si => si.ID == story.Id) == 1;
+                }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
+            }
+            finally
+            {
+                EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
+            }
         }
 
         [TestMethod]
