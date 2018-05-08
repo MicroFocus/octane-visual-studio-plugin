@@ -79,7 +79,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void SearchItemsViewModelTests_Search_EmptyFilter_NoSearchResults()
         {
             var viewModel = new SearchItemsViewModel("");
-            viewModel.Search().Wait();
+            viewModel.SearchAsync().Wait();
 
             Assert.AreEqual(0, viewModel.SearchItems.Count(), "Searching for empty string should return nothing.");
         }
@@ -104,7 +104,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 var viewModel = new SearchItemsViewModel(filter);
                 Utility.WaitUntil(() =>
                 {
-                    viewModel.Search().Wait();
+                    viewModel.SearchAsync().Wait();
                     return viewModel.SearchItems.Count(si => si.ID == story.Id) == 1;
                 }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
             }
@@ -121,13 +121,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             Utility.WaitUntil(() =>
             {
-                viewModel.Search().Wait();
+                viewModel.SearchAsync().Wait();
                 return viewModel.SearchItems.Count() == 3;
             }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
 
             Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _story.Id), "Expected story wasn't returned by search operation.");
             Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _epic.Id), "Expected epic wasn't returned by search operation.");
             Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _gherkinTest.Id), "Expected gherkin test wasn't returned by search operation.");
+
+            Assert.AreEqual(WindowMode.Loaded, viewModel.Mode, "Mismatched window mode");
+            Assert.AreEqual(null, viewModel.ErrorMessage, "Mismatched error message");
         }
 
         #endregion
@@ -141,7 +144,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             Utility.WaitUntil(() =>
             {
-                viewModel.Search().Wait();
+                viewModel.SearchAsync().Wait();
                 return viewModel.SearchItems.Count() == 3;
             }, "Timeout waiting for correct initial search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
 
@@ -155,7 +158,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             Utility.WaitUntil(() =>
             {
-                viewModel.Search().Wait();
+                viewModel.SearchAsync().Wait();
                 return viewModel.SearchItems.Count() == 3;
             }, "Timeout waiting for correct search results after refresh", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
 
@@ -170,7 +173,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             Utility.WaitUntil(() =>
             {
-                viewModel.Search().Wait();
+                viewModel.SearchAsync().Wait();
                 return viewModel.SearchItems.Count() == 3;
             }, "Timeout waiting for correct initial search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
 
@@ -184,7 +187,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             Utility.WaitUntil(() =>
             {
-                viewModel.Search().Wait();
+                viewModel.SearchAsync().Wait();
                 return viewModel.SearchItems.Count() == 4;
             }, "Timeout waiting for correct search results after refresh", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
 

@@ -34,6 +34,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly string _searchFilter;
         private readonly IList<BaseItemViewModel> _searchResults = new List<BaseItemViewModel>();
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public SearchItemsViewModel(string searchFilter)
         {
             if (searchFilter == null)
@@ -58,7 +61,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// <summary>
         /// Search for all entities satisfying the criteria
         /// </summary>
-        public async Task Search()
+        public async Task SearchAsync()
         {
             try
             {
@@ -114,6 +117,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #region Refresh
 
+        /// <summary>
+        /// Refresh command using the same filter
+        /// </summary>
         public ICommand RefreshCommand { get; }
 
         private void Refresh(object param)
@@ -121,7 +127,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Mode = WindowMode.Loading;
             NotifyPropertyChanged("Mode");
 
-            Search();
+            SearchAsync();
         }
 
         #endregion
