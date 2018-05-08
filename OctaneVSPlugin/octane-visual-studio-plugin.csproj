@@ -163,7 +163,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="index.html" />
     <VSCTCompile Include="MainWindowPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
@@ -191,7 +190,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Resource Include="Resources\search.png" />
-    <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindowControl.xaml">
