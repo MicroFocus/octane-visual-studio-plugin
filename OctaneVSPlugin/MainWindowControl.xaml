@@ -22,6 +22,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
+             xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -139,7 +140,7 @@
                 </Style>
             </DockPanel.Style>
 
-            <local:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+            <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
             
         </DockPanel>
 

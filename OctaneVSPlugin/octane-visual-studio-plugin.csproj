@@ -103,7 +103,7 @@
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
-    <Compile Include="GifImage.cs" />
+    <Compile Include="View\GifImage.cs" />
     <Compile Include="GreaterThanValueConverter.cs" />
     <Compile Include="ItemIconInfo.cs" />
     <Compile Include="MainWindowMode.cs" />
