@@ -32,11 +32,31 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// Wait until condition is satisfied.
         /// If it took more than the specified timeout, an assert will be triggered with the given message
         /// </summary>
-        public static void WaitUntil(Func<bool> condition, int miliseconds, string message)
+        public static void WaitUntil(Func<bool> condition, string message, TimeSpan timeout)
         {
-            var conditionSatisfied = SpinWait.SpinUntil(condition, miliseconds);
+            WaitUntil(condition, message, timeout, new TimeSpan(0, 0, 0, 0, 50));
+        }
+
+        /// <summary>
+        /// Wait until condition is satisfied.
+        /// If it took more than the specified timeout, an assert will be triggered with the given message
+        /// </summary>
+        public static void WaitUntil(Func<bool> condition, string message, TimeSpan timeout, TimeSpan waitPeriodBetweenIterations)
+        {
+            var conditionSatisfied = SpinWait.SpinUntil(() =>
+            {
+                var safisfied = condition();
+                if (!safisfied)
+                {
+                    Thread.Sleep(waitPeriodBetweenIterations);
+                }
+                return safisfied;
+            }, timeout);
+
             if (!conditionSatisfied)
+            {
                 Assert.Fail(message);
+            }
         }
 
         public static T Clone<T>(T source)

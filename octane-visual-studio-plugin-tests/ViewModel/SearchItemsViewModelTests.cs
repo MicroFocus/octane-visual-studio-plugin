@@ -20,7 +20,6 @@ using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
-using System.Threading;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 {
@@ -60,15 +59,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         {
             var viewModel = new SearchItemsViewModel(_guid.ToString());
 
-            SpinWait.SpinUntil(() =>
+            Utility.WaitUntil(() =>
             {
-                Thread.Sleep(1000);
-
                 viewModel.Search().Wait();
                 return viewModel.SearchItems.Count() == 1;
-            }, new TimeSpan(0, 2, 0));
-
-            Assert.AreEqual(1, viewModel.SearchItems.Count());
+            }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
         }
     }
 }
