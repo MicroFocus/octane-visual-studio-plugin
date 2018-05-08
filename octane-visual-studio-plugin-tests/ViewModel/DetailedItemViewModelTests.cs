@@ -15,7 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Tests;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
@@ -37,13 +36,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _story = StoryUtilities.CreateStory(entityService, workspaceContext);
+            _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            entityService.DeleteById<Story>(workspaceContext, _story.Id);
+            EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
         }
 
         #region EntitySupportsComments
@@ -51,7 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_EntitySupportsComments_EntitySupportsComments_True()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             Assert.IsTrue(viewModel.EntitySupportsComments, "Entity should support comments");
         }
 
@@ -60,7 +59,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         {
             var task = new Task("1001");
             task.SetValue(WorkItem.SUBTYPE_FIELD, "task");
-            var viewModel = new DetailedItemViewModel(task, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(task);
             Assert.IsFalse(viewModel.EntitySupportsComments, "Entity shouldn't support comments");
         }
 
@@ -71,14 +70,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_RefreshCommand_RefreshWithoutAnyChanges_Success()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
 
             viewModel.RefreshCommand.Execute(null);
 
-            Utilities.Utility.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 30000,
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded, 30000,
                 "Timeout while refreshing the entity");
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
@@ -89,7 +88,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_RefreshCommand_RefreshAfterChangingVisibleFields_Succes()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             foreach (var field in viewModel.FilteredEntityFields)
@@ -102,7 +101,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             viewModel.RefreshCommand.Execute(null);
 
-            Utilities.Utility.WaitUntil(() => viewModel.Mode == DetailsWindowMode.ItemLoaded, 30000,
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded, 30000,
                 "Timeout while refreshing the entity");
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
@@ -117,7 +116,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_Filter_NullFilter_ReturnAllFields()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             var expectedFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
@@ -132,7 +131,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_Filter_EmptyFilter_ReturnAllFields()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             var expectedFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
@@ -147,7 +146,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_Filter_FilterDoesntMatchAnyItem_ReturnEmptyList()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             viewModel.Filter = "FilterDoesntMatchAnyItem";
@@ -161,7 +160,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_Filter_FilterPartialMatch_ReturnMatchList()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             var expectedFilteredFields = new List<string> { "Blocked reason", "Creation time", "Feature", "Release", "Team" };
@@ -186,7 +185,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_Filter_FilterIgnoreCase_ReturnMatchList()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             var expectedFilteredFields = new List<string> { "Creation time", "Feature", };
@@ -203,7 +202,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_VisibleFields_ShowHideFields_ShowSelectedFields()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             ChangeFieldVisibility(viewModel, "Release", false);
@@ -217,7 +216,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_VisibleFields_ShowAllFields_ShowSelectedFields()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             foreach (var field in viewModel.FilteredEntityFields)
@@ -234,7 +233,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_VisibleFields_HideAllFields_ShowSelectedFields()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             foreach (var field in viewModel.FilteredEntityFields)
@@ -251,13 +250,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_VisibleFields_MultipleEntitiesOfSameTime_ChangesAreReflectedInAllEntities()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
-            var secondStory = StoryUtilities.CreateStory(entityService, workspaceContext);
+            var secondStory = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
             try
             {
-                var secondViewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+                var secondViewModel = new DetailedItemViewModel(_story);
                 secondViewModel.Initialize().Wait();
 
                 ChangeFieldVisibility(viewModel, "Release", false);
@@ -269,7 +268,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             }
             finally
             {
-                entityService.DeleteById<Story>(workspaceContext, secondStory.Id);
+                EntityService.DeleteById<Story>(WorkspaceContext, secondStory.Id);
             }
         }
 
@@ -291,7 +290,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
         private void ValidateResetCommand(bool allFieldsVisible)
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "Only default fields should be visible when detailed item is initialized");
@@ -323,7 +322,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void DetailedItemViewModelTests_OnlyDefaultFieldsAreShown_ToggleShowingOnlyDefaultFields_True()
         {
-            var viewModel = new DetailedItemViewModel(_story, MyWorkMetadata);
+            var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
             Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "Only default fields should be visible when detailed item is initialized");

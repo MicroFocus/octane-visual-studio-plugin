@@ -42,7 +42,7 @@
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="LoadingItem">
+                            <DataTrigger Binding="{Binding Mode}" Value="Loading">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -120,7 +120,7 @@
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="ItemLoaded">
+                            <DataTrigger Binding="{Binding Mode}" Value="Loaded">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>

@@ -101,10 +101,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         internal void LoadEntity(BaseEntity entity)
         {
-            var metadata = new MyWorkMetadata();
-            var viewModel = new DetailedItemViewModel(entity, metadata);
+            var viewModel = new DetailedItemViewModel(entity);
             viewModel.Initialize();
-            Caption = $"{EntityNames.GetInitials(Utility.GetConcreteEntityType(entity))} {viewModel.ID}";
+
+            var entityInformation = EntityRegistry.GetEntityInformation(viewModel.Entity);
+            Caption = $"{entityInformation?.ShortLabel} {viewModel.ID}";
             detailsControl.DataContext = viewModel;
         }
 

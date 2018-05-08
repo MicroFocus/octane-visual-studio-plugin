@@ -50,7 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             // After settings are applied we notify the main ViewModel to allow it to refresh.
             if (OctaneMyItemsViewModel.Instance != null)
             {
-                OctaneMyItemsViewModel.Instance.OptionsChanged();
+                OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
             }
         }
 

@@ -26,8 +26,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         private readonly Comment commentEntity;
 
-        public CommentViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
-            : base(entity, myWorkMetadata)
+        public CommentViewModel(BaseEntity entity)
+            : base(entity)
         {
             commentEntity = (Comment)entity;
             ParentEntity = GetOwnerEntity();
@@ -47,8 +47,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (ParentEntity == null)
                     return "Unable to determine the comment's owner entity";
 
+                var parentEntityInformation = EntityRegistry.GetEntityInformation(ParentEntity);
+                if (parentEntityInformation == null)
+                    return string.Empty;
+
                 var sb = new StringBuilder("Comment on ")
-                    .Append(EntityNames.GetDisplayName(ParentEntity.TypeName).ToLower())
+                    .Append(parentEntityInformation.DisplayName.ToLower())
                     .Append(": ")
                     .Append(ParentEntity.Id.ToString())
                     .Append(" ")

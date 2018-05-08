@@ -21,7 +21,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -30,13 +29,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// </summary>
     public class MyWorkMetadata
     {
-        /// <summary>
-        /// One stop shop for entities fields, icons and any data required for fetch and display them.
-        /// </summary>
-        private Dictionary<Type, Dictionary<string, ItemSubTypeInfo>> entitiesFetchInfo;
+        private static MyWorkMetadata _metadata;
+        private static readonly object _obj = new object();
 
-        // Cache subtypes
-        private Dictionary<Type, HashSet<string>> subTypesByEntityType;
+        /// <summary>
+        /// One stop shop for entities fields required for fetch and display them.
+        /// </summary>
+        private Dictionary<Type, Dictionary<string, FieldInfo[]>> _entitiesFieldsFetchInfo;
 
         // Cache fields
         private Dictionary<Type, List<string>> fieldsByEntityType;
@@ -46,10 +45,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         private const string SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER = "SimpleEntity";
 
-        /// <summary>
-        /// Placeholder value for entities that should not support copy of commit message.
-        /// </summary>
-        private const string COMMIT_MESSAGE_NOT_APPLICABLE = "";
+        public static MyWorkMetadata Instance
+        {
+            get
+            {
+                if (_metadata == null)
+                {
+                    lock (_obj)
+                    {
+                        if (_metadata == null)
+                        {
+                            _metadata = new MyWorkMetadata();
+                        }
+                    }
+                }
+
+                return _metadata;
+            }
+        }
 
         /// <summary>
         /// Array of entity types that do not have sub-types.
@@ -59,15 +72,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         private static readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
 
-        public MyWorkMetadata()
+        private MyWorkMetadata()
         {
-            entitiesFetchInfo = new Dictionary<Type, Dictionary<string, ItemSubTypeInfo>>();
+            _entitiesFieldsFetchInfo = new Dictionary<Type, Dictionary<string, FieldInfo[]>>();
             fieldsByEntityType = new Dictionary<Type, List<string>>();
-            subTypesByEntityType = new Dictionary<Type, HashSet<string>>();
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT,
-                "defect",
-                EntityNames.GetInitials(WorkItem.SUBTYPE_DEFECT), Color.FromRgb(190, 102, 92),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
                 FieldAtTop(CommonFields.DETECTED_BY, "Detected By"),
@@ -79,8 +89,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY,
-                "user story",
-                EntityNames.GetInitials(WorkItem.SUBTYPE_STORY), Color.FromRgb(218, 199, 120),
                 FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
@@ -92,8 +100,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY,
-                "quality story",
-                EntityNames.GetInitials(WorkItem.SUBTYPE_QUALITY_STORY), Color.FromRgb(95, 112, 118),
                 FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.STORY_POINTS, "SP"),
@@ -105,8 +111,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Test>(Test.SUBTYPE_MANUAL_TEST,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                EntityNames.GetInitials(Test.SUBTYPE_MANUAL_TEST), Color.FromRgb(96, 121, 141),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
@@ -116,8 +120,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                EntityNames.GetInitials(TestGherkin.SUBTYPE_GHERKIN_TEST), Color.FromRgb(120, 196, 192),
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.OWNER, "Owner"),
@@ -126,45 +128,41 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                EntityNames.GetInitials(RunSuite.SUBTYPE_RUN_SUITE), Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(CommonFields.STARTED, "Started")
                 );
 
             AddSubType<Run>(RunManual.SUBTYPE_RUN_MANUAL,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                EntityNames.GetInitials(RunManual.SUBTYPE_RUN_MANUAL), Color.FromRgb(133, 169, 188),
                 FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
                 FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
                 FieldAtBottom(CommonFields.STARTED, "Started")
                 );
 
             AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                EntityNames.GetInitials(Requirement.SUBTYPE_DOCUMENT), Color.FromRgb(215, 194, 56),
                 FieldAtSubTitle(CommonFields.PHASE, "Phase"),
                 FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
-                "task",
-                EntityNames.GetInitials(Task.TYPE_TASK),
-                Color.FromRgb(137, 204, 174),
                 FieldAtSubTitle(Task.STORY_FIELD, string.Empty, string.Empty, entity =>
                 {
                     var parentEntity = entity.GetValue("story") as BaseEntity;
                     if (parentEntity == null)
                         return string.Empty;
 
+                    var parentEntityInformation = EntityRegistry.GetEntityInformation(parentEntity);
+                    if (parentEntityInformation == null)
+                        return string.Empty;
+
                     var sb = new StringBuilder("Task of ")
-                        .Append(EntityNames.GetDisplayName(Utility.GetConcreteEntityType(parentEntity)).ToLower())
+                        .Append(parentEntityInformation.DisplayName.ToLower())
                         .Append(" ")
                         .Append(parentEntity.Id.ToString())
                         .Append(": ")
                         .Append(parentEntity.Name);
                     return sb.ToString();
+
                 }),
                 FieldAtTop(Task.OWNER_FIELD, "Owner"),
                 FieldAtTop(Task.PHASE_FIELD, "Phase"),
@@ -175,8 +173,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
-                COMMIT_MESSAGE_NOT_APPLICABLE,
-                EntityNames.GetInitials("comment"), Color.FromRgb(234, 179, 124),
                 FieldAtSubTitle(Comment.TEXT_FIELD, string.Empty, string.Empty, entity =>
                 {
                     return Utility.StripHtml(entity.GetStringValue(Comment.TEXT_FIELD));
@@ -189,32 +185,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             string subType = GetEntitySubType(entity);
             return GetFieldInfoByType(entity.GetType(), subType, FieldPosition.Bottom);
-        }
-
-        internal string GetIconText(BaseEntity entity)
-        {
-            return GetEntitySubTypeInfo(entity).IconInfo.ShortLabel;
-        }
-
-        internal Color GetIconColor(BaseEntity entity)
-        {
-            return GetEntitySubTypeInfo(entity).IconInfo.LabelColor;
-        }
-
-        internal bool IsSupportCopyCommitMessage(BaseEntity entity)
-        {
-            return COMMIT_MESSAGE_NOT_APPLICABLE != GetEntitySubTypeInfo(entity).CommitMessageTypeName;
-        }
-
-        internal string GetCommitMessageTypeName(BaseEntity entity)
-        {
-            return GetEntitySubTypeInfo(entity).CommitMessageTypeName;
-        }
-
-        private ItemSubTypeInfo GetEntitySubTypeInfo(BaseEntity entity)
-        {
-            string subType = GetEntitySubType(entity);
-            return entitiesFetchInfo[entity.GetType()][subType];
         }
 
         internal IEnumerable<FieldInfo> GetTopFieldsInfo(BaseEntity entity)
@@ -232,7 +202,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private IEnumerable<FieldInfo> GetFieldInfoByType(Type entityType, string subType, FieldPosition position)
         {
             var fieldByTypeQuery =
-                from field in entitiesFetchInfo[entityType][subType].Fields
+                from field in _entitiesFieldsFetchInfo[entityType][subType]
                 where field.Position == position
                 select field;
 
@@ -270,21 +240,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return new FieldInfo(field, title, emptyPlaceholder, FieldPosition.SubTitle, contentFunc);
         }
 
-        /// <summary>
-        /// Get work item subtypes we are interested in.
-        /// </summary>
-        public ISet<string> SubtypesForType<TEntity>()
-        {
-            HashSet<string> subtypes;
-
-            if (!subTypesByEntityType.TryGetValue(typeof(TEntity), out subtypes))
-            {
-                subtypes = new HashSet<string>(entitiesFetchInfo[typeof(TEntity)].Keys);
-                subTypesByEntityType.Add(typeof(TEntity), subtypes);
-            }
-            return subtypes;
-        }
-
         public List<string> FieldsForType<TEntity>()
         {
             List<string> fields;
@@ -292,9 +247,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (!fieldsByEntityType.TryGetValue(typeof(TEntity), out fields))
             {
                 // Create a flat list of fields
-                fields = entitiesFetchInfo[typeof(TEntity)]
+                fields = _entitiesFieldsFetchInfo[typeof(TEntity)]
                     .Values
-                    .SelectMany(x => x.Fields)
+                    .SelectMany(x => x)
                     .Select(x => x.Name)
                     .ToList();
 
@@ -323,40 +278,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return -1 == Array.IndexOf<Type>(EntitiesWithoutSubtype, entityType);
         }
 
-        private void AddSubType<TEntityType>(string subtype,
-            string commitMessageTypeName,
-            string shortLabel, Color labelColor,
-            params FieldInfo[] fields)
+        private void AddSubType<TEntityType>(string subtype, params FieldInfo[] fields)
         {
-            Dictionary<string, ItemSubTypeInfo> subTypeFields = GetSubtypesForEntityType<TEntityType>();
-            subTypeFields.Add(subtype, new ItemSubTypeInfo(commitMessageTypeName, fields, new ItemIconInfo(shortLabel, labelColor)));
+            Dictionary<string, FieldInfo[]> subTypeFields = GetSubtypesForEntityType<TEntityType>();
+            subTypeFields.Add(subtype, fields);
         }
 
-        private Dictionary<string, ItemSubTypeInfo> GetSubtypesForEntityType<TEntityType>()
+        private Dictionary<string, FieldInfo[]> GetSubtypesForEntityType<TEntityType>()
         {
-            Dictionary<string, ItemSubTypeInfo> subTypeFields;
+            Dictionary<string, FieldInfo[]> subTypeFields;
 
-            if (!entitiesFetchInfo.TryGetValue(typeof(TEntityType), out subTypeFields))
+            if (!_entitiesFieldsFetchInfo.TryGetValue(typeof(TEntityType), out subTypeFields))
             {
-                subTypeFields = new Dictionary<string, ItemSubTypeInfo>();
-                entitiesFetchInfo.Add(typeof(TEntityType), subTypeFields);
+                subTypeFields = new Dictionary<string, FieldInfo[]>();
+                _entitiesFieldsFetchInfo.Add(typeof(TEntityType), subTypeFields);
             }
 
             return subTypeFields;
-        }
-
-        private class ItemSubTypeInfo
-        {
-            public FieldInfo[] Fields { get; set; }
-            public ItemIconInfo IconInfo { get; set; }
-            public string CommitMessageTypeName { get; set; }
-
-            public ItemSubTypeInfo(string commitMessageTypeName, FieldInfo[] fields, ItemIconInfo iconInfo)
-            {
-                CommitMessageTypeName = commitMessageTypeName;
-                Fields = fields;
-                IconInfo = iconInfo;
-            }
         }
     }
 }

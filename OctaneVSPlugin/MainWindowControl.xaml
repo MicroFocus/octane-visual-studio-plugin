@@ -27,6 +27,11 @@
              mc:Ignorable="d"
              d:DesignHeight="200" d:DesignWidth="952"
              Name="MyToolWindow">
+
+    <UserControl.Resources>
+        <ResourceDictionary Source = " View\ResourceDictionary.xaml"/>
+    </UserControl.Resources>
+
     <Grid>
 
         <DockPanel x:Name="WelcomePanel">
@@ -212,8 +217,72 @@
                 </Style>
             </DockPanel.Style>
 
-            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="25" Height="25" 
+            <Grid DockPanel.Dock="Top"  Margin="5 5 5 5">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="1 0 5 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid>
+                        <ComboBox x:Name="SearchHistoryComboBox" Style="{DynamicResource ComboBoxStyle1}"
+                                  HorizontalAlignment="Left" VerticalAlignment="Center"
+                                  Width="180"
+                                  IsEditable="True"
+                                  Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
+                                  Background="{DynamicResource VsBrush.Window}"
+                                  Foreground="{DynamicResource VsBrush.WindowText}"
+                                  ItemsSource="{Binding SearchHistory}">
+                            <ComboBox.InputBindings>
+                                <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
+                            </ComboBox.InputBindings>
+                        </ComboBox>
+                        <TextBlock IsHitTestVisible="False"
+                                   Text="Search backlog items"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="7 0 0 0"
+                                   Background="{DynamicResource VsBrush.Window}"
+                                   Foreground="DarkGray">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Style.Triggers>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}" Value="" />
+                                                <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger>
+                                        <MultiDataTrigger>
+                                            <MultiDataTrigger.Conditions>
+                                                <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}" Value="{x:Null}" />
+                                                <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}" Value="False" />
+                                            </MultiDataTrigger.Conditions>
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </MultiDataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+                    <Button Grid.Column="1" x:Name="SearchButton"
+                            ToolTip="Search"
+                            Command="{Binding SearchCommand}"
+                            BorderThickness="0"
+                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                            Background="{DynamicResource VsBrush.Window}"
+                            Width="25" Height="25"
+                            Margin="5 0 0 0">
+                        <Image Source="/octane-visual-studio-plugin;component/Resources/search.png"/>
+                    </Button>
+                </Grid>
+                <Button Grid.Column="1" Width="25" Height="25"  HorizontalAlignment="Right"
                         BorderThickness="0"
                         Background="{DynamicResource VsBrush.Window}"
                         Command="{Binding RefreshCommand}"
@@ -224,7 +293,8 @@
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
-            </StackPanel>
+            </Grid>
+            
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
                     Background="{DynamicResource VsBrush.Window}"
                     Foreground="{DynamicResource VsBrush.WindowText}"

@@ -46,6 +46,7 @@ namespace octane_visual_studio_plugin
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideToolWindow(typeof(MainWindow), Style = VsDockStyle.Tabbed, Window = EnvDTE.Constants.vsWindowKindOutput)]
     [ProvideToolWindow(typeof(DetailsToolWindow), MultiInstances = true, Style = VsDockStyle.Tabbed, Window = MainWindow.WINDOW_ID, Transient = true)]
+    [ProvideToolWindow(typeof(SearchToolWindow), MultiInstances = true, Style = VsDockStyle.Tabbed, Window = MainWindow.WINDOW_ID, Transient = true)]
     [Guid(MainWindowPackage.PackageGuidString)]
     [ProvideOptionPage(typeof(OptionsPage), "ALM Octane", "Server Details", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]

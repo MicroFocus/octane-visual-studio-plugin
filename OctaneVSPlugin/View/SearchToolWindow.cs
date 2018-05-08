@@ -14,13 +14,12 @@
 * limitations under the License.
 */
 
-namespace MicroFocus.Adm.Octane.VisualStudio
-{
-    using Microsoft.VisualStudio.Shell;
-    using octane_visual_studio_plugin;
-    using System;
-    using System.Runtime.InteropServices;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using Microsoft.VisualStudio.Shell;
+using System.Runtime.InteropServices;
 
+namespace MicroFocus.Adm.Octane.VisualStudio.View
+{
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
     /// </summary>
@@ -32,34 +31,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// implementation of the IVsUIElementPane interface.
     /// </para>
     /// </remarks>
-    [Guid(WINDOW_ID)]
-    public class MainWindow : ToolWindowPane
+    [Guid("a01ef1da-eec6-4128-a474-7dd4f2d4c72d")]
+    public class SearchToolWindow : ToolWindowPane
     {
-        internal const string WINDOW_ID = "af5c5224-1b4a-444f-923f-2fc9e06f7a40";
-
-        private readonly MainWindowControl _mainWindowControl;
-
+        private readonly SearchToolWindowControl _searchControl;
         /// <summary>
-        /// Initializes a new instance of the <see cref="MainWindow"/> class.
+        /// Initializes a new instance of the <see cref="SearchToolWindow"/> class.
         /// </summary>
-        public MainWindow() : base(null)
+        public SearchToolWindow() : base(null)
         {
-            Caption = "ALM Octane - My Work";
+            Caption = "Searching...";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            _mainWindowControl = new MainWindowControl();
-            Content = _mainWindowControl;
+            _searchControl = new SearchToolWindowControl();
+            Content = _searchControl;
         }
 
-        internal static MainWindowPackage PluginPackage { get; private set; }
-
-        protected override void OnCreate()
+        internal void Search(string searchFilter)
         {
-            base.OnCreate();
-            PluginPackage = (MainWindowPackage)Package;
-            _mainWindowControl.Initialize();
+            Caption = $"\"{searchFilter}\"";
+            var viewModel = new SearchItemsViewModel(searchFilter);
+            viewModel.Search();
+            _searchControl.DataContext = viewModel;
         }
     }
 }
