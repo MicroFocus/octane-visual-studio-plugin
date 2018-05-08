@@ -105,7 +105,6 @@
     <Compile Include="FieldPosition.cs" />
     <Compile Include="View\GifImage.cs" />
     <Compile Include="GreaterThanValueConverter.cs" />
-    <Compile Include="ItemIconInfo.cs" />
     <Compile Include="MainWindowMode.cs" />
     <Compile Include="MyItemControl.xaml.cs">
       <DependentUpon>MyItemControl.xaml</DependentUpon>
