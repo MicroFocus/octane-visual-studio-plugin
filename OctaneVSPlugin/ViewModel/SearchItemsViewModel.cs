@@ -19,6 +19,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Web;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
@@ -27,12 +28,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     public class SearchItemsViewModel : INotifyPropertyChanged
     {
         private readonly OctaneServices _octaneService;
-        private string _searchFilter = string.Empty;
+        private readonly string _searchFilter;
         private readonly IList<BaseItemViewModel> _searchResults = new List<BaseItemViewModel>();
 
         public SearchItemsViewModel(string searchFilter)
         {
-            _searchFilter = searchFilter;
+            _searchFilter = Uri.EscapeDataString(HttpUtility.JavaScriptStringEncode(searchFilter));
 
             RefreshCommand = new DelegatedCommand(Refresh);
 
