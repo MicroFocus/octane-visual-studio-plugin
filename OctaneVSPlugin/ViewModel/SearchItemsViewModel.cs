@@ -25,6 +25,9 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
+    /// <summary>
+    /// View model for SearchToolWindow
+    /// </summary>
     public class SearchItemsViewModel : INotifyPropertyChanged
     {
         private readonly OctaneServices _octaneService;
@@ -33,6 +36,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public SearchItemsViewModel(string searchFilter)
         {
+            if (searchFilter == null)
+            {
+                throw new ArgumentNullException(nameof(searchFilter));
+            }
+
             _searchFilter = Uri.EscapeDataString(HttpUtility.JavaScriptStringEncode(searchFilter));
 
             RefreshCommand = new DelegatedCommand(Refresh);
