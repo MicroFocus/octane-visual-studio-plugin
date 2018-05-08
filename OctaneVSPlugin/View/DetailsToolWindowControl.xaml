@@ -466,15 +466,20 @@
 
                             <Separator DockPanel.Dock="Top" Margin="0 15 0 15"/>
 
-                            <StackPanel Orientation="Vertical">
-                                <TextBlock Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Comments</TextBlock>
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <TextBlock Grid.Row="0" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Comments</TextBlock>
 
-                                <ListView x:Name="results" ItemsSource="{Binding Comments}"
-                                        Background="{DynamicResource VsBrush.Window}"
-                                        Foreground="{DynamicResource VsBrush.WindowText}"
-                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                        ScrollViewer.CanContentScroll="False"
-                                        BorderThickness="0">
+                                <ListView Grid.Row="1" x:Name="results" ItemsSource="{Binding Comments}"
+                                    Background="{DynamicResource VsBrush.Window}"
+                                    Foreground="{DynamicResource VsBrush.WindowText}"
+                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                    ScrollViewer.CanContentScroll="False"
+                                    BorderThickness="0">
                                     <ListView.ItemContainerStyle>
                                         <Style TargetType="{x:Type ListViewItem}">
                                             <Setter Property="Background" Value="Transparent" />
@@ -506,7 +511,7 @@
                                         </DataTemplate>
                                     </ListView.ItemTemplate>
                                 </ListView>
-                            </StackPanel>
+                            </Grid>
                         </DockPanel>
 
                     </Grid>

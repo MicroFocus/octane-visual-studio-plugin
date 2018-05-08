@@ -2074,7 +2074,7 @@ namespace HTMLConverter
                         break;
 
                     case "text-indent":
-                        if (isBlock)
+                        if (isBlock && xamlElement.LocalName == HtmlToXamlConverter.Xaml_Paragraph)
                         {
                             xamlElement.SetAttribute(Xaml_TextIndent, (string)propertyEnumerator.Value);
                         }
