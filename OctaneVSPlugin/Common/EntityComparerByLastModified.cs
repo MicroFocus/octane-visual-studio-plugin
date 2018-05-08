@@ -15,11 +15,10 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
     /// Comparer for BaseEntity by LastModified field.

@@ -99,7 +99,7 @@
     <Compile Include="Common\DelegatedCommand.cs" />
     <Compile Include="ViewModel\BaseItemViewModel.cs" />
     <Compile Include="ViewModel\DetailedItemViewModel.cs" />
-    <Compile Include="EntityComparerByLastModified.cs" />
+    <Compile Include="Common\EntityComparerByLastModified.cs" />
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
