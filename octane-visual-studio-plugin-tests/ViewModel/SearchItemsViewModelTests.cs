@@ -29,20 +29,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
     [TestClass]
     public class SearchItemsViewModelTests : BaseOctanePluginTest
     {
-        private static Story _story;
         private static Guid _guid;
+
+        private static Story _story;
+        private static Epic _epic;
+        private static TestGherkin _gherkinTest;
+
 
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             _guid = Guid.NewGuid();
             _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_" + _guid);
+            _epic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic_" + _guid);
+            _gherkinTest = TestGherkinUtilities.CreateGherkinTest(EntityService, WorkspaceContext, "TestGherkin_" + _guid);
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
             EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
+            EntityService.DeleteById<Epic>(WorkspaceContext, _epic.Id);
+            EntityService.DeleteById<TestGherkin>(WorkspaceContext, _gherkinTest.Id);
         }
 
         [TestMethod]
@@ -62,8 +70,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             Utility.WaitUntil(() =>
             {
                 viewModel.Search().Wait();
-                return viewModel.SearchItems.Count() == 1;
+                return viewModel.SearchItems.Count() == 3;
             }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
+
+            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _story.Id), "Expected story wasn't returned by search operation.");
+            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _epic.Id), "Expected epic wasn't returned by search operation.");
+            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _gherkinTest.Id), "Expected gherkin test wasn't returned by search operation.");
         }
     }
 }

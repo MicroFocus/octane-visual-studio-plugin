@@ -14,8 +14,13 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
+using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Json;
 using System.Text;
@@ -59,6 +64,43 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
             }
         }
 
+        /// <summary>
+        /// Get phase object with the given logical name for the specified entity type
+        /// </summary>
+        public static Phase GetPhaseForEntityByLogicalName(EntityService entityService, WorkspaceContext workspaceContext, string entityTypeName, string logicalName)
+        {
+            var queryPhrases = new List<QueryPhrase>
+            {
+                new LogicalQueryPhrase(Phase.ENTITY_FIELD, entityTypeName),
+                new LogicalQueryPhrase(Phase.LOGICAL_NAME_FIELD, logicalName)
+            };
+
+            var result = entityService.Get<Phase>(workspaceContext, queryPhrases, null);
+            Assert.AreEqual(1, result.total_count, $"There should only be one phase with the logical name \"{logicalName }\" for type \"{entityService}\"");
+            return result.data[0];
+        }
+
+        private static WorkItemRoot _workItemRoot;
+
+        /// <summary>
+        /// Get the WorkItemRoot entity
+        /// </summary>
+        public static WorkItemRoot GetWorkItemRoot(EntityService entityService, WorkspaceContext workspaceContext)
+        {
+            if (_workItemRoot == null)
+            {
+                var fields = new List<String>() { Phase.NAME_FIELD };
+                var result = entityService.Get<WorkItemRoot>(workspaceContext, null, fields);
+                Assert.AreEqual(1, result.total_count, "There should only be one WorkItemRoot entity");
+                _workItemRoot = result.data[0];
+            }
+
+            return _workItemRoot;
+        }
+
+        /// <summary>
+        /// Deep clone given object
+        /// </summary>
         public static T Clone<T>(T source)
         {
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
@@ -80,6 +122,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
                 return (T)serializer.ReadObject(stream);
             }
         }
-
     }
 }
