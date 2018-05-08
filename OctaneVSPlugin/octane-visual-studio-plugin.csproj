@@ -129,7 +129,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeparatorViewModel.cs" />
+    <Compile Include="ViewModel\SeparatorViewModel.cs" />
     <Compile Include="MyWorkMetadata.cs" />
     <Compile Include="CommonFields.cs" />
     <Compile Include="Common\Utility.cs" />

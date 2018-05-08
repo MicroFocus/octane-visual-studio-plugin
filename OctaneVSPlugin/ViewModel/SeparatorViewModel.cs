@@ -16,7 +16,7 @@
 
 using System.Collections.Generic;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     /// <summary>
     /// Separator ViewModel for representing separators between fields on WorkItem.
