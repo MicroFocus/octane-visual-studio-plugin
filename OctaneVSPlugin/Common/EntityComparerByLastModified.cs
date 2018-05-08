@@ -28,10 +28,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         // For now we always order in descending mode.
         private const bool isDescending = true;
 
-        public int Compare(BaseEntity x, BaseEntity y)
+        public int Compare(BaseEntity first, BaseEntity second)
         {
-            DateTime? xTime = x.GetDateTimeValue(CommonFields.LastModified);
-            DateTime? yTime = y.GetDateTimeValue(CommonFields.LastModified);
+            if (first == null)
+                throw new ArgumentNullException(nameof(first));
+            if (second == null)
+                throw new ArgumentNullException(nameof(second));
+
+            DateTime? xTime = first.GetDateTimeValue(CommonFields.LastModified);
+            DateTime? yTime = second.GetDateTimeValue(CommonFields.LastModified);
             int result;
 
             if (!xTime.HasValue && !yTime.HasValue)
