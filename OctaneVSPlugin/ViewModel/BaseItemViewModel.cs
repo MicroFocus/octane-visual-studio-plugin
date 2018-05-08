@@ -47,7 +47,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public virtual string Description
         {
-            get { return Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty; }
+            get { return Entity.GetStringValue(CommonFields.Description) ?? string.Empty; }
         }
 
         public virtual string IconText

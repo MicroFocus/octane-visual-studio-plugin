@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,7 +55,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public string SubType
         {
-            get { return Entity.GetStringValue(CommonFields.SUB_TYPE); }
+            get { return Entity.GetStringValue(CommonFields.SubType); }
         }
 
         public string CommitMessage

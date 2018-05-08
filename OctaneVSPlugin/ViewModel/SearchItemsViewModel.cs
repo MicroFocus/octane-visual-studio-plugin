@@ -68,7 +68,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     // TODO - invetigate showing in bold the matching sections in Name and Description
                     entity.Name = Utility.StripHtml(entity.Name);
-                    entity.SetValue(CommonFields.DESCRIPTION, Utility.StripHtml(entity.GetStringValue(CommonFields.DESCRIPTION)));
+                    entity.SetValue(CommonFields.Description, Utility.StripHtml(entity.GetStringValue(CommonFields.Description)));
 
                     _searchResults.Add(new BaseItemViewModel(entity));
                 }

@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
 
@@ -30,8 +31,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public int Compare(BaseEntity x, BaseEntity y)
         {
-            DateTime? xTime = x.GetDateTimeValue(CommonFields.LAST_MODIFIED);
-            DateTime? yTime = y.GetDateTimeValue(CommonFields.LAST_MODIFIED);
+            DateTime? xTime = x.GetDateTimeValue(CommonFields.LastModified);
+            DateTime? yTime = y.GetDateTimeValue(CommonFields.LastModified);
             int result;
 
             if (!xTime.HasValue && !yTime.HasValue)

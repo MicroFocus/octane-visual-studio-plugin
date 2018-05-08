@@ -77,7 +77,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 // TODO - investigate why not all entities receive the subtype field by default
                 if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))
                 {
-                    updatedFields.Add(CommonFields.SUB_TYPE);
+                    updatedFields.Add(CommonFields.SubType);
                 }
 
                 Entity = await _octaneService.FindEntity(Entity, updatedFields);
@@ -246,7 +246,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (Mode == WindowMode.Loaded)
                 {
-                    var phaseEntity = Entity.GetValue(CommonFields.PHASE) as BaseEntity;
+                    var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
                     if (phaseEntity == null)
                         return string.Empty;
 
@@ -259,7 +259,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public override string Description
         {
-            get { return Mode != WindowMode.Loading ? Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty : string.Empty; }
+            get { return Mode != WindowMode.Loading ? Entity.GetStringValue(CommonFields.Description) ?? string.Empty : string.Empty; }
         }
 
         public override string IconText
