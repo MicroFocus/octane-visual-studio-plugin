@@ -19,6 +19,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
@@ -36,6 +37,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         private static Epic _epic;
         private static TestGherkin _gherkinTest;
 
+        private static Story _storyQuote;
+        private static Story _storyDoubleQuote;
+
         private static Story _refreshStory;
         private static Epic _refreshEpic;
         private static TestGherkin _refreshGherkinTest;
@@ -47,6 +51,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_" + _guid);
             _epic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic_" + _guid);
             _gherkinTest = TestGherkinUtilities.CreateGherkinTest(EntityService, WorkspaceContext, "TestGherkin_" + _guid);
+
+            _storyQuote = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_\"_SingleQuote");
+            _storyDoubleQuote = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_\"\"_DoubleQuote");
 
             _refreshGuid = Guid.NewGuid();
             _refreshStory = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_" + _refreshGuid);
@@ -60,6 +67,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
             EntityService.DeleteById<Epic>(WorkspaceContext, _epic.Id);
             EntityService.DeleteById<TestGherkin>(WorkspaceContext, _gherkinTest.Id);
+
+            EntityService.DeleteById<Story>(WorkspaceContext, _storyQuote.Id);
+            EntityService.DeleteById<Story>(WorkspaceContext, _storyDoubleQuote.Id);
 
             EntityService.DeleteById<Story>(WorkspaceContext, _refreshStory.Id);
             EntityService.DeleteById<Epic>(WorkspaceContext, _refreshEpic.Id);
@@ -87,47 +97,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void SearchItemsViewModelTests_Search_QuoteFilter_Success()
         {
-            SearchSpecialCharacters("\"");
+            var viewModel = new SearchItemsViewModel("_\"_");
+            ValidateSearch(viewModel, new List<EntityId> { _storyQuote.Id });
         }
 
         [TestMethod]
         public void SearchItemsViewModelTests_Search_DoubleQuoteFilter_Success()
         {
-            SearchSpecialCharacters("\"\"");
-        }
-
-        private static void SearchSpecialCharacters(string filter)
-        {
-            var story = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story" + filter);
-            try
-            {
-                var viewModel = new SearchItemsViewModel(filter);
-                Utility.WaitUntil(() =>
-                {
-                    viewModel.SearchAsync().Wait();
-                    return viewModel.SearchItems.Count(si => si.ID == story.Id) == 1;
-                }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
-            }
-            finally
-            {
-                EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
-            }
+            var viewModel = new SearchItemsViewModel("_\"\"_");
+            ValidateSearch(viewModel, new List<EntityId> { _storyDoubleQuote.Id });
         }
 
         [TestMethod]
         public void SearchItemsViewModelTests_Search_Filter_Success()
         {
             var viewModel = new SearchItemsViewModel(_guid.ToString());
-
-            Utility.WaitUntil(() =>
-            {
-                viewModel.SearchAsync().Wait();
-                return viewModel.SearchItems.Count() == 3;
-            }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
-
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _story.Id), "Expected story wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _epic.Id), "Expected epic wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _gherkinTest.Id), "Expected gherkin test wasn't returned by search operation.");
+            ValidateSearch(viewModel, new List<EntityId> { _story.Id, _epic.Id, _gherkinTest.Id });
 
             Assert.AreEqual(WindowMode.Loaded, viewModel.Mode, "Mismatched window mode");
             Assert.AreEqual(null, viewModel.ErrorMessage, "Mismatched error message");
@@ -141,62 +126,43 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void SearchItemsViewModelTests_Refresh_NoChanges_SameResults()
         {
             var viewModel = new SearchItemsViewModel(_guid.ToString());
-
-            Utility.WaitUntil(() =>
-            {
-                viewModel.SearchAsync().Wait();
-                return viewModel.SearchItems.Count() == 3;
-            }, "Timeout waiting for correct initial search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
-
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _story.Id), "Expected story wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _epic.Id), "Expected epic wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _gherkinTest.Id), "Expected gherkin test wasn't returned by search operation.");
-
-            var expectedSearchItems = viewModel.SearchItems.Select(si => si.ID).ToList();
+            ValidateSearch(viewModel, new List<EntityId> { _story.Id, _epic.Id, _gherkinTest.Id });
 
             viewModel.RefreshCommand.Execute(null);
-
-            Utility.WaitUntil(() =>
-            {
-                viewModel.SearchAsync().Wait();
-                return viewModel.SearchItems.Count() == 3;
-            }, "Timeout waiting for correct search results after refresh", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
-
-            CollectionAssert.AreEqual(expectedSearchItems, viewModel.SearchItems.Select(si => si.ID).ToList(),
-                "Mismatched search results after refresh");
+            ValidateSearch(viewModel, new List<EntityId> { _story.Id, _epic.Id, _gherkinTest.Id });
         }
 
         [TestMethod]
         public void SearchItemsViewModelTests_Refresh_Changes_Success()
         {
             var viewModel = new SearchItemsViewModel(_refreshGuid.ToString());
-
-            Utility.WaitUntil(() =>
-            {
-                viewModel.SearchAsync().Wait();
-                return viewModel.SearchItems.Count() == 3;
-            }, "Timeout waiting for correct initial search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
-
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _refreshStory.Id), "Expected story wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _refreshEpic.Id), "Expected epic wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _refreshGherkinTest.Id), "Expected gherkin test wasn't returned by search operation.");
+            ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id });
 
             var newEpic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic2_" + _refreshGuid);
 
             viewModel.RefreshCommand.Execute(null);
-
-            Utility.WaitUntil(() =>
-            {
-                viewModel.SearchAsync().Wait();
-                return viewModel.SearchItems.Count() == 4;
-            }, "Timeout waiting for correct search results after refresh", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
-
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _refreshStory.Id), "Expected story wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _refreshEpic.Id), "Expected epic wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == newEpic.Id), "Expected new epic wasn't returned by search operation.");
-            Assert.AreEqual(1, viewModel.SearchItems.Count(si => si.ID == _refreshGherkinTest.Id), "Expected gherkin test wasn't returned by search operation.");
+            ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id, newEpic.Id });
         }
 
         #endregion
+
+        private static void ValidateSearch(SearchItemsViewModel viewModel, List<EntityId> expectedIds)
+        {
+            Utility.WaitUntil(() =>
+            {
+                viewModel.SearchAsync().Wait();
+
+                if (viewModel.SearchItems.Count() != expectedIds.Count)
+                    return false;
+
+                foreach (var id in expectedIds)
+                {
+                    if (viewModel.SearchItems.Count(si => si.ID == id) != 1)
+                        return false;
+                }
+
+                return true;
+            }, "Timeout waiting for correct search results", new TimeSpan(0, 2, 0), new TimeSpan(0, 0, 1));
+        }
     }
 }
