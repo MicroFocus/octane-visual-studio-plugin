@@ -43,7 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             // close all opened details windows so that we don't have details windows
             // for entities from different workspaces
-            DetailsWindowManager.CloseAllDetailsWindows();
+            PluginWindowManager.CloseAllDetailsWindows();
 
             FieldsMetadataService.Reset();
 

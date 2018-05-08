@@ -134,7 +134,7 @@
     <Compile Include="CommonFields.cs" />
     <Compile Include="Common\Utility.cs" />
     <Compile Include="ViewModel\WindowMode.cs" />
-    <Compile Include="View\DetailsWindowManager.cs" />
+    <Compile Include="View\PluginWindowManager.cs" />
     <Compile Include="View\FocusBehavior.cs" />
     <Compile Include="View\HtmlToFlowDocumentConverter.cs" />
     <Compile Include="View\SearchItemControl.xaml.cs">
