@@ -151,7 +151,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                     if (parentEntity == null)
                         return string.Empty;
 
-                    var parentEntityInformation = EntityRegistry.GetEntityInformation(parentEntity);
+                    var parentEntityInformation = EntityTypeRegistry.GetEntityTypeInformation(parentEntity);
                     if (parentEntityInformation == null)
                         return string.Empty;
 

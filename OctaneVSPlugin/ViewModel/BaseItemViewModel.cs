@@ -57,7 +57,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public virtual Color IconBackgroundColor
         {
-            get { return EntityTypeInformation.LabelColor; }
+            get { return EntityTypeInformation.Color; }
         }
     }
 }

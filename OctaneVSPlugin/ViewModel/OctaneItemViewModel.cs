@@ -62,14 +62,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                string message = string.Format("{0} #{1}: ", EntityInformation.CommitMessage, ID);
+                string message = string.Format("{0} #{1}: ", EntityTypeInformation.CommitMessage, ID);
                 return message;
             }
         }
 
         public bool IsSupportCopyCommitMessage
         {
-            get { return EntityInformation.IsCopyCommitMessageSupported; }
+            get { return EntityTypeInformation.IsCopyCommitMessageSupported; }
         }
 
         public FieldViewModel SubTitleField
