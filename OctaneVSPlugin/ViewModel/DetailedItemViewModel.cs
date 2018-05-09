@@ -264,12 +264,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public override string IconText
         {
-            get { return Mode != WindowMode.Loading ? EntityInformation.ShortLabel : null; }
+            get { return Mode != WindowMode.Loading ? EntityTypeInformation.ShortLabel : null; }
         }
 
         public override Color IconBackgroundColor
         {
-            get { return Mode != WindowMode.Loading ? EntityInformation.LabelColor : new Color(); }
+            get { return Mode != WindowMode.Loading ? EntityTypeInformation.Color : new Color(); }
         }
 
         public IEnumerable<CommentViewModel> Comments
