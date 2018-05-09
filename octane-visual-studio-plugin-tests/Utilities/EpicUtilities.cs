@@ -23,9 +23,9 @@ using System;
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
 {
     /// <summary>
-    /// Utility class for managing <see cref="Story"/>
+    /// Utility class for managing <see cref="Epic"/> entities
     /// </summary>
-    public static class StoryUtilities
+    public static class EpicUtilities
     {
         private static Phase _phaseNew;
 
@@ -34,29 +34,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
             if (_phaseNew == null)
             {
                 _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    WorkItem.SUBTYPE_STORY, "phase.story.new");
+                    WorkItem.SUBTYPE_EPIC, "phase.epic.new");
             }
 
             return _phaseNew;
         }
 
         /// <summary>
-        /// Create a new user story entity
+        /// Create a new epic entity
         /// </summary>
-        public static Story CreateStory(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
+        public static Epic CreateEpic(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
         {
-            var name = customName ?? "Story_" + Guid.NewGuid();
-            var story = new Story
+            var epicName = customName ?? "Epic" + Guid.NewGuid();
+            var epicToCreate = new Epic
             {
-                Name = name,
+                Name = epicName,
                 Phase = GetPhaseNew(entityService, workspaceContext),
                 Parent = Utility.GetWorkItemRoot(entityService, workspaceContext)
             };
 
-            var createdStory = entityService.Create(workspaceContext, story, new[] { "name", "subtype" });
-            Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");
-            Assert.IsFalse(string.IsNullOrEmpty(createdStory.Id), "Newly created story should have a valid ID");
-            return createdStory;
+            var createdEpic = entityService.Create<Epic>(workspaceContext, epicToCreate, new[] { "name", "subtype" });
+            Assert.AreEqual(epicName, createdEpic.Name, "Mismatched epic name");
+
+            return createdEpic;
         }
     }
 }

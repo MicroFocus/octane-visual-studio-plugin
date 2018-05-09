@@ -60,7 +60,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 Caption = $"\"{searchFilter.Substring(0, 20)}...\"";
 
             var viewModel = new SearchItemsViewModel(searchFilter);
-            viewModel.Search();
+            viewModel.SearchAsync();
             _searchControl.DataContext = viewModel;
         }
     }

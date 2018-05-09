@@ -23,9 +23,9 @@ using System;
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
 {
     /// <summary>
-    /// Utility class for managing <see cref="Story"/>
+    /// Utility class for managing <see cref="TestGherkin"/> entities
     /// </summary>
-    public static class StoryUtilities
+    public static class TestGherkinUtilities
     {
         private static Phase _phaseNew;
 
@@ -34,29 +34,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
             if (_phaseNew == null)
             {
                 _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    WorkItem.SUBTYPE_STORY, "phase.story.new");
+                    TestGherkin.SUBTYPE_GHERKIN_TEST, "phase.gherkin_test.new");
             }
 
             return _phaseNew;
         }
 
         /// <summary>
-        /// Create a new user story entity
+        /// Create a new gherkin test entity
         /// </summary>
-        public static Story CreateStory(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
+        public static TestGherkin CreateGherkinTest(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
         {
-            var name = customName ?? "Story_" + Guid.NewGuid();
-            var story = new Story
+            var name = customName ?? "GherkinTest_" + Guid.NewGuid();
+            var test = new TestGherkin
             {
                 Name = name,
-                Phase = GetPhaseNew(entityService, workspaceContext),
-                Parent = Utility.GetWorkItemRoot(entityService, workspaceContext)
+                Phase = GetPhaseNew(entityService, workspaceContext)
             };
 
-            var createdStory = entityService.Create(workspaceContext, story, new[] { "name", "subtype" });
-            Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");
-            Assert.IsFalse(string.IsNullOrEmpty(createdStory.Id), "Newly created story should have a valid ID");
-            return createdStory;
+            var createdTest = entityService.Create(workspaceContext, test, new[] { "name", "subtype" });
+            Assert.AreEqual(name, createdTest.Name, "Mismatched name for newly created gherkin test");
+            Assert.IsTrue(!string.IsNullOrEmpty(createdTest.Id), "Gherking test id shouldn't be null or empty");
+            return createdTest;
         }
     }
 }
