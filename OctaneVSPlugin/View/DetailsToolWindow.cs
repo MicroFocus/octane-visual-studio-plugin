@@ -79,7 +79,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         protected override void OnClose()
         {
             DetachViewModelFromFieldsCache();
-            DetailsWindowManager.UnregisterDetailsWindow(this);
+            PluginWindowManager.UnregisterDetailsWindow(this);
             base.OnClose();
         }
 

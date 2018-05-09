@@ -19,6 +19,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Utility = MicroFocus.Adm.Octane.VisualStudio.Common.Utility;
@@ -77,8 +78,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             viewModel.RefreshCommand.Execute(null);
 
-            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded, 30000,
-                "Timeout while refreshing the entity");
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded,
+                "Timeout while refreshing the entity", new TimeSpan(0, 0, 30));
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
 
@@ -101,8 +102,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             viewModel.RefreshCommand.Execute(null);
 
-            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded, 30000,
-                "Timeout while refreshing the entity");
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded,
+                "Timeout while refreshing the entity", new TimeSpan(0, 0, 30));
 
             var actualVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
 

@@ -35,6 +35,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     public class SearchToolWindow : ToolWindowPane
     {
         private readonly SearchToolWindowControl _searchControl;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SearchToolWindow"/> class.
         /// </summary>
@@ -49,11 +50,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             Content = _searchControl;
         }
 
+        /// <summary>
+        /// Search for the given filter
+        /// </summary>
         internal void Search(string searchFilter)
         {
             Caption = $"\"{searchFilter}\"";
+            if (searchFilter.Length > 20)
+                Caption = $"\"{searchFilter.Substring(0, 20)}...\"";
+
             var viewModel = new SearchItemsViewModel(searchFilter);
-            viewModel.Search();
+            viewModel.SearchAsync();
             _searchControl.DataContext = viewModel;
         }
     }

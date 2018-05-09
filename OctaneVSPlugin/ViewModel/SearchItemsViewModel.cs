@@ -25,14 +25,25 @@ using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
+    /// <summary>
+    /// View model for SearchToolWindow
+    /// </summary>
     public class SearchItemsViewModel : INotifyPropertyChanged
     {
         private readonly OctaneServices _octaneService;
         private readonly string _searchFilter;
         private readonly IList<BaseItemViewModel> _searchResults = new List<BaseItemViewModel>();
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public SearchItemsViewModel(string searchFilter)
         {
+            if (searchFilter == null)
+            {
+                throw new ArgumentNullException(nameof(searchFilter));
+            }
+
             _searchFilter = Uri.EscapeDataString(HttpUtility.JavaScriptStringEncode(searchFilter));
 
             RefreshCommand = new DelegatedCommand(Refresh);
@@ -50,7 +61,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// <summary>
         /// Search for all entities satisfying the criteria
         /// </summary>
-        public async Task Search()
+        public async Task SearchAsync()
         {
             try
             {
@@ -106,6 +117,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #region Refresh
 
+        /// <summary>
+        /// Refresh command using the same filter
+        /// </summary>
         public ICommand RefreshCommand { get; }
 
         private void Refresh(object param)
@@ -113,7 +127,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Mode = WindowMode.Loading;
             NotifyPropertyChanged("Mode");
 
-            Search();
+            SearchAsync();
         }
 
         #endregion

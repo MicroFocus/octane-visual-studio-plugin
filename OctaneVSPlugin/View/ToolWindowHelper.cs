@@ -143,9 +143,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 return;
             }
 
-            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(MainWindow.PluginPackage, entity);
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
+            DetailsToolWindow window = PluginWindowManager.ObtainDetailsWindow(MainWindow.PluginPackage, entity);
             window.LoadEntity(entity);
         }
 
