@@ -23,7 +23,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
     /// <summary>
     /// Value converter which convert int value to check if they are greater than another value (0 by default).
     /// </summary>
-    public class GreaterThanValueConverter : IValueConverter
+    public class GreaterThanZeroConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -39,7 +39,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("ConvertBack operation isn't supported");
         }
     }
 }
