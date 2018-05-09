@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
 {
@@ -27,7 +28,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
     [TestClass]
     public class EntityComparerByLastModifiedTests
     {
-        private EntityComparerByLastModified _entityComparer = new EntityComparerByLastModified();
+        private readonly EntityComparerByLastModified _entityComparer = new EntityComparerByLastModified();
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
@@ -55,7 +56,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             var firstEntity = new BaseEntity();
             firstEntity.SetDateTimeValue(CommonFields.LastModified, DateTime.Now);
 
-            Assert.AreEqual(0, _entityComparer.Compare(firstEntity, new BaseEntity()), "Mismatched compare result");
+            Assert.AreEqual(1, _entityComparer.Compare(firstEntity, new BaseEntity()), "Mismatched compare result");
         }
 
         [TestMethod]
@@ -65,6 +66,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             secondEntity.SetDateTimeValue(CommonFields.LastModified, DateTime.Now);
 
             Assert.AreEqual(-1, _entityComparer.Compare(new BaseEntity(), secondEntity), "Mismatched compare result");
+        }
+
+        [TestMethod]
+        public void EntityComparerByLastModifiedTests_Compare_CompareEntityList_Success()
+        {
+            var date = DateTime.Now;
+            var earlyEntity = new BaseEntity();
+            earlyEntity.SetDateTimeValue(CommonFields.LastModified, date.AddHours(-1));
+            var middleEntity = new BaseEntity();
+            middleEntity.SetDateTimeValue(CommonFields.LastModified, date);
+            var lateEntity = new BaseEntity();
+            lateEntity.SetDateTimeValue(CommonFields.LastModified, date.AddHours(1));
+
+            var result = new List<BaseEntity> { middleEntity, lateEntity, earlyEntity };
+            result.Sort(_entityComparer);
+
+            CollectionAssert.AreEqual(new List<BaseEntity> { lateEntity, middleEntity, earlyEntity }, result, "Mismatched sorted list");
         }
     }
 }

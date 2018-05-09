@@ -21,13 +21,11 @@ using System.Collections.Generic;
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
-    /// Comparer for BaseEntity by LastModified field.
+    /// Comparer for BaseEntity by LastModified field (only in descending mode)
     /// </summary>
     internal class EntityComparerByLastModified : IComparer<BaseEntity>
     {
-        // For now we always order in descending mode.
-        private const bool isDescending = true;
-
+        /// <inheritdoc/>
         public int Compare(BaseEntity first, BaseEntity second)
         {
             if (first == null)
@@ -35,33 +33,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             if (second == null)
                 throw new ArgumentNullException(nameof(second));
 
-            DateTime? xTime = first.GetDateTimeValue(CommonFields.LastModified);
-            DateTime? yTime = second.GetDateTimeValue(CommonFields.LastModified);
-            int result;
+            DateTime? firstDateTime = first.GetDateTimeValue(CommonFields.LastModified);
+            DateTime? secondDateTime = second.GetDateTimeValue(CommonFields.LastModified);
 
-            if (!xTime.HasValue && !yTime.HasValue)
+            if (!firstDateTime.HasValue && !secondDateTime.HasValue)
             {
-                result = 0;
+                return 0;
             }
-            else if (!xTime.HasValue)
+            if (!firstDateTime.HasValue)
             {
-                result = 1;
+                return -1;
             }
-            else if (!yTime.HasValue)
+            if (!secondDateTime.HasValue)
             {
-                result = 0;
-            }
-            else
-            {
-                result = xTime.Value.CompareTo(yTime.Value);
+                return 1;
             }
 
-            if (isDescending)
-            {
-                result = -1 * result;
-            }
-
-            return result;
+            return -1 * firstDateTime.Value.CompareTo(secondDateTime.Value);
         }
     }
 }
