@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -49,6 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
                 Phase = GetPhaseNew(),
                 Parent = Utility.GetWorkItemRoot()
             };
+            story.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
             var createdStory = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, story, new[] { "name", "subtype" });
             Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");

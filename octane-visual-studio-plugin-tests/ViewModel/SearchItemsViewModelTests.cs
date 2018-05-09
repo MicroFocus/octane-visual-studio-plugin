@@ -139,9 +139,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id });
 
             var newEpic = EpicUtilities.CreateEpic("Epic2_" + _refreshGuid);
-
-            viewModel.RefreshCommand.Execute(null);
-            ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id, newEpic.Id });
+            try
+            {
+                viewModel.RefreshCommand.Execute(null);
+                ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id, newEpic.Id });
+            }
+            finally
+            {
+                EntityService.DeleteById<Epic>(WorkspaceContext, newEpic.Id);
+            }
         }
 
         #endregion

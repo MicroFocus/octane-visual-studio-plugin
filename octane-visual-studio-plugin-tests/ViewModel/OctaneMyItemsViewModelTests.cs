@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
@@ -47,11 +48,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 var viewModel = new OctaneMyItemsViewModel();
                 viewModel.LoadMyItemsAsync().Wait();
 
-                Assert.AreEqual(1, viewModel.MyItems.Count(), "Mismatched MyItems count");
+                var myItems = viewModel.MyItems.ToList();
+                Assert.IsTrue(myItems.Count >= 2, "Mismatched MyItems count");
+
+                var expectedItems = new List<BaseEntity> { story, defect };
+                foreach (var item in expectedItems)
+                {
+                    Assert.AreEqual(1, myItems.Count(i => i.ID == item.Id), $"Couldn't find entity {item.Name}");
+                }
             }
             finally
             {
                 EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
+                EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
             }
         }
     }

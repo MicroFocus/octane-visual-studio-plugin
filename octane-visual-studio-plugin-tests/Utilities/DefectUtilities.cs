@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -68,6 +69,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
                 Severity = GetSeverityByName("High"),
                 Parent = Utility.GetWorkItemRoot()
             };
+            defect.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
             var createdDefect = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, defect, new[] { Defect.NAME_FIELD, Defect.AUTHOR_FIELD });
             Assert.AreEqual(name, createdDefect.Name, "Mismatched defect name");

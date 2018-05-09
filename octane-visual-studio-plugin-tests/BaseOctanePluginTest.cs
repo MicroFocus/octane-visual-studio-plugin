@@ -15,13 +15,17 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 {
@@ -37,6 +41,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
         public static EntityService EntityService = new EntityService(RestConnector);
 
         public static WorkspaceContext WorkspaceContext;
+
+        public static WorkspaceUser User;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
@@ -67,6 +73,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 
             var sharedSpaceContext = new SharedSpaceContext(sharedSpaceId);
             OctaneConfiguration.SharedSpaceId = sharedSpaceContext.SharedSpaceId;
+
+            User = GetWorkspaceUser();
         }
 
         [TestInitialize]
@@ -95,6 +103,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
         {
             ExposedClass.From(typeof(FieldsCache))._persistedFieldsCache = _persistedFieldsCache;
             ExposedClass.From(typeof(FieldsCache)).PersistFieldsMetadata();
+        }
+
+        private static WorkspaceUser GetWorkspaceUser()
+        {
+            QueryPhrase ownerQuery = new LogicalQueryPhrase("name", OctaneConfiguration.Username);
+            EntityListResult<WorkspaceUser> ownerQueryResult = EntityService.GetAsync<WorkspaceUser>(WorkspaceContext, new List<QueryPhrase> { ownerQuery }, null).Result;
+            var workspaceUser = ownerQueryResult.data.FirstOrDefault();
+            if (workspaceUser == null)
+                throw new Exception($"Unable to find a user with the name \"{OctaneConfiguration.Username}\"");
+            return workspaceUser;
         }
     }
 }
