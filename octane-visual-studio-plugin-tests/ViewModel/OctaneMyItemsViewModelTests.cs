@@ -41,6 +41,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void OctaneMyItemsViewModelTests_MyItems_AllSupportedEntityTypes_Success()
         {
             var story = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_OctaneMyItemsViewModelTests");
+            var defect = DefectUtilities.CreateDefect(EntityService, WorkspaceContext, "Defect_OctaneMyItemsViewModelTests");
             try
             {
                 var viewModel = new OctaneMyItemsViewModel();
