@@ -18,7 +18,7 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
     /// Value converter which convert int value to check if they are greater than another value (0 by default).

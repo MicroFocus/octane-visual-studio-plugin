@@ -6,6 +6,7 @@
              xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
              xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              xmlns:visualStudio="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
+             xmlns:common="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.Common"
              Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
@@ -130,7 +131,7 @@
 
             <DockPanel x:Name="ShowSearchResultsView">
                 <DockPanel.Resources>
-                    <visualStudio:GreaterThanValueConverter x:Key="GreaterThanValueConverter" />
+                    <common:GreaterThanValueConverter x:Key="GreaterThanValueConverter" />
                 </DockPanel.Resources>
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">

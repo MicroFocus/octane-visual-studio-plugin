@@ -23,6 +23,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
              xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
+             xmlns:common="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.Common"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -199,7 +200,7 @@
 
         <DockPanel>
             <DockPanel.Resources>
-                <local:GreaterThanValueConverter x:Key="GreaterThanValueConverter" />
+                <common:GreaterThanValueConverter x:Key="GreaterThanValueConverter" />
             </DockPanel.Resources>
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
