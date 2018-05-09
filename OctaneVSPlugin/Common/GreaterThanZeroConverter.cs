@@ -27,14 +27,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int compareTo = 0;
-            if (parameter is int)
-            {
-                compareTo = (int)parameter;
-            }
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
 
-            int intValue = System.Convert.ToInt32(value);
-            return intValue > compareTo;
+            return System.Convert.ToInt32(value) > 0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

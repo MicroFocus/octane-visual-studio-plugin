@@ -30,7 +30,43 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
 
         #region Convert
 
+        [TestMethod]
+        [ExpectedException(typeof(ArgumentNullException))]
+        public void GreaterThanValueConverterTests_Convert_NullValue_Throws()
+        {
+            _converter.Convert(null, null, null, null);
+        }
 
+        [TestMethod]
+        [ExpectedException(typeof(FormatException))]
+        public void GreaterThanValueConverterTests_Convert_ObjectValue_Throws()
+        {
+            _converter.Convert("test", null, null, null);
+        }
+
+        [TestMethod]
+        public void GreaterThanValueConverterTests_Convert_NumericStringValue_Success()
+        {
+            Assert.IsTrue((bool)_converter.Convert("123", null, null, null), "Invalid convert result");
+        }
+
+        [TestMethod]
+        public void GreaterThanValueConverterTests_Convert_GreaterValue_Success()
+        {
+            Assert.IsTrue((bool)_converter.Convert(4, null, null, null), "Invalid convert result");
+        }
+
+        [TestMethod]
+        public void GreaterThanValueConverterTests_Convert_ZeroValue_Success()
+        {
+            Assert.IsFalse((bool)_converter.Convert(0, null, null, null), "Invalid convert result");
+        }
+
+        [TestMethod]
+        public void GreaterThanValueConverterTests_Convert_SmallerValue_Success()
+        {
+            Assert.IsFalse((bool)_converter.Convert(-2, null, null, null), "Invalid convert result");
+        }
 
         #endregion
 
