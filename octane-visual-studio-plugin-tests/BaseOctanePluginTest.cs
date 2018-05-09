@@ -59,7 +59,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 
             RestConnector.Connect(OctaneConfiguration.Url, connectionInfo);
 
-
             var sharedSpaceId = int.Parse(ConfigurationManager.AppSettings["sharedSpaceId"]);
             var workspaceId = int.Parse(ConfigurationManager.AppSettings["workspaceId"]);
 

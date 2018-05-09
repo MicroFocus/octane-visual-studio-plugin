@@ -185,7 +185,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// <summary>
         /// Retrieve all the entities related to the current user
         /// </summary>
-        internal async void LoadMyItemsAsync()
+        internal async System.Threading.Tasks.Task LoadMyItemsAsync()
         {
             if (string.IsNullOrEmpty(OctaneConfiguration.Url))
             {

@@ -62,6 +62,7 @@
     <Compile Include="Utilities\TestGherkinUtilities.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="ViewModel\DetailedItemViewModelTests.cs" />
+    <Compile Include="ViewModel\OctaneMyItemsViewModelTests.cs" />
     <Compile Include="ViewModel\SearchItemsViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
