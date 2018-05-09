@@ -18,7 +18,6 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using Microsoft.VisualStudio.PlatformUI;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -100,14 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             UpdateSearchHistory();
 
-            // TODO Compute unique ID for search window
-            SearchToolWindow searchWindow = (SearchToolWindow)MainWindow.PluginPackage.FindToolWindow(typeof(SearchToolWindow), 100000, true);
-            if (searchWindow?.Frame == null)
-            {
-                throw new NotSupportedException("Cannot create search tool window");
-            }
-            IVsWindowFrame searchWindowFrame = (IVsWindowFrame)searchWindow.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(searchWindowFrame.Show());
+            var searchWindow = PluginWindowManager.ObtainSearchWindow(MainWindow.PluginPackage);
             searchWindow.Search(SearchFilter);
         }
 
