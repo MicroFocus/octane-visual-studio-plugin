@@ -15,8 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Services;
-using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -29,12 +27,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
     {
         private static Phase _phaseNew;
 
-        private static Phase GetPhaseNew(EntityService entityService, WorkspaceContext workspaceContext)
+        private static Phase GetPhaseNew()
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    WorkItem.SUBTYPE_FEATURE, "phase.feature.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_FEATURE, "phase.feature.new");
             }
 
             return _phaseNew;
@@ -43,17 +40,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// <summary>
         /// Create a new feature entity
         /// </summary>
-        public static Feature CreateFeature(EntityService entityService, WorkspaceContext workspaceContext, Epic parentEpic, string customName = null)
+        public static Feature CreateFeature(Epic parentEpic, string customName = null)
         {
             var featureName = customName ?? "Feature_" + Guid.NewGuid();
             var featureToCreate = new Feature
             {
                 Name = featureName,
-                Phase = GetPhaseNew(entityService, workspaceContext),
+                Phase = GetPhaseNew(),
                 Parent = parentEpic
             };
 
-            var createdFeature = entityService.Create(workspaceContext, featureToCreate, new[] { "name", "subtype" });
+            var createdFeature = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, featureToCreate, new[] { "name", "subtype" });
             Assert.AreEqual(featureName, createdFeature.Name, "Mismatched feature name");
 
             return createdFeature;

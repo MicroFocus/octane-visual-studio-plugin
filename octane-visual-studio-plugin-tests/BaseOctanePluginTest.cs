@@ -34,9 +34,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
         private dynamic _persistedFieldsCache;
 
         protected static RestConnector RestConnector = new RestConnector();
-        protected static EntityService EntityService = new EntityService(RestConnector);
+        public static EntityService EntityService = new EntityService(RestConnector);
 
-        protected static WorkspaceContext WorkspaceContext;
+        public static WorkspaceContext WorkspaceContext;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)

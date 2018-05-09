@@ -15,9 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
-using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -31,18 +29,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
     {
         private static Phase _phaseNew;
 
-        private static Phase GetPhaseNew(EntityService entityService, WorkspaceContext workspaceContext)
+        private static Phase GetPhaseNew()
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    WorkItem.SUBTYPE_DEFECT, "phase.defect.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_DEFECT, "phase.defect.new");
             }
 
             return _phaseNew;
         }
 
-        private static ListNode GetSeverityByName(EntityService entityService, WorkspaceContext workspaceContext, string name)
+        private static ListNode GetSeverityByName(string name)
         {
             var suffix = name.ToLower().Replace(" ", "_");
             var logicalName = "list_node.severity." + suffix;
@@ -53,7 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
 
             var fields = new List<string>() { BaseEntity.NAME_FIELD, BaseEntity.LOGICAL_NAME_FIELD };
 
-            var result = entityService.Get<ListNode>(workspaceContext, queryPhrases, fields);
+            var result = BaseOctanePluginTest.EntityService.Get<ListNode>(BaseOctanePluginTest.WorkspaceContext, queryPhrases, fields);
             Assert.AreEqual(1, result.total_count, $"There should only be one severity with the logical name \"{logicalName }\"");
             return result.data[0];
         }
@@ -61,18 +58,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// <summary>
         /// Create a new defect entity
         /// </summary>
-        public static Defect CreateDefect(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
+        public static Defect CreateDefect(string customName = null)
         {
             var name = customName ?? "Defect_" + Guid.NewGuid();
             var defect = new Defect
             {
                 Name = name,
-                Phase = GetPhaseNew(entityService, workspaceContext),
-                Severity = GetSeverityByName(entityService, workspaceContext, "High"),
-                Parent = Utility.GetWorkItemRoot(entityService, workspaceContext)
+                Phase = GetPhaseNew(),
+                Severity = GetSeverityByName("High"),
+                Parent = Utility.GetWorkItemRoot()
             };
 
-            var createdDefect = entityService.Create(workspaceContext, defect, new[] { Defect.NAME_FIELD, Defect.AUTHOR_FIELD });
+            var createdDefect = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, defect, new[] { Defect.NAME_FIELD, Defect.AUTHOR_FIELD });
             Assert.AreEqual(name, createdDefect.Name, "Mismatched defect name");
 
             return createdDefect;

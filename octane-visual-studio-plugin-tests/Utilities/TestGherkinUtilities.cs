@@ -15,8 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Services;
-using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -29,12 +27,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
     {
         private static Phase _phaseNew;
 
-        private static Phase GetPhaseNew(EntityService entityService, WorkspaceContext workspaceContext)
+        private static Phase GetPhaseNew()
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    TestGherkin.SUBTYPE_GHERKIN_TEST, "phase.gherkin_test.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(TestGherkin.SUBTYPE_GHERKIN_TEST, "phase.gherkin_test.new");
             }
 
             return _phaseNew;
@@ -43,16 +40,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// <summary>
         /// Create a new gherkin test entity
         /// </summary>
-        public static TestGherkin CreateGherkinTest(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
+        public static TestGherkin CreateGherkinTest(string customName = null)
         {
             var name = customName ?? "GherkinTest_" + Guid.NewGuid();
             var test = new TestGherkin
             {
                 Name = name,
-                Phase = GetPhaseNew(entityService, workspaceContext)
+                Phase = GetPhaseNew()
             };
 
-            var createdTest = entityService.Create(workspaceContext, test, new[] { "name", "subtype" });
+            var createdTest = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, test, new[] { "name", "subtype" });
             Assert.AreEqual(name, createdTest.Name, "Mismatched name for newly created gherkin test");
             Assert.IsTrue(!string.IsNullOrEmpty(createdTest.Id), "Gherking test id shouldn't be null or empty");
             return createdTest;

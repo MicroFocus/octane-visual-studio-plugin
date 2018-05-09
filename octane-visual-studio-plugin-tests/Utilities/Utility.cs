@@ -15,9 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
-using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -67,16 +65,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// <summary>
         /// Get phase object with the given logical name for the specified entity type
         /// </summary>
-        public static Phase GetPhaseForEntityByLogicalName(EntityService entityService, WorkspaceContext workspaceContext, string entityTypeName, string logicalName)
+        public static Phase GetPhaseForEntityByLogicalName(string entityTypeName, string logicalName)
         {
             var queryPhrases = new List<QueryPhrase>
             {
                 new LogicalQueryPhrase(Phase.ENTITY_FIELD, entityTypeName),
-                new LogicalQueryPhrase(Phase.LOGICAL_NAME_FIELD, logicalName)
+                new LogicalQueryPhrase(BaseEntity.LOGICAL_NAME_FIELD, logicalName)
             };
 
-            var result = entityService.Get<Phase>(workspaceContext, queryPhrases, null);
-            Assert.AreEqual(1, result.total_count, $"There should only be one phase with the logical name \"{logicalName }\" for type \"{entityService}\"");
+            var result = BaseOctanePluginTest.EntityService.Get<Phase>(BaseOctanePluginTest.WorkspaceContext, queryPhrases, null);
+            Assert.AreEqual(1, result.total_count, $"There should only be one phase with the logical name \"{logicalName }\" for type \"{entityTypeName}\"");
             return result.data[0];
         }
 
@@ -85,12 +83,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// <summary>
         /// Get the WorkItemRoot entity
         /// </summary>
-        public static WorkItemRoot GetWorkItemRoot(EntityService entityService, WorkspaceContext workspaceContext)
+        public static WorkItemRoot GetWorkItemRoot()
         {
             if (_workItemRoot == null)
             {
-                var fields = new List<String>() { Phase.NAME_FIELD };
-                var result = entityService.Get<WorkItemRoot>(workspaceContext, null, fields);
+                var fields = new List<string> { BaseEntity.NAME_FIELD };
+                var result = BaseOctanePluginTest.EntityService.Get<WorkItemRoot>(BaseOctanePluginTest.WorkspaceContext, null, fields);
                 Assert.AreEqual(1, result.total_count, "There should only be one WorkItemRoot entity");
                 _workItemRoot = result.data[0];
             }

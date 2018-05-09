@@ -37,7 +37,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
+            _story = StoryUtilities.CreateStory();
         }
 
         [ClassCleanup]
@@ -254,7 +254,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story);
             viewModel.Initialize().Wait();
 
-            var secondStory = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
+            var secondStory = StoryUtilities.CreateStory();
             try
             {
                 var secondViewModel = new DetailedItemViewModel(_story);

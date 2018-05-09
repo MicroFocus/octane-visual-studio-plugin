@@ -48,17 +48,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public static void ClassInit(TestContext context)
         {
             _guid = Guid.NewGuid();
-            _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_" + _guid);
-            _epic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic_" + _guid);
-            _gherkinTest = TestGherkinUtilities.CreateGherkinTest(EntityService, WorkspaceContext, "TestGherkin_" + _guid);
+            _story = StoryUtilities.CreateStory("Story_" + _guid);
+            _epic = EpicUtilities.CreateEpic("Epic_" + _guid);
+            _gherkinTest = TestGherkinUtilities.CreateGherkinTest("TestGherkin_" + _guid);
 
-            _storyQuote = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_\"_SingleQuote");
-            _storyDoubleQuote = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_\"\"_DoubleQuote");
+            _storyQuote = StoryUtilities.CreateStory("Story_\"_SingleQuote");
+            _storyDoubleQuote = StoryUtilities.CreateStory("Story_\"\"_DoubleQuote");
 
             _refreshGuid = Guid.NewGuid();
-            _refreshStory = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_" + _refreshGuid);
-            _refreshEpic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic_" + _refreshGuid);
-            _refreshGherkinTest = TestGherkinUtilities.CreateGherkinTest(EntityService, WorkspaceContext, "TestGherkin_" + _refreshGuid);
+            _refreshStory = StoryUtilities.CreateStory("Story_" + _refreshGuid);
+            _refreshEpic = EpicUtilities.CreateEpic("Epic_" + _refreshGuid);
+            _refreshGherkinTest = TestGherkinUtilities.CreateGherkinTest("TestGherkin_" + _refreshGuid);
         }
 
         [ClassCleanup]
@@ -138,7 +138,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new SearchItemsViewModel(_refreshGuid.ToString());
             ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id });
 
-            var newEpic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic2_" + _refreshGuid);
+            var newEpic = EpicUtilities.CreateEpic("Epic2_" + _refreshGuid);
 
             viewModel.RefreshCommand.Execute(null);
             ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id, newEpic.Id });
