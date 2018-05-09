@@ -23,9 +23,9 @@ using System;
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
 {
     /// <summary>
-    /// Utility class for managing <see cref="Epic"/> entities
+    /// Utility class for managing <see cref="Feature"/> entities
     /// </summary>
-    public static class EpicUtilities
+    public static class FeatureUtilities
     {
         private static Phase _phaseNew;
 
@@ -34,29 +34,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
             if (_phaseNew == null)
             {
                 _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    WorkItem.SUBTYPE_EPIC, "phase.epic.new");
+                    WorkItem.SUBTYPE_FEATURE, "phase.feature.new");
             }
 
             return _phaseNew;
         }
 
         /// <summary>
-        /// Create a new epic entity
+        /// Create a new feature entity
         /// </summary>
-        public static Epic CreateEpic(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
+        public static Feature CreateFeature(EntityService entityService, WorkspaceContext workspaceContext, Epic parentEpic, string customName = null)
         {
-            var epicName = customName ?? "Epic_" + Guid.NewGuid();
-            var epicToCreate = new Epic
+            var featureName = customName ?? "Feature_" + Guid.NewGuid();
+            var featureToCreate = new Feature
             {
-                Name = epicName,
+                Name = featureName,
                 Phase = GetPhaseNew(entityService, workspaceContext),
-                Parent = Utility.GetWorkItemRoot(entityService, workspaceContext)
+                Parent = parentEpic
             };
 
-            var createdEpic = entityService.Create(workspaceContext, epicToCreate, new[] { "name", "subtype" });
-            Assert.AreEqual(epicName, createdEpic.Name, "Mismatched epic name");
+            var createdFeature = entityService.Create(workspaceContext, featureToCreate, new[] { "name", "subtype" });
+            Assert.AreEqual(featureName, createdFeature.Name, "Mismatched feature name");
 
-            return createdEpic;
+            return createdFeature;
         }
     }
 }

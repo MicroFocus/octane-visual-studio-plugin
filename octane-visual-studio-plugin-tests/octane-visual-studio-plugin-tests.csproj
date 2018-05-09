@@ -58,6 +58,7 @@
     <Compile Include="Utilities\ExposedClass.cs" />
     <Compile Include="Utilities\ExposedObject.cs" />
     <Compile Include="Utilities\ExposedObjectHelper.cs" />
+    <Compile Include="Utilities\FeatureUtilities.cs" />
     <Compile Include="Utilities\StoryUtilities.cs" />
     <Compile Include="Utilities\TestGherkinUtilities.cs" />
     <Compile Include="Utilities\Utility.cs" />
