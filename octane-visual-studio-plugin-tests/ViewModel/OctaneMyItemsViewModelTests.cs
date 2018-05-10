@@ -18,7 +18,6 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -42,13 +41,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void OctaneMyItemsViewModelTests_MyItems_AllSupportedEntityTypes_Success()
         {
-            var guid = Guid.NewGuid();
-            var story = StoryUtilities.CreateStory("Story_OctaneMyItemsViewModelTests_" + guid);
-            var defect = DefectUtilities.CreateDefect("Defect_OctaneMyItemsViewModelTests_" + guid);
+            var story = StoryUtilities.CreateStory();
+            var qualityStory = QualityStoryUtilities.CreateQualityStory();
+            var defect = DefectUtilities.CreateDefect();
 
-            var gherkinTest = TestGherkinUtilities.CreateGherkinTest("GherkinTest_OctaneMyItemsViewModelTests_" + guid);
+            var gherkinTest = TestGherkinUtilities.CreateGherkinTest();
 
-            var expectedItems = new List<BaseEntity> { story, defect, gherkinTest };
+            var expectedItems = new List<BaseEntity> { story, qualityStory, defect, gherkinTest };
             try
             {
                 var viewModel = new OctaneMyItemsViewModel();
@@ -65,6 +64,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             finally
             {
                 EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
+                EntityService.DeleteById<QualityStory>(WorkspaceContext, qualityStory.Id);
                 EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
 
                 EntityService.DeleteById<TestGherkin>(WorkspaceContext, gherkinTest.Id);
@@ -74,9 +74,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void OctaneMyItemsViewModelTests_MyItems_NotSupportedEntityTypes_Success()
         {
-            var guid = Guid.NewGuid();
-            var epic = EpicUtilities.CreateEpic("Epic_OctaneMyItemsViewModelTests_" + guid);
-            var feature = FeatureUtilities.CreateFeature(epic, "Feature_OctaneMyItemsViewModelTests_" + guid);
+            var epic = EpicUtilities.CreateEpic();
+            var feature = FeatureUtilities.CreateFeature(epic);
 
             var expectedItems = new List<BaseEntity> { epic, feature };
             try
