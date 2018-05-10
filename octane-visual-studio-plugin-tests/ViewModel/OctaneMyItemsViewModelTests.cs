@@ -48,8 +48,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var task = TaskUtilities.CreateTask(story);
 
             var gherkinTest = TestGherkinUtilities.CreateGherkinTest();
+            var manualTest = TestManualUtilities.CreateManualTest();
 
-            var expectedItems = new List<BaseEntity> { story, qualityStory, task, defect, gherkinTest };
+            var expectedItems = new List<BaseEntity> { story, qualityStory, task, defect, gherkinTest, manualTest };
             try
             {
                 var viewModel = new OctaneMyItemsViewModel();
@@ -72,6 +73,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
 
                 EntityService.DeleteById<TestGherkin>(WorkspaceContext, gherkinTest.Id);
+                EntityService.DeleteById<TestManual>(WorkspaceContext, manualTest.Id);
             }
         }
 

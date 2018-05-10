@@ -22,7 +22,7 @@ using System;
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
 {
     /// <summary>
-    /// Utility class for managing <see cref="Story"/>
+    /// Utility class for managing <see cref="Task"/>
     /// </summary>
     public static class TaskUtilities
     {

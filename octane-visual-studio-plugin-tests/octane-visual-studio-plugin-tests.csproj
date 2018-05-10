@@ -57,6 +57,7 @@
     <Compile Include="Utilities\Entity\DefectUtilities.cs" />
     <Compile Include="Utilities\Entity\EpicUtilities.cs" />
     <Compile Include="Utilities\Entity\TaskUtilities.cs" />
+    <Compile Include="Utilities\Entity\TestManualUtilities.cs" />
     <Compile Include="Utilities\ExposedClass.cs" />
     <Compile Include="Utilities\ExposedObject.cs" />
     <Compile Include="Utilities\ExposedObjectHelper.cs" />
