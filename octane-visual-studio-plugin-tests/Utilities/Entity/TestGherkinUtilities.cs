@@ -19,7 +19,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
+namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
 {
     /// <summary>
     /// Utility class for managing <see cref="TestGherkin"/> entities

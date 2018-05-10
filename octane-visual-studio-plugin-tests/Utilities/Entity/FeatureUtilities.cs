@@ -19,12 +19,12 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
+namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
 {
     /// <summary>
-    /// Utility class for managing <see cref="Story"/>
+    /// Utility class for managing <see cref="Feature"/> entities
     /// </summary>
-    public static class StoryUtilities
+    public static class FeatureUtilities
     {
         private static Phase _phaseNew;
 
@@ -32,30 +32,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_STORY, "phase.story.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_FEATURE, "phase.feature.new");
             }
 
             return _phaseNew;
         }
 
         /// <summary>
-        /// Create a new user story entity
+        /// Create a new feature entity
         /// </summary>
-        public static Story CreateStory(string customName = null)
+        public static Feature CreateFeature(Epic parentEpic, string customName = null)
         {
-            var name = customName ?? "Story_" + Guid.NewGuid();
-            var story = new Story
+            var featureName = customName ?? "Feature_" + Guid.NewGuid();
+            var featureToCreate = new Feature
             {
-                Name = name,
+                Name = featureName,
                 Phase = GetPhaseNew(),
-                Parent = Utility.GetWorkItemRoot()
+                Parent = parentEpic
             };
-            story.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
+            featureToCreate.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
-            var createdStory = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, story, new[] { "name", "subtype" });
-            Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");
-            Assert.IsFalse(string.IsNullOrEmpty(createdStory.Id), "Newly created story should have a valid ID");
-            return createdStory;
+            var createdFeature = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, featureToCreate, new[] { "name", "subtype" });
+            Assert.AreEqual(featureName, createdFeature.Name, "Mismatched feature name");
+
+            return createdFeature;
         }
     }
 }

@@ -19,12 +19,12 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
+namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
 {
     /// <summary>
-    /// Utility class for managing <see cref="Epic"/> entities
+    /// Utility class for managing <see cref="Story"/>
     /// </summary>
-    public static class EpicUtilities
+    public static class StoryUtilities
     {
         private static Phase _phaseNew;
 
@@ -32,30 +32,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_EPIC, "phase.epic.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_STORY, "phase.story.new");
             }
 
             return _phaseNew;
         }
 
         /// <summary>
-        /// Create a new epic entity
+        /// Create a new user story entity
         /// </summary>
-        public static Epic CreateEpic(string customName = null)
+        public static Story CreateStory(string customName = null)
         {
-            var epicName = customName ?? "Epic_" + Guid.NewGuid();
-            var epicToCreate = new Epic
+            var name = customName ?? "Story_" + Guid.NewGuid();
+            var story = new Story
             {
-                Name = epicName,
+                Name = name,
                 Phase = GetPhaseNew(),
                 Parent = Utility.GetWorkItemRoot()
             };
-            epicToCreate.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
+            story.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
-            var createdEpic = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, epicToCreate, new[] { "name", "subtype" });
-            Assert.AreEqual(epicName, createdEpic.Name, "Mismatched epic name");
-
-            return createdEpic;
+            var createdStory = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, story, new[] { "name", "subtype" });
+            Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");
+            Assert.IsFalse(string.IsNullOrEmpty(createdStory.Id), "Newly created story should have a valid ID");
+            return createdStory;
         }
     }
 }

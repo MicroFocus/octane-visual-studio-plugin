@@ -19,12 +19,12 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
+namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
 {
     /// <summary>
-    /// Utility class for managing <see cref="Feature"/> entities
+    /// Utility class for managing <see cref="Epic"/> entities
     /// </summary>
-    public static class FeatureUtilities
+    public static class EpicUtilities
     {
         private static Phase _phaseNew;
 
@@ -32,30 +32,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_FEATURE, "phase.feature.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_EPIC, "phase.epic.new");
             }
 
             return _phaseNew;
         }
 
         /// <summary>
-        /// Create a new feature entity
+        /// Create a new epic entity
         /// </summary>
-        public static Feature CreateFeature(Epic parentEpic, string customName = null)
+        public static Epic CreateEpic(string customName = null)
         {
-            var featureName = customName ?? "Feature_" + Guid.NewGuid();
-            var featureToCreate = new Feature
+            var epicName = customName ?? "Epic_" + Guid.NewGuid();
+            var epicToCreate = new Epic
             {
-                Name = featureName,
+                Name = epicName,
                 Phase = GetPhaseNew(),
-                Parent = parentEpic
+                Parent = Utility.GetWorkItemRoot()
             };
-            featureToCreate.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
+            epicToCreate.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
-            var createdFeature = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, featureToCreate, new[] { "name", "subtype" });
-            Assert.AreEqual(featureName, createdFeature.Name, "Mismatched feature name");
+            var createdEpic = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, epicToCreate, new[] { "name", "subtype" });
+            Assert.AreEqual(epicName, createdEpic.Name, "Mismatched epic name");
 
-            return createdFeature;
+            return createdEpic;
         }
     }
 }
