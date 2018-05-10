@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -49,6 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
                 Phase = GetPhaseNew(),
                 Parent = Utility.GetWorkItemRoot()
             };
+            epicToCreate.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
             var createdEpic = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, epicToCreate, new[] { "name", "subtype" });
             Assert.AreEqual(epicName, createdEpic.Name, "Mismatched epic name");

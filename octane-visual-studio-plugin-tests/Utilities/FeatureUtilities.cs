@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -49,6 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
                 Phase = GetPhaseNew(),
                 Parent = parentEpic
             };
+            featureToCreate.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
             var createdFeature = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, featureToCreate, new[] { "name", "subtype" });
             Assert.AreEqual(featureName, createdFeature.Name, "Mismatched feature name");

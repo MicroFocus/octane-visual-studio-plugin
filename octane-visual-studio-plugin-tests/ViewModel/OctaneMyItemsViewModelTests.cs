@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -41,17 +42,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void OctaneMyItemsViewModelTests_MyItems_AllSupportedEntityTypes_Success()
         {
-            var story = StoryUtilities.CreateStory("Story_OctaneMyItemsViewModelTests");
-            var defect = DefectUtilities.CreateDefect("Defect_OctaneMyItemsViewModelTests");
+            var guid = Guid.NewGuid();
+            var story = StoryUtilities.CreateStory("Story_OctaneMyItemsViewModelTests_" + guid);
+            var defect = DefectUtilities.CreateDefect("Defect_OctaneMyItemsViewModelTests_" + guid);
+
+            var gherkinTest = TestGherkinUtilities.CreateGherkinTest("GherkinTest_OctaneMyItemsViewModelTests_" + guid);
+
+            var expectedItems = new List<BaseEntity> { story, defect, gherkinTest };
             try
             {
                 var viewModel = new OctaneMyItemsViewModel();
                 viewModel.LoadMyItemsAsync().Wait();
 
                 var myItems = viewModel.MyItems.ToList();
-                Assert.IsTrue(myItems.Count >= 2, "Mismatched MyItems count");
+                Assert.IsTrue(myItems.Count >= expectedItems.Count, "Mismatched MyItems count");
 
-                var expectedItems = new List<BaseEntity> { story, defect };
                 foreach (var item in expectedItems)
                 {
                     Assert.AreEqual(1, myItems.Count(i => i.ID == item.Id), $"Couldn't find entity {item.Name}");
@@ -61,6 +66,34 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             {
                 EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
                 EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
+
+                EntityService.DeleteById<TestGherkin>(WorkspaceContext, gherkinTest.Id);
+            }
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_NotSupportedEntityTypes_Success()
+        {
+            var guid = Guid.NewGuid();
+            var epic = EpicUtilities.CreateEpic("Epic_OctaneMyItemsViewModelTests_" + guid);
+            var feature = FeatureUtilities.CreateFeature(epic, "Feature_OctaneMyItemsViewModelTests_" + guid);
+
+            var expectedItems = new List<BaseEntity> { epic, feature };
+            try
+            {
+                var viewModel = new OctaneMyItemsViewModel();
+                viewModel.LoadMyItemsAsync().Wait();
+
+                var myItems = viewModel.MyItems.ToList();
+                foreach (var item in expectedItems)
+                {
+                    Assert.AreEqual(0, myItems.Count(i => i.ID == item.Id), $"Found unsupported entity {item.Name}");
+                }
+            }
+            finally
+            {
+                EntityService.DeleteById<Epic>(WorkspaceContext, epic.Id);
+                EntityService.DeleteById<Feature>(WorkspaceContext, feature.Id);
             }
         }
     }

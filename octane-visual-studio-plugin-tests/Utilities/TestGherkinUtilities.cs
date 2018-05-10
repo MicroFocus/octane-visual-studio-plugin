@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
@@ -48,6 +49,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
                 Name = name,
                 Phase = GetPhaseNew()
             };
+            test.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
             var createdTest = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, test, new[] { "name", "subtype" });
             Assert.AreEqual(name, createdTest.Name, "Mismatched name for newly created gherkin test");
