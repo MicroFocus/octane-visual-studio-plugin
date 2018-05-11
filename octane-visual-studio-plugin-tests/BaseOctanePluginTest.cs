@@ -21,6 +21,7 @@ using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
+using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -43,6 +44,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
         public static WorkspaceContext WorkspaceContext;
 
         public static WorkspaceUser User;
+
+        public static Release CurrentRelease;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
@@ -75,6 +78,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
             OctaneConfiguration.SharedSpaceId = sharedSpaceContext.SharedSpaceId;
 
             User = GetWorkspaceUser();
+
+            CurrentRelease = ReleaseUtilities.CreateRelease();
+        }
+
+        [AssemblyCleanup]
+        public static void AssemblyCleanup()
+        {
+            EntityService.DeleteById<Release>(WorkspaceContext, CurrentRelease.Id);
         }
 
         [TestInitialize]
