@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
@@ -128,6 +129,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private struct WindowInfo
         {
             public int WindowId { get; }

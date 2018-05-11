@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
@@ -21,6 +22,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// <summary>
     /// Interaction logic for SearchItemControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class SearchItemControl : UserControl
     {
         public SearchItemControl()

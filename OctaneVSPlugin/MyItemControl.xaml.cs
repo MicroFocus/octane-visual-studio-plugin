@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -21,6 +22,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// <summary>
     /// Interaction logic for MyItemControl.xaml
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class MyItemControl : UserControl
     {
         public MyItemControl()

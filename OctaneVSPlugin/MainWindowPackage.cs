@@ -51,6 +51,7 @@ namespace octane_visual_studio_plugin
     [ProvideOptionPage(typeof(OptionsPage), "ALM Octane", "Server Details", 0, 0, true)]
     [SuppressMessage("StyleCop.CSharp.DocumentationRules", "SA1650:ElementDocumentationMustBeSpelledCorrectly", Justification = "pkgdef, VS and vsixmanifest are valid VS terms")]
     [ProvideAutoLoad(UIContextGuids.SolutionExists, PackageAutoLoadFlags.SkipWhenUIContextRulesActive)]
+    [ExcludeFromCodeCoverage]
     public sealed class MainWindowPackage : Package
     {
         /// <summary>

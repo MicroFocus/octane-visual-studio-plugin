@@ -19,6 +19,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
@@ -35,6 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// </para>
     /// </remarks>
     [Guid("d19915c9-3dea-4d5c-aa56-bd1fed3a7ab3")]
+    [ExcludeFromCodeCoverage]
     public class DetailsToolWindow : ToolWindowPane
     {
         private readonly OctaneToolWindowControl detailsControl;
