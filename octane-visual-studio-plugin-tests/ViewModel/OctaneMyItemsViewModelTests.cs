@@ -15,9 +15,11 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -105,5 +107,72 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 EntityService.DeleteById<Feature>(WorkspaceContext, feature.Id);
             }
         }
+
+        #region Refresh
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_Refresh_ItemAdded_Success()
+        {
+            var defect = DefectUtilities.CreateDefect();
+            Defect newDefect = null;
+            try
+            {
+                var viewModel = new OctaneMyItemsViewModel();
+                viewModel.LoadMyItemsAsync().Wait();
+
+                var myItems = viewModel.MyItems.ToList();
+                Assert.AreEqual(1, myItems.Count(item => item.ID == defect.Id), $"Couldn't find entity {defect.Name}");
+
+                newDefect = DefectUtilities.CreateDefect();
+
+                viewModel.RefreshCommand.Execute(null);
+
+                Utility.WaitUntil(() => viewModel.Mode == MainWindowMode.ItemsLoaded,
+                    "Timeout waiting for Refresh to finish", new TimeSpan(0, 0, 30));
+
+                myItems = viewModel.MyItems.ToList();
+                Assert.AreEqual(1, myItems.Count(item => item.ID == defect.Id), $"Couldn't find entity {defect.Name} after refresh");
+                Assert.AreEqual(1, myItems.Count(item => item.ID == newDefect.Id), $"Couldn't find entity {newDefect.Name} after refresh");
+            }
+            finally
+            {
+                EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
+                if (newDefect != null)
+                    EntityService.DeleteById<Defect>(WorkspaceContext, newDefect.Id);
+            }
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_Refresh_ItemRemoved_Success()
+        {
+            var defect = DefectUtilities.CreateDefect();
+            bool removed = false;
+            try
+            {
+                var viewModel = new OctaneMyItemsViewModel();
+                viewModel.LoadMyItemsAsync().Wait();
+
+                var myItems = viewModel.MyItems.ToList();
+                Assert.AreEqual(1, myItems.Count(item => item.ID == defect.Id), $"Couldn't find entity {defect.Name}");
+
+                EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
+                removed = true;
+
+                viewModel.RefreshCommand.Execute(null);
+
+                Utility.WaitUntil(() => viewModel.Mode == MainWindowMode.ItemsLoaded,
+                    "Timeout waiting for Refresh to finish", new TimeSpan(0, 0, 30));
+
+                myItems = viewModel.MyItems.ToList();
+                Assert.AreEqual(0, myItems.Count(item => item.ID == defect.Id), $"Found previously deleted entity {defect.Name} after refresh");
+            }
+            finally
+            {
+                if (!removed)
+                    EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
+            }
+        }
+
+        #endregion
     }
 }
