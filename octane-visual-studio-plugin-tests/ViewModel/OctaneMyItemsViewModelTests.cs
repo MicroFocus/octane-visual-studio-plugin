@@ -20,7 +20,6 @@ using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
@@ -40,79 +39,116 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             Assert.AreEqual(0, viewModel.MyItems.Count(), "Mismatched MyItems count");
         }
 
+        #region MyItems
+
         [TestMethod]
-        public void OctaneMyItemsViewModelTests_MyItems_AllSupportedEntityTypes_Success()
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_Story_Success()
+        {
+            ValidateType(StoryUtilities.CreateStory(), 1);
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_Task_Success()
         {
             var story = StoryUtilities.CreateStory();
-            var qualityStory = QualityStoryUtilities.CreateQualityStory();
-            var defect = DefectUtilities.CreateDefect();
-
-            var task = TaskUtilities.CreateTask(story);
-
-            var gherkinTest = TestGherkinUtilities.CreateGherkinTest();
-            var manualTest = TestManualUtilities.CreateManualTest();
-
-            var manualRun = RunManualUtilities.CreateManualRun(manualTest);
-
-            var testSuite = TestSuiteUtilities.CreateTestSuite();
-            var suiteRun = RunSuiteUtilities.CreateSuiteRun(testSuite);
-
-            var expectedItems = new List<BaseEntity> { story, qualityStory, task, defect, gherkinTest, manualTest, manualRun, suiteRun };
             try
             {
-                var viewModel = new OctaneMyItemsViewModel();
-                viewModel.LoadMyItemsAsync().Wait();
-
-                var myItems = viewModel.MyItems.ToList();
-                Assert.IsTrue(myItems.Count >= expectedItems.Count, "Mismatched MyItems count");
-
-                foreach (var item in expectedItems)
-                {
-                    Assert.AreEqual(1, myItems.Count(i => i.ID == item.Id), $"Couldn't find entity {item.Name}");
-                }
+                ValidateType(TaskUtilities.CreateTask(story), 1);
             }
             finally
             {
-                EntityService.DeleteById<Task>(WorkspaceContext, task.Id);
-
                 EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
-                EntityService.DeleteById<QualityStory>(WorkspaceContext, qualityStory.Id);
-                EntityService.DeleteById<Defect>(WorkspaceContext, defect.Id);
+            }
+        }
 
-                EntityService.DeleteById<RunManual>(WorkspaceContext, manualRun.Id);
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_QualityStory_Success()
+        {
+            ValidateType(QualityStoryUtilities.CreateQualityStory(), 1);
+        }
 
-                EntityService.DeleteById<TestGherkin>(WorkspaceContext, gherkinTest.Id);
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_Defect_Success()
+        {
+            ValidateType(DefectUtilities.CreateDefect(), 1);
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_GherkinTest_Success()
+        {
+            ValidateType(TestGherkinUtilities.CreateGherkinTest(), 1);
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_ManualTest_Success()
+        {
+            ValidateType(TestManualUtilities.CreateManualTest(), 1);
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_ManualRun_Success()
+        {
+            var manualTest = TestManualUtilities.CreateManualTest();
+            try
+            {
+                ValidateType(RunManualUtilities.CreateManualRun(manualTest), 1);
+            }
+            finally
+            {
                 EntityService.DeleteById<TestManual>(WorkspaceContext, manualTest.Id);
+            }
+        }
 
-                EntityService.DeleteById<RunSuite>(WorkspaceContext, suiteRun.Id);
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_Supported_SuiteRun_Success()
+        {
+            var testSuite = TestSuiteUtilities.CreateTestSuite();
+            try
+            {
+                ValidateType(RunSuiteUtilities.CreateSuiteRun(testSuite), 1);
+            }
+            finally
+            {
                 EntityService.DeleteById<TestSuite>(WorkspaceContext, testSuite.Id);
             }
         }
 
         [TestMethod]
-        public void OctaneMyItemsViewModelTests_MyItems_NotSupportedEntityTypes_Success()
+        public void OctaneMyItemsViewModelTests_MyItems_NotSupported_Epic_Success()
+        {
+            ValidateType(EpicUtilities.CreateEpic(), 0);
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_MyItems_NotSupported_Feature_Success()
         {
             var epic = EpicUtilities.CreateEpic();
-            var feature = FeatureUtilities.CreateFeature(epic);
+            try
+            {
+                ValidateType(FeatureUtilities.CreateFeature(epic), 0);
+            }
+            finally
+            {
+                EntityService.DeleteById<Epic>(WorkspaceContext, epic.Id);
+            }
+        }
 
-            var expectedItems = new List<BaseEntity> { epic, feature };
+        private void ValidateType<T>(T entity, int expectedCount) where T : BaseEntity
+        {
             try
             {
                 var viewModel = new OctaneMyItemsViewModel();
                 viewModel.LoadMyItemsAsync().Wait();
 
-                var myItems = viewModel.MyItems.ToList();
-                foreach (var item in expectedItems)
-                {
-                    Assert.AreEqual(0, myItems.Count(i => i.ID == item.Id), $"Found unsupported entity {item.Name}");
-                }
+                Assert.AreEqual(expectedCount, viewModel.MyItems.Count(i => i.ID == entity.Id), $"Couldn't find entity {entity.Name}");
             }
             finally
             {
-                EntityService.DeleteById<Epic>(WorkspaceContext, epic.Id);
-                EntityService.DeleteById<Feature>(WorkspaceContext, feature.Id);
+                EntityService.DeleteById<T>(WorkspaceContext, entity.Id);
             }
         }
+
+        #endregion
 
         #region Refresh
 
