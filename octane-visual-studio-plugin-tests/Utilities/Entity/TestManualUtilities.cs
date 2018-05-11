@@ -43,7 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
         /// </summary>
         public static TestManual CreateManualTest(string customName = null)
         {
-            var name = customName ?? "GherkinTest_" + Guid.NewGuid();
+            var name = customName ?? "ManualTest_" + Guid.NewGuid();
             var test = new TestManual()
             {
                 Name = name,
