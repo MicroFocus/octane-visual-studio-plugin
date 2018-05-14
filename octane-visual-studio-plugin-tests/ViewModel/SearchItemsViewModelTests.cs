@@ -96,6 +96,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         }
 
         [TestMethod]
+        public void SearchItemsViewModelTests_Search_EmptySpace_NoSearchResults()
+        {
+            var viewModel = new SearchItemsViewModel(" ");
+            viewModel.SearchAsync().Wait();
+
+            Assert.AreEqual(0, viewModel.SearchItems.Count(), "Searching for empty string should return nothing.");
+        }
+
+        [TestMethod]
         public void SearchItemsViewModelTests_Search_QuoteFilter_Success()
         {
             var viewModel = new SearchItemsViewModel("_\"_");

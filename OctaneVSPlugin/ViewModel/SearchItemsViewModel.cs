@@ -44,6 +44,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 throw new ArgumentNullException(nameof(searchFilter));
             }
 
+            _searchFilter = searchFilter.Trim();
+
             _searchFilter = Uri.EscapeDataString(HttpUtility.JavaScriptStringEncode(searchFilter));
 
             RefreshCommand = new DelegatedCommand(Refresh);

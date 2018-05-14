@@ -94,8 +94,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void SearchInternal(object parameter)
         {
-            if (string.IsNullOrEmpty(SearchFilter))
+            if (string.IsNullOrEmpty(SearchFilter) || string.IsNullOrEmpty(SearchFilter.Trim()))
                 return;
+
+            SearchFilter = SearchFilter.Trim();
 
             UpdateSearchHistory();
 

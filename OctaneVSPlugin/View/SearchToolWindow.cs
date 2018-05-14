@@ -55,6 +55,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         internal void Search(string searchFilter)
         {
+            if (string.IsNullOrEmpty(searchFilter) || string.IsNullOrEmpty(searchFilter.Trim()))
+            {
+                Caption = "\"\"";
+                return;
+            }
+
+            searchFilter = searchFilter.Trim();
+
             Caption = $"\"{searchFilter}\"";
             if (searchFilter.Length > 20)
                 Caption = $"\"{searchFilter.Substring(0, 20)}...\"";
