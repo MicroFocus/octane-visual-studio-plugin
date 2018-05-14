@@ -104,7 +104,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         internal void LoadEntity(BaseEntity entity)
         {
             var viewModel = new DetailedItemViewModel(entity);
-            viewModel.Initialize();
+            viewModel.InitializeAsync();
 
             var entityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(viewModel.Entity);
             Caption = $"{entityTypeInformation?.ShortLabel} {viewModel.ID}";

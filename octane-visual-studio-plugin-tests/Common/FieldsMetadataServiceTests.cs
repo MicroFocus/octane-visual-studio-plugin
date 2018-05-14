@@ -59,7 +59,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
         public void FieldsMetadataServiceTests_GetFormattedValue_EntityInCache_ReturnsMetadata()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var metadata = FieldsMetadataService.GetFieldMetadata(viewModel.Entity).Result;
             Assert.IsTrue(metadata.Count > 0, "Cache should contain field metadata");

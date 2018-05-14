@@ -73,7 +73,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_RefreshCommand_RefreshWithoutAnyChanges_Success()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var expectedVisibleFields = viewModel.VisibleFields.Select(f => f.Name).ToList();
 
@@ -91,7 +91,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_RefreshCommand_RefreshAfterChangingVisibleFields_Succes()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             foreach (var field in viewModel.FilteredEntityFields)
             {
@@ -119,7 +119,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_Filter_NullFilter_ReturnAllFields()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var expectedFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
 
@@ -134,7 +134,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_Filter_EmptyFilter_ReturnAllFields()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var expectedFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Name).ToList();
 
@@ -149,7 +149,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_Filter_FilterDoesntMatchAnyItem_ReturnEmptyList()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             viewModel.Filter = "FilterDoesntMatchAnyItem";
 
@@ -163,7 +163,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_Filter_FilterPartialMatch_ReturnMatchList()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var expectedFilteredFields = new List<string> { "Blocked reason", "Creation time", "Feature", "Release", "Team" };
             viewModel.Filter = "ea";
@@ -188,7 +188,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_Filter_FilterIgnoreCase_ReturnMatchList()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var expectedFilteredFields = new List<string> { "Creation time", "Feature", };
             viewModel.Filter = "EaT";
@@ -205,7 +205,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_VisibleFields_ShowHideFields_ShowSelectedFields()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             ChangeFieldVisibility(viewModel, "Release", false);
             ChangeFieldVisibility(viewModel, "Committers", true);
@@ -219,7 +219,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_VisibleFields_ShowAllFields_ShowSelectedFields()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             foreach (var field in viewModel.FilteredEntityFields)
             {
@@ -236,7 +236,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_VisibleFields_HideAllFields_ShowSelectedFields()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             foreach (var field in viewModel.FilteredEntityFields)
             {
@@ -253,13 +253,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_VisibleFields_MultipleEntitiesOfSameTime_ChangesAreReflectedInAllEntities()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var secondStory = StoryUtilities.CreateStory();
             try
             {
                 var secondViewModel = new DetailedItemViewModel(_story);
-                secondViewModel.Initialize().Wait();
+                secondViewModel.InitializeAsync().Wait();
 
                 ChangeFieldVisibility(viewModel, "Release", false);
                 ChangeFieldVisibility(viewModel, "Committers", true);
@@ -293,7 +293,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         private void ValidateResetCommand(bool allFieldsVisible)
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "Only default fields should be visible when detailed item is initialized");
 
@@ -325,7 +325,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void DetailedItemViewModelTests_OnlyDefaultFieldsAreShown_ToggleShowingOnlyDefaultFields_True()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             Assert.IsTrue(viewModel.OnlyDefaultFieldsAreShown, "Only default fields should be visible when detailed item is initialized");
 
@@ -349,6 +349,42 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var field = viewModel.FilteredEntityFields.FirstOrDefault(f => f.Label == fieldLabel);
             field.IsSelected = visibility;
             viewModel.ToggleEntityFieldVisibilityCommand.Execute(null);
+        }
+
+        #region CommentSectionVisibility
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_CommentSectionVisibility_ToggleCommentSectionCommand_Success()
+        {
+            var viewModel = new DetailedItemViewModel(_story);
+            Assert.IsFalse(viewModel.CommentSectionVisibility, "Default value for CommentSectionVisibility should be false");
+            Assert.AreEqual(DetailedItemViewModel.ShowCommentsTooltip, viewModel.ShowCommentTooltip, "Mismatched default ShowCommentTooltip");
+
+            viewModel.ToggleCommentSectionCommand.Execute(null);
+            Assert.IsTrue(viewModel.CommentSectionVisibility, "Executing ToggleCommentSectionCommand should change CommentSectionVisibility to true");
+            Assert.AreEqual(DetailedItemViewModel.HideCommentsTooltip, viewModel.ShowCommentTooltip, "Mismatched ShowCommentTooltip after executing ToggleCommentSectionCommand");
+
+            viewModel.ToggleCommentSectionCommand.Execute(null);
+            Assert.IsFalse(viewModel.CommentSectionVisibility, "Executing ToggleCommentSectionCommand again should change CommentSectionVisibility to false");
+            Assert.AreEqual(DetailedItemViewModel.ShowCommentsTooltip, viewModel.ShowCommentTooltip, "Mismatched ShowCommentTooltip after executing ToggleCommentSectionCommand again");
+        }
+
+        #endregion
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_VariousProperties_BeforeAndAfterInitialize_Success()
+        {
+            var viewModel = new DetailedItemViewModel(_story);
+            Assert.AreEqual(WindowMode.Loading, viewModel.Mode, "Mismatched initial mode");
+            Assert.AreEqual(string.Empty, viewModel.Phase, "Mismatched initial phase");
+
+            viewModel.InitializeAsync().Wait();
+            Assert.AreEqual(WindowMode.Loaded, viewModel.Mode, "Mismatched initial mode");
+            Assert.AreEqual("New", viewModel.Phase, "Mismatched initial phase");
+
+            var entityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(_story);
+            Assert.AreEqual(entityTypeInformation.ShortLabel, viewModel.IconText, "Mismatched icon text");
+            Assert.AreEqual(entityTypeInformation.Color, viewModel.IconBackgroundColor, "Mismatched icon background color");
         }
     }
 }
