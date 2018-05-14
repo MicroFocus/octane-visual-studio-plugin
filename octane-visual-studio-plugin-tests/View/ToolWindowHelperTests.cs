@@ -82,14 +82,158 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 });
         }
 
-        private void ValidateContextMenuItems<T>(T entity, List<MenuItemEnum> expectedMenuItems) where T : BaseEntity
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_Task_Success()
+        {
+            var story = StoryUtilities.CreateStory();
+            try
+            {
+                ValidateContextMenuItems(TaskUtilities.CreateTask(story),
+                    new List<MenuItemEnum>
+                    {
+                        MenuItemEnum.ViewDetails,
+                        MenuItemEnum.TaskViewParentDetails,
+                        MenuItemEnum.OpenInBrowser,
+                        MenuItemEnum.CopyCommitMessage
+                    });
+            }
+            finally
+            {
+                EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
+            }
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_QualityStory_Success()
+        {
+            ValidateContextMenuItems(QualityStoryUtilities.CreateQualityStory(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.ViewDetails,
+                    MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage
+                });
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_Defect_Success()
+        {
+            ValidateContextMenuItems(DefectUtilities.CreateDefect(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.ViewDetails,
+                    MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage
+                });
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_GherkinTest_Success()
+        {
+            ValidateContextMenuItems(TestGherkinUtilities.CreateGherkinTest(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.ViewDetails,
+                    MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.DownloadScript
+                });
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_ManualTest_Success()
+        {
+            ValidateContextMenuItems(TestManualUtilities.CreateManualTest(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.ViewDetails,
+                    MenuItemEnum.OpenInBrowser
+                });
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_ManualRun_Success()
+        {
+            var manualTest = TestManualUtilities.CreateManualTest();
+            try
+            {
+                ValidateContextMenuItems(RunManualUtilities.CreateManualRun(manualTest),
+                    new List<MenuItemEnum>
+                    {
+                        MenuItemEnum.ViewDetails,
+                        MenuItemEnum.OpenInBrowser,
+                    });
+            }
+            finally
+            {
+                EntityService.DeleteById<TestManual>(WorkspaceContext, manualTest.Id);
+            }
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_SuiteRun_Success()
+        {
+            var testSuite = TestSuiteUtilities.CreateTestSuite();
+            try
+            {
+                ValidateContextMenuItems(RunSuiteUtilities.CreateSuiteRun(testSuite),
+                    new List<MenuItemEnum>
+                    {
+                        MenuItemEnum.ViewDetails,
+                        MenuItemEnum.OpenInBrowser,
+                    });
+            }
+            finally
+            {
+                EntityService.DeleteById<TestSuite>(WorkspaceContext, testSuite.Id);
+            }
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_Epic_Success()
+        {
+            ValidateContextMenuItems(EpicUtilities.CreateEpic(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.OpenInBrowser,
+                }, false);
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ConstructContextMenu_Feature_Success()
+        {
+            var epic = EpicUtilities.CreateEpic();
+            try
+            {
+                ValidateContextMenuItems(FeatureUtilities.CreateFeature(epic),
+                    new List<MenuItemEnum>
+                    {
+                        MenuItemEnum.OpenInBrowser,
+                    }, false);
+            }
+            finally
+            {
+                EntityService.DeleteById<Epic>(WorkspaceContext, epic.Id);
+            }
+        }
+
+        // TODO remove useMyItems and use a more generic mechanism to obtain the BaseItemViewModel
+        private void ValidateContextMenuItems<T>(T entity, List<MenuItemEnum> expectedMenuItems, bool useMyItems = true) where T : BaseEntity
         {
             try
             {
-                var viewModel = new OctaneMyItemsViewModel();
-                viewModel.LoadMyItemsAsync().Wait();
+                BaseItemViewModel selectedItem;
+                if (useMyItems)
+                {
+                    var viewModel = new OctaneMyItemsViewModel();
+                    viewModel.LoadMyItemsAsync().Wait();
 
-                var selectedItem = viewModel.MyItems.FirstOrDefault(i => i.ID == entity.Id);
+                    selectedItem = viewModel.MyItems.FirstOrDefault(i => i.ID == entity.Id);
+                }
+                else
+                {
+                    selectedItem = new BaseItemViewModel(entity);
+                }
+
                 Assert.IsNotNull(selectedItem, "Couldn't find entity");
 
                 var cm = new ContextMenu();

@@ -37,10 +37,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 WorkItem.SUBTYPE_QUALITY_STORY, "Quality Story", "quality story", "QS", Color.FromRgb(95, 112, 118)) },
 
             { WorkItem.SUBTYPE_EPIC, new EntityTypeInformation(
-                WorkItem.SUBTYPE_EPIC, "Epic", "epic", "E", Color.FromRgb(202, 170, 209)) },
+                WorkItem.SUBTYPE_EPIC, "Epic", EntityTypeInformation.CommitMessageNotApplicable, "E", Color.FromRgb(202, 170, 209)) },
 
             { WorkItem.SUBTYPE_FEATURE, new EntityTypeInformation(
-                WorkItem.SUBTYPE_FEATURE, "Feature", "feature", "F", Color.FromRgb(226, 132, 90)) },
+                WorkItem.SUBTYPE_FEATURE, "Feature", EntityTypeInformation.CommitMessageNotApplicable, "F", Color.FromRgb(226, 132, 90)) },
 
             { Test.SUBTYPE_MANUAL_TEST, new EntityTypeInformation(
                 Test.SUBTYPE_MANUAL_TEST, "Manual Test", EntityTypeInformation.CommitMessageNotApplicable, "MT", Color.FromRgb(96, 121, 141)) },
