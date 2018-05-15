@@ -30,6 +30,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// <summary>
     /// Manager for keeping track of all the opened plugin windows
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class PluginWindowManager
     {
         private static readonly object Lock = new object();
