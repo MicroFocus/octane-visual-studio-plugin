@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -41,6 +42,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// Handle double-click event on a backlog item
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void HandleDoubleClickOnItem(BaseEntity entity, Action<object> copyCommitMessageDelegate = null)
         {
             try
@@ -80,6 +82,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// View given entity's details in a new window
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ViewDetails(BaseEntity entity)
         {
             try
@@ -98,6 +101,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// View given item's parent details in a new window
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ViewTaskParentDetails(BaseItemViewModel selectedItem)
         {
             try
@@ -122,6 +126,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// View given item's parent details in a new window
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ViewCommentParentDetails(BaseItemViewModel selectedItem)
         {
             try
@@ -141,6 +146,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private static void ViewEntityDetailsInternal(BaseEntity entity)
         {
             if (entity.TypeName == WorkItem.SUBTYPE_FEATURE || entity.TypeName == WorkItem.SUBTYPE_EPIC)
@@ -156,6 +162,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// Open the given entity in the browser
         /// </summary>
+        [ExcludeFromCodeCoverage]
         internal static void OpenInBrowser(BaseEntity entity)
         {
             try
