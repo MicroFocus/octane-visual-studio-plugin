@@ -17,8 +17,8 @@
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
-using Microsoft.VisualStudio.Shell.Interop;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -32,9 +32,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     {
         internal const string AppName = "ALM Octane";
 
+        internal const string ViewDetailsHeader = "View details (DblClick)";
+        internal const string ViewTaskParentDetailsHeader = "View parent details (DblClick)";
+        internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
+        internal const string OpenInBrowserHeader = "Open in Browser (Alt + DblClick)";
+        internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)";
+        internal const string DownloadGherkinScriptHeader = "Download Script";
+
         /// <summary>
         /// Handle double-click event on a backlog item
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void HandleDoubleClickOnItem(BaseEntity entity, Action<object> copyCommitMessageDelegate = null)
         {
             try
@@ -74,6 +82,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// View given entity's details in a new window
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ViewDetails(BaseEntity entity)
         {
             try
@@ -92,6 +101,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// View given item's parent details in a new window
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ViewTaskParentDetails(BaseItemViewModel selectedItem)
         {
             try
@@ -116,6 +126,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// View given item's parent details in a new window
         /// </summary>
+        [ExcludeFromCodeCoverage]
         public static void ViewCommentParentDetails(BaseItemViewModel selectedItem)
         {
             try
@@ -135,6 +146,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private static void ViewEntityDetailsInternal(BaseEntity entity)
         {
             if (entity.TypeName == WorkItem.SUBTYPE_FEATURE || entity.TypeName == WorkItem.SUBTYPE_EPIC)
@@ -150,6 +162,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// Open the given entity in the browser
         /// </summary>
+        [ExcludeFromCodeCoverage]
         internal static void OpenInBrowser(BaseEntity entity)
         {
             try
@@ -225,7 +238,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     cm.Items.Add(new MenuItem
                     {
-                        Header = "View details (DblClick)",
+                        Header = ViewDetailsHeader,
                         Command = new DelegatedCommand(viewDetailsDelegate)
                     });
                 }
@@ -239,7 +252,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     cm.Items.Add(new MenuItem
                     {
-                        Header = "View parent details (DblClick)",
+                        Header = ViewTaskParentDetailsHeader,
                         Command = new DelegatedCommand(viewTaskParentDetailsDelegate)
                     });
                 }
@@ -252,7 +265,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     cm.Items.Add(new MenuItem
                     {
-                        Header = "View parent details (DblClick)",
+                        Header = ViewCommentParentDetailsHeader,
                         Command = new DelegatedCommand(viewCommentParentDetailsDelegate)
                     });
                 }
@@ -262,7 +275,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     cm.Items.Add(new MenuItem
                     {
-                        Header = "Open in Browser (Alt + DblClick)",
+                        Header = OpenInBrowserHeader,
                         Command = new DelegatedCommand(openInBrowserDelegate)
                     });
                 }
@@ -275,7 +288,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     {
                         cm.Items.Add(new MenuItem
                         {
-                            Header = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)",
+                            Header = CopyCommitMessageHeader,
                             Command = new DelegatedCommand(copyCommitMessageDelegate)
                         });
                     }
@@ -287,7 +300,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     cm.Items.Add(new MenuItem
                     {
-                        Header = "Download Script",
+                        Header = DownloadGherkinScriptHeader,
                         Command = new DelegatedCommand(downloadGherkinScriptDelegate)
                     });
                 }

@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
+using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
@@ -31,6 +32,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
     public class SearchItemsViewModelTests : BaseOctanePluginTest
     {
         private static Guid _guid;
+        private static Guid _quotesGuid;
         private static Guid _refreshGuid;
 
         private static Story _story;
@@ -48,17 +50,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public static void ClassInit(TestContext context)
         {
             _guid = Guid.NewGuid();
-            _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_" + _guid);
-            _epic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic_" + _guid);
-            _gherkinTest = TestGherkinUtilities.CreateGherkinTest(EntityService, WorkspaceContext, "TestGherkin_" + _guid);
+            _story = StoryUtilities.CreateStory("Story_" + _guid);
+            _epic = EpicUtilities.CreateEpic("Epic_" + _guid);
+            _gherkinTest = TestGherkinUtilities.CreateGherkinTest("TestGherkin_" + _guid);
 
-            _storyQuote = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_\"_SingleQuote");
-            _storyDoubleQuote = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_\"\"_DoubleQuote");
+            _quotesGuid = Guid.NewGuid();
+            _storyQuote = StoryUtilities.CreateStory("Story_\"_SingleQuote_" + _quotesGuid);
+            _storyDoubleQuote = StoryUtilities.CreateStory("Story_\"\"_DoubleQuote_" + _quotesGuid);
 
             _refreshGuid = Guid.NewGuid();
-            _refreshStory = StoryUtilities.CreateStory(EntityService, WorkspaceContext, "Story_" + _refreshGuid);
-            _refreshEpic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic_" + _refreshGuid);
-            _refreshGherkinTest = TestGherkinUtilities.CreateGherkinTest(EntityService, WorkspaceContext, "TestGherkin_" + _refreshGuid);
+            _refreshStory = StoryUtilities.CreateStory("Story_" + _refreshGuid);
+            _refreshEpic = EpicUtilities.CreateEpic("Epic_" + _refreshGuid);
+            _refreshGherkinTest = TestGherkinUtilities.CreateGherkinTest("TestGherkin_" + _refreshGuid);
         }
 
         [ClassCleanup]
@@ -95,24 +98,33 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         }
 
         [TestMethod]
+        public void SearchItemsViewModelTests_Search_EmptySpace_NoSearchResults()
+        {
+            var viewModel = new SearchItemsViewModel(" ");
+            viewModel.SearchAsync().Wait();
+
+            Assert.AreEqual(0, viewModel.SearchItems.Count(), "Searching for empty string should return nothing.");
+        }
+
+        [TestMethod]
         public void SearchItemsViewModelTests_Search_QuoteFilter_Success()
         {
-            var viewModel = new SearchItemsViewModel("_\"_");
-            ValidateSearch(viewModel, new List<EntityId> { _storyQuote.Id });
+            var viewModel = new SearchItemsViewModel("_\"_SingleQuote_" + _quotesGuid);
+            ValidateSearch(viewModel, new List<BaseEntity> { _storyQuote });
         }
 
         [TestMethod]
         public void SearchItemsViewModelTests_Search_DoubleQuoteFilter_Success()
         {
-            var viewModel = new SearchItemsViewModel("_\"\"_");
-            ValidateSearch(viewModel, new List<EntityId> { _storyDoubleQuote.Id });
+            var viewModel = new SearchItemsViewModel("_\"\"_DoubleQuote_" + _quotesGuid);
+            ValidateSearch(viewModel, new List<BaseEntity> { _storyDoubleQuote });
         }
 
         [TestMethod]
         public void SearchItemsViewModelTests_Search_Filter_Success()
         {
             var viewModel = new SearchItemsViewModel(_guid.ToString());
-            ValidateSearch(viewModel, new List<EntityId> { _story.Id, _epic.Id, _gherkinTest.Id });
+            ValidateSearch(viewModel, new List<BaseEntity> { _story, _epic, _gherkinTest });
 
             Assert.AreEqual(WindowMode.Loaded, viewModel.Mode, "Mismatched window mode");
             Assert.AreEqual(null, viewModel.ErrorMessage, "Mismatched error message");
@@ -126,38 +138,44 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void SearchItemsViewModelTests_Refresh_NoChanges_SameResults()
         {
             var viewModel = new SearchItemsViewModel(_guid.ToString());
-            ValidateSearch(viewModel, new List<EntityId> { _story.Id, _epic.Id, _gherkinTest.Id });
+            ValidateSearch(viewModel, new List<BaseEntity> { _story, _epic, _gherkinTest });
 
             viewModel.RefreshCommand.Execute(null);
-            ValidateSearch(viewModel, new List<EntityId> { _story.Id, _epic.Id, _gherkinTest.Id });
+            ValidateSearch(viewModel, new List<BaseEntity> { _story, _epic, _gherkinTest });
         }
 
         [TestMethod]
         public void SearchItemsViewModelTests_Refresh_Changes_Success()
         {
             var viewModel = new SearchItemsViewModel(_refreshGuid.ToString());
-            ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id });
+            ValidateSearch(viewModel, new List<BaseEntity> { _refreshStory, _refreshEpic, _refreshGherkinTest });
 
-            var newEpic = EpicUtilities.CreateEpic(EntityService, WorkspaceContext, "Epic2_" + _refreshGuid);
-
-            viewModel.RefreshCommand.Execute(null);
-            ValidateSearch(viewModel, new List<EntityId> { _refreshStory.Id, _refreshEpic.Id, _refreshGherkinTest.Id, newEpic.Id });
+            var newEpic = EpicUtilities.CreateEpic("Epic2_" + _refreshGuid);
+            try
+            {
+                viewModel.RefreshCommand.Execute(null);
+                ValidateSearch(viewModel, new List<BaseEntity> { _refreshStory, _refreshEpic, _refreshGherkinTest, newEpic });
+            }
+            finally
+            {
+                EntityService.DeleteById<Epic>(WorkspaceContext, newEpic.Id);
+            }
         }
 
         #endregion
 
-        private static void ValidateSearch(SearchItemsViewModel viewModel, List<EntityId> expectedIds)
+        private static void ValidateSearch(SearchItemsViewModel viewModel, List<BaseEntity> expectedEntities)
         {
             Utility.WaitUntil(() =>
             {
                 viewModel.SearchAsync().Wait();
 
-                if (viewModel.SearchItems.Count() != expectedIds.Count)
+                if (viewModel.SearchItems.Count() != expectedEntities.Count)
                     return false;
 
-                foreach (var id in expectedIds)
+                foreach (var entity in expectedEntities)
                 {
-                    if (viewModel.SearchItems.Count(si => si.ID == id) != 1)
+                    if (viewModel.SearchItems.Count(si => si.ID == entity.Id && si.Entity.Name == entity.Name) != 1)
                         return false;
                 }
 

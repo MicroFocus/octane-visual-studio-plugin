@@ -15,12 +15,11 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Services;
-using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
+namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
 {
     /// <summary>
     /// Utility class for managing <see cref="Story"/>
@@ -29,12 +28,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
     {
         private static Phase _phaseNew;
 
-        private static Phase GetPhaseNew(EntityService entityService, WorkspaceContext workspaceContext)
+        private static Phase GetPhaseNew()
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    WorkItem.SUBTYPE_STORY, "phase.story.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_STORY, "phase.story.new");
             }
 
             return _phaseNew;
@@ -43,17 +41,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// <summary>
         /// Create a new user story entity
         /// </summary>
-        public static Story CreateStory(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
+        public static Story CreateStory(string customName = null)
         {
             var name = customName ?? "Story_" + Guid.NewGuid();
             var story = new Story
             {
                 Name = name,
-                Phase = GetPhaseNew(entityService, workspaceContext),
-                Parent = Utility.GetWorkItemRoot(entityService, workspaceContext)
+                Phase = GetPhaseNew(),
+                Parent = Utility.GetWorkItemRoot()
             };
+            story.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
-            var createdStory = entityService.Create(workspaceContext, story, new[] { "name", "subtype" });
+            var createdStory = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, story, new[] { "name", "subtype" });
             Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");
             Assert.IsFalse(string.IsNullOrEmpty(createdStory.Id), "Newly created story should have a valid ID");
             return createdStory;

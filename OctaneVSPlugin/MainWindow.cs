@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
     using Microsoft.VisualStudio.Shell;
@@ -33,6 +35,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// </para>
     /// </remarks>
     [Guid(WINDOW_ID)]
+    [ExcludeFromCodeCoverage]
     public class MainWindow : ToolWindowPane
     {
         internal const string WINDOW_ID = "af5c5224-1b4a-444f-923f-2fc9e06f7a40";

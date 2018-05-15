@@ -16,7 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
-using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
+using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -33,7 +33,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
-            _story = StoryUtilities.CreateStory(EntityService, WorkspaceContext);
+            _story = StoryUtilities.CreateStory();
         }
 
         [ClassCleanup]
@@ -59,7 +59,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
         public void FieldsMetadataServiceTests_GetFormattedValue_EntityInCache_ReturnsMetadata()
         {
             var viewModel = new DetailedItemViewModel(_story);
-            viewModel.Initialize().Wait();
+            viewModel.InitializeAsync().Wait();
 
             var metadata = FieldsMetadataService.GetFieldMetadata(viewModel.Entity).Result;
             Assert.IsTrue(metadata.Count > 0, "Cache should contain field metadata");

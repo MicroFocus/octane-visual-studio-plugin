@@ -25,12 +25,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// </summary>
     public class BaseItemViewModel
     {
-        protected readonly EntityInformation EntityInformation;
+        protected readonly EntityTypeInformation EntityTypeInformation;
 
         public BaseItemViewModel(BaseEntity entity)
         {
             Entity = entity;
-            EntityInformation = EntityRegistry.GetEntityInformation(entity);
+            EntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entity);
         }
 
         /// <summary>
@@ -47,17 +47,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public virtual string Description
         {
-            get { return Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty; }
+            get { return Entity.GetStringValue(CommonFields.Description) ?? string.Empty; }
         }
 
         public virtual string IconText
         {
-            get { return EntityInformation.ShortLabel; }
+            get { return EntityTypeInformation.ShortLabel; }
         }
 
         public virtual Color IconBackgroundColor
         {
-            get { return EntityInformation.LabelColor; }
+            get { return EntityTypeInformation.Color; }
         }
     }
 }

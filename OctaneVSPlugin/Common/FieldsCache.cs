@@ -305,116 +305,116 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         {
             { WorkItem.SUBTYPE_STORY, new HashSet<string>
                         {
-                            CommonFields.NAME,
-                            CommonFields.PHASE,
+                            CommonFields.Name,
+                            CommonFields.Phase,
                             BaseEntity.ID_FIELD,
-                            CommonFields.HAS_ATTACHMENTS,
-                            CommonFields.NEW_TASKS,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { WorkItem.SUBTYPE_QUALITY_STORY, new HashSet<string>
                         {
-                            CommonFields.NAME,
-                            CommonFields.PHASE,
+                            CommonFields.Name,
+                            CommonFields.Phase,
                             BaseEntity.ID_FIELD,
-                            CommonFields.HAS_ATTACHMENTS,
-                            CommonFields.NEW_TASKS,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { WorkItem.SUBTYPE_DEFECT, new HashSet<string>
                         {
-                            CommonFields.NAME,
-                            CommonFields.PHASE,
+                            CommonFields.Name,
+                            CommonFields.Phase,
                             BaseEntity.ID_FIELD,
-                            CommonFields.HAS_ATTACHMENTS,
-                            CommonFields.NEW_TASKS,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { Task.TYPE_TASK, new HashSet<string>
                         {
-                            CommonFields.NAME,
-                            CommonFields.PHASE,
+                            CommonFields.Name,
+                            CommonFields.Phase,
                             BaseEntity.ID_FIELD,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { TestGherkin.SUBTYPE_GHERKIN_TEST, new HashSet<string>
                         {
-                            CommonFields.CREATION_TIME,
-                            CommonFields.NAME,
-                            CommonFields.PHASE,
+                            CommonFields.CreationTime,
+                            CommonFields.Name,
+                            CommonFields.Phase,
                             BaseEntity.ID_FIELD,
                             TestGherkin.TEST_STATUS_FIELD,
                             TestGherkin.IDENTITY_HASH_FIELD,
-                            CommonFields.HAS_ATTACHMENTS,
+                            CommonFields.HasAttachments,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { Requirement.SUBTYPE_DOCUMENT, new HashSet<string>
                         {
-                            CommonFields.NAME,
-                            CommonFields.PHASE,
+                            CommonFields.Name,
+                            CommonFields.Phase,
                             BaseEntity.ID_FIELD,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { Test.SUBTYPE_MANUAL_TEST, new HashSet<string>
                         {
-                            CommonFields.CREATION_TIME,
-                            CommonFields.NAME,
-                            CommonFields.PHASE,
+                            CommonFields.CreationTime,
+                            CommonFields.Name,
+                            CommonFields.Phase,
                             BaseEntity.ID_FIELD,
                             TestGherkin.TEST_STATUS_FIELD,
-                            CommonFields.HAS_ATTACHMENTS,
+                            CommonFields.HasAttachments,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { RunManual.SUBTYPE_RUN_MANUAL, new HashSet<string>
                         {
-                            CommonFields.NAME,
+                            CommonFields.Name,
                             BaseEntity.ID_FIELD,
-                            CommonFields.HAS_ATTACHMENTS,
+                            CommonFields.HasAttachments,
                             RunManual.HAS_VISUAL_COVERAGE_FIELD,
                             Run.TEST_FIELD,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             },
             { RunSuite.SUBTYPE_RUN_SUITE, new HashSet<string>
                         {
-                            CommonFields.NAME,
+                            CommonFields.Name,
                             BaseEntity.ID_FIELD,
                             Run.TEST_FIELD,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
-                            CommonFields.DESCRIPTION,
-                            CommonFields.SUB_TYPE
+                            CommonFields.Description,
+                            CommonFields.SubType
                         }
             }
         };

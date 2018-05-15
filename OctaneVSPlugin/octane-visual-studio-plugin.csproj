@@ -77,7 +77,8 @@
     <Compile Include="Common\Collector\EntitiesCollector.cs" />
     <Compile Include="Common\Collector\MyWorkEntitiesCollector.cs" />
     <Compile Include="Common\Collector\SearchEntitiesCollector.cs" />
-    <Compile Include="Common\EntityRegistry.cs" />
+    <Compile Include="Common\EntityTypeInformation.cs" />
+    <Compile Include="Common\EntityTypeRegistry.cs" />
     <Compile Include="Common\FieldsCache.cs" />
     <Compile Include="Common\FieldsMetadataService.cs" />
     <Compile Include="Common\HTMLConverter\HtmlCssParser.cs" />
@@ -99,14 +100,13 @@
     <Compile Include="Common\DelegatedCommand.cs" />
     <Compile Include="ViewModel\BaseItemViewModel.cs" />
     <Compile Include="ViewModel\DetailedItemViewModel.cs" />
-    <Compile Include="EntityComparerByLastModified.cs" />
+    <Compile Include="Common\EntityComparerByLastModified.cs" />
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
-    <Compile Include="GifImage.cs" />
-    <Compile Include="GreaterThanValueConverter.cs" />
-    <Compile Include="ItemIconInfo.cs" />
-    <Compile Include="MainWindowMode.cs" />
+    <Compile Include="View\GifImage.cs" />
+    <Compile Include="Common\GreaterThanZeroConverter.cs" />
+    <Compile Include="ViewModel\MainWindowMode.cs" />
     <Compile Include="MyItemControl.xaml.cs">
       <DependentUpon>MyItemControl.xaml</DependentUpon>
     </Compile>
@@ -129,9 +129,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeparatorViewModel.cs" />
+    <Compile Include="ViewModel\SeparatorViewModel.cs" />
     <Compile Include="MyWorkMetadata.cs" />
-    <Compile Include="CommonFields.cs" />
+    <Compile Include="Common\CommonFields.cs" />
     <Compile Include="Common\Utility.cs" />
     <Compile Include="ViewModel\WindowMode.cs" />
     <Compile Include="View\PluginWindowManager.cs" />
@@ -163,7 +163,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="index.html" />
     <VSCTCompile Include="MainWindowPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
@@ -191,7 +190,6 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Resource Include="Resources\search.png" />
-    <Content Include="stylesheet.css" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindowControl.xaml">

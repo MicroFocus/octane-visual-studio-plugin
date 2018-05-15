@@ -15,12 +15,11 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Services;
-using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 
-namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
+namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
 {
     /// <summary>
     /// Utility class for managing <see cref="Epic"/> entities
@@ -29,12 +28,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
     {
         private static Phase _phaseNew;
 
-        private static Phase GetPhaseNew(EntityService entityService, WorkspaceContext workspaceContext)
+        private static Phase GetPhaseNew()
         {
             if (_phaseNew == null)
             {
-                _phaseNew = Utility.GetPhaseForEntityByLogicalName(entityService, workspaceContext,
-                    WorkItem.SUBTYPE_EPIC, "phase.epic.new");
+                _phaseNew = Utility.GetPhaseForEntityByLogicalName(WorkItem.SUBTYPE_EPIC, "phase.epic.new");
             }
 
             return _phaseNew;
@@ -43,17 +41,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// <summary>
         /// Create a new epic entity
         /// </summary>
-        public static Epic CreateEpic(EntityService entityService, WorkspaceContext workspaceContext, string customName = null)
+        public static Epic CreateEpic(string customName = null)
         {
-            var epicName = customName ?? "Epic" + Guid.NewGuid();
+            var epicName = customName ?? "Epic_" + Guid.NewGuid();
             var epicToCreate = new Epic
             {
                 Name = epicName,
-                Phase = GetPhaseNew(entityService, workspaceContext),
-                Parent = Utility.GetWorkItemRoot(entityService, workspaceContext)
+                Phase = GetPhaseNew(),
+                Parent = Utility.GetWorkItemRoot()
             };
+            epicToCreate.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
 
-            var createdEpic = entityService.Create<Epic>(workspaceContext, epicToCreate, new[] { "name", "subtype" });
+            var createdEpic = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, epicToCreate, new[] { "name", "subtype" });
             Assert.AreEqual(epicName, createdEpic.Name, "Mismatched epic name");
 
             return createdEpic;

@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -27,6 +28,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// <summary>
     /// Interaction logic for MainWindowControl.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class MainWindowControl : UserControl
     {
         private readonly OctaneMyItemsViewModel _viewModel;

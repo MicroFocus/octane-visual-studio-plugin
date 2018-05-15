@@ -43,7 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private WorkspaceContext workspaceContext;
         private SharedSpaceContext sharedSpaceContext;
 
-        private static readonly EntityComparerByLastModified entityComparer = new EntityComparerByLastModified();
+        private static readonly EntityComparerByLastModified EntityComparer = new EntityComparerByLastModified();
 
         public OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
         {
@@ -111,7 +111,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             var collector = new MyWorkEntitiesCollector(this, userItems, MyWorkMetadata.Instance);
             List<BaseEntity> result = await collector.GetAllEntities();
-            result.Sort(entityComparer);
+            result.Sort(EntityComparer);
 
             return result;
         }

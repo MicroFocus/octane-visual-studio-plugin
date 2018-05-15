@@ -22,7 +22,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows.Input;
-using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -38,6 +37,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private string _filter = string.Empty;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public DetailedItemViewModel(BaseEntity entity)
             : base(entity)
         {
@@ -66,7 +68,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             FieldsCache.Instance.Attach(this);
         }
 
-        public async System.Threading.Tasks.Task Initialize()
+        /// <summary>
+        /// Initialize detailed information about the cached entity
+        /// </summary>
+        public async System.Threading.Tasks.Task InitializeAsync()
         {
             try
             {
@@ -77,7 +82,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 // TODO - investigate why not all entities receive the subtype field by default
                 if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))
                 {
-                    updatedFields.Add(CommonFields.SUB_TYPE);
+                    updatedFields.Add(CommonFields.SubType);
                 }
 
                 Entity = await _octaneService.FindEntity(Entity, updatedFields);
@@ -208,6 +213,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #endregion
 
+        /// <summary>
+        /// Message shown to the user in case of an error
+        /// </summary>
         public string ErrorMessage { get; private set; }
 
         private async System.Threading.Tasks.Task RetrieveComments()
@@ -246,7 +254,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (Mode == WindowMode.Loaded)
                 {
-                    var phaseEntity = Entity.GetValue(CommonFields.PHASE) as BaseEntity;
+                    var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
                     if (phaseEntity == null)
                         return string.Empty;
 
@@ -257,26 +265,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
-        public override string Description
-        {
-            get { return Mode != WindowMode.Loading ? Entity.GetStringValue(CommonFields.DESCRIPTION) ?? string.Empty : string.Empty; }
-        }
-
-        public override string IconText
-        {
-            get { return Mode != WindowMode.Loading ? EntityInformation.ShortLabel : null; }
-        }
-
-        public override Color IconBackgroundColor
-        {
-            get { return Mode != WindowMode.Loading ? EntityInformation.LabelColor : new Color(); }
-        }
-
+        /// <summary>
+        /// Comments associated with the cached entity
+        /// </summary>
         public IEnumerable<CommentViewModel> Comments
         {
             get { return _commentViewModels; }
         }
 
+        /// <summary>
+        /// Current status of the detailed view
+        /// </summary>
         public WindowMode Mode { get; private set; }
 
         private static readonly HashSet<string> EntityTypesSupportingComments = new HashSet<string>
@@ -298,10 +297,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Requirement.SUBTYPE_DOCUMENT
         };
 
-        public bool CommentSectionVisibility { get; set; }
-
         #region Refresh
 
+        /// <summary>
+        /// Refresh entity information
+        /// </summary>
         public ICommand RefreshCommand { get; }
 
         private void Refresh(object param)
@@ -309,13 +309,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Mode = WindowMode.Loading;
             NotifyPropertyChanged("Mode");
 
-            Initialize();
+            InitializeAsync();
         }
 
         #endregion
 
         #region OpenInBrowser
 
+        /// <summary>
+        /// Open in browser command
+        /// </summary>
         public ICommand OpenInBrowserCommand { get; }
 
         private void OpenInBrowser(object param)
@@ -325,6 +328,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #endregion
 
+        #region CommentSectionVisibility
+
+        /// <summary>
+        /// Flag specifying whether the comment section is visible or not
+        /// </summary>
+        public bool CommentSectionVisibility { get; set; }
+
+        /// <summary>
+        /// Toggle the comment section visibility command
+        /// </summary>
         public ICommand ToggleCommentSectionCommand { get; }
 
         private void SwitchCommentSectionVisibility(object param)
@@ -334,10 +347,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged("ShowCommentTooltip");
         }
 
+        internal const string HideCommentsTooltip = "Hide comments";
+        internal const string ShowCommentsTooltip = "Show comments";
+
+        /// <summary>
+        /// Comment button tooltip
+        /// </summary>
         public string ShowCommentTooltip
         {
-            get { return CommentSectionVisibility ? "Hide comments" : "Show comments"; }
+            get { return CommentSectionVisibility ? HideCommentsTooltip : ShowCommentsTooltip; }
         }
+
+        #endregion
+
+        #region INotifyPropertyChanged
 
         public event PropertyChangedEventHandler PropertyChanged = delegate { };
 
@@ -348,5 +371,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
+
+        #endregion
     }
 }

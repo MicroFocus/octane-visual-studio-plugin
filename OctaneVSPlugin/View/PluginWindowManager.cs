@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
@@ -29,6 +30,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// <summary>
     /// Manager for keeping track of all the opened plugin windows
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class PluginWindowManager
     {
         private static readonly object Lock = new object();
@@ -128,6 +130,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private struct WindowInfo
         {
             public int WindowId { get; }

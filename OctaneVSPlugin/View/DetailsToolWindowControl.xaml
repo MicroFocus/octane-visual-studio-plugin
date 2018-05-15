@@ -49,7 +49,7 @@
                     </Style>
                 </DockPanel.Style>
 
-                <visualStudio:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
 
             </DockPanel>
 

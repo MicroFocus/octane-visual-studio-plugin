@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -54,21 +55,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public string SubType
         {
-            get { return Entity.GetStringValue(CommonFields.SUB_TYPE); }
+            get { return Entity.GetStringValue(CommonFields.SubType); }
         }
 
         public string CommitMessage
         {
             get
             {
-                string message = string.Format("{0} #{1}: ", EntityInformation.CommitMessage, ID);
+                string message = string.Format("{0} #{1}: ", EntityTypeInformation.CommitMessage, ID);
                 return message;
             }
         }
 
         public bool IsSupportCopyCommitMessage
         {
-            get { return EntityInformation.IsCopyCommitMessageSupported; }
+            get { return EntityTypeInformation.IsCopyCommitMessageSupported; }
         }
 
         public FieldViewModel SubTitleField

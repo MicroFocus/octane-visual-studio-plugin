@@ -78,70 +78,70 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             fieldsByEntityType = new Dictionary<Type, List<string>>();
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_DEFECT,
-                FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "No environment"),
-                FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.DETECTED_BY, "Detected By"),
-                FieldAtTop(CommonFields.STORY_POINTS, "SP"),
-                FieldAtTop(CommonFields.SEVERITY, "Severity"),
-                FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
-                FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
-                FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
+                FieldAtSubTitle(CommonFields.Environment, "Environment", "No environment"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.DetectedBy, "Detected By"),
+                FieldAtTop(CommonFields.StoryPoints, "SP"),
+                FieldAtTop(CommonFields.Severity, "Severity"),
+                FieldAtBottom(CommonFields.InvestedHours, "Invested Hours"),
+                FieldAtBottom(CommonFields.RemainingHours, "Remaining Hours"),
+                FieldAtBottom(CommonFields.EstimatedHours, "Estimated Hours")
                 );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_STORY,
-                FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
-                FieldAtTop(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.STORY_POINTS, "SP"),
-                FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
-                FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
-                FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
+                FieldAtSubTitle(CommonFields.Release, "Release", "No release"),
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.StoryPoints, "SP"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.InvestedHours, "Invested Hours"),
+                FieldAtBottom(CommonFields.RemainingHours, "Remaining Hours"),
+                FieldAtBottom(CommonFields.EstimatedHours, "Estimated Hours")
                 );
 
             AddSubType<WorkItem>(WorkItem.SUBTYPE_QUALITY_STORY,
-                FieldAtSubTitle(CommonFields.RELEASE, "Release", "No release"),
-                FieldAtTop(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.STORY_POINTS, "SP"),
-                FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.INVESTED_HOURS, "Invested Hours"),
-                FieldAtBottom(CommonFields.REMAINING_HOURS, "Remaining Hours"),
-                FieldAtBottom(CommonFields.ESTIMATED_HOURS, "Estimated Hours")
+                FieldAtSubTitle(CommonFields.Release, "Release", "No release"),
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.StoryPoints, "SP"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.InvestedHours, "Invested Hours"),
+                FieldAtBottom(CommonFields.RemainingHours, "Remaining Hours"),
+                FieldAtBottom(CommonFields.EstimatedHours, "Estimated Hours")
                 );
 
             AddSubType<Test>(Test.SUBTYPE_MANUAL_TEST,
                 FieldAtSubTitle("test_type", "Test Type"),
-                FieldAtTop(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.STEPS_NUM, "Steps"),
-                FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.StepsNum, "Steps"),
+                FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
                 );
 
             AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
                 FieldAtSubTitle("test_type", "Test Type"),
-                FieldAtTop(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.OWNER, "Owner"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.AUTOMATION_STATUS, "Automation status")
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
                 );
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
-                FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
-                FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
-                FieldAtBottom(CommonFields.STARTED, "Started")
+                FieldAtSubTitle(CommonFields.Environment, "Environment", "[No environment]"),
+                FieldAtTop(CommonFields.TestRunNativeStatus, "Status"),
+                FieldAtBottom(CommonFields.Started, "Started")
                 );
 
             AddSubType<Run>(RunManual.SUBTYPE_RUN_MANUAL,
-                FieldAtSubTitle(CommonFields.ENVIROMENT, "Environment", "[No environment]"),
-                FieldAtTop(CommonFields.TEST_RUN_NATIVE_STATUS, "Status"),
-                FieldAtBottom(CommonFields.STARTED, "Started")
+                FieldAtSubTitle(CommonFields.Environment, "Environment", "[No environment]"),
+                FieldAtTop(CommonFields.TestRunNativeStatus, "Status"),
+                FieldAtBottom(CommonFields.Started, "Started")
                 );
 
             AddSubType<Requirement>(Requirement.SUBTYPE_DOCUMENT,
-                FieldAtSubTitle(CommonFields.PHASE, "Phase"),
-                FieldAtTop(CommonFields.AUTHOR, "Author", string.Empty, Utility.GetAuthorFullName)
+                FieldAtSubTitle(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
             AddSubType<Task>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
@@ -151,7 +151,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                     if (parentEntity == null)
                         return string.Empty;
 
-                    var parentEntityInformation = EntityRegistry.GetEntityInformation(parentEntity);
+                    var parentEntityInformation = EntityTypeRegistry.GetEntityTypeInformation(parentEntity);
                     if (parentEntityInformation == null)
                         return string.Empty;
 
@@ -214,7 +214,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             string subType;
             if (IsAggregateEntity(entity.GetType()))
             {
-                subType = (string)entity.GetValue(CommonFields.SUB_TYPE);
+                subType = (string)entity.GetValue(CommonFields.SubType);
                 Debug.Assert(subType != null, "Entity should have subtype field. If it's simple list it in EntitiesWithoutSubtype array.");
             }
             else
@@ -254,14 +254,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                     .ToList();
 
                 // Add common fields
-                fields.Add(CommonFields.DESCRIPTION);
-                fields.Add(CommonFields.NAME);
-                fields.Add(CommonFields.LAST_MODIFIED);
+                fields.Add(CommonFields.Description);
+                fields.Add(CommonFields.Name);
+                fields.Add(CommonFields.LastModified);
 
                 // Some entities are listed as not having subtype field
                 if (IsAggregateEntity(typeof(TEntity)))
                 {
-                    fields.Add(CommonFields.SUB_TYPE);
+                    fields.Add(CommonFields.SubType);
                 }
 
                 fieldsByEntityType.Add(typeof(TEntity), fields);
