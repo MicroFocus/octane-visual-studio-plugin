@@ -23,8 +23,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
     /// Test class for <see cref="OptionsPage"/>
     /// </summary>
     [TestClass]
-    public class OptionsPageTests
+    public class OptionsPageTests : BaseOctanePluginTest
     {
+        private string _url;
+        private long _ssid;
+        private long _wsid;
+        private string _username;
+        private string _password;
+
+        protected override void TestInitializeInternal()
+        {
+            _url = OctaneConfiguration.Url;
+            _ssid = OctaneConfiguration.SharedSpaceId;
+            _wsid = OctaneConfiguration.WorkSpaceId;
+            _username = OctaneConfiguration.Username;
+            _password = OctaneConfiguration.Password;
+        }
+
+        protected override void TestCleanupInternal()
+        {
+            OctaneConfiguration.Url = _url;
+            OctaneConfiguration.SharedSpaceId = _ssid;
+            OctaneConfiguration.WorkSpaceId = _wsid;
+            OctaneConfiguration.Username = _username;
+            OctaneConfiguration.Password = _password;
+        }
+
         [TestMethod]
         public void OptionsPageTests_Url_ValidateSetter_Success()
         {

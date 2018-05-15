@@ -114,6 +114,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
         {
             ExposedClass.From(typeof(FieldsCache))._persistedFieldsCache = _persistedFieldsCache;
             ExposedClass.From(typeof(FieldsCache)).PersistFieldsMetadata();
+
+            TestCleanupInternal();
+        }
+
+        protected virtual void TestCleanupInternal()
+        {
         }
 
         private static WorkspaceUser GetWorkspaceUser()
