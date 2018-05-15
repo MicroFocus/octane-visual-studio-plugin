@@ -140,7 +140,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 var viewModel = new OctaneMyItemsViewModel();
                 viewModel.LoadMyItemsAsync().Wait();
 
-                Assert.AreEqual(expectedCount, viewModel.MyItems.Count(i => i.ID == entity.Id), $"Couldn't find entity {entity.Name}");
+                Assert.AreEqual(expectedCount, viewModel.MyItems.Count(i => i.ID == entity.Id && i.Entity.Name == entity.Name),
+                    $"Couldn't find exactly one entity with the name {entity.Name}");
             }
             finally
             {
