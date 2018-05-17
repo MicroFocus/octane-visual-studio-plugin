@@ -15,7 +15,6 @@ namespace HTMLConverter
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Windows; // DependencyProperty
     using System.Windows.Documents; // TextElement
     using System.Xml;
@@ -716,37 +715,52 @@ namespace HTMLConverter
 
         private static void AddImage(XmlElement xamlParentElement, XmlElement htmlElement, Hashtable inheritedProperties, CssStylesheet stylesheet, List<XmlElement> sourceContext)
         {
-            //  Implement images
-            string src = GetAttribute(htmlElement, "src");
-            if (src == null)
-            {
-                // When src attribute is missing - ignore the image
-                AddSpanOrRun(xamlParentElement, htmlElement, inheritedProperties, stylesheet, sourceContext);
-                return;
-            }
+            ////  Implement images
+            //string src = GetAttribute(htmlElement, "src");
+            //if (src == null)
+            //{
+            //    // When src attribute is missing - ignore the image
+            //    AddSpanOrRun(xamlParentElement, htmlElement, inheritedProperties, stylesheet, sourceContext);
+            //    return;
+            //}
 
-            XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Hyperlink, _xamlNamespace);
+            //XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Hyperlink, _xamlNamespace);
 
-            string[] srcParts = src.Split(new char[] { '#' });
-            if (srcParts.Length > 0 && srcParts[0].Trim().Length > 0)
-            {
-                xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_NavigateUri, srcParts[0].Trim());
-            }
-            if (srcParts.Length == 2 && srcParts[1].Trim().Length > 0)
-            {
-                xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_TargetName, srcParts[1].Trim());
-            }
+            //string[] srcParts = src.Split(new char[] { '#' });
+            //if (srcParts.Length > 0 && srcParts[0].Trim().Length > 0)
+            //{
+            //    xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_NavigateUri, srcParts[0].Trim());
+            //}
+            //if (srcParts.Length == 2 && srcParts[1].Trim().Length > 0)
+            //{
+            //    xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_TargetName, srcParts[1].Trim());
+            //}
 
-            string text = GetAttribute(htmlElement, "alt");
-            if (string.IsNullOrEmpty(text))
-            {
-                srcParts = src.Split('/');
-                text = srcParts.LastOrDefault();
-            }
-            AddTextRun(xamlElement, text ?? string.Empty);
+            //string text = GetAttribute(htmlElement, "alt");
+            //if (string.IsNullOrEmpty(text))
+            //{
+            //    srcParts = src.Split('/');
+            //    text = srcParts.LastOrDefault();
+            //}
+            //AddTextRun(xamlElement, text ?? string.Empty);
 
-            // Add the new element to the parent.
-            xamlParentElement.AppendChild(xamlElement);
+            //// Add the new element to the parent.
+            //xamlParentElement.AppendChild(xamlElement);
+
+            bool inLine = (xamlParentElement.Name == HtmlToXamlConverter.Xaml_Paragraph);
+            XmlElement xamlUIContainerElement = null;
+            if (inLine)
+                xamlUIContainerElement = xamlParentElement.OwnerDocument.CreateElement(
+                    null, "InlineUIContainer", _xamlNamespace);
+            else
+                xamlUIContainerElement = xamlParentElement.OwnerDocument.CreateElement(
+                    null, "BlockUIContainer", _xamlNamespace);
+            XmlElement xamlImageElement = xamlParentElement.OwnerDocument.CreateElement(
+                null, "Image", _xamlNamespace);
+            xamlImageElement.SetAttribute("Source", htmlElement.GetAttribute("src"));
+            xamlImageElement.SetAttribute("Stretch", "None");
+            xamlUIContainerElement.AppendChild(xamlImageElement);
+            xamlParentElement.AppendChild(xamlUIContainerElement);
         }
 
         // .............................................................
