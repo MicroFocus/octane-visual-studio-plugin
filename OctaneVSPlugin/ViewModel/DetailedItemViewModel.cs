@@ -40,6 +40,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private string _filter = string.Empty;
 
+        private static readonly string TempPath = Path.GetTempPath() + "\\octane_temp\\";
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -126,10 +128,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (string.IsNullOrEmpty(description))
                     return;
 
-                var tempPath = Path.GetTempPath() + "\\octane_temp\\";
-                if (!Directory.Exists(tempPath))
+                if (!Directory.Exists(TempPath))
                 {
-                    Directory.CreateDirectory(tempPath);
+                    Directory.CreateDirectory(TempPath);
                 }
 
                 doc = NSoup.Parse.Parser.Parse(description, OctaneConfiguration.Url);
@@ -146,8 +147,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     downloadTasks.Add(Task.Run(() =>
                     {
-                        var imagePath = tempPath + imageName;
-                        _octaneService.DownloadAttachmentAsync(relativeUrl, imagePath).Wait();
+                        var imagePath = TempPath + EntityType + Entity.Id + imageName;
+                        if (!File.Exists(imagePath))
+                        {
+                            _octaneService.DownloadAttachmentAsync(relativeUrl, imagePath).Wait();
+                        }
                         image.Attr("src", imagePath);
                     }));
                 }
