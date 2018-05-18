@@ -17,6 +17,9 @@
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.Runtime.Serialization.Json;
+using System.Text;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
@@ -103,5 +106,51 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             // Open the URL in the user's default browser.
             Process.Start(url);
         }
+
+        #region Serialization
+
+        /// <summary>
+        /// Deserialize given json value; if something went wrong, return the default value
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <param name="defaultValue"></param>
+        /// <returns></returns>
+        public static T DeserializeFromJson<T>(string json, T defaultValue)
+        {
+            try
+            {
+                var serializer = new DataContractJsonSerializer(typeof(T));
+                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
+                {
+                    T result = (T)serializer.ReadObject(stream);
+                    return result != null ? result : defaultValue;
+                }
+            }
+            catch (Exception)
+            {
+                return defaultValue;
+            }
+        }
+
+        /// <summary>
+        /// Serialize given value to json
+        /// </summary>
+        public static string SerializeToJson<T>(T value)
+        {
+            var serializer = new DataContractJsonSerializer(typeof(T));
+            using (MemoryStream memoryStream = new MemoryStream())
+            {
+                serializer.WriteObject(memoryStream, value);
+
+                memoryStream.Position = 0;
+                using (StreamReader sr = new StreamReader(memoryStream))
+                {
+                    return sr.ReadToEnd();
+                }
+            }
+        }
+
+        #endregion
     }
 }

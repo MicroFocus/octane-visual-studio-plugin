@@ -16,33 +16,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Json;
-using System.Text;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     public static class SearchHistoryManager
     {
         private const int MaxSearchHistorySize = 4;
-
         private static SearchHistoryMetadata _metadata;
-
-        //internal static long CurrentWorkspaceId = -1;
-
-        //private static List<string> _searchHistory;
 
         internal static List<string> LoadHistory()
         {
-            _metadata = Deserialize(OctanePluginSettings.Default.SearchHistory, new SearchHistoryMetadata
+            _metadata = Utility.DeserializeFromJson(OctanePluginSettings.Default.SearchHistory, new SearchHistoryMetadata
             {
                 id = ConstructId(),
                 queries = new List<string>()
             });
-
-            //HandleDifferentContext();
 
             return _metadata.queries.ToList();
         }
@@ -65,8 +55,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
         internal static void UpdateHistory(string filter)
         {
-            //HandleDifferentContext();
-
             var newHistory = _metadata.queries.ToList();
             var oldHistory = _metadata.queries.ToList();
 
@@ -92,42 +80,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         {
             try
             {
-                OctanePluginSettings.Default.SearchHistory = Serialize(_metadata);
+                OctanePluginSettings.Default.SearchHistory = Utility.SerializeToJson(_metadata);
                 OctanePluginSettings.Default.Save();
             }
             catch (Exception)
             {
-            }
-        }
-
-        private static T Deserialize<T>(string json, T defaultValue)
-        {
-            try
-            {
-                var serializer = new DataContractJsonSerializer(typeof(T));
-                using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(json)))
-                {
-                    return (T)serializer.ReadObject(stream);
-                }
-            }
-            catch (Exception)
-            {
-                return defaultValue;
-            }
-        }
-
-        private static string Serialize<T>(T value)
-        {
-            var serializer = new DataContractJsonSerializer(typeof(T));
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                serializer.WriteObject(memoryStream, value);
-
-                memoryStream.Position = 0;
-                using (StreamReader sr = new StreamReader(memoryStream))
-                {
-                    return sr.ReadToEnd();
-                }
             }
         }
 

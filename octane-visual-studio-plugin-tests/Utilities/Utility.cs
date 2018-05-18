@@ -19,9 +19,6 @@ using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Runtime.Serialization.Json;
-using System.Text;
 using System.Threading;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
@@ -101,24 +98,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities
         /// </summary>
         public static T Clone<T>(T source)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(T));
-
-            string serializedObject;
-            using (MemoryStream memoryStream = new MemoryStream())
-            {
-                serializer.WriteObject(memoryStream, source);
-
-                memoryStream.Position = 0;
-                using (StreamReader sr = new StreamReader(memoryStream))
-                {
-                    serializedObject = sr.ReadToEnd();
-                }
-            }
-
-            using (var stream = new MemoryStream(Encoding.UTF8.GetBytes(serializedObject)))
-            {
-                return (T)serializer.ReadObject(stream);
-            }
+            var serializedObj = VisualStudio.Common.Utility.SerializeToJson(source);
+            return VisualStudio.Common.Utility.DeserializeFromJson<T>(serializedObj, default(T));
         }
     }
 }
