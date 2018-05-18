@@ -40,7 +40,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private string _filter = string.Empty;
 
-        private static readonly string TempPath = Path.GetTempPath() + "\\octane_temp\\";
+        internal static readonly string TempPath = Path.GetTempPath() + "\\octane_temp\\";
 
         /// <summary>
         /// Constructor

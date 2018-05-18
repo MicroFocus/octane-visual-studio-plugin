@@ -22,7 +22,9 @@ using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using Utility = MicroFocus.Adm.Octane.VisualStudio.Common.Utility;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
@@ -385,6 +387,66 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var entityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(_story);
             Assert.AreEqual(entityTypeInformation.ShortLabel, viewModel.IconText, "Mismatched icon text");
             Assert.AreEqual(entityTypeInformation.Color, viewModel.IconBackgroundColor, "Mismatched icon background color");
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_HandleImagesInDescription_DownloadImage_Success()
+        {
+            var fileName = "DetailedItemViewModelTests_HandleImagesInDescription_" + Guid.NewGuid() + ".txt";
+
+            var fileContentsBytes = new byte[2500];
+            var rnd = new Random();
+            rnd.NextBytes(fileContentsBytes);
+
+            // simulating uploading a picture; using plain text to also test content randomness
+            var attachment = EntityService.AttachToEntity(WorkspaceContext, _story, fileName, fileContentsBytes, "text/plain", new string[] { "owner_work_item" });
+            Assert.IsNotNull(attachment.Id, "Attachment id shouldn't be null");
+            Assert.AreEqual(WorkItem.SUBTYPE_STORY, attachment.owner_work_item.TypeName, "Mismatched attachment parent type");
+            Assert.AreEqual(_story.Id, attachment.owner_work_item.Id, "Mismatched attachment parent id");
+
+            var updatedStory = new Story(_story.Id);
+            updatedStory.SetValue(CommonFields.Description,
+                "<html><body>" +
+                "<div style=\"\">" +
+                "<img data-size-percentage=\"100\" src=\"" + WorkspaceContext.GetPath() + "/attachments/" + attachment.Id + "/" + fileName + "\" style=\"width:437px;height:303px;\" />" +
+                "</div>" +
+                "<p>&nbsp;</p>" +
+                "</body></html>");
+            updatedStory = EntityService.Update(WorkspaceContext, updatedStory, new[] { "name", "subtype", CommonFields.Description });
+
+            var viewModel = new DetailedItemViewModel(updatedStory);
+            viewModel.InitializeAsync().Wait();
+
+            var path = DetailedItemViewModel.TempPath + WorkItem.SUBTYPE_STORY + updatedStory.Id + fileName;
+            ValidateFileContents(path, fileContentsBytes);
+
+            var fileInfo = new FileInfo(path);
+            var expectedLastWriteTime = fileInfo.LastWriteTime;
+
+            Thread.Sleep(1000);
+
+            viewModel.RefreshCommand.Execute(null);
+
+            fileInfo = new FileInfo(path);
+            Assert.AreEqual(expectedLastWriteTime, fileInfo.LastWriteTime, "Downloaded attachement was modified by refresh");
+        }
+
+        private void ValidateFileContents(string filePath, byte[] expectedContentBytes)
+        {
+            byte[] buffer = new byte[1024];
+            using (var stream = new FileStream(filePath, FileMode.Open))
+            using (var memoryStream = new MemoryStream())
+            {
+                // copy the stream contents to a memory stream
+                int size = stream.Read(buffer, 0, buffer.Length);
+                while (size > 0)
+                {
+                    memoryStream.Write(buffer, 0, size);
+                    size = stream.Read(buffer, 0, buffer.Length);
+                }
+
+                CollectionAssert.AreEqual(expectedContentBytes, memoryStream.ToArray(), "Mismatched attachment contents");
+            }
         }
     }
 }
