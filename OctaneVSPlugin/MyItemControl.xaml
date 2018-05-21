@@ -23,7 +23,8 @@
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
              xmlns:viewModel="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.ViewModel"
              mc:Ignorable="d" 
-             d:DesignHeight="70" d:DesignWidth="500">
+             d:DesignHeight="70" d:DesignWidth="500"
+             MaxHeight="70">
 
     <UserControl.Resources>
 
