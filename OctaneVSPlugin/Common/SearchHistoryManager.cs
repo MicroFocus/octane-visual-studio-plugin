@@ -21,20 +21,66 @@ using System.Runtime.Serialization;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
+    /// <summary>
+    /// Class for managing the user's search history
+    /// </summary>
     public static class SearchHistoryManager
     {
-        private const int MaxSearchHistorySize = 4;
         private static SearchHistoryMetadata _metadata;
 
-        internal static List<string> LoadHistory()
+        /// <summary>
+        /// Maximum number of elements saved for the search history
+        /// </summary>
+        internal const int MaxSearchHistorySize = 5;
+
+        /// <summary>
+        /// Update the search history with the given filter
+        /// </summary>
+        internal static void UpdateHistory(string filter)
         {
+            if (string.IsNullOrEmpty(filter))
+                return;
+
+            LoadHistoryIfNeeded();
+
+            var newHistory = _metadata.queries.ToList();
+            var oldHistory = _metadata.queries.ToList();
+
+            newHistory.Clear();
+            newHistory.Add(filter);
+
+            oldHistory.Remove(filter);
+
+            newHistory.AddRange(oldHistory.Take(MaxSearchHistorySize - 1));
+
+            _metadata.queries = newHistory;
+
+            SaveHistory();
+        }
+
+        /// <summary>
+        /// Returns the current search history
+        /// </summary>
+        internal static List<string> History
+        {
+            get
+            {
+                LoadHistoryIfNeeded();
+                HandleDifferentContext();
+                return _metadata.queries.ToList();
+            }
+        }
+
+        private static void LoadHistoryIfNeeded()
+        {
+            if (_metadata != null)
+                return;
+
             _metadata = Utility.DeserializeFromJson(OctanePluginSettings.Default.SearchHistory, new SearchHistoryMetadata
             {
                 id = ConstructId(),
                 queries = new List<string>()
             });
-
-            return _metadata.queries.ToList();
         }
 
         private static void HandleDifferentContext()
@@ -51,29 +97,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             };
 
             SaveHistory();
-        }
-
-        internal static void UpdateHistory(string filter)
-        {
-            var newHistory = _metadata.queries.ToList();
-            var oldHistory = _metadata.queries.ToList();
-
-            newHistory.Clear();
-            newHistory.Add(filter);
-
-            oldHistory.Remove(filter);
-
-            newHistory.AddRange(oldHistory.Take(MaxSearchHistorySize));
-
-            _metadata.queries = newHistory;
-
-            SaveHistory();
-        }
-
-        internal static List<string> GetHistory()
-        {
-            HandleDifferentContext();
-            return _metadata.queries.ToList();
         }
 
         private static void SaveHistory()

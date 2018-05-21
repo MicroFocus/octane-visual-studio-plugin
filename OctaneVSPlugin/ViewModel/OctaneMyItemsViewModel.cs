@@ -39,9 +39,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         private string _lastExceptionMessage;
 
-
-        private List<string> _searchHistory;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -52,8 +49,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SearchCommand = new DelegateCommand(SearchInternal);
             RefreshCommand = new DelegatedCommand(Refresh);
             OpenOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
-
-            _searchHistory = SearchHistoryManager.LoadHistory();
 
             _myItems = new ObservableCollection<OctaneItemViewModel>();
             _mode = MainWindowMode.FirstTime;
@@ -94,7 +89,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             NotifyPropertyChanged("SearchHistory");
 
             var searchWindow = PluginWindowManager.ObtainSearchWindow(MainWindow.PluginPackage);
-            searchWindow.Search(SearchFilter);
+            searchWindow?.Search(SearchFilter);
         }
 
         /// <summary>
@@ -104,7 +99,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                return _mode == MainWindowMode.ItemsLoaded ? new ObservableCollection<string>(SearchHistoryManager.GetHistory()) : new ObservableCollection<string>();
+                return new ObservableCollection<string>(_mode == MainWindowMode.ItemsLoaded
+                           ? SearchHistoryManager.History
+                           : new List<string>());
             }
         }
 
