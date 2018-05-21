@@ -286,7 +286,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     viewModels.Add(new CommentViewModel(comment));
                 }
 
-                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => c.CreationTime));
+                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => DateTime.Parse(c.CreationTime)));
             }
             catch (Exception)
             {
