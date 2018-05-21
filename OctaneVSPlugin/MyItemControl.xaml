@@ -46,7 +46,7 @@
             </DataTemplate.Triggers>
         </DataTemplate>
 
-        <DataTemplate DataType="{x:Type local:SeparatorViewModel}">
+        <DataTemplate DataType="{x:Type viewModel:SeparatorViewModel}">
             <TextBlock Text=" | " />
         </DataTemplate>
         
@@ -83,11 +83,11 @@
                         <ColumnDefinition />
                     </Grid.ColumnDefinitions>
                     
-                    <TextBlock Text="{Binding ID, FallbackValue=Test}" Visibility="{Binding Path=VisibleID, Converter={StaticResource BoolToVisConverter}}" Margin="0 0 5 0" />
-                    <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" FontWeight="Bold" Text="{Binding Title, FallbackValue=Im im number 1 with very very very long title and many many more things like this and that}" />
+                    <TextBlock Text="{Binding ID, FallbackValue=ID}" Visibility="{Binding Path=VisibleID, Converter={StaticResource BoolToVisConverter}}" Margin="0 0 5 0" />
+                    <TextBlock Grid.Column="1" TextTrimming="CharacterEllipsis" FontWeight="Bold" Text="{Binding Title, FallbackValue=Unable to obtain information}" />
                 </Grid>
 
-                <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Subtitle field sldkfj slkdfjlsdkjflskd jflsdkj}"
+                <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Unable to obtain information}"
                                   Grid.Row="1" Grid.Column="0" />
 
                 <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding TopFields}" Margin="5 0 0 0" HorizontalAlignment="Right"

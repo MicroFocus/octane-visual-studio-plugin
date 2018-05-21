@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text; // StringBuilder
 using System.Xml;
 
@@ -71,7 +72,7 @@ namespace HTMLConverter
     /// HtmlParser class accepts a string of possibly badly formed Html, parses it and returns a string
     /// of well-formed Html that is as close to the original string in content as possible
     /// </summary>
-
+    [ExcludeFromCodeCoverage]
     internal class HtmlParser
     {
         // ---------------------------------------------------------------------

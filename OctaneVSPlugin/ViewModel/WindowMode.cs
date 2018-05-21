@@ -17,22 +17,22 @@
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     /// <summary>
-    /// Represents the modes in which the details window can be in.
+    /// Represents the modes in which a window can be in.
     /// </summary>
-    public enum DetailsWindowMode
+    public enum WindowMode
     {
         /// <summary>
-        /// This mode is set during loading of the item.
+        /// This mode is set during loading of the window.
         /// </summary>
-        LoadingItem,
+        Loading,
 
         /// <summary>
-        /// This mode is set after the item has been loaded.
+        /// This mode is set after the window has been loaded.
         /// </summary>
-        ItemLoaded,
+        Loaded,
 
         /// <summary>
-        /// This mode is set when we fail to load the item.
+        /// This mode is set when we fail to load the window.
         /// </summary>
         FailedToLoad
     }

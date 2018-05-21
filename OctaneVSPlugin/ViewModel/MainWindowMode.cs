@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     /// <summary>
     /// Represents the modes in which the main window can be in.

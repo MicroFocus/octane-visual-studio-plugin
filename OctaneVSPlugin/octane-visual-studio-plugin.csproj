@@ -74,6 +74,11 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Common\Collector\EntitiesCollector.cs" />
+    <Compile Include="Common\Collector\MyWorkEntitiesCollector.cs" />
+    <Compile Include="Common\Collector\SearchEntitiesCollector.cs" />
+    <Compile Include="Common\EntityTypeInformation.cs" />
+    <Compile Include="Common\EntityTypeRegistry.cs" />
     <Compile Include="Common\FieldsCache.cs" />
     <Compile Include="Common\FieldsMetadataService.cs" />
     <Compile Include="Common\HTMLConverter\HtmlCssParser.cs" />
@@ -85,25 +90,24 @@
     <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
     <Compile Include="Common\IFieldsObserver.cs" />
     <Compile Include="Common\OctaneConfiguration.cs" />
+    <Compile Include="Common\SearchHistoryManager.cs" />
     <Compile Include="OctanePluginSettings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>OctanePluginSettings.settings</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\CommentViewModel.cs" />
-    <Compile Include="Common\EntityNames.cs" />
     <Compile Include="DataProtector.cs" />
-    <Compile Include="DelegatedCommand.cs" />
+    <Compile Include="Common\DelegatedCommand.cs" />
     <Compile Include="ViewModel\BaseItemViewModel.cs" />
     <Compile Include="ViewModel\DetailedItemViewModel.cs" />
-    <Compile Include="EntityComparerByLastModified.cs" />
+    <Compile Include="Common\EntityComparerByLastModified.cs" />
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
-    <Compile Include="GifImage.cs" />
-    <Compile Include="GreaterThanValueConverter.cs" />
-    <Compile Include="ItemIconInfo.cs" />
-    <Compile Include="MainWindowMode.cs" />
+    <Compile Include="View\GifImage.cs" />
+    <Compile Include="Common\GreaterThanZeroConverter.cs" />
+    <Compile Include="ViewModel\MainWindowMode.cs" />
     <Compile Include="MyItemControl.xaml.cs">
       <DependentUpon>MyItemControl.xaml</DependentUpon>
     </Compile>
@@ -117,6 +121,7 @@
       <DependentUpon>MainWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindowPackage.cs" />
+    <Compile Include="ViewModel\SearchItemsViewModel.cs" />
     <Compile Include="View\DetailsToolWindow.cs" />
     <Compile Include="View\DetailsToolWindowControl.xaml.cs">
       <DependentUpon>DetailsToolWindowControl.xaml</DependentUpon>
@@ -125,15 +130,23 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SeparatorViewModel.cs" />
+    <Compile Include="ViewModel\SeparatorViewModel.cs" />
     <Compile Include="MyWorkMetadata.cs" />
-    <Compile Include="CommonFields.cs" />
+    <Compile Include="Common\CommonFields.cs" />
     <Compile Include="Common\Utility.cs" />
-    <Compile Include="ViewModel\DetailsWindowMode.cs" />
-    <Compile Include="View\DetailsWindowManager.cs" />
+    <Compile Include="ViewModel\WindowMode.cs" />
+    <Compile Include="View\PluginWindowManager.cs" />
     <Compile Include="View\FocusBehavior.cs" />
     <Compile Include="View\HtmlToFlowDocumentConverter.cs" />
+    <Compile Include="View\SearchItemControl.xaml.cs">
+      <DependentUpon>SearchItemControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SearchToolWindow.cs" />
+    <Compile Include="View\SearchToolWindowControl.xaml.cs">
+      <DependentUpon>SearchToolWindowControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\TextBlockService.cs" />
+    <Compile Include="View\ToolWindowHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -151,7 +164,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="index.html" />
     <VSCTCompile Include="MainWindowPackage.vsct">
       <ResourceName>Menus.ctmenu</ResourceName>
       <SubType>Designer</SubType>
@@ -164,6 +176,7 @@
     <Content Include="Resources\MainWindowPackage.ico" />
     <Resource Include="Resources\octane-logo.png" />
     <Resource Include="Resources\microfocus-blue-logo.png" />
+    <Resource Include="Resources\no-items-to-display.png" />
     <Content Include="Resources\octane-logo-32x32.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -177,7 +190,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Content Include="stylesheet.css" />
+    <Resource Include="Resources\search.png" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindowControl.xaml">
@@ -189,6 +202,18 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DetailsToolWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\ResourceDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SearchItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\SearchToolWindowControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -205,9 +230,6 @@
     </Reference>
     <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
-    </Reference>
-    <Reference Include="MicroFocus.Adm.Octane.Api.Core, Version=12.55.25.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MicroFocus.Adm.Octane.Api.Core.12.55.25\lib\net45\MicroFocus.Adm.Octane.Api.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
@@ -299,6 +321,7 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -321,6 +344,12 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\alm-octane-csharp-rest-sdk\OctaneSdk\OctaneSdk.csproj">
+      <Project>{344d2ea6-c3e6-4a67-95c1-51b5e7647e89}</Project>
+      <Name>OctaneSdk</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!--<Import Project="$(Solutiondir)\packages\Microsoft.VSSDK.BuildTools.15.0.26201\build\Microsoft.VSSDK.BuildTools.targets" Condition="'$(VSToolsPath)' != ''" />

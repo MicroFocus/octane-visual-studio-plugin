@@ -14,32 +14,78 @@
 * limitations under the License.
 */
 
-using MicroFocus.Adm.Octane.Api.Core.Tests;
+using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
+using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
+using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 {
     /// <summary>
     /// Base test class for plugin tests
     /// </summary>
-    public abstract class BaseOctanePluginTest : BaseTest
+    [TestClass]
+    public abstract class BaseOctanePluginTest
     {
-        protected readonly MyWorkMetadata MyWorkMetadata = new MyWorkMetadata();
         private dynamic _persistedFieldsCache;
+
+        protected static RestConnector RestConnector = new RestConnector();
+        public static EntityService EntityService = new EntityService(RestConnector);
+
+        public static WorkspaceContext WorkspaceContext;
+
+        public static WorkspaceUser User;
+
+        public static Release CurrentRelease;
 
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
-            InitConnection(context);
+            var ignoreServerCertificateValidation = ConfigurationManager.AppSettings["ignoreServerCertificateValidation"];
+            if (ignoreServerCertificateValidation != null && ignoreServerCertificateValidation.ToLower().Equals("true"))
+            {
+                NetworkSettings.IgnoreServerCertificateValidation();
+            }
+            NetworkSettings.EnableAllSecurityProtocols();
 
-            OctaneConfiguration.Url = host;
-            OctaneConfiguration.Username = userName;
-            OctaneConfiguration.Password = password;
-            OctaneConfiguration.WorkSpaceId = workspaceContext.WorkspaceId;
+            OctaneConfiguration.Url = ConfigurationManager.AppSettings["webAppUrl"];
+            // If webAppUrl is empty we do not try to connect.
+            if (string.IsNullOrWhiteSpace(OctaneConfiguration.Url))
+                return;
+
+            OctaneConfiguration.Username = ConfigurationManager.AppSettings["userName"];
+            OctaneConfiguration.Password = ConfigurationManager.AppSettings["password"];
+            var connectionInfo = new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password);
+
+            RestConnector.Connect(OctaneConfiguration.Url, connectionInfo);
+
+            var sharedSpaceId = int.Parse(ConfigurationManager.AppSettings["sharedSpaceId"]);
+            var workspaceId = int.Parse(ConfigurationManager.AppSettings["workspaceId"]);
+
+            WorkspaceContext = new WorkspaceContext(sharedSpaceId, workspaceId);
+            OctaneConfiguration.WorkSpaceId = WorkspaceContext.WorkspaceId;
+
+            var sharedSpaceContext = new SharedSpaceContext(sharedSpaceId);
             OctaneConfiguration.SharedSpaceId = sharedSpaceContext.SharedSpaceId;
+
+            User = GetWorkspaceUser();
+
+            CurrentRelease = ReleaseUtilities.CreateRelease();
+        }
+
+        [AssemblyCleanup]
+        public static void AssemblyCleanup()
+        {
+            EntityService.DeleteById<Release>(WorkspaceContext, CurrentRelease.Id);
         }
 
         [TestInitialize]
@@ -68,6 +114,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
         {
             ExposedClass.From(typeof(FieldsCache))._persistedFieldsCache = _persistedFieldsCache;
             ExposedClass.From(typeof(FieldsCache)).PersistFieldsMetadata();
+
+            TestCleanupInternal();
+        }
+
+        protected virtual void TestCleanupInternal()
+        {
+        }
+
+        private static WorkspaceUser GetWorkspaceUser()
+        {
+            QueryPhrase ownerQuery = new LogicalQueryPhrase("name", OctaneConfiguration.Username);
+            EntityListResult<WorkspaceUser> ownerQueryResult = EntityService.GetAsync<WorkspaceUser>(WorkspaceContext, new List<QueryPhrase> { ownerQuery }, null).Result;
+            var workspaceUser = ownerQueryResult.data.FirstOrDefault();
+            if (workspaceUser == null)
+                throw new Exception($"Unable to find a user with the name \"{OctaneConfiguration.Username}\"");
+            return workspaceUser;
         }
     }
 }
