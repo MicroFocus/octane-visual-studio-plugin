@@ -1,0 +1,178 @@
+﻿<UserControl x:Class="MicroFocus.Adm.Octane.VisualStudio.View.SearchToolWindowControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:vsshell="clr-namespace:Microsoft.VisualStudio.Shell;assembly=Microsoft.VisualStudio.Shell.14.0"
+             xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
+             xmlns:visualStudio="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
+             xmlns:common="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.Common"
+             Background="{DynamicResource {x:Static vsshell:VsBrushes.WindowKey}}"
+             Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
+             mc:Ignorable="d"
+             d:DesignHeight="300" d:DesignWidth="300"
+             Name="SearchWindow">
+
+    <Border Padding="10">
+        <Grid>
+            <DockPanel x:Name="LoadingItemPanel">
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Mode}" Value="Loading">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+
+                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+            </DockPanel>
+
+            <DockPanel x:Name="FailedToLoadPanel">
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Mode}" Value="FailedToLoad">
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="50"/>
+                        <RowDefinition />
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
+                        <Button Width="25" Height="25" 
+                                BorderThickness="0"
+                                Background="{DynamicResource VsBrush.Window}"
+                                Command="{Binding RefreshCommand}"
+                                ToolTip="Refresh details">
+                            <!--This text-block show the reload sign as unicode character-->
+                            <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                                       FontWeight="Bold" FontSize="24"
+                                       Foreground="LightSkyBlue"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Button>
+
+                    </StackPanel>
+
+                    <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                        <Grid.RowDefinitions>
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <Image Grid.Row="1" Stretch="None"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
+
+                        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <TextBlock>Unable to search for backlog items</TextBlock>
+
+                            <TextBlock Text="{Binding ErrorMessage, FallbackValue=this will show the error message}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                   Foreground="Red"/>
+                        </StackPanel>
+
+                        <Image Grid.Row="4" Stretch="None"
+                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
+                           RenderOptions.BitmapScalingMode="Fant"
+                           Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
+                    </Grid>
+                </Grid>
+            </DockPanel>
+
+            <DockPanel x:Name="NoItemsPanel">
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Mode}" Value="Loaded" />
+                                    <Condition Binding="{Binding SearchItems.Count}" Value="0" />
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Viewbox Grid.Row="0" MaxHeight="200">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/no-items-to-display.png" />
+                        </StackPanel>
+
+                    </Viewbox>
+
+                    <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
+                        There are no items to display.
+                    </TextBlock>
+                </Grid>
+            </DockPanel>
+
+            <DockPanel x:Name="ShowSearchResultsView">
+                <DockPanel.Resources>
+                    <common:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+                </DockPanel.Resources>
+                <DockPanel.Style>
+                    <Style TargetType="DockPanel">
+                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Style.Triggers>
+                            <MultiDataTrigger>
+                                <MultiDataTrigger.Conditions>
+                                    <Condition Binding="{Binding Mode}" Value="Loaded" />
+                                    <Condition Binding="{Binding SearchItems.Count, Converter={StaticResource GreaterThanZeroConverter}}" Value="True" />
+                                </MultiDataTrigger.Conditions>
+                                <MultiDataTrigger.Setters>
+                                    <Setter Property="Visibility" Value="Visible" />
+                                </MultiDataTrigger.Setters>
+                            </MultiDataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DockPanel.Style>
+                <ListBox x:Name="SearchResults" ItemsSource="{Binding SearchItems}"
+                         MouseDoubleClick="SearchItems_MouseDoubleClick"
+                         Background="{DynamicResource VsBrush.Window}"
+                         Foreground="{DynamicResource VsBrush.WindowText}"
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                         BorderThickness="0">
+                    <ListBox.ContextMenu>
+                        <ContextMenu Name="SearchResultsContextMenu" Opened="SearchResults_ContextMenuOpened" />
+                    </ListBox.ContextMenu>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <view:SearchItemControl />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <!-- Set the horizontal content alignment to stretch so the item will have the full width of the list box.
+                         This allows the MyItemControl to align the top and bottom fields to the right. -->
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </DockPanel>
+        </Grid>
+    </Border>
+</UserControl>

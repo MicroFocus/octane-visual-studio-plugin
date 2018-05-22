@@ -17,7 +17,7 @@
 using System;
 using System.Windows.Input;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
     /// Implement ICommandHandler which delegate the Execute to a delegate.

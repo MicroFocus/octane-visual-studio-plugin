@@ -57,6 +57,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         public static string StripHtml(string text)
         {
+            if (text == null)
+                return string.Empty;
+
             var doc = NSoup.Parse.Parser.Parse(text, OctaneConfiguration.Url);
             return doc.Text();
         }

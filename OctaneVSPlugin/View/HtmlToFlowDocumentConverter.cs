@@ -3,6 +3,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -14,6 +15,7 @@ using System.Windows.Navigation;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
+    [ExcludeFromCodeCoverage]
     public class HtmlToFlowDocumentConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

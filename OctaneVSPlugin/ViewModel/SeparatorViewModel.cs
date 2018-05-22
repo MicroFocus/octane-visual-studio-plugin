@@ -14,22 +14,26 @@
 * limitations under the License.
 */
 
-using System.Windows.Media;
+using System.Collections.Generic;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     /// <summary>
-    /// Info about the icon label and color.
+    /// Separator ViewModel for representing separators between fields on WorkItem.
     /// </summary>
-    public class ItemIconInfo
+    public class SeparatorViewModel
     {
-        public string ShortLabel { get; private set; }
-        public Color LabelColor { get; private set; }
-
-        public ItemIconInfo(string shortLabel, Color labelColor)
+        public static IEnumerable<SeparatorViewModel> Generator()
         {
-            ShortLabel = shortLabel;
-            LabelColor = labelColor;
+            while (true)
+            {
+                yield return new SeparatorViewModel();
+            }
+        }
+
+        internal static SeparatorViewModel Make()
+        {
+            return new SeparatorViewModel();
         }
     }
 }

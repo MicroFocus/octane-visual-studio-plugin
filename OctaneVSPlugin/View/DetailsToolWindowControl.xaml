@@ -42,14 +42,14 @@
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="LoadingItem">
+                            <DataTrigger Binding="{Binding Mode}" Value="Loading">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </DockPanel.Style>
 
-                <visualStudio:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
 
             </DockPanel>
 
@@ -120,7 +120,7 @@
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="ItemLoaded">
+                            <DataTrigger Binding="{Binding Mode}" Value="Loaded">
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>

@@ -16,106 +16,178 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
-using octane_visual_studio_plugin;
+using MicroFocus.Adm.Octane.VisualStudio.View;
+using Microsoft.VisualStudio.PlatformUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows.Input;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
+    /// <summary>
+    /// View model for entities directly related to the current user
+    /// </summary>
     public class OctaneMyItemsViewModel : INotifyPropertyChanged
     {
-        private static OctaneMyItemsViewModel instance;
-
-        private DelegatedCommand refreshCommand;
-        private DelegatedCommand openOctaneOptionsDialogCommand;
-        private MainWindowPackage package;
-
-        private MainWindowMode mode;
-        private ObservableCollection<OctaneItemViewModel> myItems;
-
-        private MyWorkMetadata myWorkMetadata;
+        private MainWindowMode _mode;
+        private readonly ObservableCollection<OctaneItemViewModel> _myItems;
 
         /// <summary>
-        /// Store the exception message from load items.
+        /// Store the exception message from the loading items operation
         /// </summary>
-        private string lastExceptionMessage;
+        private string _lastExceptionMessage;
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        private const int MaxSearchHistorySize = 4;
+        private readonly List<string> _searchHistory;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public OctaneMyItemsViewModel()
         {
-            instance = this;
+            Instance = this;
 
-            myWorkMetadata = new MyWorkMetadata();
+            SearchCommand = new DelegateCommand(SearchInternal);
+            RefreshCommand = new DelegatedCommand(Refresh);
+            OpenOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
 
-            refreshCommand = new DelegatedCommand(Refresh);
-            openOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
-            myItems = new ObservableCollection<OctaneItemViewModel>();
-            mode = MainWindowMode.FirstTime;
+            try
+            {
+                _searchHistory = OctanePluginSettings.Default.SearchHistory.Cast<string>().ToList();
+            }
+            catch (Exception)
+            {
+                _searchHistory = new List<string>();
+            }
+
+            _myItems = new ObservableCollection<OctaneItemViewModel>();
+            _mode = MainWindowMode.FirstTime;
         }
 
-        public static OctaneMyItemsViewModel Instance
-        {
-            get { return instance; }
-        }
+        public static OctaneMyItemsViewModel Instance { get; private set; }
 
+        /// <summary>
+        /// Current state of the view model
+        /// </summary>
         public MainWindowMode Mode
         {
-            get { return mode; }
+            get { return _mode; }
             private set
             {
-                mode = value;
+                _mode = value;
                 NotifyPropertyChanged("Mode");
             }
         }
 
-        public ICommand RefreshCommand
+        #region Search
+
+        /// <summary>
+        /// Current search filter
+        /// </summary>
+        public string SearchFilter { get; set; }
+
+        public ICommand SearchCommand { get; }
+
+        private void SearchInternal(object parameter)
         {
-            get { return refreshCommand; }
+            if (string.IsNullOrEmpty(SearchFilter) || string.IsNullOrEmpty(SearchFilter.Trim()))
+                return;
+
+            SearchFilter = SearchFilter.Trim();
+
+            UpdateSearchHistory();
+
+            var searchWindow = PluginWindowManager.ObtainSearchWindow(MainWindow.PluginPackage);
+            searchWindow.Search(SearchFilter);
         }
 
-        public ICommand OpenOctaneOptionsDialogCommand
+        private void UpdateSearchHistory()
         {
-            get { return openOctaneOptionsDialogCommand; }
+            var oldHistory = _searchHistory.ToList();
+
+            _searchHistory.Clear();
+            _searchHistory.Add(SearchFilter);
+
+            oldHistory.Remove(SearchFilter);
+
+            _searchHistory.AddRange(oldHistory.Take(MaxSearchHistorySize));
+
+            try
+            {
+                var sc = new StringCollection();
+                sc.AddRange(_searchHistory.ToArray());
+                OctanePluginSettings.Default.SearchHistory = sc;
+                OctanePluginSettings.Default.Save();
+            }
+            catch (Exception)
+            {
+            }
+
+            NotifyPropertyChanged("SearchHistory");
         }
 
+        /// <summary>
+        /// Enumeration of the last searches
+        /// </summary>
+        public IEnumerable<string> SearchHistory
+        {
+            get
+            {
+                return new ObservableCollection<string>(_searchHistory);
+            }
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Enumeration containing entities related to the current user
+        /// </summary>
         public IEnumerable<OctaneItemViewModel> MyItems
         {
-            get { return myItems; }
+            get { return _myItems; }
         }
 
+        /// <summary>
+        /// Error message
+        /// </summary>
         public string LastExceptionMessage
         {
-            get { return lastExceptionMessage; }
+            get { return _lastExceptionMessage; }
             set
             {
-                lastExceptionMessage = value;
+                _lastExceptionMessage = value;
                 NotifyPropertyChanged("LastExceptionMessage");
             }
         }
 
+        /// <summary>
+        /// Refresh command
+        /// </summary>
+        public ICommand RefreshCommand { get; }
+
         private void Refresh(object parameter)
         {
-            LoadMyItems();
-        }
-
-        private void OpenOctaneOptionsDialog(object parameter)
-        {
-            package.ShowOptionPage(typeof(OptionsPage));
+            LoadMyItemsAsync();
         }
 
         /// <summary>
-        /// This method is called after the options are changed.
+        /// Command for opening the ALM Octane options dialog
         /// </summary>
-        internal void OptionsChanged()
+        public ICommand OpenOctaneOptionsDialogCommand { get; }
+
+        private void OpenOctaneOptionsDialog(object parameter)
         {
-            LoadMyItems();
+            MainWindow.PluginPackage.ShowOptionPage(typeof(OptionsPage));
         }
 
-        internal async void LoadMyItems()
+        /// <summary>
+        /// Retrieve all the entities related to the current user
+        /// </summary>
+        internal async System.Threading.Tasks.Task LoadMyItemsAsync()
         {
             if (string.IsNullOrEmpty(OctaneConfiguration.Url))
             {
@@ -141,18 +213,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     OctaneConfiguration.Password);
                 await octane.Connect();
 
-                myItems.Clear();
+                _myItems.Clear();
 
-                IList<BaseEntity> items = await octane.GetMyItems(myWorkMetadata);
+                IList<BaseEntity> items = await octane.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
-                    myItems.Add(new OctaneItemViewModel(entity, myWorkMetadata));
+                    _myItems.Add(new OctaneItemViewModel(entity));
                 }
 
                 IList<BaseEntity> comments = await octane.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
-                    myItems.Add(new CommentViewModel(comment, myWorkMetadata));
+                    _myItems.Add(new CommentViewModel(comment));
                 }
 
                 Mode = MainWindowMode.ItemsLoaded;
@@ -164,16 +236,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
-        internal void SetPackage(MainWindowPackage package)
-        {
-            this.package = package;
-            LoadMyItems();
-        }
+        #region INotifyPropertyChanged
 
-        internal MainWindowPackage Package
-        {
-            get { return package; }
-        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         private void NotifyPropertyChanged(string propName)
         {
@@ -183,27 +248,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
-        public async System.Threading.Tasks.Task<string> GetGherkinScript(Test test)
-        {
-            try
-            {
-                OctaneServices octane = new OctaneServices(
-                    OctaneConfiguration.Url,
-                    OctaneConfiguration.SharedSpaceId,
-                    OctaneConfiguration.WorkSpaceId,
-                    OctaneConfiguration.Username,
-                    OctaneConfiguration.Password);
-                await octane.Connect();
-
-                TestScript testScript = await octane.GetTestScript(test.Id);
-                return testScript.Script;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Fail to get test script", ex);
-            }
-        }
-
-
+        #endregion
     }
 }

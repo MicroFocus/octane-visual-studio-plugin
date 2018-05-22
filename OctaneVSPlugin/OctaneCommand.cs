@@ -18,12 +18,14 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
+using System.Diagnostics.CodeAnalysis;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
     /// <summary>
     /// Command handler
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class OctaneCommand
     {
         /// <summary>

@@ -19,6 +19,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
@@ -35,6 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// </para>
     /// </remarks>
     [Guid("d19915c9-3dea-4d5c-aa56-bd1fed3a7ab3")]
+    [ExcludeFromCodeCoverage]
     public class DetailsToolWindow : ToolWindowPane
     {
         private readonly OctaneToolWindowControl detailsControl;
@@ -79,7 +81,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         protected override void OnClose()
         {
             DetachViewModelFromFieldsCache();
-            DetailsWindowManager.UnregisterDetailsWindow(this);
+            PluginWindowManager.UnregisterDetailsWindow(this);
             base.OnClose();
         }
 
@@ -101,10 +103,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         internal void LoadEntity(BaseEntity entity)
         {
-            var metadata = new MyWorkMetadata();
-            var viewModel = new DetailedItemViewModel(entity, metadata);
-            viewModel.Initialize();
-            Caption = $"{EntityNames.GetInitials(Utility.GetConcreteEntityType(entity))} {viewModel.ID}";
+            var viewModel = new DetailedItemViewModel(entity);
+            viewModel.InitializeAsync();
+
+            var entityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(viewModel.Entity);
+            Caption = $"{entityTypeInformation?.ShortLabel} {viewModel.ID}";
             detailsControl.DataContext = viewModel;
         }
 

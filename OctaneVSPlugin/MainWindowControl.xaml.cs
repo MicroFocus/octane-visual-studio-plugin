@@ -15,13 +15,10 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
-using Microsoft.VisualStudio.Shell;
-using Microsoft.VisualStudio.Shell.Interop;
-using octane_visual_studio_plugin;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -31,19 +28,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// <summary>
     /// Interaction logic for MainWindowControl.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public partial class MainWindowControl : UserControl
     {
-        private readonly OctaneMyItemsViewModel viewModel;
-        private MainWindowPackage package;
-
-        private readonly MenuItem viewDetailsMenuItem;
-        private readonly MenuItem viewTaskParentDetailsMenuItem;
-        private readonly MenuItem viewCommentParentDetailsMenuItem;
-        private readonly MenuItem openInBrowserMenuItem;
-        private readonly MenuItem copyCommitMessageMenuItem;
-        private readonly MenuItem gherkinTestMenuItem;
-
-        private const string AppName = "ALM Octane";
+        private readonly OctaneMyItemsViewModel _viewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowControl"/> class.
@@ -51,50 +39,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public MainWindowControl()
         {
             InitializeComponent();
-            viewModel = new OctaneMyItemsViewModel();
-            DataContext = viewModel;
-
-            viewDetailsMenuItem = new MenuItem
-            {
-                Header = "View details (DblClick)",
-                Command = new DelegatedCommand(ViewDetails)
-            };
-
-            viewTaskParentDetailsMenuItem = new MenuItem
-            {
-                Header = "View parent details (DblClick)",
-                Command = new DelegatedCommand(ViewTaskParentDetails)
-            };
-
-            viewCommentParentDetailsMenuItem = new MenuItem
-            {
-                Header = "View parent details (DblClick)",
-                Command = new DelegatedCommand(ViewCommentParentDetails)
-            };
-
-            openInBrowserMenuItem = new MenuItem
-            {
-                Header = "Open in Browser (Alt + DblClick)",
-                Command = new DelegatedCommand(OpenInBrowser)
-            };
-
-            copyCommitMessageMenuItem = new MenuItem
-            {
-                Header = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)",
-                Command = new DelegatedCommand(CopyCommitMessage)
-            };
-
-            gherkinTestMenuItem = new MenuItem
-            {
-                Header = "Download Script",
-                Command = new DelegatedCommand(DownloadGherkinScript)
-            };
+            _viewModel = new OctaneMyItemsViewModel();
+            DataContext = _viewModel;
         }
 
-        public void SetPackage(MainWindowPackage package)
+        /// <summary>
+        /// Initialize the data for the control
+        /// </summary>
+        internal void Initialize()
         {
-            this.package = package;
-            viewModel.SetPackage(package);
+            _viewModel.LoadMyItemsAsync();
         }
 
         private OctaneItemViewModel SelectedItem
@@ -107,78 +61,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private void OpenInBrowser(object param)
         {
-            try
-            {
-                Utility.OpenInBrowser(GetSelectedEntity());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.OpenInBrowser(GetSelectedEntity());
         }
 
-        private async void ViewDetails(object param)
+        private void ViewDetails(object param)
         {
-            try
-            {
-                var selectedEntity = GetSelectedEntity();
-                await ViewEntityDetailsInternal(selectedEntity);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.ViewDetails(GetSelectedEntity());
         }
 
-        private async void ViewTaskParentDetails(object param)
+        private void ViewTaskParentDetails(object param)
         {
-            try
-            {
-                if (SelectedItem.Entity.TypeName != Api.Core.Entities.Task.TYPE_TASK)
-                {
-                    throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
-                }
-                var selectedEntity = (BaseEntity)SelectedItem.Entity.GetValue("story");
-
-                await ViewEntityDetailsInternal(selectedEntity);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.ViewTaskParentDetails(SelectedItem);
         }
 
-        private async void ViewCommentParentDetails(object param)
+        private void ViewCommentParentDetails(object param)
         {
-            try
-            {
-                var commentViewModel = SelectedItem as CommentViewModel;
-                if (commentViewModel == null)
-                {
-                    throw new Exception($"Unrecognized type {SelectedItem.Entity.TypeName}.");
-                }
-                var selectedEntity = commentViewModel.ParentEntity;
-
-                await ViewEntityDetailsInternal(selectedEntity);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        private async System.Threading.Tasks.Task ViewEntityDetailsInternal(BaseEntity entity)
-        {
-            if (entity.TypeName == WorkItem.SUBTYPE_FEATURE || entity.TypeName == WorkItem.SUBTYPE_EPIC)
-            {
-                Utility.OpenInBrowser(entity);
-                return;
-            }
-
-            DetailsToolWindow window = DetailsWindowManager.ObtainDetailsWindow(package, entity);
-            IVsWindowFrame windowFrame = (IVsWindowFrame)window.Frame;
-            Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
-            window.LoadEntity(entity);
+            ToolWindowHelper.ViewCommentParentDetails(SelectedItem);
         }
 
         private void CopyCommitMessage(object sender)
@@ -193,139 +91,36 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to obtain commit message.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to obtain commit message.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void results_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        private void results_MouseDoubleClick(object sender, MouseButtonEventArgs e)
         {
-            if (SelectedItem == null)
-                return;
-
-            try
-            {
-                if (Keyboard.IsKeyDown(Key.LeftAlt) || Keyboard.IsKeyDown(Key.RightAlt))
-                {
-                    if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift))
-                    {
-                        CopyCommitMessage(sender);
-                    }
-                    else
-                    {
-                        OpenInBrowser(sender);
-                    }
-                }
-                else
-                {
-                    var selectedEntity = GetSelectedEntity();
-                    if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
-                    {
-                        ViewDetails(sender);
-                    }
-                    else
-                    {
-                        OpenInBrowser(sender);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to process double click operation.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.HandleDoubleClickOnItem(GetSelectedEntity(), CopyCommitMessage);
         }
 
-        private async void DownloadGherkinScript(object sender)
+        private void DownloadGherkinScript(object sender)
         {
-            try
-            {
-                Test test = (Test)SelectedItem.Entity;
-                string script = await viewModel.GetGherkinScript(test);
-
-                package.CreateFile(test.Name, script);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.DownloadGherkinScript(SelectedItem);
         }
 
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
         {
-            var cm = (ContextMenu)sender;
-
-            cm.Items.Clear();
-
-            try
-            {
-                // view details
-                if (DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(SelectedItem.Entity)))
-                {
-                    cm.Items.Add(viewDetailsMenuItem);
-                }
-
-                // view parent details
-                var selectedEntity = SelectedItem.Entity;
-                var taskParentEntity = GetTaskParentEntity(selectedEntity);
-                if (selectedEntity.TypeName == Api.Core.Entities.Task.TYPE_TASK && taskParentEntity != null
-                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(taskParentEntity)))
-                {
-                    cm.Items.Add(viewTaskParentDetailsMenuItem);
-                }
-
-                var commentParentEntity = GetCommentParentEntity(SelectedItem);
-                if (commentParentEntity != null &&
-                    DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(commentParentEntity)))
-                {
-                    cm.Items.Add(viewCommentParentDetailsMenuItem);
-                }
-
-                cm.Items.Add(openInBrowserMenuItem);
-
-                if (SelectedItem.IsSupportCopyCommitMessage)
-                {
-                    cm.Items.Add(copyCommitMessageMenuItem);
-                }
-
-                if (SelectedItem.SubType == TestGherkin.SUBTYPE_GHERKIN_TEST)
-                {
-                    cm.Items.Add(gherkinTestMenuItem);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to show context menu.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
+                ViewDetails, ViewTaskParentDetails, ViewCommentParentDetails,
+                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript);
         }
 
         private BaseEntity GetSelectedEntity()
         {
-            var selectedEntity = SelectedItem.Entity;
+            var selectedEntity = SelectedItem?.Entity;
             if (SelectedItem is CommentViewModel commentViewModel)
             {
                 selectedEntity = commentViewModel.ParentEntity;
             }
 
             return selectedEntity;
-        }
-
-        private BaseEntity GetCommentParentEntity(OctaneItemViewModel selectedItem)
-        {
-            if (selectedItem is CommentViewModel commentViewModel)
-            {
-                return commentViewModel.ParentEntity;
-            }
-
-            return null;
-        }
-
-        private BaseEntity GetTaskParentEntity(BaseEntity entity)
-        {
-            if (entity.TypeName == Api.Core.Entities.Task.TYPE_TASK)
-            {
-                return (BaseEntity)SelectedItem.Entity.GetValue("story");
-            }
-
-            return null;
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
@@ -7,6 +8,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// <summary>
     /// Focus behavior for element when it is shown
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public static class FocusBehavior
     {
         public static readonly DependencyProperty IsFocusProperty;

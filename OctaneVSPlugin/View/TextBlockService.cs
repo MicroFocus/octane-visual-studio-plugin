@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -9,6 +10,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// <summary>
     ///  Service for adding a IsTextTrimmed property to TextBlocks
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class TextBlockService
     {
         static TextBlockService()
