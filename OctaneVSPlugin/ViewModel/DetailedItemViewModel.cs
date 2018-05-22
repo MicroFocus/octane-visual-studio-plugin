@@ -23,6 +23,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
@@ -40,7 +41,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private string _filter = string.Empty;
 
-        internal static readonly string TempPath = Path.GetTempPath() + "\\octane_temp\\";
+        internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
 
         /// <summary>
         /// Constructor
@@ -121,6 +122,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private async Task HandleImagesInDescription()
         {
             List<Task> downloadTasks = new List<Task>();
+            List<Tuple<Element, string>> imageNodes = new List<Tuple<Element, string>>();
+            bool updatedImage = false;
             Document doc = null;
             try
             {
@@ -145,15 +148,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     if (string.IsNullOrEmpty(imageName))
                         continue;
 
-                    downloadTasks.Add(Task.Run(() =>
+                    var imagePath = TempPath + EntityType + Entity.Id + imageName;
+                    if (!File.Exists(imagePath))
                     {
-                        var imagePath = TempPath + EntityType + Entity.Id + imageName;
-                        if (!File.Exists(imagePath))
-                        {
-                            _octaneService.DownloadAttachmentAsync(relativeUrl, imagePath).Wait();
-                        }
+                        imageNodes.Add(new Tuple<Element, string>(image, imagePath));
+                        downloadTasks.Add(_octaneService.DownloadAttachmentAsync(relativeUrl, imagePath));
+                    }
+                    else
+                    {
                         image.Attr("src", imagePath);
-                    }));
+                    }
+
+                    updatedImage = true;
                 }
 
                 await Task.WhenAll(downloadTasks);
@@ -162,7 +168,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
             }
 
-            if (downloadTasks.Any() && doc != null)
+            for (var i = 0; i < downloadTasks.Count; i++)
+            {
+                if (downloadTasks[i].Status == TaskStatus.RanToCompletion)
+                {
+                    imageNodes[i].Item1.Attr("src", imageNodes[i].Item2);
+                }
+            }
+
+            if (doc != null && updatedImage)
             {
                 Entity.SetValue(CommonFields.Description, doc.ToString());
             }
