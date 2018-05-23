@@ -123,7 +123,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             List<Task> downloadTasks = new List<Task>();
             List<Tuple<Element, string>> imageNodes = new List<Tuple<Element, string>>();
-            bool updatedImage = false;
+            bool needToUpdateDescription = false;
             Document doc = null;
             try
             {
@@ -159,7 +159,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         image.Attr("src", imagePath);
                     }
 
-                    updatedImage = true;
+                    needToUpdateDescription = true;
                 }
 
                 await Task.WhenAll(downloadTasks);
@@ -176,7 +176,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
             }
 
-            if (doc != null && updatedImage)
+            if (doc != null && needToUpdateDescription)
             {
                 Entity.SetValue(CommonFields.Description, doc.ToString());
             }
