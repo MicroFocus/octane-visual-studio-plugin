@@ -62,8 +62,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                string message = string.Format("{0} #{1}: ", EntityTypeInformation.CommitMessage, ID);
-                return message;
+                if (Entity.TypeName == Task.TYPE_TASK)
+                {
+                    var parentEntity = Utility.GetTaskParentEntity(Entity);
+                    var parentEntityTypeInfo = EntityTypeRegistry.GetEntityTypeInformation(parentEntity);
+
+                    return $"{parentEntityTypeInfo.CommitMessage} #{parentEntity.Id}: {EntityTypeInformation.CommitMessage} #{ID}: ";
+                }
+                else
+                {
+                    return $"{EntityTypeInformation.CommitMessage} #{ID}: ";
+                }
             }
         }
 
