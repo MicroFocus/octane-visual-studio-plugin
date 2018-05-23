@@ -51,10 +51,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         internal static SearchToolWindow ObtainSearchWindow(MainWindowPackage package)
         {
-            if (package == null)
-                return null;
-
-            return ObtainWindow<SearchToolWindow>(package, "SearchWindow");
+            return package == null ? null : ObtainWindow<SearchToolWindow>(package, "SearchWindow");
         }
 
         private static T ObtainWindow<T>(MainWindowPackage package, string uniqueId) where T : ToolWindowPane

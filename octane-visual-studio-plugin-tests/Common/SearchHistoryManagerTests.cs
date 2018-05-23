@@ -186,15 +186,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
 
             CollectionAssert.AreEqual(new List<string> { "2" }, SearchHistoryManager.History, "Mismatched history");
         }
-
-
-        // save, _metadata = null, (restart), check history, save check history
-
-        // save save, switch workspace, check history
-        // save save, switch sharedspace, check history
-        // save save, switch url, check history
-        // save save, switch username, check history
-
-
     }
 }
