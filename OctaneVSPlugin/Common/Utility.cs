@@ -152,5 +152,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         }
 
         #endregion
+
+        /// <summary>
+        /// Return the parent entity of a task; null otherwise
+        /// </summary>
+        public static BaseEntity GetTaskParentEntity(BaseEntity entity)
+        {
+            if (entity == null)
+                return null;
+
+            if (entity.TypeName == Task.TYPE_TASK)
+            {
+                return (BaseEntity)entity.GetValue("story");
+            }
+
+            return null;
+        }
     }
 }

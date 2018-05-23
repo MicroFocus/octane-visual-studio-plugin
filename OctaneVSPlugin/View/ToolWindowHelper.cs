@@ -244,7 +244,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
 
                 // view task parent details
-                var taskParentEntity = GetTaskParentEntity(selectedEntity);
+                var taskParentEntity = Utility.GetTaskParentEntity(selectedEntity);
                 if (viewTaskParentDetailsDelegate != null
                     && selectedEntity.TypeName == Task.TYPE_TASK
                     && taskParentEntity != null
@@ -309,16 +309,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             {
                 MessageBox.Show("Unable to show context menu.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        private static BaseEntity GetTaskParentEntity(BaseEntity entity)
-        {
-            if (entity.TypeName == Task.TYPE_TASK)
-            {
-                return (BaseEntity)entity.GetValue("story");
-            }
-
-            return null;
         }
 
         private static BaseEntity GetCommentParentEntity(BaseItemViewModel selectedItem)

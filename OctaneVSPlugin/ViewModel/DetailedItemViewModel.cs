@@ -16,12 +16,15 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using NSoup.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -36,6 +39,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly List<FieldViewModel> _allEntityFields;
 
         private string _filter = string.Empty;
+
+        internal static readonly string TempPath = Path.GetTempPath() + "\\octane_temp\\";
 
         /// <summary>
         /// Constructor
@@ -71,7 +76,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// <summary>
         /// Initialize detailed information about the cached entity
         /// </summary>
-        public async System.Threading.Tasks.Task InitializeAsync()
+        public async Task InitializeAsync()
         {
             try
             {
@@ -86,6 +91,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 Entity = await _octaneService.FindEntity(Entity, updatedFields);
+
+                await HandleImagesInDescription();
 
                 _allEntityFields.Clear();
 
@@ -109,6 +116,56 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 ErrorMessage = ex.Message;
             }
             NotifyPropertyChanged();
+        }
+
+        private async Task HandleImagesInDescription()
+        {
+            List<Task> downloadTasks = new List<Task>();
+            Document doc = null;
+            try
+            {
+                var description = Entity.GetStringValue(CommonFields.Description);
+                if (string.IsNullOrEmpty(description))
+                    return;
+
+                if (!Directory.Exists(TempPath))
+                {
+                    Directory.CreateDirectory(TempPath);
+                }
+
+                doc = NSoup.Parse.Parser.Parse(description, OctaneConfiguration.Url);
+                foreach (var image in doc.Select("img"))
+                {
+                    var relativeUrl = image.Attr("src");
+
+                    if (relativeUrl == null || !relativeUrl.StartsWith("/api/shared_spaces"))
+                        continue;
+
+                    var imageName = relativeUrl.Split('/').LastOrDefault();
+                    if (string.IsNullOrEmpty(imageName))
+                        continue;
+
+                    downloadTasks.Add(Task.Run(() =>
+                    {
+                        var imagePath = TempPath + EntityType + Entity.Id + imageName;
+                        if (!File.Exists(imagePath))
+                        {
+                            _octaneService.DownloadAttachmentAsync(relativeUrl, imagePath).Wait();
+                        }
+                        image.Attr("src", imagePath);
+                    }));
+                }
+
+                await Task.WhenAll(downloadTasks);
+            }
+            catch (Exception)
+            {
+            }
+
+            if (downloadTasks.Any() && doc != null)
+            {
+                Entity.SetValue(CommonFields.Description, doc.ToString());
+            }
         }
 
         /// <summary>

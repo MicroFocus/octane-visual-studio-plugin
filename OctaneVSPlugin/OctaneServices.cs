@@ -248,6 +248,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result?.data;
         }
 
-
+        /// <summary>
+        /// Async operation for downloading the attachment at the url and store it locally at the given location
+        /// </summary>
+        public async Task DownloadAttachmentAsync(string relativeUrl, string destinationPath)
+        {
+            await es.DownloadAttachmentAsync(relativeUrl, destinationPath);
+        }
     }
 }

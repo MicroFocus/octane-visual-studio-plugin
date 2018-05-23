@@ -8,6 +8,8 @@
 //
 //---------------------------------------------------------------------------
 
+using System.Linq;
+
 namespace HTMLConverter
 {
     using System;
@@ -15,7 +17,6 @@ namespace HTMLConverter
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using System.Windows; // DependencyProperty
     using System.Windows.Documents; // TextElement
     using System.Xml;
@@ -725,28 +726,46 @@ namespace HTMLConverter
                 return;
             }
 
-            XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Hyperlink, _xamlNamespace);
-
-            string[] srcParts = src.Split(new char[] { '#' });
-            if (srcParts.Length > 0 && srcParts[0].Trim().Length > 0)
+            if (src.StartsWith("/api/shared_spaces"))
             {
-                xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_NavigateUri, srcParts[0].Trim());
-            }
-            if (srcParts.Length == 2 && srcParts[1].Trim().Length > 0)
-            {
-                xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_TargetName, srcParts[1].Trim());
-            }
+                // something went wrong with downloading the image from octane
+                // so show a hyperlink instead
+                XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Hyperlink, _xamlNamespace);
 
-            string text = GetAttribute(htmlElement, "alt");
-            if (string.IsNullOrEmpty(text))
-            {
-                srcParts = src.Split('/');
-                text = srcParts.LastOrDefault();
-            }
-            AddTextRun(xamlElement, text ?? string.Empty);
+                string[] srcParts = src.Split(new char[] { '#' });
+                if (srcParts.Length > 0 && srcParts[0].Trim().Length > 0)
+                {
+                    xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_NavigateUri, srcParts[0].Trim());
+                }
+                if (srcParts.Length == 2 && srcParts[1].Trim().Length > 0)
+                {
+                    xamlElement.SetAttribute(HtmlToXamlConverter.Xaml_Hyperlink_TargetName, srcParts[1].Trim());
+                }
 
-            // Add the new element to the parent.
-            xamlParentElement.AppendChild(xamlElement);
+                string text = GetAttribute(htmlElement, "alt");
+                if (string.IsNullOrEmpty(text))
+                {
+                    srcParts = src.Split('/');
+                    text = srcParts.LastOrDefault();
+                }
+                AddTextRun(xamlElement, text ?? string.Empty);
+
+                // Add the new element to the parent.
+                xamlParentElement.AppendChild(xamlElement);
+            }
+            else
+            {
+                // create an image control
+                var localName = xamlParentElement.Name == HtmlToXamlConverter.Xaml_Paragraph
+                    ? "InlineUIContainer"
+                    : "BlockUIContainer";
+                var xamlUiContainerElement = xamlParentElement.OwnerDocument.CreateElement(null, localName, _xamlNamespace);
+                var xamlImageElement = xamlParentElement.OwnerDocument.CreateElement(null, "Image", _xamlNamespace);
+                xamlImageElement.SetAttribute("Source", htmlElement.GetAttribute("src"));
+                xamlImageElement.SetAttribute("Stretch", "None");
+                xamlUiContainerElement.AppendChild(xamlImageElement);
+                xamlParentElement.AppendChild(xamlUiContainerElement);
+            }
         }
 
         // .............................................................
