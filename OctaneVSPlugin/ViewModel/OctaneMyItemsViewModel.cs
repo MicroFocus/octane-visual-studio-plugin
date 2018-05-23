@@ -21,9 +21,7 @@ using Microsoft.VisualStudio.PlatformUI;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
-using System.Linq;
 using System.Windows.Input;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -41,9 +39,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         private string _lastExceptionMessage;
 
-        private const int MaxSearchHistorySize = 4;
-        private readonly List<string> _searchHistory;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -54,15 +49,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SearchCommand = new DelegateCommand(SearchInternal);
             RefreshCommand = new DelegatedCommand(Refresh);
             OpenOctaneOptionsDialogCommand = new DelegatedCommand(OpenOctaneOptionsDialog);
-
-            try
-            {
-                _searchHistory = OctanePluginSettings.Default.SearchHistory.Cast<string>().ToList();
-            }
-            catch (Exception)
-            {
-                _searchHistory = new List<string>();
-            }
 
             _myItems = new ObservableCollection<OctaneItemViewModel>();
             _mode = MainWindowMode.FirstTime;
@@ -99,35 +85,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             SearchFilter = SearchFilter.Trim();
 
-            UpdateSearchHistory();
+            SearchHistoryManager.UpdateHistory(SearchFilter);
+            NotifyPropertyChanged("SearchHistory");
 
             var searchWindow = PluginWindowManager.ObtainSearchWindow(MainWindow.PluginPackage);
-            searchWindow.Search(SearchFilter);
-        }
-
-        private void UpdateSearchHistory()
-        {
-            var oldHistory = _searchHistory.ToList();
-
-            _searchHistory.Clear();
-            _searchHistory.Add(SearchFilter);
-
-            oldHistory.Remove(SearchFilter);
-
-            _searchHistory.AddRange(oldHistory.Take(MaxSearchHistorySize));
-
-            try
-            {
-                var sc = new StringCollection();
-                sc.AddRange(_searchHistory.ToArray());
-                OctanePluginSettings.Default.SearchHistory = sc;
-                OctanePluginSettings.Default.Save();
-            }
-            catch (Exception)
-            {
-            }
-
-            NotifyPropertyChanged("SearchHistory");
+            searchWindow?.Search(SearchFilter);
         }
 
         /// <summary>
@@ -137,7 +99,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                return new ObservableCollection<string>(_searchHistory);
+                return new ObservableCollection<string>(_mode == MainWindowMode.ItemsLoaded
+                           ? SearchHistoryManager.History
+                           : new List<string>());
             }
         }
 
@@ -228,6 +192,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 Mode = MainWindowMode.ItemsLoaded;
+
+                SearchFilter = "";
+                NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
@@ -240,7 +207,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void NotifyPropertyChanged(string propName)
+        private void NotifyPropertyChanged(string propName = "")
         {
             if (PropertyChanged != null)
             {

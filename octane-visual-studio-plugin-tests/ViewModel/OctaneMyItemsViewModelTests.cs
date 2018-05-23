@@ -15,12 +15,14 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Utility = MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Utility;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 {
@@ -217,5 +219,80 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         }
 
         #endregion
+
+        #region SearchHistory
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_SearchHistory_ItemsNotLoaded_Success()
+        {
+            var viewModel = new OctaneMyItemsViewModel();
+            Assert.IsNull(viewModel.SearchFilter, "Invalid initial state for SearchFilter");
+            CollectionAssert.AreEqual(new List<string>(), viewModel.SearchHistory.ToList(), "Invalid search history");
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_SearchHistory_SearchForMoreThanMax_Success()
+        {
+            var viewModel = new OctaneMyItemsViewModel();
+            viewModel.LoadMyItemsAsync().Wait();
+
+            var expectedHistory = ExecuteSearches(viewModel, SearchHistoryManager.MaxSearchHistorySize + 1);
+
+            expectedHistory.Reverse();
+
+            CollectionAssert.AreEqual(expectedHistory.Take(SearchHistoryManager.MaxSearchHistorySize).ToList(), viewModel.SearchHistory.ToList(), "Invalid search history");
+        }
+
+        [TestMethod]
+        public void OctaneMyItemsViewModelTests_SearchHistory_SwitchBackToValidWorkspaceAfterTryingInvalidWorkspace_Success()
+        {
+            var originalWorkspaceId = OctaneConfiguration.WorkSpaceId;
+            try
+            {
+                var viewModel = new OctaneMyItemsViewModel();
+                viewModel.LoadMyItemsAsync().Wait();
+
+                var expectedHistory = ExecuteSearches(viewModel, SearchHistoryManager.MaxSearchHistorySize + 1);
+                expectedHistory.Reverse();
+                expectedHistory = expectedHistory.Take(SearchHistoryManager.MaxSearchHistorySize).ToList();
+
+                OctaneConfiguration.WorkSpaceId = 1000000;
+
+                viewModel.LoadMyItemsAsync().Wait();
+
+                Assert.AreEqual(MainWindowMode.FailToLoad, viewModel.Mode, "Mismatched window mode after switching to invalid workspace");
+                CollectionAssert.AreEqual(new List<string>(), viewModel.SearchHistory.ToList(),
+                    "Invalid search history after switching to invalid workspace");
+
+                OctaneConfiguration.WorkSpaceId = originalWorkspaceId;
+
+                viewModel.LoadMyItemsAsync().Wait();
+
+                Assert.AreEqual(MainWindowMode.ItemsLoaded, viewModel.Mode, "Mismatched window mode after reverting to working workspace");
+                Assert.AreEqual(string.Empty, viewModel.SearchFilter, "Mismatched search filter after reverting to working workspace");
+                CollectionAssert.AreEqual(expectedHistory, viewModel.SearchHistory.ToList(), "Invalid search history after reverting to working workspace");
+            }
+            finally
+            {
+                OctaneConfiguration.WorkSpaceId = originalWorkspaceId;
+            }
+        }
+
+        #endregion
+
+        private List<string> ExecuteSearches(OctaneMyItemsViewModel viewModel, int count)
+        {
+            var expectedHistory = new List<string>();
+            for (int i = 0; i < count; i++)
+            {
+                var guid = Guid.NewGuid().ToString();
+                expectedHistory.Add(guid);
+
+                viewModel.SearchFilter = guid;
+                viewModel.SearchCommand.Execute(null);
+            }
+
+            return expectedHistory;
+        }
     }
 }

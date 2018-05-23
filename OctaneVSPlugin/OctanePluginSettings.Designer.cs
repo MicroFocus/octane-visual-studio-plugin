@@ -12,7 +12,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.6.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "15.7.0.0")]
     internal sealed partial class OctanePluginSettings : global::System.Configuration.ApplicationSettingsBase {
         
         private static OctanePluginSettings defaultInstance = ((OctanePluginSettings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new OctanePluginSettings())));
@@ -37,9 +37,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        public global::System.Collections.Specialized.StringCollection SearchHistory {
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SearchHistory {
             get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["SearchHistory"]));
+                return ((string)(this["SearchHistory"]));
             }
             set {
                 this["SearchHistory"] = value;
