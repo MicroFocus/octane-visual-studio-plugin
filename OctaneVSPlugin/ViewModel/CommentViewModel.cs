@@ -22,30 +22,39 @@ using System.Text;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
+    /// <summary>
+    /// View model for a comment
+    /// </summary>
     public class CommentViewModel : OctaneItemViewModel
     {
-        private readonly Comment commentEntity;
+        private readonly Comment _commentEntity;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="entity"></param>
         public CommentViewModel(BaseEntity entity)
             : base(entity)
         {
-            commentEntity = (Comment)entity;
+            _commentEntity = (Comment)entity;
             ParentEntity = GetOwnerEntity();
 
-            Author = Utility.GetAuthorFullName(commentEntity);
-            CreationTime = DateTime.Parse(commentEntity.CreationTime).ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
-            Text = Utility.StripHtml(commentEntity.Text);
-            OriginalText = commentEntity.Text;
+            Author = Utility.GetAuthorFullName(_commentEntity);
+            CreationTime = DateTime.Parse(_commentEntity.CreationTime).ToString("MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+            Text = Utility.StripHtml(_commentEntity.Text);
+            OriginalText = _commentEntity.Text;
         }
 
+        /// <inheritdoc/>>
         public override bool VisibleID { get { return false; } }
 
+        /// <inheritdoc/>>
         public override string Title
         {
             get
             {
                 if (ParentEntity == null)
-                    return "Unable to determine the comment's owner entity";
+                    return "Unable to determine the comment's owner";
 
                 var parentEntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(ParentEntity);
                 if (parentEntityTypeInformation == null)
@@ -68,24 +77,36 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private BaseEntity GetOwnerEntity()
         {
-            if (commentEntity.OwnerWorkItem != null)
-                return commentEntity.OwnerWorkItem;
+            if (_commentEntity.OwnerWorkItem != null)
+                return _commentEntity.OwnerWorkItem;
 
-            if (commentEntity.OwnerTest != null)
-                return commentEntity.OwnerTest;
+            if (_commentEntity.OwnerTest != null)
+                return _commentEntity.OwnerTest;
 
-            if (commentEntity.OwnerRun != null)
-                return commentEntity.OwnerRun;
+            if (_commentEntity.OwnerRun != null)
+                return _commentEntity.OwnerRun;
 
-            return commentEntity.OwnerRequirement;
+            return _commentEntity.OwnerRequirement;
         }
 
+        /// <summary>
+        /// Returns person who posted the comment
+        /// </summary>
         public string Author { get; }
 
+        /// <summary>
+        /// Return the time the comment was created
+        /// </summary>
         public string CreationTime { get; }
 
+        /// <summary>
+        /// Receives comment text with stripped HTML tags
+        /// </summary>
         public string Text { get; }
 
+        /// <summary>
+        /// Returns original text as it was received from Octane
+        /// </summary>
         public string OriginalText { get; }
     }
 }
