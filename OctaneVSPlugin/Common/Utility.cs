@@ -103,5 +103,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             // Open the URL in the user's default browser.
             Process.Start(url);
         }
+
+        /// <summary>
+        /// Return the parent entity of a task; null otherwise
+        /// </summary>
+        public static BaseEntity GetTaskParentEntity(BaseEntity entity)
+        {
+            if (entity == null)
+                return null;
+
+            if (entity.TypeName == Task.TYPE_TASK)
+            {
+                return (BaseEntity)entity.GetValue("story");
+            }
+
+            return null;
+        }
     }
 }
