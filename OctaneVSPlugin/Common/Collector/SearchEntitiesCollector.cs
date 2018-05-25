@@ -18,11 +18,17 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
 {
+    /// <summary>
+    /// Mechanism for searching the entities
+    /// </summary>
     internal class SearchEntitiesCollector : EntitiesCollector
     {
         private readonly string _searchString;
         private readonly int _limitPerType;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         internal SearchEntitiesCollector(OctaneServices service, string searchString, int limitPerType)
             : base(service)
         {
@@ -30,6 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             _limitPerType = limitPerType;
         }
 
+        /// <inheritdoc/>>
         protected override void PrepareCollectorTasks()
         {
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_DEFECT));
