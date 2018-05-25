@@ -381,8 +381,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             Assert.AreEqual(string.Empty, viewModel.Phase, "Mismatched initial phase");
 
             viewModel.InitializeAsync().Wait();
-            Assert.AreEqual(WindowMode.Loaded, viewModel.Mode, "Mismatched initial mode");
-            Assert.AreEqual("New", viewModel.Phase, "Mismatched initial phase");
+            Assert.AreEqual(WindowMode.Loaded, viewModel.Mode, "Mismatched mode after initialization");
+            Assert.AreEqual("New", viewModel.Phase, "Mismatched phase after initialization");
 
             var entityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(_story);
             Assert.AreEqual(entityTypeInformation.ShortLabel, viewModel.IconText, "Mismatched icon text");

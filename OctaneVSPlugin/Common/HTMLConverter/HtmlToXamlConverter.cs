@@ -8,8 +8,6 @@
 //
 //---------------------------------------------------------------------------
 
-using System.Linq;
-
 namespace HTMLConverter
 {
     using System;
@@ -17,6 +15,7 @@ namespace HTMLConverter
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using System.Windows; // DependencyProperty
     using System.Windows.Documents; // TextElement
     using System.Xml;

@@ -14,13 +14,11 @@
 * limitations under the License.
 */
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
     using Microsoft.VisualStudio.Shell;
     using octane_visual_studio_plugin;
-    using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
 
     /// <summary>
@@ -56,8 +54,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Content = _mainWindowControl;
         }
 
+        /// <summary>
+        /// Reference to the package
+        /// </summary>
         internal static MainWindowPackage PluginPackage { get; private set; }
 
+        /// <inheritdoc/>>
         protected override void OnCreate()
         {
             base.OnCreate();

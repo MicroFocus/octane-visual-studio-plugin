@@ -66,7 +66,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         }
 
         /// <summary>
-        /// Flag specifying whether the current entity type support a commit message
+        /// Flag specifying whether the current entity type supports a commit message
         /// </summary>
         internal bool IsCopyCommitMessageSupported
         {
