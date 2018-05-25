@@ -280,7 +280,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
-                // coppy commit message
+                // copy commit message
                 if (copyCommitMessageDelegate != null)
                 {
                     var octaneItem = selectedItem as OctaneItemViewModel;
