@@ -23,6 +23,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     public class OctaneItemViewModel : BaseItemViewModel
     {
+        private bool _isActiveWorkItem;
+
         private readonly List<FieldViewModel> topFields;
         private readonly List<FieldViewModel> bottomFields;
         private readonly FieldViewModel subTitleField;
@@ -56,6 +58,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public string SubType
         {
             get { return Entity.GetStringValue(CommonFields.SubType); }
+        }
+
+        /// <summary>
+        /// Flag specifying whether this entity is the current active work item
+        /// </summary>
+        public bool IsActiveWorkItem
+        {
+            get { return _isActiveWorkItem; }
+            set
+            {
+                _isActiveWorkItem = value;
+                NotifyPropertyChanged("IsActiveWorkItem");
+            }
         }
 
         public string CommitMessage

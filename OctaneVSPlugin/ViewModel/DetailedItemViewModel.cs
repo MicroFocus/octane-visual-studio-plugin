@@ -20,7 +20,6 @@ using NSoup.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,7 +31,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// Detailed view model for an entity
     /// </summary>
-    public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged, IFieldsObserver
+    public class DetailedItemViewModel : BaseItemViewModel, IFieldsObserver
     {
         private readonly OctaneServices _octaneService;
 
@@ -427,20 +426,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public string ShowCommentTooltip
         {
             get { return CommentSectionVisibility ? HideCommentsTooltip : ShowCommentsTooltip; }
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        private void NotifyPropertyChanged(string propName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
         }
 
         #endregion

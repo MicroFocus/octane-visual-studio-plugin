@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using System.ComponentModel;
 using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -23,7 +24,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// Base class for an entity view model
     /// </summary>
-    public class BaseItemViewModel
+    public class BaseItemViewModel : INotifyPropertyChanged
     {
         protected readonly EntityTypeInformation EntityTypeInformation;
 
@@ -59,5 +60,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get { return EntityTypeInformation.Color; }
         }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        protected void NotifyPropertyChanged(string propName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+
+        #endregion
     }
 }

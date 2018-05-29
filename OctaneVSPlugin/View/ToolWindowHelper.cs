@@ -232,9 +232,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 var selectedEntity = selectedItem.Entity;
 
+                var entityType = Utility.GetConcreteEntityType(selectedEntity);
+
                 // view details
                 if (viewDetailsDelegate != null
-                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+                    && DetailsToolWindow.IsEntityTypeSupported(entityType))
                 {
                     cm.Items.Add(new MenuItem
                     {
@@ -248,7 +250,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 if (viewTaskParentDetailsDelegate != null
                     && selectedEntity.TypeName == Task.TYPE_TASK
                     && taskParentEntity != null
-                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(taskParentEntity)))
+                    && DetailsToolWindow.IsEntityTypeSupported(entityType))
                 {
                     cm.Items.Add(new MenuItem
                     {
@@ -261,7 +263,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 var commentParentEntity = GetCommentParentEntity(selectedItem);
                 if (viewCommentParentDetailsDelegate != null
                     && commentParentEntity != null
-                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(commentParentEntity)))
+                    && DetailsToolWindow.IsEntityTypeSupported(entityType))
                 {
                     cm.Items.Add(new MenuItem
                     {
@@ -296,12 +298,31 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 // download gherkin script
                 if (downloadGherkinScriptDelegate != null
-                    && Utility.GetConcreteEntityType(selectedItem.Entity) == TestGherkin.SUBTYPE_GHERKIN_TEST)
+                    && entityType == TestGherkin.SUBTYPE_GHERKIN_TEST)
                 {
                     cm.Items.Add(new MenuItem
                     {
                         Header = DownloadGherkinScriptHeader,
                         Command = new DelegatedCommand(downloadGherkinScriptDelegate)
+                    });
+                }
+
+                if (entityType == WorkItem.SUBTYPE_STORY
+                    || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                    || entityType == WorkItem.SUBTYPE_DEFECT
+                    || entityType == Task.TYPE_TASK)
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = "Start work",
+                        Command = new DelegatedCommand(arg =>
+                        {
+                            var octaneItem = selectedItem as OctaneItemViewModel;
+                            if (octaneItem == null)
+                                return;
+
+                            octaneItem.IsActiveWorkItem = !octaneItem.IsActiveWorkItem;
+                        })
                     });
                 }
             }
