@@ -46,6 +46,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         private readonly Action<object> _copyCommitMessageDelegate = x => _value = CopyCommitMessageValue;
         private const int DownloadGherkinScriptValue = 6;
         private readonly Action<object> _downloadGherkinScriptDelegate = x => _value = DownloadGherkinScriptValue;
+        private const int StartWorkValue = 7;
+        private readonly Action<object> _startWorkDelegate = x => _value = StartWorkValue;
 
         /// <inheritdoc/>>
         protected override void TestInitializeInternal()
@@ -56,7 +58,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         [TestMethod]
         public void ToolWindowHelperTests_ConstructContextMenu_NullContextMenu_Success()
         {
-            ToolWindowHelper.ConstructContextMenu(null, null, null, null, null, null, null, null);
+            ToolWindowHelper.ConstructContextMenu(null, null, null, null, null, null, null, null, null);
         }
 
         [TestMethod]
@@ -65,7 +67,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
             var cm = new ContextMenu();
             cm.Items.Add(new MenuItem());
 
-            ToolWindowHelper.ConstructContextMenu(cm, null, null, null, null, null, null, null);
+            ToolWindowHelper.ConstructContextMenu(cm, null, null, null, null, null, null, null, null);
 
             Assert.AreEqual(0, cm.Items.Count, "Mismatched number of menu items in context menu");
         }
@@ -78,7 +80,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage
+                    MenuItemEnum.CopyCommitMessage,
+                    MenuItemEnum.StartWork
                 });
         }
 
@@ -94,7 +97,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                         MenuItemEnum.ViewDetails,
                         MenuItemEnum.TaskViewParentDetails,
                         MenuItemEnum.OpenInBrowser,
-                        MenuItemEnum.CopyCommitMessage
+                        MenuItemEnum.CopyCommitMessage,
+                        MenuItemEnum.StartWork
                     });
             }
             finally
@@ -111,7 +115,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage
+                    MenuItemEnum.CopyCommitMessage,
+                    MenuItemEnum.StartWork
                 });
         }
 
@@ -123,7 +128,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage
+                    MenuItemEnum.CopyCommitMessage,
+                    MenuItemEnum.StartWork
                 });
         }
 
@@ -244,7 +250,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                     _viewCommentParentDetailsDelegate,
                     _openInBrowserDelegate,
                     _copyCommitMessageDelegate,
-                    _downloadGherkinScriptDelegate);
+                    _downloadGherkinScriptDelegate,
+                    _startWorkDelegate);
 
                 Assert.AreEqual(expectedMenuItems.Count, cm.Items.Count,
                     "Mismatched number of menu items in context menu");
@@ -278,6 +285,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                             ValidateMenuItem(items, index, ToolWindowHelper.DownloadGherkinScriptHeader,
                                 DownloadGherkinScriptValue);
                             break;
+                        case MenuItemEnum.StartWork:
+                            ValidateMenuItem(items, index, ToolWindowHelper.StartWorkHeader,
+                                StartWorkValue);
+                            break;
                     }
 
                     index++;
@@ -310,7 +321,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
             CommentViewParentDetails,
             OpenInBrowser,
             CopyCommitMessage,
-            DownloadScript
+            DownloadScript,
+            StartWork
         };
     }
 }

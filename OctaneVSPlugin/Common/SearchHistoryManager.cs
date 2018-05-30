@@ -15,7 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -98,23 +97,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             return entity;
         }
 
-        private static OctaneItemViewModel _currentActiveOctaneItem;
-
-        internal static void SetActiveItem(OctaneItemViewModel newActiveOctaneItem)
+        internal static void SetActiveEntity(BaseEntity entity)
         {
-            if (newActiveOctaneItem == null)
+            if (entity == null)
                 return;
 
             LoadHistoryIfNeeded();
             HandleDifferentContext();
 
-            if (_currentActiveOctaneItem != null)
-                _currentActiveOctaneItem.IsActiveWorkItem = false;
-            _currentActiveOctaneItem = newActiveOctaneItem;
-
-            newActiveOctaneItem.IsActiveWorkItem = true;
-            _metadata.activeItemType = Utility.GetConcreteEntityType(newActiveOctaneItem.Entity);
-            _metadata.activeItemId = newActiveOctaneItem.ID;
+            _metadata.activeItemType = Utility.GetConcreteEntityType(entity);
+            _metadata.activeItemId = entity.Id;
 
             SaveHistory();
         }
@@ -158,7 +150,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 OctanePluginSettings.Default.SearchHistory = Utility.SerializeToJson(_metadata);
                 OctanePluginSettings.Default.Save();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
             }
         }

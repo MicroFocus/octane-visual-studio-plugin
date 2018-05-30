@@ -23,7 +23,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     public class OctaneItemViewModel : BaseItemViewModel
     {
-        private bool _isActiveWorkItem;
+        private static OctaneItemViewModel _currentActiveItem;
 
         private readonly List<FieldViewModel> topFields;
         private readonly List<FieldViewModel> bottomFields;
@@ -65,12 +65,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public bool IsActiveWorkItem
         {
-            get { return _isActiveWorkItem; }
-            set
+            get { return this == _currentActiveItem; }
+            private set
             {
-                _isActiveWorkItem = value;
                 NotifyPropertyChanged("IsActiveWorkItem");
             }
+        }
+
+        /// <summary>
+        /// Set the given item as the current active item
+        /// </summary>
+        public static void SetActiveItem(OctaneItemViewModel octaneItem)
+        {
+            if (octaneItem == null)
+                return;
+
+            var oldActiveItem = _currentActiveItem;
+            _currentActiveItem = octaneItem;
+
+            if (oldActiveItem != null)
+                oldActiveItem.IsActiveWorkItem = false;
+
+            _currentActiveItem.IsActiveWorkItem = true;
+            SearchHistoryManager.SetActiveEntity(_currentActiveItem.Entity);
         }
 
         public string CommitMessage

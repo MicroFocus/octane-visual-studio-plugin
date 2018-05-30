@@ -38,6 +38,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         internal const string OpenInBrowserHeader = "Open in Browser (Alt + DblClick)";
         internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)";
         internal const string DownloadGherkinScriptHeader = "Download Script";
+        internal const string StartWorkHeader = "Start Work";
 
         /// <summary>
         /// Handle double-click event on a backlog item
@@ -217,7 +218,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             Action<object> viewCommentParentDetailsDelegate,
             Action<object> openInBrowserDelegate,
             Action<object> copyCommitMessageDelegate,
-            Action<object> downloadGherkinScriptDelegate)
+            Action<object> downloadGherkinScriptDelegate,
+            Action<object> startWorkDelegate)
         {
             try
             {
@@ -306,23 +308,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
-                if (entityType == WorkItem.SUBTYPE_STORY
-                    || entityType == WorkItem.SUBTYPE_QUALITY_STORY
-                    || entityType == WorkItem.SUBTYPE_DEFECT
-                    || entityType == Task.TYPE_TASK)
+                if (startWorkDelegate != null
+                    && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK))
                 {
                     cm.Items.Add(new MenuItem
                     {
-                        Header = "Start work",
-                        Command = new DelegatedCommand(arg =>
-                        {
-                            var octaneItem = selectedItem as OctaneItemViewModel;
-                            if (octaneItem == null)
-                                return;
-
-                            SearchHistoryManager.SetActiveItem(octaneItem);
-                            MainWindowCommand.Instance.UpdateActiveItemInToolbar();
-                        })
+                        Header = StartWorkHeader,
+                        Command = new DelegatedCommand(startWorkDelegate)
                     });
                 }
             }

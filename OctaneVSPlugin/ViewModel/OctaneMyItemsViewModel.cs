@@ -34,8 +34,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private MainWindowMode _mode;
         private readonly ObservableCollection<OctaneItemViewModel> _myItems;
 
-        private OctaneItemViewModel _activeItem;
-
         /// <summary>
         /// Store the exception message from the loading items operation
         /// </summary>
@@ -187,7 +185,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     if (SearchHistoryManager.IsActiveItem(entity))
                     {
-                        SearchHistoryManager.SetActiveItem(octaneItem);
+                        OctaneItemViewModel.SetActiveItem(octaneItem);
                     }
                     _myItems.Add(octaneItem);
                 }
@@ -201,12 +199,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Mode = MainWindowMode.ItemsLoaded;
 
                 SearchFilter = "";
-                MainWindowCommand.Instance.UpdateActiveItemInToolbar();
+                if (MainWindowCommand.Instance != null)
+                    MainWindowCommand.Instance.UpdateActiveItemInToolbar();
                 NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
-                MainWindowCommand.Instance.DisableActiveItemToolbar();
+                if (MainWindowCommand.Instance != null)
+                    MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
                 LastExceptionMessage = ex.Message;
             }

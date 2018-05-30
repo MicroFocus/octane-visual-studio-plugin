@@ -105,11 +105,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             ToolWindowHelper.DownloadGherkinScript(SelectedItem);
         }
 
+        private void StartWork(object sender)
+        {
+            try
+            {
+                if (SelectedItem?.Entity == null)
+                    return;
+
+                OctaneItemViewModel.SetActiveItem(SelectedItem);
+
+                MainWindowCommand.Instance.UpdateActiveItemInToolbar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to start work on current item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
         {
             ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
                 ViewDetails, ViewTaskParentDetails, ViewCommentParentDetails,
-                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript);
+                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript, StartWork);
         }
 
         private BaseEntity GetSelectedEntity()
