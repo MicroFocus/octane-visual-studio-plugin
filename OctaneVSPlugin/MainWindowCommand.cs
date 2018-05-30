@@ -46,6 +46,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         private readonly Package _package;
 
+        private readonly OleMenuCommand _activeItemMenuCommand;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowCommand"/> class.
         /// Adds our command handlers for menu (commands must exist in the command table file)
@@ -70,11 +72,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
                 // register active item command
                 menuCommandID = new CommandID(CommandSet, ActiveItemCommandId);
-                menuItem = new OleMenuCommand(SetActiveItemCallback, menuCommandID)
+                var activeEntity = SearchHistoryManager.GetActiveEntity();
+                _activeItemMenuCommand = new OleMenuCommand(SetActiveItemCallback, menuCommandID)
                 {
-                    Text = SearchHistoryManager.GetActiveItemType() + " " + SearchHistoryManager.GetActiveItemId()
+                    Text = activeEntity != null
+                              ? EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id
+                              : "N/A"
                 };
-                commandService.AddCommand(menuItem);
+                commandService.AddCommand(_activeItemMenuCommand);
             }
         }
 
@@ -85,6 +90,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 return;
 
             command.Text = "US 1234";
+        }
+
+        /// <summary>
+        /// Update active item button in toolbar with the current active item's information
+        /// </summary>
+        public void UpdateActiveItemInToolbar()
+        {
+            var activeEntity = SearchHistoryManager.GetActiveEntity();
+            _activeItemMenuCommand.Text = activeEntity != null
+                ? EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id
+                : "N/A";
         }
 
         /// <summary>

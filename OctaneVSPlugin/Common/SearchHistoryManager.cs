@@ -85,20 +85,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                    && _metadata.activeItemId == entity.Id;
         }
 
-        internal static string GetActiveItemType()
+        internal static BaseEntity GetActiveEntity()
         {
             LoadHistoryIfNeeded();
             HandleDifferentContext();
 
-            return _metadata.activeItemType;
-        }
+            if (_currentActiveOctaneItem != null)
+                return _currentActiveOctaneItem.Entity;
 
-        internal static string GetActiveItemId()
-        {
-            LoadHistoryIfNeeded();
-            HandleDifferentContext();
-
-            return _metadata.activeItemId;
+            var entity = new BaseEntity(_metadata.activeItemId);
+            entity.SetValue(BaseEntity.TYPE_FIELD, _metadata.activeItemType);
+            return entity;
         }
 
         private static OctaneItemViewModel _currentActiveOctaneItem;

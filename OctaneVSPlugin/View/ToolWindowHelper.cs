@@ -322,6 +322,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                                 return;
 
                             SearchHistoryManager.SetActiveItem(octaneItem);
+                            MainWindowCommand.Instance.UpdateActiveItemInToolbar();
                         })
                     });
                 }
