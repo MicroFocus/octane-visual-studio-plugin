@@ -90,8 +90,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             LoadHistoryIfNeeded();
             HandleDifferentContext();
 
-            if (_currentActiveOctaneItem != null)
-                return _currentActiveOctaneItem.Entity;
+            if (string.IsNullOrEmpty(_metadata.activeItemType))
+                return null;
 
             var entity = new BaseEntity(_metadata.activeItemId);
             entity.SetValue(BaseEntity.TYPE_FIELD, _metadata.activeItemType);

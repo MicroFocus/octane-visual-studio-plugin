@@ -73,13 +73,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
                 // register active item command
                 menuCommandID = new CommandID(CommandSet, ActiveItemCommandId);
-                var activeEntity = SearchHistoryManager.GetActiveEntity();
-                _activeItemMenuCommand = new OleMenuCommand(OpenActiveItemInDetailsWindowCallback, menuCommandID)
-                {
-                    Text = activeEntity != null
-                              ? EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id
-                              : "N/A"
-                };
+                _activeItemMenuCommand = new OleMenuCommand(OpenActiveItemInDetailsWindowCallback, menuCommandID);
+                DisableActiveItemToolbar();
                 commandService.AddCommand(_activeItemMenuCommand);
             }
         }
@@ -91,6 +86,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 return;
 
             var activeEntity = SearchHistoryManager.GetActiveEntity();
+            if (activeEntity == null)
+                return;
+
             PluginWindowManager.ShowDetailsWindow(MainWindow.PluginPackage, activeEntity);
         }
 
@@ -100,9 +98,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public void UpdateActiveItemInToolbar()
         {
             var activeEntity = SearchHistoryManager.GetActiveEntity();
-            _activeItemMenuCommand.Text = activeEntity != null
-                ? EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id
-                : "N/A";
+
+            if (activeEntity != null)
+            {
+                _activeItemMenuCommand.Text = EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id;
+                _activeItemMenuCommand.Enabled = true;
+            }
+            else
+            {
+                DisableActiveItemToolbar();
+            }
+        }
+
+        /// <summary>
+        /// Disable active item toolbar
+        /// </summary>
+        public void DisableActiveItemToolbar()
+        {
+            _activeItemMenuCommand.Text = "N/A";
+            _activeItemMenuCommand.Enabled = false;
         }
 
         /// <summary>

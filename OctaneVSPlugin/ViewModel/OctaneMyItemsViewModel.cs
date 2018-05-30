@@ -201,10 +201,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Mode = MainWindowMode.ItemsLoaded;
 
                 SearchFilter = "";
+                MainWindowCommand.Instance.UpdateActiveItemInToolbar();
                 NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
+                MainWindowCommand.Instance.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
                 LastExceptionMessage = ex.Message;
             }

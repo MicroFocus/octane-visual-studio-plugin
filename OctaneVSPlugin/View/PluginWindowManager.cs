@@ -43,6 +43,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         internal static void ShowDetailsWindow(MainWindowPackage package, BaseEntity entity)
         {
+            if (package == null || entity == null)
+                return;
+
             var window = ObtainWindow<DetailsToolWindow>(package, GetUniqueIdentifier(entity));
             window?.LoadEntity(entity);
         }
@@ -52,7 +55,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         internal static void ShowSearchWindow(MainWindowPackage package, string searchFilter)
         {
-            if (package == null)
+            if (package == null || string.IsNullOrEmpty(searchFilter))
                 return;
 
             var window = ObtainWindow<SearchToolWindow>(package, "SearchWindow");
