@@ -34,6 +34,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private MainWindowMode _mode;
         private readonly ObservableCollection<OctaneItemViewModel> _myItems;
 
+        private OctaneItemViewModel _activeItem;
+
         /// <summary>
         /// Store the exception message from the loading items operation
         /// </summary>
@@ -182,7 +184,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 IList<BaseEntity> items = await octane.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
-                    _myItems.Add(new OctaneItemViewModel(entity));
+                    var octaneItem = new OctaneItemViewModel(entity);
+
+                    if (SearchHistoryManager.IsActiveItem(entity))
+                    {
+                        SearchHistoryManager.SetActiveItem(octaneItem);
+                    }
+                    _myItems.Add(octaneItem);
                 }
 
                 IList<BaseEntity> comments = await octane.GetMyCommentItems();

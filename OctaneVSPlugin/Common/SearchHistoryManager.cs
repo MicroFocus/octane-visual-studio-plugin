@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -71,6 +73,55 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             }
         }
 
+        internal static bool IsActiveItem(BaseEntity entity)
+        {
+            if (entity == null)
+                return false;
+
+            LoadHistoryIfNeeded();
+            HandleDifferentContext();
+
+            return _metadata.activeItemType == Utility.GetConcreteEntityType(entity)
+                   && _metadata.activeItemId == entity.Id;
+        }
+
+        internal static string GetActiveItemType()
+        {
+            LoadHistoryIfNeeded();
+            HandleDifferentContext();
+
+            return _metadata.activeItemType;
+        }
+
+        internal static string GetActiveItemId()
+        {
+            LoadHistoryIfNeeded();
+            HandleDifferentContext();
+
+            return _metadata.activeItemId;
+        }
+
+        private static OctaneItemViewModel _currentActiveOctaneItem;
+
+        internal static void SetActiveItem(OctaneItemViewModel newActiveOctaneItem)
+        {
+            if (newActiveOctaneItem == null)
+                return;
+
+            LoadHistoryIfNeeded();
+            HandleDifferentContext();
+
+            if (_currentActiveOctaneItem != null)
+                _currentActiveOctaneItem.IsActiveWorkItem = false;
+            _currentActiveOctaneItem = newActiveOctaneItem;
+
+            newActiveOctaneItem.IsActiveWorkItem = true;
+            _metadata.activeItemType = Utility.GetConcreteEntityType(newActiveOctaneItem.Entity);
+            _metadata.activeItemId = newActiveOctaneItem.ID;
+
+            SaveHistory();
+        }
+
         private static void LoadHistoryIfNeeded()
         {
             if (_metadata != null)
@@ -79,7 +130,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             _metadata = Utility.DeserializeFromJson(OctanePluginSettings.Default.SearchHistory, new SearchHistoryMetadata
             {
                 id = ConstructId(),
-                queries = new List<string>()
+                queries = new List<string>(),
+                activeItemType = string.Empty,
+                activeItemId = string.Empty
             });
         }
 
@@ -93,7 +146,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             _metadata = new SearchHistoryMetadata
             {
                 id = ConstructId(),
-                queries = new List<string>()
+                queries = new List<string>(),
+                activeItemType = string.Empty,
+                activeItemId = string.Empty
             };
 
             SaveHistory();
@@ -106,7 +161,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 OctanePluginSettings.Default.SearchHistory = Utility.SerializeToJson(_metadata);
                 OctanePluginSettings.Default.Save();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
             }
         }
@@ -124,6 +179,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             [DataMember]
             public List<string> queries;
+
+            [DataMember]
+            public string activeItemType;
+
+            [DataMember]
+            public string activeItemId;
         }
     }
 }

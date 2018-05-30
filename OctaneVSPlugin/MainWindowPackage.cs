@@ -80,12 +80,13 @@ namespace octane_visual_studio_plugin
         {
             IVsActivityLog log = GetService(typeof(SVsActivityLog)) as IVsActivityLog;
             log.LogEntry(3, "Octane", "Started Octane plugin");
-            MainWindowCommand.Initialize(this);
-            base.Initialize();
-            OctaneCommand.Initialize(this);
 
             var optionsPage = (OptionsPage)GetDialogPage(typeof(OptionsPage));
             optionsPage.LoadSettingsFromStorage();
+
+            MainWindowCommand.Initialize(this);
+            base.Initialize();
+            OctaneCommand.Initialize(this);
         }
 
         #endregion

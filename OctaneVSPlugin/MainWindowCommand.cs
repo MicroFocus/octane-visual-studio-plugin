@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -69,7 +70,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
                 // register active item command
                 menuCommandID = new CommandID(CommandSet, ActiveItemCommandId);
-                menuItem = new OleMenuCommand(SetActiveItemCallback, menuCommandID) { Text = "First Command" };
+                menuItem = new OleMenuCommand(SetActiveItemCallback, menuCommandID)
+                {
+                    Text = SearchHistoryManager.GetActiveItemType() + " " + SearchHistoryManager.GetActiveItemId()
+                };
                 commandService.AddCommand(menuItem);
             }
         }

@@ -321,7 +321,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                             if (octaneItem == null)
                                 return;
 
-                            octaneItem.IsActiveWorkItem = !octaneItem.IsActiveWorkItem;
+                            SearchHistoryManager.SetActiveItem(octaneItem);
                         })
                     });
                 }
