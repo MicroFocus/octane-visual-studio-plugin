@@ -90,8 +90,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SearchHistoryManager.UpdateHistory(SearchFilter);
             NotifyPropertyChanged("SearchHistory");
 
-            var searchWindow = PluginWindowManager.ObtainSearchWindow(MainWindow.PluginPackage);
-            searchWindow?.Search(SearchFilter);
+            PluginWindowManager.ShowSearchWindow(MainWindow.PluginPackage, SearchFilter);
         }
 
         /// <summary>

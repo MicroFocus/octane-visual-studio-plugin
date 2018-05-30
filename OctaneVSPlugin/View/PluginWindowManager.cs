@@ -39,19 +39,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         private static readonly Dictionary<string, WindowInfo> OpenedDetailWindows = new Dictionary<string, WindowInfo>();
 
         /// <summary>
-        /// Return the details window for the given entity
+        /// Show the details window for the given entity
         /// </summary>
-        internal static DetailsToolWindow ObtainDetailsWindow(MainWindowPackage package, BaseEntity entity)
+        internal static void ShowDetailsWindow(MainWindowPackage package, BaseEntity entity)
         {
-            return ObtainWindow<DetailsToolWindow>(package, GetUniqueIdentifier(entity));
+            var window = ObtainWindow<DetailsToolWindow>(package, GetUniqueIdentifier(entity));
+            window?.LoadEntity(entity);
         }
 
         /// <summary>
-        /// Return the search window
+        /// Show the search window
         /// </summary>
-        internal static SearchToolWindow ObtainSearchWindow(MainWindowPackage package)
+        internal static void ShowSearchWindow(MainWindowPackage package, string searchFilter)
         {
-            return package == null ? null : ObtainWindow<SearchToolWindow>(package, "SearchWindow");
+            if (package == null)
+                return;
+
+            var window = ObtainWindow<SearchToolWindow>(package, "SearchWindow");
+            window?.Search(searchFilter);
         }
 
         private static T ObtainWindow<T>(MainWindowPackage package, string uniqueId) where T : ToolWindowPane

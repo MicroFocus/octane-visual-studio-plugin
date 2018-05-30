@@ -155,8 +155,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 return;
             }
 
-            DetailsToolWindow window = PluginWindowManager.ObtainDetailsWindow(MainWindow.PluginPackage, entity);
-            window.LoadEntity(entity);
+            PluginWindowManager.ShowDetailsWindow(MainWindow.PluginPackage, entity);
         }
 
         /// <summary>

@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
@@ -73,7 +74,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 // register active item command
                 menuCommandID = new CommandID(CommandSet, ActiveItemCommandId);
                 var activeEntity = SearchHistoryManager.GetActiveEntity();
-                _activeItemMenuCommand = new OleMenuCommand(SetActiveItemCallback, menuCommandID)
+                _activeItemMenuCommand = new OleMenuCommand(OpenActiveItemInDetailsWindowCallback, menuCommandID)
                 {
                     Text = activeEntity != null
                               ? EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id
@@ -83,13 +84,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        private void SetActiveItemCallback(object caller, EventArgs args)
+        private static void OpenActiveItemInDetailsWindowCallback(object caller, EventArgs args)
         {
             var command = caller as OleMenuCommand;
             if (command == null)
                 return;
 
-            command.Text = "US 1234";
+            var activeEntity = SearchHistoryManager.GetActiveEntity();
+            PluginWindowManager.ShowDetailsWindow(MainWindow.PluginPackage, activeEntity);
         }
 
         /// <summary>
