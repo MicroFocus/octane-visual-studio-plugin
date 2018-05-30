@@ -55,11 +55,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return Entity.TypeName; }
         }
 
-        public string SubType
-        {
-            get { return Entity.GetStringValue(CommonFields.SubType); }
-        }
-
         /// <summary>
         /// Flag specifying whether this entity is the current active work item
         /// </summary>
