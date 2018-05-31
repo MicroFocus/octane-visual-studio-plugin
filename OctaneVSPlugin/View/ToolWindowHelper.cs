@@ -39,6 +39,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)";
         internal const string DownloadGherkinScriptHeader = "Download Script";
         internal const string StartWorkHeader = "Start Work";
+        internal const string StopWorkHeader = "Stop Work";
 
         /// <summary>
         /// Handle double-click event on a backlog item
@@ -219,7 +220,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             Action<object> openInBrowserDelegate,
             Action<object> copyCommitMessageDelegate,
             Action<object> downloadGherkinScriptDelegate,
-            Action<object> startWorkDelegate)
+            Action<object> startWorkDelegate,
+            Action<object> stopWorkDelegate)
         {
             try
             {
@@ -283,10 +285,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
-                // coppy commit message
+                var octaneItem = selectedItem as OctaneItemViewModel;
+
+                // copy commit message
                 if (copyCommitMessageDelegate != null)
                 {
-                    var octaneItem = selectedItem as OctaneItemViewModel;
                     if (octaneItem != null && octaneItem.IsSupportCopyCommitMessage)
                     {
                         cm.Items.Add(new MenuItem
@@ -309,6 +312,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
 
                 if (startWorkDelegate != null
+                    && octaneItem != null
+                    && !octaneItem.IsActiveWorkItem
                     && (entityType == WorkItem.SUBTYPE_STORY
                         || entityType == WorkItem.SUBTYPE_QUALITY_STORY
                         || entityType == WorkItem.SUBTYPE_DEFECT
@@ -318,6 +323,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     {
                         Header = StartWorkHeader,
                         Command = new DelegatedCommand(startWorkDelegate)
+                    });
+                }
+
+                if (stopWorkDelegate != null
+                    && octaneItem != null
+                    && octaneItem.IsActiveWorkItem
+                    && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK))
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = StopWorkHeader,
+                        Command = new DelegatedCommand(stopWorkDelegate)
                     });
                 }
             }

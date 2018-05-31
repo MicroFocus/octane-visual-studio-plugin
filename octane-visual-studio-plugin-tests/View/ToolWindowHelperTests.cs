@@ -58,7 +58,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         [TestMethod]
         public void ToolWindowHelperTests_ConstructContextMenu_NullContextMenu_Success()
         {
-            ToolWindowHelper.ConstructContextMenu(null, null, null, null, null, null, null, null, null);
+            ToolWindowHelper.ConstructContextMenu(null, null, null, null, null, null, null, null, null, null);
         }
 
         [TestMethod]
@@ -67,7 +67,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
             var cm = new ContextMenu();
             cm.Items.Add(new MenuItem());
 
-            ToolWindowHelper.ConstructContextMenu(cm, null, null, null, null, null, null, null, null);
+            ToolWindowHelper.ConstructContextMenu(cm, null, null, null, null, null, null, null, null, null);
 
             Assert.AreEqual(0, cm.Items.Count, "Mismatched number of menu items in context menu");
         }
@@ -251,7 +251,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                     _openInBrowserDelegate,
                     _copyCommitMessageDelegate,
                     _downloadGherkinScriptDelegate,
-                    _startWorkDelegate);
+                    _startWorkDelegate,
+                    null);
 
                 Assert.AreEqual(expectedMenuItems.Count, cm.Items.Count,
                     "Mismatched number of menu items in context menu");

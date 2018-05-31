@@ -122,11 +122,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
+        private void StopWork(object sender)
+        {
+            try
+            {
+                if (SelectedItem?.Entity == null)
+                    return;
+
+                OctaneItemViewModel.ClearActiveItem();
+
+                MainWindowCommand.Instance.UpdateActiveItemInToolbar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to stop work on current item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
         {
             ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
                 ViewDetails, ViewTaskParentDetails, ViewCommentParentDetails,
-                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript, StartWork);
+                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript,
+                StartWork, StopWork);
         }
 
         private BaseEntity GetSelectedEntity()

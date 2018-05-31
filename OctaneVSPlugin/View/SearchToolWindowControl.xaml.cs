@@ -69,7 +69,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         {
             ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
                 ViewDetails, ViewTaskParentDetails, null,
-                OpenInBrowser, null, DownloadGherkinScript, null);
+                OpenInBrowser, null, DownloadGherkinScript, null, null);
         }
     }
 }

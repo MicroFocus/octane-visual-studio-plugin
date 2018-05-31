@@ -111,6 +111,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             SaveHistory();
         }
 
+        internal static void ClearActiveEntity()
+        {
+            LoadHistoryIfNeeded();
+            HandleDifferentContext();
+
+            _metadata.activeItemType = string.Empty;
+            _metadata.activeItemId = string.Empty;
+
+            SaveHistory();
+        }
+
         private static void LoadHistoryIfNeeded()
         {
             if (_metadata != null)
