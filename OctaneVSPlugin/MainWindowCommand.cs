@@ -16,11 +16,13 @@
 
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -35,7 +37,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public const int CommandId = 0x0100;
 
-        public const int ActiveItemCommandId = 0x0400;
+        public const int ShowActiveItemCommandId = 0x0400;
+        public const int CopyCommitMessageCommandId = 0x0401;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -48,6 +51,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private readonly Package _package;
 
         private readonly OleMenuCommand _activeItemMenuCommand;
+        private readonly OleMenuCommand _copyCommitMessageCommand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowCommand"/> class.
@@ -72,10 +76,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 commandService.AddCommand(menuItem);
 
                 // register active item command
-                menuCommandID = new CommandID(CommandSet, ActiveItemCommandId);
+                menuCommandID = new CommandID(CommandSet, ShowActiveItemCommandId);
                 _activeItemMenuCommand = new OleMenuCommand(OpenActiveItemInDetailsWindowCallback, menuCommandID);
-                DisableActiveItemToolbar();
                 commandService.AddCommand(_activeItemMenuCommand);
+
+                // register copy commit message command
+                menuCommandID = new CommandID(CommandSet, CopyCommitMessageCommandId);
+                _copyCommitMessageCommand = new OleMenuCommand(CopyCommitMessageCallback, menuCommandID);
+                commandService.AddCommand(_copyCommitMessageCommand);
+
+                DisableActiveItemToolbar();
             }
         }
 
@@ -92,6 +102,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             PluginWindowManager.ShowDetailsWindow(MainWindow.PluginPackage, activeEntity);
         }
 
+        private static void CopyCommitMessageCallback(object caller, EventArgs args)
+        {
+            var command = caller as OleMenuCommand;
+            if (command == null)
+                return;
+
+            if (OctaneItemViewModel.CurrentActiveItem == null)
+                return;
+
+            if (!OctaneItemViewModel.CurrentActiveItem.IsSupportCopyCommitMessage)
+                return;
+
+            Clipboard.SetText(OctaneItemViewModel.CurrentActiveItem.CommitMessage);
+        }
+
         /// <summary>
         /// Update active item button in toolbar with the current active item's information
         /// </summary>
@@ -103,6 +128,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 _activeItemMenuCommand.Text = EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id;
                 _activeItemMenuCommand.Enabled = true;
+
+                _copyCommitMessageCommand.Enabled = true;
             }
             else
             {
@@ -117,6 +144,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             _activeItemMenuCommand.Text = "N/A";
             _activeItemMenuCommand.Enabled = false;
+
+            _copyCommitMessageCommand.Enabled = false;
         }
 
         /// <summary>

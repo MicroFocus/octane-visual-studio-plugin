@@ -24,7 +24,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     public class OctaneItemViewModel : BaseItemViewModel
     {
         private bool _isActiveItem;
-        private static OctaneItemViewModel _currentActiveItem;
 
         private readonly List<FieldViewModel> topFields;
         private readonly List<FieldViewModel> bottomFields;
@@ -69,6 +68,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        public static OctaneItemViewModel CurrentActiveItem { get; private set; }
+
         /// <summary>
         /// Set the given item as the current active item
         /// </summary>
@@ -77,13 +78,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             if (octaneItem == null)
                 return;
 
-            if (_currentActiveItem != null)
-                _currentActiveItem.IsActiveWorkItem = false;
+            if (CurrentActiveItem != null)
+                CurrentActiveItem.IsActiveWorkItem = false;
 
-            _currentActiveItem = octaneItem;
+            CurrentActiveItem = octaneItem;
 
-            _currentActiveItem.IsActiveWorkItem = true;
-            SearchHistoryManager.SetActiveEntity(_currentActiveItem.Entity);
+            CurrentActiveItem.IsActiveWorkItem = true;
+            SearchHistoryManager.SetActiveEntity(CurrentActiveItem.Entity);
         }
 
         /// <summary>
@@ -91,10 +92,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public static void ClearActiveItem()
         {
-            if (_currentActiveItem != null)
-                _currentActiveItem.IsActiveWorkItem = false;
+            if (CurrentActiveItem != null)
+                CurrentActiveItem.IsActiveWorkItem = false;
 
-            _currentActiveItem = null;
+            CurrentActiveItem = null;
             SearchHistoryManager.ClearActiveEntity();
         }
 
