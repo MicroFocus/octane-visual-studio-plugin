@@ -285,21 +285,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
-                var octaneItem = selectedItem as OctaneItemViewModel;
-
-                // copy commit message
-                if (copyCommitMessageDelegate != null)
-                {
-                    if (octaneItem != null && octaneItem.IsSupportCopyCommitMessage)
-                    {
-                        cm.Items.Add(new MenuItem
-                        {
-                            Header = CopyCommitMessageHeader,
-                            Command = new DelegatedCommand(copyCommitMessageDelegate)
-                        });
-                    }
-                }
-
                 // download gherkin script
                 if (downloadGherkinScriptDelegate != null
                     && entityType == TestGherkin.SUBTYPE_GHERKIN_TEST)
@@ -311,6 +296,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
+                // start work
+                var octaneItem = selectedItem as OctaneItemViewModel;
                 if (startWorkDelegate != null
                     && octaneItem != null
                     && !octaneItem.IsActiveWorkItem
@@ -326,6 +313,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
+                // stop work
                 if (stopWorkDelegate != null
                     && octaneItem != null
                     && octaneItem.IsActiveWorkItem
@@ -334,6 +322,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         || entityType == WorkItem.SUBTYPE_DEFECT
                         || entityType == Task.TYPE_TASK))
                 {
+                    // copy commit message
+                    if (copyCommitMessageDelegate != null)
+                    {
+                        if (octaneItem.IsSupportCopyCommitMessage)
+                        {
+                            cm.Items.Add(new MenuItem
+                            {
+                                Header = CopyCommitMessageHeader,
+                                Command = new DelegatedCommand(copyCommitMessageDelegate)
+                            });
+                        }
+                    }
+
                     cm.Items.Add(new MenuItem
                     {
                         Header = StopWorkHeader,
