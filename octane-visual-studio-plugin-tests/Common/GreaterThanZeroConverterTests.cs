@@ -32,38 +32,38 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
 
         [TestMethod]
         [ExpectedException(typeof(ArgumentNullException))]
-        public void GreaterThanValueConverterTests_Convert_NullValue_Throws()
+        public void GreaterThanZeroConverterTests_Convert_NullValue_Throws()
         {
             _converter.Convert(null, null, null, null);
         }
 
         [TestMethod]
         [ExpectedException(typeof(FormatException))]
-        public void GreaterThanValueConverterTests_Convert_ObjectValue_Throws()
+        public void GreaterThanZeroConverterTests_Convert_ObjectValue_Throws()
         {
             _converter.Convert("test", null, null, null);
         }
 
         [TestMethod]
-        public void GreaterThanValueConverterTests_Convert_NumericStringValue_Success()
+        public void GreaterThanZeroConverterTests_Convert_NumericStringValue_Success()
         {
             Assert.IsTrue((bool)_converter.Convert("123", null, null, null), "Invalid convert result");
         }
 
         [TestMethod]
-        public void GreaterThanValueConverterTests_Convert_GreaterValue_Success()
+        public void GreaterThanZeroConverterTests_Convert_GreaterValue_Success()
         {
             Assert.IsTrue((bool)_converter.Convert(4, null, null, null), "Invalid convert result");
         }
 
         [TestMethod]
-        public void GreaterThanValueConverterTests_Convert_ZeroValue_Success()
+        public void GreaterThanZeroConverterTests_Convert_ZeroValue_Success()
         {
             Assert.IsFalse((bool)_converter.Convert(0, null, null, null), "Invalid convert result");
         }
 
         [TestMethod]
-        public void GreaterThanValueConverterTests_Convert_SmallerValue_Success()
+        public void GreaterThanZeroConverterTests_Convert_SmallerValue_Success()
         {
             Assert.IsFalse((bool)_converter.Convert(-2, null, null, null), "Invalid convert result");
         }
@@ -74,7 +74,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
 
         [TestMethod]
         [ExpectedException(typeof(NotSupportedException))]
-        public void GreaterThanValueConverterTests_ConvertBack_Throws()
+        public void GreaterThanZeroConverterTests_ConvertBack_Throws()
         {
             _converter.ConvertBack(null, null, null, null);
         }
