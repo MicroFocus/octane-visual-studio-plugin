@@ -30,6 +30,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
         private readonly EntityListResult<UserItem> _userItems;
         private readonly MyWorkMetadata _itemFetchInfo;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         internal MyWorkEntitiesCollector(OctaneServices service, EntityListResult<UserItem> userItems, MyWorkMetadata itemFetchInfo)
             : base(service)
         {
@@ -37,6 +40,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             _itemFetchInfo = itemFetchInfo;
         }
 
+        /// <inheritdoc/>>
         protected override void PrepareCollectorTasks()
         {
             Add<WorkItem>(userItem => userItem.WorkItem);

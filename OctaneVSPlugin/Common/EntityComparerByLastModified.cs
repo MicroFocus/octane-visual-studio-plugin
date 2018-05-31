@@ -49,7 +49,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 return 1;
             }
 
-            return -1 * firstDateTime.Value.CompareTo(secondDateTime.Value);
+            return secondDateTime.Value.CompareTo(firstDateTime.Value);
         }
     }
 }
