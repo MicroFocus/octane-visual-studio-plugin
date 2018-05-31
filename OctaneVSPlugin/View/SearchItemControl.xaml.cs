@@ -14,26 +14,20 @@
 * limitations under the License.
 */
 
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows.Controls;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
     /// <summary>
-    /// Separator ViewModel for representing separators between fields on WorkItem.
+    /// Interaction logic for SearchItemControl.xaml
     /// </summary>
-    public class SeparatorViewModel
+    [ExcludeFromCodeCoverage]
+    public partial class SearchItemControl : UserControl
     {
-        public static IEnumerable<SeparatorViewModel> Generator()
+        public SearchItemControl()
         {
-            while (true)
-            {
-                yield return new SeparatorViewModel();
-            }
-        }
-
-        internal static SeparatorViewModel Make()
-        {
-            return new SeparatorViewModel();
+            InitializeComponent();
         }
     }
 }

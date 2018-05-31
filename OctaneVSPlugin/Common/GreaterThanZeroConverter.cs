@@ -18,28 +18,24 @@ using System;
 using System.Globalization;
 using System.Windows.Data;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
     /// Value converter which convert int value to check if they are greater than another value (0 by default).
     /// </summary>
-    public class GreaterThanValueConverter : IValueConverter
+    public class GreaterThanZeroConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            int compareTo = 0;
-            if (parameter is int)
-            {
-                compareTo = (int)parameter;
-            }
+            if (value == null)
+                throw new ArgumentNullException(nameof(value));
 
-            int intValue = System.Convert.ToInt32(value);
-            return intValue > compareTo;
+            return System.Convert.ToInt32(value) > 0;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException("ConvertBack operation isn't supported");
         }
     }
 }

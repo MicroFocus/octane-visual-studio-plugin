@@ -1,15 +1,17 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
     /// <summary>
     /// Helper class for animating a gif as WPF's MediaElement doesn't support this yet
     /// https://stackoverflow.com/a/1134340
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal class GifImage : Image
     {
         private bool _isInitialized;

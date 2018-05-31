@@ -8,19 +8,18 @@
 //
 //---------------------------------------------------------------------------
 
+
 namespace HTMLConverter
 {
     using System;
-    using System.Xml;
-    using System.Diagnostics;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
-    using System.IO;
+    using System.Xml;
 
-    using System.Windows; // DependencyProperty
-    using System.Windows.Documents; // TextElement
-  
+    [ExcludeFromCodeCoverage]
     internal static class HtmlCssParser
     {
         // .................................................................
@@ -318,7 +317,7 @@ namespace HTMLConverter
                 "ghostwhite", "gold", "goldenrod", "gray", "green", "greenyellow", "honeydew", "hotpink", "indianred",
                 "indigo", "ivory", "khaki", "lavender", "lavenderblush", "lawngreen", "lemonchiffon", "lightblue", "lightcoral",
                 "lightcyan", "lightgoldenrodyellow", "lightgreen", "lightgrey", "lightpink", "lightsalmon", "lightseagreen",
-                "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta", 
+                "lightskyblue", "lightslategray", "lightsteelblue", "lightyellow", "lime", "limegreen", "linen", "magenta",
                 "maroon", "mediumaquamarine", "mediumblue", "mediumorchid", "mediumpurple", "mediumseagreen", "mediumslateblue",
                 "mediumspringgreen", "mediumturquoise", "mediumvioletred", "midnightblue", "mintcream", "mistyrose", "moccasin",
                 "navajowhite", "navy", "oldlace", "olive", "olivedrab", "orange", "orangered", "orchid", "palegoldenrod",
@@ -817,7 +816,7 @@ namespace HTMLConverter
         }
     }
 
-
+    [ExcludeFromCodeCoverage]
     internal class CssStylesheet
     {
         // Constructor
@@ -972,7 +971,7 @@ namespace HTMLConverter
             //  Add id processing for style selectors
             if (_styleDefinitions != null)
             {
-                for (int i = _styleDefinitions.Count - 1; i >= 0;  i--)
+                for (int i = _styleDefinitions.Count - 1; i >= 0; i--)
                 {
                     string selector = _styleDefinitions[i].Selector;
 

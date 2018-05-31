@@ -17,22 +17,25 @@
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using octane_visual_studio_plugin;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
     /// <summary>
-    /// Manager for keeping track of all the opened<see cref="DetailsToolWindow"/>
+    /// Manager for keeping track of all the opened plugin windows
     /// </summary>
-    internal static class DetailsWindowManager
+    [ExcludeFromCodeCoverage]
+    internal static class PluginWindowManager
     {
-        private static object Lock = new object();
+        private static readonly object Lock = new object();
 
-        private static int WindowCounter = 0;
+        private static int _windowCounter;
         private static readonly Dictionary<string, WindowInfo> OpenedDetailWindows = new Dictionary<string, WindowInfo>();
 
         /// <summary>
@@ -40,10 +43,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         internal static DetailsToolWindow ObtainDetailsWindow(MainWindowPackage package, BaseEntity entity)
         {
-            var uniqueId = GetUniqueIdentifier(entity);
+            return ObtainWindow<DetailsToolWindow>(package, GetUniqueIdentifier(entity));
+        }
 
+        /// <summary>
+        /// Return the search window
+        /// </summary>
+        internal static SearchToolWindow ObtainSearchWindow(MainWindowPackage package)
+        {
+            return package == null ? null : ObtainWindow<SearchToolWindow>(package, "SearchWindow");
+        }
+
+        private static T ObtainWindow<T>(MainWindowPackage package, string uniqueId) where T : ToolWindowPane
+        {
             bool windowAlreadyOpened = false;
-            int windowId = WindowCounter + 1;
+            int windowId = _windowCounter + 1;
 
             lock (Lock)
             {
@@ -56,7 +70,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 // open the existing window with the current windowId
                 // if a window wasn't found, then a new one is created
-                DetailsToolWindow toolWindow = (DetailsToolWindow)package.FindToolWindow(typeof(DetailsToolWindow), windowId, true);
+                var toolWindow = (T)package.FindToolWindow(typeof(T), windowId, true);
                 if (toolWindow?.Frame == null)
                 {
                     throw new NotSupportedException("Cannot create tool window");
@@ -64,8 +78,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 if (!windowAlreadyOpened)
                 {
-                    OpenedDetailWindows.Add(uniqueId, new WindowInfo(++WindowCounter, toolWindow));
+                    OpenedDetailWindows.Add(uniqueId, new WindowInfo(++_windowCounter, toolWindow));
                 }
+
+                IVsWindowFrame windowFrame = (IVsWindowFrame)toolWindow.Frame;
+                Microsoft.VisualStudio.ErrorHandler.ThrowOnFailure(windowFrame.Show());
 
                 return toolWindow;
             }
@@ -105,7 +122,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             {
                 foreach (var windowInfo in OpenedDetailWindows.Values.ToList())
                 {
-                    var frame = windowInfo.DetailsWindow.Frame as IVsWindowFrame;
+                    var frame = windowInfo.WindowPane.Frame as IVsWindowFrame;
                     if (frame != null)
                         frame.CloseFrame((uint)__FRAMECLOSE.FRAMECLOSE_NoSave);
                 }
@@ -113,15 +130,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+        [ExcludeFromCodeCoverage]
         private struct WindowInfo
         {
             public int WindowId { get; }
-            public DetailsToolWindow DetailsWindow { get; }
+            public ToolWindowPane WindowPane { get; }
 
-            public WindowInfo(int windowId, DetailsToolWindow detailsWindow)
+            public WindowInfo(int windowId, ToolWindowPane windowPane)
             {
                 WindowId = windowId;
-                DetailsWindow = detailsWindow;
+                WindowPane = windowPane;
             }
         }
     }

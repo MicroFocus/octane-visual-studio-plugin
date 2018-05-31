@@ -18,7 +18,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 {
     using Microsoft.VisualStudio.Shell;
     using octane_visual_studio_plugin;
-    using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
 
     /// <summary>
@@ -33,31 +33,38 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// </para>
     /// </remarks>
     [Guid(WINDOW_ID)]
+    [ExcludeFromCodeCoverage]
     public class MainWindow : ToolWindowPane
     {
         internal const string WINDOW_ID = "af5c5224-1b4a-444f-923f-2fc9e06f7a40";
 
-        private readonly MainWindowControl mainWindowControl;
+        private readonly MainWindowControl _mainWindowControl;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
         public MainWindow() : base(null)
         {
-            this.Caption = "ALM Octane - My Work";
+            Caption = "ALM Octane - My Work";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
             // the object returned by the Content property.
-            mainWindowControl = new MainWindowControl();
-            this.Content = mainWindowControl;
+            _mainWindowControl = new MainWindowControl();
+            Content = _mainWindowControl;
         }
 
+        /// <summary>
+        /// Reference to the package
+        /// </summary>
+        internal static MainWindowPackage PluginPackage { get; private set; }
+
+        /// <inheritdoc/>>
         protected override void OnCreate()
         {
             base.OnCreate();
-            var mainWindowPackage = (MainWindowPackage)Package;
-            mainWindowControl.SetPackage(mainWindowPackage);
+            PluginPackage = (MainWindowPackage)Package;
+            _mainWindowControl.Initialize();
         }
     }
 }

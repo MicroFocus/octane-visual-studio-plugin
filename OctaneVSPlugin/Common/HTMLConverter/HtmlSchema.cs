@@ -8,16 +8,19 @@
 //
 //---------------------------------------------------------------------------
 
+
 namespace HTMLConverter
 {
-    using System.Diagnostics;
     using System.Collections;
+    using System.Diagnostics;
+    using System.Diagnostics.CodeAnalysis;
 
     /// <summary>
     /// HtmlSchema class
     /// maintains static information about HTML structure
     /// can be used by HtmlParser to check conditions under which an element starts or ends, etc.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal class HtmlSchema
     {
         // ---------------------------------------------------------------------
@@ -195,7 +198,7 @@ namespace HTMLConverter
         {
             if (_htmlCharacterEntities.Contains(entityName))
             {
-                return (char) _htmlCharacterEntities[entityName];
+                return (char)_htmlCharacterEntities[entityName];
             }
             else
             {
@@ -205,7 +208,7 @@ namespace HTMLConverter
 
         #endregion Internal Methods
 
-        
+
         // ---------------------------------------------------------------------
         //
         //  Internal Properties
@@ -322,7 +325,7 @@ namespace HTMLConverter
             _htmlEmptyElements.Add("meta");
             _htmlEmptyElements.Add("param");
         }
-        
+
         private static void InitializeOtherOpenableElements()
         {
             // It is a list of known html elements which we
@@ -487,6 +490,8 @@ namespace HTMLConverter
             _htmlCharacterEntities["cap"] = (char)8745;
             _htmlCharacterEntities["Ccedil"] = (char)199;
             _htmlCharacterEntities["ccedil"] = (char)231;
+            _htmlCharacterEntities["cedil"] = (char)184;
+            _htmlCharacterEntities["Cedilla"] = (char)184;
             _htmlCharacterEntities["cent"] = (char)162;
             _htmlCharacterEntities["Chi"] = (char)935;
             _htmlCharacterEntities["chi"] = (char)967;
@@ -594,6 +599,8 @@ namespace HTMLConverter
             _htmlCharacterEntities["Nu"] = (char)925;
             _htmlCharacterEntities["nu"] = (char)957;
             _htmlCharacterEntities["Oacute"] = (char)211;
+            _htmlCharacterEntities["oacute"] = (char)243;
+            _htmlCharacterEntities["Ocirc"] = (char)212;
             _htmlCharacterEntities["ocirc"] = (char)244;
             _htmlCharacterEntities["OElig"] = (char)338;
             _htmlCharacterEntities["oelig"] = (char)339;
@@ -732,7 +739,7 @@ namespace HTMLConverter
         private static ArrayList _htmlElementsClosingOnParentElementEnd;
 
         // names of elements that close certain optional closing tag elements when they start
-        
+
         // names of elements closing the colgroup element
         private static ArrayList _htmlElementsClosingColgroup;
 

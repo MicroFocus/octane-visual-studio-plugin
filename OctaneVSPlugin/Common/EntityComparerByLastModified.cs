@@ -18,45 +18,38 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
 using System.Collections.Generic;
 
-namespace MicroFocus.Adm.Octane.VisualStudio
+namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
-    /// Comparer for BaseEntity by LastModified field.
+    /// Comparer for BaseEntity by LastModified field (only in descending mode)
     /// </summary>
     internal class EntityComparerByLastModified : IComparer<BaseEntity>
     {
-        // For now we always order in descending mode.
-        private const bool isDescending = true;
-
-        public int Compare(BaseEntity x, BaseEntity y)
+        /// <inheritdoc/>
+        public int Compare(BaseEntity first, BaseEntity second)
         {
-            DateTime? xTime = x.GetDateTimeValue(CommonFields.LAST_MODIFIED);
-            DateTime? yTime = y.GetDateTimeValue(CommonFields.LAST_MODIFIED);
-            int result;
+            if (first == null)
+                throw new ArgumentNullException(nameof(first));
+            if (second == null)
+                throw new ArgumentNullException(nameof(second));
 
-            if (!xTime.HasValue && !yTime.HasValue)
-            {
-                result = 0;
-            }
-            else if (!xTime.HasValue)
-            {
-                result = 1;
-            }
-            else if (!yTime.HasValue)
-            {
-                result = 0;
-            }
-            else
-            {
-                result = xTime.Value.CompareTo(yTime.Value);
-            }
+            DateTime? firstDateTime = first.GetDateTimeValue(CommonFields.LastModified);
+            DateTime? secondDateTime = second.GetDateTimeValue(CommonFields.LastModified);
 
-            if (isDescending)
+            if (!firstDateTime.HasValue && !secondDateTime.HasValue)
             {
-                result = -1 * result;
+                return 0;
+            }
+            if (!firstDateTime.HasValue)
+            {
+                return -1;
+            }
+            if (!secondDateTime.HasValue)
+            {
+                return 1;
             }
 
-            return result;
+            return secondDateTime.Value.CompareTo(firstDateTime.Value);
         }
     }
 }

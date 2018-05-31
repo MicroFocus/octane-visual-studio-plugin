@@ -137,5 +137,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             var actualType = Utility.GetConcreteEntityType(entity);
             Assert.AreEqual("custom_type", actualType, "Mismatched entity type");
         }
+
+        [TestMethod]
+        public void UtilityTests_GetTaskParentEntity_NullInput_Success()
+        {
+            Assert.IsNull(Utility.GetTaskParentEntity(null), "null shouldn't have a parent");
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetTaskParentEntity_NotATaskInput_Success()
+        {
+            var entity = new WorkItem();
+            entity.SetValue(BaseEntity.TYPE_FIELD, "custom_type");
+
+            Assert.IsNull(Utility.GetTaskParentEntity(entity), "calling GetTaskParentEntity on an entity that is not a task should return null");
+        }
+
+        [TestMethod]
+        public void UtilityTests_GetTaskParentEntity_TaskInput_Success()
+        {
+            var parentEntity = new WorkItem();
+            parentEntity.SetValue(BaseEntity.TYPE_FIELD, "custom_type");
+            var task = new WorkItem();
+            task.SetValue(BaseEntity.TYPE_FIELD, Task.TYPE_TASK);
+            task.SetValue("story", parentEntity);
+
+            Assert.AreEqual(parentEntity, Utility.GetTaskParentEntity(task), "Mismatched task parent entity");
+        }
     }
 }

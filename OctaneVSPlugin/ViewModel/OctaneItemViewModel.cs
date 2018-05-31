@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -26,20 +27,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly List<FieldViewModel> bottomFields;
         private readonly FieldViewModel subTitleField;
 
-        public OctaneItemViewModel(BaseEntity entity, MyWorkMetadata myWorkMetadata)
-            : base(entity, myWorkMetadata)
+        public OctaneItemViewModel(BaseEntity entity)
+            : base(entity)
         {
             topFields = new List<FieldViewModel>();
             bottomFields = new List<FieldViewModel>();
 
-            subTitleField = new FieldViewModel(Entity, myWorkMetadata.GetSubTitleFieldInfo(entity));
+            subTitleField = new FieldViewModel(Entity, MyWorkMetadata.Instance.GetSubTitleFieldInfo(entity));
 
-            foreach (FieldInfo fieldInfo in myWorkMetadata.GetTopFieldsInfo(entity))
+            foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetTopFieldsInfo(entity))
             {
                 topFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
 
-            foreach (FieldInfo fieldInfo in myWorkMetadata.GetBottomFieldsInfo(entity))
+            foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetBottomFieldsInfo(entity))
             {
                 bottomFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
@@ -54,21 +55,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public string SubType
         {
-            get { return Entity.GetStringValue(CommonFields.SUB_TYPE); }
+            get { return Entity.GetStringValue(CommonFields.SubType); }
         }
 
         public string CommitMessage
         {
             get
             {
-                string message = string.Format("{0} #{1}: ", MyWorkMetadata.GetCommitMessageTypeName(Entity), ID);
-                return message;
+                if (Entity.TypeName == Task.TYPE_TASK)
+                {
+                    var parentEntity = Utility.GetTaskParentEntity(Entity);
+                    var parentEntityTypeInfo = EntityTypeRegistry.GetEntityTypeInformation(parentEntity);
+
+                    return $"{parentEntityTypeInfo.CommitMessage} #{parentEntity.Id}: {EntityTypeInformation.CommitMessage} #{ID}: ";
+                }
+                else
+                {
+                    return $"{EntityTypeInformation.CommitMessage} #{ID}: ";
+                }
             }
         }
 
         public bool IsSupportCopyCommitMessage
         {
-            get { return MyWorkMetadata.IsSupportCopyCommitMessage(Entity); }
+            get { return EntityTypeInformation.IsCopyCommitMessageSupported; }
         }
 
         public FieldViewModel SubTitleField

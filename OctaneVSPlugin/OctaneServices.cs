@@ -20,11 +20,11 @@ using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using OctaneTask = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -43,7 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private WorkspaceContext workspaceContext;
         private SharedSpaceContext sharedSpaceContext;
 
-        private static readonly EntityComparerByLastModified entityComparer = new EntityComparerByLastModified();
+        private static readonly EntityComparerByLastModified EntityComparer = new EntityComparerByLastModified();
 
         public OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
         {
@@ -103,24 +103,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return idPhrase;
         }
 
-        public async Task<IList<BaseEntity>> GetMyItems(MyWorkMetadata itemFetchInfo)
+        public async Task<IList<BaseEntity>> GetMyItems()
         {
             var owner = await GetWorkspaceUser();
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
                 BuildUserItemCriteria(owner), BuildUserItemFields());
 
-            var collector = new EntitiesCollector(this, userItems, itemFetchInfo);
-
-            collector.Add<WorkItem>(userItem => userItem.WorkItem);
-            collector.Add<Test>(userItem => userItem.Test);
-            collector.Add<Run>(userItem => userItem.Run);
-            collector.Add<Requirement>(userItem => userItem.Requirement);
-            collector.Add<OctaneTask>(userItem => userItem.Task);
-
+            var collector = new MyWorkEntitiesCollector(this, userItems, MyWorkMetadata.Instance);
             List<BaseEntity> result = await collector.GetAllEntities();
-            result.Sort(entityComparer);
+            result.Sort(EntityComparer);
 
             return result;
+        }
+
+        public async Task<IList<BaseEntity>> SearchEntities(string searchString, int limitPerType)
+        {
+            var collector = new SearchEntitiesCollector(this, searchString, limitPerType);
+            List<BaseEntity> result = await collector.GetAllEntities();
+            return result;
+        }
+
+        public Task<EntityListResult<TEntity>> SearchEntitiesByType<TEntity>(string searchString, int limit, string type)
+            where TEntity : BaseEntity
+        {
+            return es.SearchAsync<TEntity>(workspaceContext, searchString, new List<string> { type }, limit);
         }
 
         private IList<QueryPhrase> BuildCommentsCriteria(WorkspaceUser user)
@@ -151,9 +157,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private async Task<WorkspaceUser> GetWorkspaceUser()
         {
-            QueryPhrase ownerQuery = new LogicalQueryPhrase("email", user);
+            QueryPhrase ownerQuery = new LogicalQueryPhrase("name", user);
             EntityListResult<WorkspaceUser> ownerQueryResult = await es.GetAsync<WorkspaceUser>(workspaceContext, ToQueryList(ownerQuery), null);
-            return ownerQueryResult.data.FirstOrDefault();
+            var workspaceUser = ownerQueryResult.data.FirstOrDefault();
+            if (workspaceUser == null)
+                throw new Exception($"Unable to find a user with the name \"{user}\"");
+            return workspaceUser;
         }
 
         public async Task<BaseEntity> FindEntity(BaseEntity entityModel, IList<string> fields)
@@ -189,7 +198,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return comments?.data;
         }
 
-        private Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
+        public Task<EntityListResult<TEntity>> FetchEntities<TEntity>(
             List<UserItem> userItems,
             Func<UserItem, BaseEntity> getReferenceEntityFunc,
             MyWorkMetadata itemFetchInfo)
@@ -239,54 +248,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result?.data;
         }
 
-        private class EntitiesCollector
+        /// <summary>
+        /// Async operation for downloading the attachment at the url and store it locally at the given location
+        /// </summary>
+        public async Task DownloadAttachmentAsync(string relativeUrl, string destinationPath)
         {
-            private readonly OctaneServices octaneService;
-            private readonly EntityListResult<UserItem> userItems;
-            private readonly MyWorkMetadata itemFetchInfo;
-
-            private List<Task<GenericEntityListResult>> fetchTasks;
-
-            public EntitiesCollector(OctaneServices octaneService, EntityListResult<UserItem> userItems, MyWorkMetadata itemFetchInfo)
-            {
-                this.octaneService = octaneService;
-                this.userItems = userItems;
-                this.itemFetchInfo = itemFetchInfo;
-
-                fetchTasks = new List<Task<GenericEntityListResult>>();
-            }
-
-            public async Task<List<BaseEntity>> GetAllEntities()
-            {
-                await Task.WhenAll(fetchTasks.ToArray());
-
-                var allEntities =
-                    from task in fetchTasks
-                    let result = task.Result.BaseEntities
-                    select result;
-
-                // Flat the result list and materialize it with ToList.
-                return allEntities.SelectMany(x => x).ToList();
-            }
-
-            public void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc) where TEntityType : BaseEntity
-            {
-                var tcs = new TaskCompletionSource<GenericEntityListResult>();
-
-                Task<EntityListResult<TEntityType>> fetchTask = octaneService.FetchEntities<TEntityType>(
-                    userItems.data,
-                    getReferenceEntityFunc,
-                    itemFetchInfo);
-
-                // This trick turns a Task<EntityListResult<TEntity>> to generic Task<GenericEntityListResult>.
-                // This allows us to later aggregate all the fetched entities without caring about the specific type of each one.
-                fetchTask.ContinueWith((result) =>
-                {
-                    tcs.TrySetResult(fetchTask.Result);
-                });
-
-                fetchTasks.Add(tcs.Task);
-            }
+            await es.DownloadAttachmentAsync(relativeUrl, destinationPath);
         }
     }
 }
