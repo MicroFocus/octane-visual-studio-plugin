@@ -22,7 +22,6 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
-using System.Windows;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -114,7 +113,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (!OctaneItemViewModel.CurrentActiveItem.IsSupportCopyCommitMessage)
                 return;
 
-            Clipboard.SetText(OctaneItemViewModel.CurrentActiveItem.CommitMessage);
+            OctaneItemViewModel.CurrentActiveItem.ValidateCommitMessage();
         }
 
         /// <summary>

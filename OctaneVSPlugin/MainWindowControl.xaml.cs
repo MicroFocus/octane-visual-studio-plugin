@@ -83,11 +83,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             try
             {
-                if (SelectedItem.IsSupportCopyCommitMessage)
-                {
-                    string message = SelectedItem.CommitMessage;
-                    Clipboard.SetText(message);
-                }
+                SelectedItem.ValidateCommitMessage();
             }
             catch (Exception ex)
             {

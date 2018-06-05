@@ -18,6 +18,8 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using Task = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -66,6 +68,50 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 _isActiveItem = value;
                 NotifyPropertyChanged("IsActiveWorkItem");
             }
+        }
+
+        /// <summary>
+        /// Validate current item's commit mesasge against Octane's template
+        /// </summary>
+        public async System.Threading.Tasks.Task ValidateCommitMessage()
+        {
+            if (!EntityTypeInformation.IsCopyCommitMessageSupported)
+                return;
+
+            var octane = new OctaneServices(OctaneConfiguration.Url,
+                OctaneConfiguration.SharedSpaceId,
+                OctaneConfiguration.WorkSpaceId,
+                OctaneConfiguration.Username,
+                OctaneConfiguration.Password);
+            await octane.Connect();
+            var commitPatterns = await octane.ValidateCommitMessageAsync(CommitMessage);
+
+            var type = Utility.GetConcreteEntityType(Entity);
+            var expectedId = Entity.Id;
+            if (type == Task.TYPE_TASK)
+            {
+                var parentEntity = Utility.GetTaskParentEntity(Entity);
+
+                type = Utility.GetConcreteEntityType(parentEntity);
+                expectedId = parentEntity.Id;
+            }
+
+            var result = false;
+            switch (type)
+            {
+                case WorkItem.SUBTYPE_STORY:
+                    result = commitPatterns.story.Contains(expectedId);
+                    break;
+                case WorkItem.SUBTYPE_DEFECT:
+                    result = commitPatterns.defect.Contains(expectedId);
+                    break;
+                case WorkItem.SUBTYPE_QUALITY_STORY:
+                    result = commitPatterns.quality_story.Contains(expectedId);
+                    break;
+            }
+
+            if (result)
+                Clipboard.SetText(CommitMessage);
         }
 
         public static OctaneItemViewModel CurrentActiveItem { get; private set; }
