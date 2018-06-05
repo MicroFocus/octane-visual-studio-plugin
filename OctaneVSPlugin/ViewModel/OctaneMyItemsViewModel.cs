@@ -178,6 +178,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 _myItems.Clear();
 
+                bool foundActiveItem = false;
                 IList<BaseEntity> items = await octane.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
@@ -185,9 +186,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     if (SearchHistoryManager.IsActiveItem(entity))
                     {
+                        foundActiveItem = true;
                         OctaneItemViewModel.SetActiveItem(octaneItem);
                     }
                     _myItems.Add(octaneItem);
+                }
+
+                if (!foundActiveItem)
+                {
+                    OctaneItemViewModel.ClearActiveItem();
+                    if (MainWindowCommand.Instance != null)
+                        MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 }
 
                 IList<BaseEntity> comments = await octane.GetMyCommentItems();
