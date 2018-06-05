@@ -85,7 +85,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             SearchFilter = SearchFilter.Trim();
 
-            SearchHistoryManager.UpdateHistory(SearchFilter);
+            WorkspaceSessionPersistanceManager.UpdateHistory(SearchFilter);
             NotifyPropertyChanged("SearchHistory");
 
             PluginWindowManager.ShowSearchWindow(MainWindow.PluginPackage, SearchFilter);
@@ -99,7 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get
             {
                 return new ObservableCollection<string>(_mode == MainWindowMode.ItemsLoaded
-                           ? SearchHistoryManager.History
+                           ? WorkspaceSessionPersistanceManager.History
                            : new List<string>());
             }
         }
@@ -184,7 +184,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     var octaneItem = new OctaneItemViewModel(entity);
 
-                    if (SearchHistoryManager.IsActiveItem(entity))
+                    if (WorkspaceSessionPersistanceManager.IsActiveEntity(entity))
                     {
                         foundActiveItem = true;
                         OctaneItemViewModel.SetActiveItem(octaneItem);

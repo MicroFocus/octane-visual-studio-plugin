@@ -94,7 +94,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (command == null)
                 return;
 
-            var activeEntity = SearchHistoryManager.GetActiveEntity();
+            var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
             if (activeEntity == null)
                 return;
 
@@ -121,7 +121,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public void UpdateActiveItemInToolbar()
         {
-            var activeEntity = SearchHistoryManager.GetActiveEntity();
+            var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
 
             if (activeEntity != null)
             {

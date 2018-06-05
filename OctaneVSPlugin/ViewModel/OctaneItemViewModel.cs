@@ -130,7 +130,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             CurrentActiveItem = octaneItem;
 
             CurrentActiveItem.IsActiveWorkItem = true;
-            SearchHistoryManager.SetActiveEntity(CurrentActiveItem.Entity);
+            WorkspaceSessionPersistanceManager.SetActiveEntity(CurrentActiveItem.Entity);
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 CurrentActiveItem.IsActiveWorkItem = false;
 
             CurrentActiveItem = null;
-            SearchHistoryManager.ClearActiveEntity();
+            WorkspaceSessionPersistanceManager.ClearActiveEntity();
         }
 
         public string CommitMessage

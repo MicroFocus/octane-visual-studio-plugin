@@ -23,11 +23,13 @@ using System.Runtime.Serialization;
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
-    /// Class for managing the user's search history
+    /// Class for managing current workspace session information
     /// </summary>
-    public static class SearchHistoryManager
+    public static class WorkspaceSessionPersistanceManager
     {
-        private static SearchHistoryMetadata _metadata;
+        private static WorkspaceSessionMetadata _metadata;
+
+        #region History
 
         /// <summary>
         /// Maximum number of elements saved for the search history
@@ -42,7 +44,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             if (string.IsNullOrEmpty(filter))
                 return;
 
-            LoadHistoryIfNeeded();
+            LoadMetadataIfNeeded();
 
             var newHistory = _metadata.queries.ToList();
             var oldHistory = _metadata.queries.ToList();
@@ -56,7 +58,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             _metadata.queries = newHistory;
 
-            SaveHistory();
+            SaveMetadata();
         }
 
         /// <summary>
@@ -66,73 +68,92 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         {
             get
             {
-                LoadHistoryIfNeeded();
-                HandleDifferentContext();
+                LoadMetadataIfNeeded();
                 return _metadata.queries.ToList();
             }
         }
 
-        internal static bool IsActiveItem(BaseEntity entity)
+        #endregion
+
+        #region ActiveEntity
+
+        /// <summary>
+        /// Check whether the given entity is the currently cached active entity
+        /// </summary>
+        internal static bool IsActiveEntity(BaseEntity entity)
         {
             if (entity == null)
                 return false;
 
-            LoadHistoryIfNeeded();
-            HandleDifferentContext();
+            LoadMetadataIfNeeded();
 
-            return _metadata.activeItemType == Utility.GetConcreteEntityType(entity)
-                   && _metadata.activeItemId == entity.Id;
+            return _metadata.activeEntityId == entity.Id
+                    && _metadata.activeEntityType == Utility.GetConcreteEntityType(entity);
         }
 
+        /// <summary>
+        /// Returns the currently active entity
+        /// </summary>
         internal static BaseEntity GetActiveEntity()
         {
-            LoadHistoryIfNeeded();
-            HandleDifferentContext();
+            LoadMetadataIfNeeded();
 
-            if (string.IsNullOrEmpty(_metadata.activeItemType))
+            if (string.IsNullOrEmpty(_metadata.activeEntityType))
                 return null;
 
-            var entity = new BaseEntity(_metadata.activeItemId);
-            entity.SetValue(BaseEntity.TYPE_FIELD, _metadata.activeItemType);
+            var entity = new BaseEntity(_metadata.activeEntityId);
+            entity.SetValue(BaseEntity.TYPE_FIELD, _metadata.activeEntityType);
             return entity;
         }
 
+        /// <summary>
+        /// Sets the given entity as the currently active entity
+        /// </summary>
         internal static void SetActiveEntity(BaseEntity entity)
         {
             if (entity == null)
                 return;
 
-            LoadHistoryIfNeeded();
-            HandleDifferentContext();
+            LoadMetadataIfNeeded();
 
-            _metadata.activeItemType = Utility.GetConcreteEntityType(entity);
-            _metadata.activeItemId = entity.Id;
+            _metadata.activeEntityType = Utility.GetConcreteEntityType(entity);
+            _metadata.activeEntityId = entity.Id;
 
-            SaveHistory();
+            SaveMetadata();
         }
 
+        /// <summary>
+        /// Clear the cache of the currently active entity
+        /// </summary>
         internal static void ClearActiveEntity()
         {
-            LoadHistoryIfNeeded();
-            HandleDifferentContext();
+            LoadMetadataIfNeeded();
 
-            _metadata.activeItemType = string.Empty;
-            _metadata.activeItemId = string.Empty;
+            _metadata.activeEntityType = string.Empty;
+            _metadata.activeEntityId = string.Empty;
 
-            SaveHistory();
+            SaveMetadata();
         }
 
-        private static void LoadHistoryIfNeeded()
+        #endregion
+
+        private static void LoadMetadataIfNeeded()
+        {
+            DeserializeMetadataIfNeeded();
+            HandleDifferentContext();
+        }
+
+        private static void DeserializeMetadataIfNeeded()
         {
             if (_metadata != null)
                 return;
 
-            _metadata = Utility.DeserializeFromJson(OctanePluginSettings.Default.SearchHistory, new SearchHistoryMetadata
+            _metadata = Utility.DeserializeFromJson(OctanePluginSettings.Default.WorkspaceSessionMetadata, new WorkspaceSessionMetadata
             {
                 id = ConstructId(),
                 queries = new List<string>(),
-                activeItemType = string.Empty,
-                activeItemId = string.Empty
+                activeEntityType = string.Empty,
+                activeEntityId = string.Empty
             });
         }
 
@@ -143,22 +164,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 return;
             }
 
-            _metadata = new SearchHistoryMetadata
+            _metadata = new WorkspaceSessionMetadata
             {
                 id = ConstructId(),
                 queries = new List<string>(),
-                activeItemType = string.Empty,
-                activeItemId = string.Empty
+                activeEntityType = string.Empty,
+                activeEntityId = string.Empty
             };
 
-            SaveHistory();
+            SaveMetadata();
         }
 
-        private static void SaveHistory()
+        private static void SaveMetadata()
         {
             try
             {
-                OctanePluginSettings.Default.SearchHistory = Utility.SerializeToJson(_metadata);
+                OctanePluginSettings.Default.WorkspaceSessionMetadata = Utility.SerializeToJson(_metadata);
                 OctanePluginSettings.Default.Save();
             }
             catch (Exception)
@@ -172,7 +193,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         }
 
         [DataContract]
-        public class SearchHistoryMetadata
+        public class WorkspaceSessionMetadata
         {
             [DataMember]
             public string id;
@@ -181,10 +202,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             public List<string> queries;
 
             [DataMember]
-            public string activeItemType;
+            public string activeEntityType;
 
             [DataMember]
-            public string activeItemId;
+            public string activeEntityId;
         }
     }
 }

@@ -38,12 +38,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SearchHistory {
+        public string WorkspaceSessionMetadata {
             get {
-                return ((string)(this["SearchHistory"]));
+                return ((string)(this["WorkspaceSessionMetadata"]));
             }
             set {
-                this["SearchHistory"] = value;
+                this["WorkspaceSessionMetadata"] = value;
             }
         }
     }
