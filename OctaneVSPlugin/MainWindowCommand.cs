@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -90,30 +91,46 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private static void OpenActiveItemInDetailsWindowCallback(object caller, EventArgs args)
         {
-            var command = caller as OleMenuCommand;
-            if (command == null)
-                return;
+            try
+            {
+                var command = caller as OleMenuCommand;
+                if (command == null)
+                    return;
 
-            var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
-            if (activeEntity == null)
-                return;
+                var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
+                if (activeEntity == null)
+                    return;
 
-            PluginWindowManager.ShowDetailsWindow(MainWindow.PluginPackage, activeEntity);
+                PluginWindowManager.ShowDetailsWindow(MainWindow.PluginPackage, activeEntity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open details window for active item.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private static void CopyCommitMessageCallback(object caller, EventArgs args)
         {
-            var command = caller as OleMenuCommand;
-            if (command == null)
-                return;
+            try
+            {
+                var command = caller as OleMenuCommand;
+                if (command == null)
+                    return;
 
-            if (OctaneItemViewModel.CurrentActiveItem == null)
-                return;
+                if (OctaneItemViewModel.CurrentActiveItem == null)
+                    return;
 
-            if (!OctaneItemViewModel.CurrentActiveItem.IsSupportCopyCommitMessage)
-                return;
+                if (!OctaneItemViewModel.CurrentActiveItem.IsSupportCopyCommitMessage)
+                    return;
 
-            OctaneItemViewModel.CurrentActiveItem.ValidateCommitMessage();
+                OctaneItemViewModel.CurrentActiveItem.ValidateCommitMessage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to generate and copy commit message to clipboard.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
@@ -121,18 +138,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public void UpdateActiveItemInToolbar()
         {
-            var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
-
-            if (activeEntity != null)
+            try
             {
-                _activeItemMenuCommand.Text = EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id;
-                _activeItemMenuCommand.Enabled = true;
+                var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
 
-                _copyCommitMessageCommand.Enabled = true;
+                if (activeEntity != null)
+                {
+                    _activeItemMenuCommand.Text = EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id;
+                    _activeItemMenuCommand.Enabled = true;
+
+                    _copyCommitMessageCommand.Enabled = true;
+                }
+                else
+                {
+                    DisableActiveItemToolbar();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                DisableActiveItemToolbar();
+                MessageBox.Show("Unable to update active item in Octane toolbar.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -141,10 +166,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public void DisableActiveItemToolbar()
         {
-            _activeItemMenuCommand.Text = "N/A";
-            _activeItemMenuCommand.Enabled = false;
+            try
+            {
+                _activeItemMenuCommand.Text = "N/A";
+                _activeItemMenuCommand.Enabled = false;
 
-            _copyCommitMessageCommand.Enabled = false;
+                _copyCommitMessageCommand.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to disable active item in Octane toolbar.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         /// <summary>
