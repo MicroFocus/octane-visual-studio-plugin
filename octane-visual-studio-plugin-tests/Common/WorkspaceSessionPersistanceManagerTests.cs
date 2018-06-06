@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -42,6 +43,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             _wsid = OctaneConfiguration.WorkSpaceId;
             _username = OctaneConfiguration.Username;
             _password = OctaneConfiguration.Password;
+
+            WorkspaceSessionPersistanceManager.ClearActiveEntity();
         }
 
         protected override void TestCleanupInternal()
@@ -51,7 +54,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             OctaneConfiguration.WorkSpaceId = _wsid;
             OctaneConfiguration.Username = _username;
             OctaneConfiguration.Password = _password;
+
+            WorkspaceSessionPersistanceManager.ClearActiveEntity();
         }
+
+        #region History
 
         [TestMethod]
         public void WorkspaceSessionPersistanceManagerTests_UpdateHistory_NullFilter_Success()
@@ -145,27 +152,68 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             CollectionAssert.AreEqual(new List<string> { "2", "1" }, WorkspaceSessionPersistanceManager.History, "Mismatched history");
         }
 
+        #endregion
+
+        #region ActiveItem
 
         [TestMethod]
-        public void WorkspaceSessionPersistanceManagerTests_UpdateHistory_SwitchUrl_Success()
+        public void WorkspaceSessionPersistanceManagerTests_IsActiveEntity_Null_Success()
+        {
+            Assert.IsFalse(WorkspaceSessionPersistanceManager.IsActiveEntity(null));
+        }
+
+        [TestMethod]
+        public void WorkspaceSessionPersistanceManagerTests_SetActiveEntity_ValidEntity_Success()
+        {
+            ValidateActiveEntity(null);
+
+            var story = new Story(123) { SubType = WorkItem.SUBTYPE_STORY };
+
+            WorkspaceSessionPersistanceManager.SetActiveEntity(story);
+            ValidateActiveEntity(story);
+
+            WorkspaceSessionPersistanceManager.ClearActiveEntity();
+            ValidateActiveEntity(null);
+        }
+
+        [TestMethod]
+        public void WorkspaceSessionPersistanceManagerTests_SetActiveEntity_ChangeActiveEntity_Success()
+        {
+            ValidateActiveEntity(null);
+
+            var story = new Story(123) { SubType = WorkItem.SUBTYPE_STORY };
+            WorkspaceSessionPersistanceManager.SetActiveEntity(story);
+            ValidateActiveEntity(story);
+
+            var defect = new Defect(456) { SubType = WorkItem.SUBTYPE_DEFECT };
+            WorkspaceSessionPersistanceManager.SetActiveEntity(defect);
+            ValidateActiveEntity(defect);
+        }
+
+        #endregion
+
+        #region ContextSwitch
+
+        [TestMethod]
+        public void WorkspaceSessionPersistanceManagerTests_ContextSwitch_SwitchUrl_Success()
         {
             ValidateConnectionSwitch(() => OctaneConfiguration.Url = Guid.NewGuid().ToString());
         }
 
         [TestMethod]
-        public void WorkspaceSessionPersistanceManagerTests_UpdateHistory_SwitchWorkspace_Success()
+        public void WorkspaceSessionPersistanceManagerTests_ContextSwitch_SwitchWorkspace_Success()
         {
             ValidateConnectionSwitch(() => OctaneConfiguration.WorkSpaceId = new Random().Next());
         }
 
         [TestMethod]
-        public void WorkspaceSessionPersistanceManagerTests_UpdateHistory_SwitchSharedSpace_Success()
+        public void WorkspaceSessionPersistanceManagerTests_ContextSwitch_SwitchSharedSpace_Success()
         {
             ValidateConnectionSwitch(() => OctaneConfiguration.SharedSpaceId = new Random().Next());
         }
 
         [TestMethod]
-        public void WorkspaceSessionPersistanceManagerTests_UpdateHistory_SwitchUser_Success()
+        public void WorkspaceSessionPersistanceManagerTests_ContextSwitch_SwitchUser_Success()
         {
             ValidateConnectionSwitch(() => OctaneConfiguration.Username = Guid.NewGuid().ToString());
         }
@@ -177,14 +225,37 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             CollectionAssert.AreEqual(new List<string>(), WorkspaceSessionPersistanceManager.History, "Invalid initial history");
 
             WorkspaceSessionPersistanceManager.UpdateHistory("1");
+            var defect = new Defect(111) { SubType = WorkItem.SUBTYPE_DEFECT };
+            WorkspaceSessionPersistanceManager.SetActiveEntity(defect);
 
             connectionSwitchAction();
 
             CollectionAssert.AreEqual(new List<string>(), WorkspaceSessionPersistanceManager.History, "Mismatched history after reset");
+            ValidateActiveEntity(null);
 
             WorkspaceSessionPersistanceManager.UpdateHistory("2");
+            WorkspaceSessionPersistanceManager.SetActiveEntity(defect);
 
             CollectionAssert.AreEqual(new List<string> { "2" }, WorkspaceSessionPersistanceManager.History, "Mismatched history");
+            ValidateActiveEntity(defect);
+        }
+
+        #endregion
+
+        private void ValidateActiveEntity(BaseEntity expectedEntity)
+        {
+            if (expectedEntity == null)
+            {
+                Assert.IsNull(WorkspaceSessionPersistanceManager.GetActiveEntity(), "There shouldn't be any active entity");
+                return;
+            }
+            var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
+            Assert.AreEqual(expectedEntity.Id, activeEntity.Id, "Mismatched entity ids");
+            Assert.AreEqual(VisualStudio.Common.Utility.GetConcreteEntityType(expectedEntity),
+                            VisualStudio.Common.Utility.GetConcreteEntityType(activeEntity),
+                            "Mismatched entity types");
+
+            Assert.IsTrue(WorkspaceSessionPersistanceManager.IsActiveEntity(expectedEntity), "Entity isn't the active entity");
         }
     }
 }
