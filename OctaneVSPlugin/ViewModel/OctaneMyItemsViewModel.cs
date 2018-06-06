@@ -195,8 +195,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (!foundActiveItem)
                 {
                     OctaneItemViewModel.ClearActiveItem();
-                    if (MainWindowCommand.Instance != null)
-                        MainWindowCommand.Instance?.DisableActiveItemToolbar();
+                    MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 }
 
                 IList<BaseEntity> comments = await octane.GetMyCommentItems();
@@ -208,14 +207,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Mode = MainWindowMode.ItemsLoaded;
 
                 SearchFilter = "";
-                if (MainWindowCommand.Instance != null)
-                    MainWindowCommand.Instance.UpdateActiveItemInToolbar();
+                MainWindowCommand.Instance?.UpdateActiveItemInToolbar();
                 NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
-                if (MainWindowCommand.Instance != null)
-                    MainWindowCommand.Instance?.DisableActiveItemToolbar();
+                MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
                 LastExceptionMessage = ex.Message;
             }
