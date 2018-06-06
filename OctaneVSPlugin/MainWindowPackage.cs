@@ -81,25 +81,15 @@ namespace octane_visual_studio_plugin
             IVsActivityLog log = GetService(typeof(SVsActivityLog)) as IVsActivityLog;
             log.LogEntry(3, "Octane", "Started Octane plugin");
 
-            var optionsPage = (OptionsPage)GetDialogPage(typeof(OptionsPage));
-            optionsPage.LoadSettingsFromStorage();
-
             MainWindowCommand.Initialize(this);
             base.Initialize();
             OctaneCommand.Initialize(this);
+
+            var optionsPage = (OptionsPage)GetDialogPage(typeof(OptionsPage));
+            optionsPage.LoadSettingsFromStorage();
         }
 
         #endregion
-
-
-        private void TestCommitMessage()
-        {
-            //GitFileStatusTracker tracker;
-            //var repositoryGraph = tracker.RepositoryGraph;
-            //var commit = repositoryGraph.GetCommit(commitId);
-            //// commit.Message;
-            //IVsScc
-        }
 
         internal void CreateFile(string fileName, string content)
         {
