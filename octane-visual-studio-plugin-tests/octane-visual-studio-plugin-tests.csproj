@@ -80,6 +80,7 @@
     <Compile Include="Utilities\Entity\TestGherkinUtilities.cs" />
     <Compile Include="Utilities\Utility.cs" />
     <Compile Include="ViewModel\DetailedItemViewModelTests.cs" />
+    <Compile Include="ViewModel\OctaneItemViewModelTests.cs" />
     <Compile Include="ViewModel\OctaneMyItemsViewModelTests.cs" />
     <Compile Include="ViewModel\SearchItemsViewModelTests.cs" />
     <Compile Include="View\OptionsPageTests.cs" />

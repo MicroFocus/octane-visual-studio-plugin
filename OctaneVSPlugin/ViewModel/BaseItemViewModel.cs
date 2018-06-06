@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using System;
 using System.ComponentModel;
 using System.Windows.Media;
 
@@ -28,8 +29,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         protected readonly EntityTypeInformation EntityTypeInformation;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="entity"></param>
         public BaseItemViewModel(BaseEntity entity)
         {
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             Entity = entity;
             EntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entity);
         }
@@ -42,20 +50,38 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// <summary>
         /// Entity ID associated witht he current view model
         /// </summary>
-        public EntityId ID { get { return Entity.Id; } }
+        public EntityId ID
+        {
+            get { return Entity.Id; }
+        }
 
-        public virtual string Title { get { return Entity.Name; } }
+        /// <summary>
+        /// Title shown for the current item
+        /// </summary>
+        public virtual string Title
+        {
+            get { return Entity.Name; }
+        }
 
+        /// <summary>
+        /// Description for the current item view model
+        /// </summary>
         public virtual string Description
         {
             get { return Entity.GetStringValue(CommonFields.Description) ?? string.Empty; }
         }
 
+        /// <summary>
+        /// Short label for the current item view model
+        /// </summary>
         public virtual string IconText
         {
             get { return EntityTypeInformation.ShortLabel; }
         }
 
+        /// <summary>
+        /// Icon color for the current item view model
+        /// </summary>
         public virtual Color IconBackgroundColor
         {
             get { return EntityTypeInformation.Color; }

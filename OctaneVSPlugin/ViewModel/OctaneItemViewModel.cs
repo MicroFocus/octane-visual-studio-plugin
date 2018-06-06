@@ -23,39 +23,37 @@ using Task = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
+    /// <summary>
+    /// View model for an entity directly related to the current user
+    /// </summary>
     public class OctaneItemViewModel : BaseItemViewModel
     {
         private bool _isActiveItem;
 
-        private readonly List<FieldViewModel> topFields;
-        private readonly List<FieldViewModel> bottomFields;
-        private readonly FieldViewModel subTitleField;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public OctaneItemViewModel(BaseEntity entity)
             : base(entity)
         {
-            topFields = new List<FieldViewModel>();
-            bottomFields = new List<FieldViewModel>();
+            SubTitleField = new FieldViewModel(Entity, MyWorkMetadata.Instance.GetSubTitleFieldInfo(entity));
 
-            subTitleField = new FieldViewModel(Entity, MyWorkMetadata.Instance.GetSubTitleFieldInfo(entity));
-
+            var topFields = new List<FieldViewModel>();
             foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetTopFieldsInfo(entity))
             {
                 topFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
+            TopFields = FieldsWithSeparators(topFields).ToList();
 
+            var bottomFields = new List<FieldViewModel>();
             foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetBottomFieldsInfo(entity))
             {
                 bottomFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
+            BottomFields = FieldsWithSeparators(bottomFields).ToList();
         }
 
         public virtual bool VisibleID { get { return true; } }
-
-        public string TypeName
-        {
-            get { return Entity.TypeName; }
-        }
 
         /// <summary>
         /// Flag specifying whether this entity is the current active work item
@@ -168,25 +166,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return EntityTypeInformation.IsCopyCommitMessageSupported; }
         }
 
-        public FieldViewModel SubTitleField
-        {
-            get { return subTitleField; }
-        }
+        /// <summary>
+        /// Field info shown below the title
+        /// </summary>
+        public FieldViewModel SubTitleField { get; }
 
-        public IEnumerable<object> TopFields
-        {
-            get
-            {
-                return FieldsWithSeparators(topFields);
-            }
-        }
-        public IEnumerable<object> BottomFields
-        {
-            get
-            {
-                return FieldsWithSeparators(bottomFields);
-            }
-        }
+        /// <summary>
+        /// Field enumeration shown at the top of the view
+        /// </summary>
+        public IEnumerable<object> TopFields { get; }
+
+        /// <summary>
+        /// Field enumeration shown at the bottom of the view
+        /// </summary>
+        public IEnumerable<object> BottomFields { get; }
 
         private IEnumerable<object> FieldsWithSeparators(List<FieldViewModel> fields)
         {
