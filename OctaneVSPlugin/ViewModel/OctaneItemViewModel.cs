@@ -55,6 +55,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public virtual bool VisibleID { get { return true; } }
 
+        #region ActiveItem
+
         /// <summary>
         /// Flag specifying whether this entity is the current active work item
         /// </summary>
@@ -69,49 +71,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         /// <summary>
-        /// Validate current item's commit mesasge against Octane's template
+        /// Reference to current active item
         /// </summary>
-        public async System.Threading.Tasks.Task ValidateCommitMessage()
-        {
-            if (!EntityTypeInformation.IsCopyCommitMessageSupported)
-                return;
-
-            var octane = new OctaneServices(OctaneConfiguration.Url,
-                OctaneConfiguration.SharedSpaceId,
-                OctaneConfiguration.WorkSpaceId,
-                OctaneConfiguration.Username,
-                OctaneConfiguration.Password);
-            await octane.Connect();
-            var commitPatterns = await octane.ValidateCommitMessageAsync(CommitMessage);
-
-            var type = Utility.GetConcreteEntityType(Entity);
-            var expectedId = Entity.Id;
-            if (type == Task.TYPE_TASK)
-            {
-                var parentEntity = Utility.GetTaskParentEntity(Entity);
-
-                type = Utility.GetConcreteEntityType(parentEntity);
-                expectedId = parentEntity.Id;
-            }
-
-            var result = false;
-            switch (type)
-            {
-                case WorkItem.SUBTYPE_STORY:
-                    result = commitPatterns.story.Contains(expectedId);
-                    break;
-                case WorkItem.SUBTYPE_DEFECT:
-                    result = commitPatterns.defect.Contains(expectedId);
-                    break;
-                case WorkItem.SUBTYPE_QUALITY_STORY:
-                    result = commitPatterns.quality_story.Contains(expectedId);
-                    break;
-            }
-
-            if (result)
-                Clipboard.SetText(CommitMessage);
-        }
-
         public static OctaneItemViewModel CurrentActiveItem { get; private set; }
 
         /// <summary>
@@ -143,10 +104,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             WorkspaceSessionPersistanceManager.ClearActiveEntity();
         }
 
+        #endregion
+
+        #region CommitMessage
+
+        /// <summary>
+        /// Commit message for item
+        /// </summary>
         public string CommitMessage
         {
             get
             {
+                if (!IsSupportCopyCommitMessage)
+                    return string.Empty;
+
                 if (Entity.TypeName == Task.TYPE_TASK)
                 {
                     var parentEntity = Utility.GetTaskParentEntity(Entity);
@@ -161,10 +132,63 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        /// <summary>
+        /// Flag whether the current item supports a commit message
+        /// </summary>
         public bool IsSupportCopyCommitMessage
         {
             get { return EntityTypeInformation.IsCopyCommitMessageSupported; }
         }
+
+        /// <summary>
+        /// Validate current item's commit mesasge against Octane's template
+        /// </summary>
+        public async System.Threading.Tasks.Task ValidateCommitMessage()
+        {
+            if (!EntityTypeInformation.IsCopyCommitMessageSupported)
+                return;
+
+            var octane = new OctaneServices(OctaneConfiguration.Url,
+                OctaneConfiguration.SharedSpaceId,
+                OctaneConfiguration.WorkSpaceId,
+                OctaneConfiguration.Username,
+                OctaneConfiguration.Password);
+            await octane.Connect();
+
+            var commitPatterns = await octane.ValidateCommitMessageAsync(CommitMessage);
+
+            var type = Utility.GetConcreteEntityType(Entity);
+            var expectedId = Entity.Id;
+            if (type == Task.TYPE_TASK)
+            {
+                var parentEntity = Utility.GetTaskParentEntity(Entity);
+
+                type = Utility.GetConcreteEntityType(parentEntity);
+                expectedId = parentEntity.Id;
+            }
+
+            var result = false;
+            switch (type)
+            {
+                case WorkItem.SUBTYPE_STORY:
+                    result = commitPatterns.story.Contains(expectedId);
+                    break;
+                case WorkItem.SUBTYPE_DEFECT:
+                    result = commitPatterns.defect.Contains(expectedId);
+                    break;
+                case WorkItem.SUBTYPE_QUALITY_STORY:
+                    result = commitPatterns.quality_story.Contains(expectedId);
+                    break;
+            }
+
+            if (result)
+                Clipboard.SetText(CommitMessage);
+        }
+
+        #endregion
+
+
+        #region Fields
 
         /// <summary>
         /// Field info shown below the title
@@ -197,5 +221,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             yield return fields.Last();
         }
+
+        #endregion
     }
 }

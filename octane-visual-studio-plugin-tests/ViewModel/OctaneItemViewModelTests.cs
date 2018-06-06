@@ -32,25 +32,34 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
     public class OctaneItemViewModelTests : BaseOctanePluginTest
     {
         private static Story _storyEntity;
+        private static Task _taskEntity;
 
         private static OctaneItemViewModel _storyViewModel;
+        private static OctaneItemViewModel _taskViewModel;
 
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             _storyEntity = StoryUtilities.CreateStory();
+            _taskEntity = TaskUtilities.CreateTask(_storyEntity);
 
             var viewModel = new OctaneMyItemsViewModel();
             viewModel.LoadMyItemsAsync().Wait();
 
             _storyViewModel = viewModel.MyItems.FirstOrDefault(i => i.ID == _storyEntity.Id && i.Entity.Name == _storyEntity.Name);
             Assert.IsNotNull(_storyViewModel, "Couldn't find story entity in MyWork");
+
+            _taskViewModel = viewModel.MyItems.FirstOrDefault(i => i.ID == _taskEntity.Id && i.Entity.Name == _taskEntity.Name);
+            Assert.IsNotNull(_taskViewModel, "Couldn't find task entity in MyWork");
+
+            Assert.IsNull(OctaneItemViewModel.CurrentActiveItem, "There shouldn't be an active item");
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
             EntityService.DeleteById<Story>(WorkspaceContext, _storyEntity.Id);
+            EntityService.DeleteById<Task>(WorkspaceContext, _taskEntity.Id);
         }
 
         [TestMethod]
@@ -59,6 +68,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         {
             new OctaneItemViewModel(null);
         }
+
+        protected override void TestInitializeInternal()
+        {
+            OctaneItemViewModel.ClearActiveItem();
+        }
+
+        #region Fields
 
         [TestMethod]
         public void OctaneItemViewModelTests_Fields_ValidateAllFields_Success()
@@ -90,5 +106,81 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 }
             }
         }
+
+        #endregion
+
+        #region ActiveItem
+
+        [TestMethod]
+        public void OctaneItemViewModelTests_SetActiveItem_NullItem_Success()
+        {
+            OctaneItemViewModel.SetActiveItem(null);
+        }
+
+        [TestMethod]
+        public void OctaneItemViewModelTests_SetActiveItem_SetValidItem_Success()
+        {
+            Assert.IsNull(OctaneItemViewModel.CurrentActiveItem, "There shouldn't be an active item");
+            Assert.IsFalse(_taskViewModel.IsActiveWorkItem, "Task item shouldn't be active");
+            Assert.IsFalse(_storyViewModel.IsActiveWorkItem, "Story item shouldn't be active");
+
+            OctaneItemViewModel.SetActiveItem(_storyViewModel);
+
+            Assert.AreEqual(_storyViewModel, OctaneItemViewModel.CurrentActiveItem, "Story item should be the active item");
+            Assert.IsTrue(_storyViewModel.IsActiveWorkItem, "Story item should be the active after SetActiveItem");
+        }
+
+        [TestMethod]
+        public void OctaneItemViewModelTests_SetActiveItem_ChangeValidItem_Success()
+        {
+            Assert.IsNull(OctaneItemViewModel.CurrentActiveItem, "There shouldn't be an active item");
+            Assert.IsFalse(_taskViewModel.IsActiveWorkItem, "Task item shouldn't be active");
+            Assert.IsFalse(_storyViewModel.IsActiveWorkItem, "Story item shouldn't be active");
+
+            OctaneItemViewModel.SetActiveItem(_taskViewModel);
+
+            Assert.AreEqual(_taskViewModel, OctaneItemViewModel.CurrentActiveItem, "Task item should be the active item");
+            Assert.IsTrue(_taskViewModel.IsActiveWorkItem, "Task item should be the active after calling SetActiveItem on task");
+
+            OctaneItemViewModel.SetActiveItem(_storyViewModel);
+
+            Assert.AreEqual(_storyViewModel, OctaneItemViewModel.CurrentActiveItem, "Story item should be the active item");
+            Assert.IsFalse(_taskViewModel.IsActiveWorkItem, "Task item shouldn't be active after calling SetActiveItem on Story item");
+            Assert.IsTrue(_storyViewModel.IsActiveWorkItem, "Story item should be active after calling SetActiveItem on Story item");
+        }
+
+        [TestMethod]
+        public void OctaneItemViewModelTests_ClearActiveItem_ClearWhenThereIsNoActiveItem_Success()
+        {
+            Assert.IsNull(OctaneItemViewModel.CurrentActiveItem, "There shouldn't be an active item");
+            Assert.IsFalse(_taskViewModel.IsActiveWorkItem, "Task item shouldn't be active");
+            Assert.IsFalse(_storyViewModel.IsActiveWorkItem, "Story item shouldn't be active");
+
+            OctaneItemViewModel.ClearActiveItem();
+
+            Assert.IsNull(OctaneItemViewModel.CurrentActiveItem, "There shouldn't be an active item after ClearActiveItem");
+            Assert.IsFalse(_taskViewModel.IsActiveWorkItem, "Task item shouldn't be active after ClearActiveItem");
+            Assert.IsFalse(_storyViewModel.IsActiveWorkItem, "Story item shouldn't be active after ClearActiveItem");
+        }
+
+        [TestMethod]
+        public void OctaneItemViewModelTests_ClearActiveItem_ClearActiveItem_Success()
+        {
+            Assert.IsNull(OctaneItemViewModel.CurrentActiveItem, "There shouldn't be an active item");
+            Assert.IsFalse(_taskViewModel.IsActiveWorkItem, "Task item shouldn't be active");
+            Assert.IsFalse(_storyViewModel.IsActiveWorkItem, "Story item shouldn't be active");
+
+            OctaneItemViewModel.SetActiveItem(_storyViewModel);
+
+            Assert.AreEqual(_storyViewModel, OctaneItemViewModel.CurrentActiveItem, "Story item should be the active item");
+
+            OctaneItemViewModel.ClearActiveItem();
+
+            Assert.IsNull(OctaneItemViewModel.CurrentActiveItem, "There shouldn't be an active item after ClearActiveItem");
+            Assert.IsFalse(_taskViewModel.IsActiveWorkItem, "Task item shouldn't be active after ClearActiveItem");
+            Assert.IsFalse(_storyViewModel.IsActiveWorkItem, "Story item shouldn't be active after ClearActiveItem");
+        }
+
+        #endregion
     }
 }
