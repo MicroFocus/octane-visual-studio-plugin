@@ -21,6 +21,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:visualStudio="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
              xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
+             xmlns:viewModel="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.ViewModel"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -33,6 +34,73 @@
         <ControlTemplate x:Key="NoScroll">
             <ItemsPresenter></ItemsPresenter>
         </ControlTemplate>
+
+        <DataTemplate x:Key="ReadOnlyFieldTemplate">
+            <Grid Margin="0 3 5 3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                    <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Content, Mode=OneWay}"
+                         Background="{DynamicResource VsBrush.Window}"
+                         Foreground="{DynamicResource VsBrush.WindowText}"
+                         BorderThickness="0">
+                    <TextBox.Style>
+                        <Style TargetType="TextBox">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="TextBox">
+                                                <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+                </TextBox>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="EditableFieldTemplate">
+            <Grid Margin="0 3 5 3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                    <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <TextBox Grid.Column="1"
+                         Background="{DynamicResource VsBrush.Window}"
+                         Foreground="{DynamicResource VsBrush.WindowText}"
+                         Text="{Binding Content, Mode=OneWay}"/>
+            </Grid>
+        </DataTemplate>
+
+        <view:FieldListDataTemplateSelector x:Key="myDataTemplateSelector"/>
+
     </UserControl.Resources>
 
     <Border Padding="10">
@@ -365,12 +433,13 @@
                                     <TextBlock  DockPanel.Dock="Top" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">General</TextBlock>
 
                                     <ListView ItemsSource="{Binding VisibleFields}"
-                                            Background="{DynamicResource VsBrush.Window}"
-                                            Foreground="{DynamicResource VsBrush.WindowText}"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                            ScrollViewer.CanContentScroll="False"
-                                            BorderThickness="0"
-                                            Template="{StaticResource NoScroll}">
+                                              ItemTemplateSelector="{StaticResource myDataTemplateSelector}"
+                                              Background="{DynamicResource VsBrush.Window}"
+                                              Foreground="{DynamicResource VsBrush.WindowText}"
+                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                              ScrollViewer.CanContentScroll="False"
+                                              BorderThickness="0"
+                                              Template="{StaticResource NoScroll}">
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
                                                 <UniformGrid Columns="2"/>
@@ -388,52 +457,10 @@
                                                 </Setter>
                                             </Style>
                                         </ListView.ItemContainerStyle>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0 3 5 3">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="4*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="{x:Type TextBlock}">
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
-                                                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
-                                                    <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Content, Mode=OneWay}"
-                                                             Background="{DynamicResource VsBrush.Window}"
-                                                             Foreground="{DynamicResource VsBrush.WindowText}"
-                                                             BorderThickness="0">
-                                                        <TextBox.Style>
-                                                            <Style TargetType="TextBox">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
-                                                                        <Setter Property="Template">
-                                                                            <Setter.Value>
-                                                                                <ControlTemplate TargetType="TextBox">
-                                                                                    <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
-                                                                                </ControlTemplate>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBox.Style>
-                                                    </TextBox>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
                                     </ListView>
 
                                     <Separator Margin="0 15 0 15"/>
                                     <TextBlock  DockPanel.Dock="Top" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Description</TextBlock>
-                                    <!--WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/-->
                                     <Border BorderThickness="1" Background="Transparent" BorderBrush="Silver">
                                         <FlowDocumentScrollViewer
                                             HorizontalScrollBarVisibility="Disabled"

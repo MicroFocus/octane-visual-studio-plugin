@@ -105,6 +105,7 @@
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
+    <Compile Include="View\FieldListDataTemplateSelector.cs" />
     <Compile Include="View\GifImage.cs" />
     <Compile Include="Common\GreaterThanZeroConverter.cs" />
     <Compile Include="ViewModel\MainWindowMode.cs" />
