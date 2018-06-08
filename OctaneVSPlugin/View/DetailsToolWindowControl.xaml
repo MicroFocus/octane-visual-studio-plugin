@@ -95,7 +95,7 @@
                 <TextBox Grid.Column="1"
                          Background="{DynamicResource VsBrush.Window}"
                          Foreground="{DynamicResource VsBrush.WindowText}"
-                         Text="{Binding Content, Mode=OneWay}"/>
+                         Text="{Binding Content, Mode=TwoWay}"/>
             </Grid>
         </DataTemplate>
 

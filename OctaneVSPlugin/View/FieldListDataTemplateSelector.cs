@@ -32,7 +32,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             if (field == null)
                 return null;
 
-            return element.FindResource("ReadOnlyFieldTemplate") as DataTemplate;
+            if (field.Metadata.GetStringValue("editable") == "True"
+                && field.Metadata.GetStringValue("final") == "False"
+                && (field.Metadata.FieldType == "boolean"
+                    || field.Metadata.FieldType == "integer"
+                    || field.Metadata.FieldType == "string"))
+            {
+                return element.FindResource("EditableFieldTemplate") as DataTemplate;
+            }
+            else
+            {
+                return element.FindResource("ReadOnlyFieldTemplate") as DataTemplate;
+            }
         }
     }
 }

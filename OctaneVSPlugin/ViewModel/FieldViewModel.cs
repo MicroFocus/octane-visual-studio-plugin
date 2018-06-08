@@ -28,37 +28,41 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     public class FieldViewModel
     {
         private readonly BaseEntity _parentEntity;
-        private readonly string _fieldName;
-        private readonly string _fieldLabel;
-        private readonly string emptyPlaceholder;
-        private readonly Func<BaseEntity, object> customContentFunc;
+        private readonly string _emptyPlaceholder;
+        private readonly Func<BaseEntity, object> _customContentFunc;
 
         public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected)
         {
             _parentEntity = entity;
-            _fieldName = fieldName;
-            _fieldLabel = fieldValue;
+            Name = fieldName;
+            Label = fieldValue;
+            IsSelected = isSelected;
+        }
+
+        public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected)
+        {
+            _parentEntity = entity;
+            Metadata = metadata;
+
+            Name = metadata.Name;
+            Label = metadata.Label;
             IsSelected = isSelected;
         }
 
         public FieldViewModel(BaseEntity entity, FieldInfo fieldInfo)
         {
             _parentEntity = entity;
-            _fieldName = fieldInfo.Name;
-            _fieldLabel = fieldInfo.Title;
-            emptyPlaceholder = fieldInfo.EmptyPlaceholder;
-            customContentFunc = fieldInfo.ContentFunc;
+            Name = fieldInfo.Name;
+            Label = fieldInfo.Title;
+            _emptyPlaceholder = fieldInfo.EmptyPlaceholder;
+            _customContentFunc = fieldInfo.ContentFunc;
         }
 
-        public string Label
-        {
-            get { return _fieldLabel; }
-        }
+        public FieldMetadata Metadata { get; }
 
-        public string Name
-        {
-            get { return _fieldName; }
-        }
+        public string Label { get; }
+
+        public string Name { get; }
 
         public bool HideLabel
         {
@@ -71,18 +75,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                if (customContentFunc != null)
-                    return customContentFunc(_parentEntity);
+                if (_customContentFunc != null)
+                    return _customContentFunc(_parentEntity);
 
-                var formattedValue = FieldsMetadataService.GetFormattedValue(_parentEntity, _fieldName);
+                var formattedValue = FieldsMetadataService.GetFormattedValue(_parentEntity, Name);
                 if (formattedValue != null)
                     return formattedValue;
 
-                object value = _parentEntity.GetValue(_fieldName);
+                object value = _parentEntity.GetValue(Name);
                 switch (value)
                 {
                     case null:
-                        return emptyPlaceholder;
+                        return _emptyPlaceholder;
                     case BaseEntity entity:
                         return entity.Name;
                     case EntityList<BaseEntity> entityList:
@@ -91,13 +95,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         return value;
                 }
             }
+            set
+            {
+                var x = value;
+                _parentEntity.SetValue(Name, value);
+            }
         }
 
         private string FormatEntityList(EntityList<BaseEntity> value)
         {
             if (value.data.Count == 0)
             {
-                return emptyPlaceholder;
+                return _emptyPlaceholder;
             }
 
             string[] entityNames = value.data.Select(x => x.Name).ToArray();

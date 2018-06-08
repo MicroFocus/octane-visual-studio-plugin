@@ -101,7 +101,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 var fieldsToHideHashSet = FieldsCache.GetFieldsToHide(Entity);
                 foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
                 {
-                    var fieldViewModel = new FieldViewModel(Entity, field.Name, field.Label, visibleFieldsHashSet.Contains(field.Name));
+                    var fieldViewModel = new FieldViewModel(Entity, field, visibleFieldsHashSet.Contains(field.Name));
 
                     _allEntityFields.Add(fieldViewModel);
                 }
