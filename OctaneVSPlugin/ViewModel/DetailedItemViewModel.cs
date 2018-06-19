@@ -50,6 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             : base(entity)
         {
             RefreshCommand = new DelegatedCommand(Refresh);
+            SaveEntityCommand = new DelegatedCommand(SaveEntity);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
@@ -367,6 +368,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             // requirement
             Requirement.SUBTYPE_DOCUMENT
         };
+
+        #region SaveEntity
+
+        /// <summary>
+        /// Save entity command
+        /// </summary>
+        public ICommand SaveEntityCommand { get; }
+
+        private void SaveEntity(object param)
+        {
+        }
+
+        #endregion
 
         #region Refresh
 

@@ -246,9 +246,18 @@
                                     <TextBlock Text="{Binding Phase}"
                                                VerticalAlignment="Center" Margin="5 0 0 0" />
                                 </StackPanel>
+                                <Button x:Name="SaveEntityButton"
+                                        Margin="40 0 0 0"
+                                        Width="25" Height="25"
+                                        BorderThickness="0"
+                                        HorizontalAlignment="Left" VerticalAlignment="Center"
+                                        Command="{Binding SaveEntityCommand}"
+                                        Content="Save"
+                                        ToolTip="Save">
+                                </Button>
                                 <ToggleButton x:Name="CustomizeFieldsButton" 
                                               Width="25" Height="25"
-                                              Margin="40 0 0 0"
+                                              Margin="8 0 0 0"
                                               HorizontalAlignment="Left" VerticalAlignment="Center"
                                               ToolTip="Customize fields">
                                     <ToggleButton.Template>
