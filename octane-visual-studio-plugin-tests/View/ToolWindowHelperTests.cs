@@ -46,6 +46,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         private readonly Action<object> _copyCommitMessageDelegate = x => _value = CopyCommitMessageValue;
         private const int DownloadGherkinScriptValue = 6;
         private readonly Action<object> _downloadGherkinScriptDelegate = x => _value = DownloadGherkinScriptValue;
+        private const int StartWorkValue = 7;
+        private readonly Action<object> _startWorkDelegate = x => _value = StartWorkValue;
+        private const int StopWorkValue = 8;
+        private readonly Action<object> _stopWorkDelegate = x => _value = StopWorkValue;
 
         /// <inheritdoc/>>
         protected override void TestInitializeInternal()
@@ -56,7 +60,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         [TestMethod]
         public void ToolWindowHelperTests_ConstructContextMenu_NullContextMenu_Success()
         {
-            ToolWindowHelper.ConstructContextMenu(null, null, null, null, null, null, null, null);
+            ToolWindowHelper.ConstructContextMenu(null, null, null, null, null, null, null, null, null, null);
         }
 
         [TestMethod]
@@ -65,7 +69,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
             var cm = new ContextMenu();
             cm.Items.Add(new MenuItem());
 
-            ToolWindowHelper.ConstructContextMenu(cm, null, null, null, null, null, null, null);
+            ToolWindowHelper.ConstructContextMenu(cm, null, null, null, null, null, null, null, null, null);
 
             Assert.AreEqual(0, cm.Items.Count, "Mismatched number of menu items in context menu");
         }
@@ -78,8 +82,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage
+                    MenuItemEnum.StartWork
                 });
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ContextMenuForActiveItem_Story_Success()
+        {
+            ValidateContextMenuItems(StoryUtilities.CreateStory(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.ViewDetails,
+                    MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage,
+                    MenuItemEnum.StopWork
+                }, true, true);
         }
 
         [TestMethod]
@@ -94,8 +111,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                         MenuItemEnum.ViewDetails,
                         MenuItemEnum.TaskViewParentDetails,
                         MenuItemEnum.OpenInBrowser,
-                        MenuItemEnum.CopyCommitMessage
+                        MenuItemEnum.StartWork
                     });
+            }
+            finally
+            {
+                EntityService.DeleteById<Story>(WorkspaceContext, story.Id);
+            }
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ContextMenuForActiveItem_Task_Success()
+        {
+            var story = StoryUtilities.CreateStory();
+            try
+            {
+                ValidateContextMenuItems(TaskUtilities.CreateTask(story),
+                    new List<MenuItemEnum>
+                    {
+                        MenuItemEnum.ViewDetails,
+                        MenuItemEnum.TaskViewParentDetails,
+                        MenuItemEnum.OpenInBrowser,
+                        MenuItemEnum.CopyCommitMessage,
+                        MenuItemEnum.StopWork
+                    }, true, true);
             }
             finally
             {
@@ -111,8 +150,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage
+                    MenuItemEnum.StartWork
                 });
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ContextMenuForActiveItem_QualityStory_Success()
+        {
+            ValidateContextMenuItems(QualityStoryUtilities.CreateQualityStory(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.ViewDetails,
+                    MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage,
+                    MenuItemEnum.StopWork
+                }, true, true);
         }
 
         [TestMethod]
@@ -123,8 +175,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage
+                    MenuItemEnum.StartWork
                 });
+        }
+
+        [TestMethod]
+        public void ToolWindowHelperTests_ContextMenuForActiveItem_Defect_Success()
+        {
+            ValidateContextMenuItems(DefectUtilities.CreateDefect(),
+                new List<MenuItemEnum>
+                {
+                    MenuItemEnum.ViewDetails,
+                    MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage,
+                    MenuItemEnum.StopWork
+                }, true, true);
         }
 
         [TestMethod]
@@ -217,7 +282,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         }
 
         // TODO remove useMyItems and use a more generic mechanism to obtain the BaseItemViewModel
-        private void ValidateContextMenuItems<T>(T entity, List<MenuItemEnum> expectedMenuItems, bool useMyItems = true) where T : BaseEntity
+        private void ValidateContextMenuItems<T>(T entity, List<MenuItemEnum> expectedMenuItems, bool useMyItems = true, bool setActiveItem = false) where T : BaseEntity
         {
             try
             {
@@ -228,6 +293,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                     viewModel.LoadMyItemsAsync().Wait();
 
                     selectedItem = viewModel.MyItems.FirstOrDefault(i => i.ID == entity.Id);
+
+                    if (setActiveItem)
+                        OctaneItemViewModel.SetActiveItem(selectedItem as OctaneItemViewModel);
                 }
                 else
                 {
@@ -244,7 +312,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                     _viewCommentParentDetailsDelegate,
                     _openInBrowserDelegate,
                     _copyCommitMessageDelegate,
-                    _downloadGherkinScriptDelegate);
+                    _downloadGherkinScriptDelegate,
+                    _startWorkDelegate,
+                    _stopWorkDelegate);
 
                 Assert.AreEqual(expectedMenuItems.Count, cm.Items.Count,
                     "Mismatched number of menu items in context menu");
@@ -261,12 +331,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                             ValidateMenuItem(items, index, ToolWindowHelper.ViewDetailsHeader, ViewDetailsValue);
                             break;
                         case MenuItemEnum.TaskViewParentDetails:
-                            ValidateMenuItem(items, index, ToolWindowHelper.ViewTaskParentDetailsHeader,
-                                ViewTaskParentDetailsValue);
+                            ValidateMenuItem(items, index, ToolWindowHelper.ViewTaskParentDetailsHeader, ViewTaskParentDetailsValue);
                             break;
                         case MenuItemEnum.CommentViewParentDetails:
-                            ValidateMenuItem(items, index, ToolWindowHelper.CopyCommitMessageHeader,
-                                ViewCommentParentDetailsValue);
+                            ValidateMenuItem(items, index, ToolWindowHelper.CopyCommitMessageHeader, ViewCommentParentDetailsValue);
                             break;
                         case MenuItemEnum.OpenInBrowser:
                             ValidateMenuItem(items, index, ToolWindowHelper.OpenInBrowserHeader, OpenInBrowserValue);
@@ -275,8 +343,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                             ValidateMenuItem(items, index, ToolWindowHelper.CopyCommitMessageHeader, CopyCommitMessageValue);
                             break;
                         case MenuItemEnum.DownloadScript:
-                            ValidateMenuItem(items, index, ToolWindowHelper.DownloadGherkinScriptHeader,
-                                DownloadGherkinScriptValue);
+                            ValidateMenuItem(items, index, ToolWindowHelper.DownloadGherkinScriptHeader, DownloadGherkinScriptValue);
+                            break;
+                        case MenuItemEnum.StartWork:
+                            ValidateMenuItem(items, index, ToolWindowHelper.StartWorkHeader, StartWorkValue);
+                            break;
+                        case MenuItemEnum.StopWork:
+                            ValidateMenuItem(items, index, ToolWindowHelper.StopWorkHeader, StopWorkValue);
                             break;
                     }
 
@@ -310,7 +383,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
             CommentViewParentDetails,
             OpenInBrowser,
             CopyCommitMessage,
-            DownloadScript
+            DownloadScript,
+            StartWork,
+            StopWork
         };
     }
 }

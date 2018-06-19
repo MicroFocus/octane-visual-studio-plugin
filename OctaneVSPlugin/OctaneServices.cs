@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
@@ -24,7 +25,9 @@ using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -254,6 +257,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public async Task DownloadAttachmentAsync(string relativeUrl, string destinationPath)
         {
             await es.DownloadAttachmentAsync(relativeUrl, destinationPath);
+        }
+
+        /// <summary>
+        /// Validate given commit message
+        /// </summary>
+        public async Task<CommitPattern> ValidateCommitMessageAsync(string commitMessage)
+        {
+            return await es.ValidateCommitMessageAsync(workspaceContext, HttpUtility.UrlEncode(commitMessage, Encoding.UTF8));
         }
     }
 }

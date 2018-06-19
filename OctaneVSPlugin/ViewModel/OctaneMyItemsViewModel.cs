@@ -85,11 +85,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             SearchFilter = SearchFilter.Trim();
 
-            SearchHistoryManager.UpdateHistory(SearchFilter);
+            WorkspaceSessionPersistanceManager.UpdateHistory(SearchFilter);
             NotifyPropertyChanged("SearchHistory");
 
-            var searchWindow = PluginWindowManager.ObtainSearchWindow(MainWindow.PluginPackage);
-            searchWindow?.Search(SearchFilter);
+            PluginWindowManager.ShowSearchWindow(MainWindow.PluginPackage, SearchFilter);
         }
 
         /// <summary>
@@ -100,7 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get
             {
                 return new ObservableCollection<string>(_mode == MainWindowMode.ItemsLoaded
-                           ? SearchHistoryManager.History
+                           ? WorkspaceSessionPersistanceManager.History
                            : new List<string>());
             }
         }
@@ -179,10 +178,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 _myItems.Clear();
 
+                bool foundActiveItem = false;
                 IList<BaseEntity> items = await octane.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
-                    _myItems.Add(new OctaneItemViewModel(entity));
+                    var octaneItem = new OctaneItemViewModel(entity);
+
+                    if (WorkspaceSessionPersistanceManager.IsActiveEntity(entity))
+                    {
+                        foundActiveItem = true;
+                        OctaneItemViewModel.SetActiveItem(octaneItem);
+                    }
+                    _myItems.Add(octaneItem);
+                }
+
+                if (!foundActiveItem)
+                {
+                    OctaneItemViewModel.ClearActiveItem();
+                    MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 }
 
                 IList<BaseEntity> comments = await octane.GetMyCommentItems();
@@ -194,10 +207,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Mode = MainWindowMode.ItemsLoaded;
 
                 SearchFilter = "";
+                MainWindowCommand.Instance?.UpdateActiveItemInToolbar();
                 NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
+                MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
                 LastExceptionMessage = ex.Message;
             }
