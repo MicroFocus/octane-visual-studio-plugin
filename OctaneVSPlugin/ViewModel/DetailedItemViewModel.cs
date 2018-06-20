@@ -92,7 +92,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     updatedFields.Add(CommonFields.SubType);
                 }
 
-                Entity = await _octaneService.FindEntity(Entity, updatedFields);
+                Entity = await _octaneService.FindEntityAsync(Entity, updatedFields);
 
                 await HandleImagesInDescription();
 
@@ -376,8 +376,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public ICommand SaveEntityCommand { get; }
 
-        private void SaveEntity(object param)
+        private async void SaveEntity(object param)
         {
+            try
+            {
+                Mode = WindowMode.Loading;
+                NotifyPropertyChanged("Mode");
+
+                var entityToUpdate = Entity.SimpleClone();
+                foreach (var field in _allEntityFields.Where(f => f.IsChanged))
+                {
+                    entityToUpdate.SetValue(field.Name, field.Content);
+                }
+                await _octaneService.UpdateEntityAsync(entityToUpdate);
+                await InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            NotifyPropertyChanged();
         }
 
         #endregion
@@ -391,10 +410,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void Refresh(object param)
         {
-            Mode = WindowMode.Loading;
-            NotifyPropertyChanged("Mode");
+            try
+            {
+                Mode = WindowMode.Loading;
+                NotifyPropertyChanged("Mode");
 
-            InitializeAsync();
+                InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            NotifyPropertyChanged();
         }
 
         #endregion

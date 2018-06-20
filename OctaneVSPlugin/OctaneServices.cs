@@ -165,7 +165,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return workspaceUser;
         }
 
-        public async Task<BaseEntity> FindEntity(BaseEntity entityModel, IList<string> fields)
+        /// <summary>
+        /// Returns the entity with the given ID and the requested fields
+        /// </summary>
+        public async Task<BaseEntity> FindEntityAsync(BaseEntity entityModel, IList<string> fields)
         {
             var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), fields);
             return entity;
@@ -178,6 +181,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             { "run", "owner_run" },
             { "requirement", "owner_requirement" }
         };
+
+        /// <summary>
+        /// Update the properties of the given entity
+        /// </summary>
+        public async Task<BaseEntity> UpdateEntityAsync(BaseEntity entity)
+        {
+            var updatedEntity = await es.UpdateAsync(workspaceContext, entity, Utility.GetConcreteEntityType(entity));
+            return updatedEntity;
+        }
 
         /// <summary>
         /// Retrieves a list of all the comments attached to the given entity

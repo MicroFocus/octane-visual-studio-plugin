@@ -97,10 +97,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             set
             {
-                var x = value;
-                _parentEntity.SetValue(Name, value);
+                IsChanged = true;
+                _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
             }
         }
+
+        public bool IsChanged { get; private set; }
 
         private string FormatEntityList(EntityList<BaseEntity> value)
         {
