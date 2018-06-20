@@ -19,9 +19,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:visualStudio="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
              xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
-             xmlns:viewModel="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.ViewModel"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -31,6 +30,9 @@
     <UserControl.Resources>
         <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
         <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+
+        <view:BoolToIndexConverter x:Key="BoolToIndexConverter" />
+
         <ControlTemplate x:Key="NoScroll">
             <ItemsPresenter></ItemsPresenter>
         </ControlTemplate>
@@ -96,6 +98,34 @@
                          Background="{DynamicResource VsBrush.Window}"
                          Foreground="{DynamicResource VsBrush.WindowText}"
                          Text="{Binding Content, Mode=TwoWay}"/>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="EditableBooleanFieldTemplate">
+            <Grid Margin="0 3 5 3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="4*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                    <TextBlock.Style>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Style.Triggers>
+                                <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                    <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
+                <ComboBox Grid.Column="1"
+                          Background="{DynamicResource VsBrush.Window}"
+                          SelectedIndex="{Binding Content, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}">
+                    <ComboBox.Items>
+                        <system:Boolean>True</system:Boolean>
+                        <system:Boolean>False</system:Boolean>
+                    </ComboBox.Items>
+                </ComboBox>
             </Grid>
         </DataTemplate>
 

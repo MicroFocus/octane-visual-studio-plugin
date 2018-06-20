@@ -99,6 +99,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 switch (Metadata.FieldType)
                 {
+                    case "boolean":
+                        _parentEntity.SetValue(Name, value);
+                        IsChanged = true;
+                        break;
                     case "integer":
                         _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
                         IsChanged = true;
