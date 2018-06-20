@@ -47,6 +47,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             FieldsMetadataService.Reset();
 
+            // disable the active item toolbar because we don't know yet
+            // whether we can connect with the new Octane credentials
+            MainWindowCommand.Instance.DisableActiveItemToolbar();
+
             // After settings are applied we notify the main ViewModel to allow it to refresh.
             if (OctaneMyItemsViewModel.Instance != null)
             {
