@@ -97,8 +97,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             set
             {
-                IsChanged = true;
-                _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
+                switch (Metadata.FieldType)
+                {
+                    case "integer":
+                        _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
+                        IsChanged = true;
+                        break;
+                    case "string":
+                        _parentEntity.SetValue(Name, value.ToString());
+                        IsChanged = true;
+                        break;
+                }
             }
         }
 

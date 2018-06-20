@@ -69,6 +69,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
         #endregion
 
+        #region SaveEntityCommand
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_SaveEntityCommand_ChangeIntField_Success()
+        {
+            var viewModel = new DetailedItemViewModel(_story);
+            viewModel.InitializeAsync().Wait();
+
+            var storyPointsField = viewModel.VisibleFields.FirstOrDefault(f => f.Name == CommonFields.StoryPoints);
+            storyPointsField.Content = 1234;
+            Assert.AreEqual(1234, storyPointsField.Content);
+
+            viewModel.SaveEntityCommand.Execute(null);
+
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded,
+                "Timeout while refreshing the entity", new TimeSpan(0, 0, 30));
+
+            storyPointsField = viewModel.VisibleFields.FirstOrDefault(f => f.Name == CommonFields.StoryPoints);
+            Assert.AreEqual(1234, storyPointsField.Content);
+        }
+
+        #endregion
+
         #region RefreshCommand
 
         [TestMethod]
