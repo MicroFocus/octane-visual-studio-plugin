@@ -38,6 +38,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private readonly List<FieldViewModel> _allEntityFields;
 
+        private readonly List<Phase> _phaseTransitions;
+
         private string _filter = string.Empty;
 
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
@@ -57,6 +59,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
             _allEntityFields = new List<FieldViewModel>();
+
+            _phaseTransitions = new List<Phase>();
 
             Mode = WindowMode.Loading;
 
@@ -106,13 +110,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
                 var currentPhaseName = phaseEntity.Name;
-                Phase = "";
+
+                _phaseTransitions.Clear();
+                SelectedNextPhase = null;
+
                 foreach (var transition in transitions.Where(t => t.SourcePhase.Name == currentPhaseName))
                 {
                     if (transition.IsPrimary)
-                        Phase = transition.TargetPhase.Name + Phase + ";";
+                        _phaseTransitions.Insert(0, transition.TargetPhase);
                     else
-                        Phase += transition.TargetPhase.Name + ";";
+                        _phaseTransitions.Add(transition.TargetPhase);
                 }
 
                 Mode = WindowMode.Loaded;
@@ -329,8 +336,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public string Phase
         {
-            get;
-            /*{
+            get
+            {
                 if (Mode == WindowMode.Loaded)
                 {
                     var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
@@ -341,9 +348,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 return string.Empty;
-            }*/
-            private set;
+            }
         }
+
+        /// <summary>
+        /// List of names for possible next phases
+        /// </summary>
+        public List<string> NextPhaseNames
+        {
+            get { return _phaseTransitions.Select(pt => pt.Name).ToList(); }
+        }
+
+        /// <summary>
+        /// Name of the currently selected next phase
+        /// </summary>
+        public string SelectedNextPhase { get; set; }
 
         #endregion
 
@@ -397,6 +416,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 foreach (var field in _allEntityFields.Where(f => f.IsChanged))
                 {
                     entityToUpdate.SetValue(field.Name, field.Content);
+                }
+
+                if (SelectedNextPhase != null)
+                {
+                    var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);
+                    if (nextPhase != null)
+                        entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
                 }
                 await _octaneService.UpdateEntityAsync(entityToUpdate);
                 await InitializeAsync();

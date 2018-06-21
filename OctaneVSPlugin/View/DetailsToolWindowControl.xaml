@@ -271,10 +271,22 @@
                             <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
                                 <StackPanel x:Name="PhaseSection" Orientation="Horizontal"
                                             Visibility="{Binding Path=ShowPhase, Converter={StaticResource BoolToVisConverter}}">
-                                    <TextBlock Text="Phase:"
+                                    <TextBlock Text="Current phase:"
                                                VerticalAlignment="Center" FontWeight="Bold" />
                                     <TextBlock Text="{Binding Phase}"
                                                VerticalAlignment="Center" Margin="5 0 0 0" />
+                                    <TextBlock Text="|"
+                                               Margin="5 0 0 0"
+                                               VerticalAlignment="Center" FontWeight="Bold" />
+                                    <TextBlock Text="Move to:"
+                                               VerticalAlignment="Center" FontWeight="Bold" 
+                                               Margin="5 0 0 0" />
+                                    <ComboBox Background="{DynamicResource VsBrush.Window}"
+                                              VerticalAlignment="Center"
+                                              Width="120"
+                                              ItemsSource="{Binding NextPhaseNames}"
+                                              SelectedItem="{Binding SelectedNextPhase, Mode=TwoWay}"
+                                              Margin="5 0 0 0"/>
                                 </StackPanel>
                                 <Button x:Name="SaveEntityButton"
                                         Margin="40 0 0 0"
