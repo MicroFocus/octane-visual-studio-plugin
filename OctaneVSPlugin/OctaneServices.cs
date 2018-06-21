@@ -278,5 +278,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             return await es.ValidateCommitMessageAsync(workspaceContext, HttpUtility.UrlEncode(commitMessage, Encoding.UTF8));
         }
+
+        /// <summary>
+        /// Return all possible transitions for a given entity type
+        /// </summary>
+        public async Task<List<Transition>> GetPosibbleTransitionsForEntityType(string entityType)
+        {
+            var result = await es.GetPosibbleTransitionsForEntityType(workspaceContext, entityType);
+            return result?.data;
+        }
     }
 }

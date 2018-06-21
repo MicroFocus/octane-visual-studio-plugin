@@ -102,6 +102,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (EntitySupportsComments)
                     await RetrieveComments();
 
+                var transitions = await _octaneService.GetPosibbleTransitionsForEntityType(EntityType);
+
+                var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
+                var currentPhaseName = phaseEntity.Name;
+                Phase = "";
+                foreach (var transition in transitions.Where(t => t.SourcePhase.Name == currentPhaseName))
+                {
+                    if (transition.IsPrimary)
+                        Phase = transition.TargetPhase.Name + Phase + ";";
+                    else
+                        Phase += transition.TargetPhase.Name + ";";
+                }
+
                 Mode = WindowMode.Loaded;
             }
             catch (Exception ex)
@@ -282,7 +295,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public string ErrorMessage { get; private set; }
 
-        private async System.Threading.Tasks.Task RetrieveComments()
+        private async Task RetrieveComments()
         {
             try
             {
@@ -301,6 +314,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        #region Phase
+
         /// <summary>
         /// Flag specifiying whether we need to show the phase section in the UI or not
         /// </summary>
@@ -314,8 +329,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public string Phase
         {
-            get
-            {
+            get;
+            /*{
                 if (Mode == WindowMode.Loaded)
                 {
                     var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
@@ -326,8 +341,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 return string.Empty;
-            }
+            }*/
+            private set;
         }
+
+        #endregion
 
         /// <summary>
         /// Comments associated with the cached entity
