@@ -28,109 +28,117 @@
              Name="MyToolWindow">
 
     <UserControl.Resources>
-        <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
-        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
 
-        <view:BoolToIndexConverter x:Key="BoolToIndexConverter" />
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        
+            <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
-        <ControlTemplate x:Key="NoScroll">
-            <ItemsPresenter></ItemsPresenter>
-        </ControlTemplate>
+            <view:BoolToIndexConverter x:Key="BoolToIndexConverter" />
 
-        <DataTemplate x:Key="ReadOnlyFieldTemplate">
-            <Grid Margin="0 3 5 3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Style.Triggers>
-                                <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
-                                    <Setter Property="ToolTip" Value="{Binding Label}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Content, Mode=OneWay}"
-                         Background="{DynamicResource VsBrush.Window}"
-                         Foreground="{DynamicResource VsBrush.WindowText}"
-                         BorderThickness="0">
-                    <TextBox.Style>
-                        <Style TargetType="TextBox">
-                            <Style.Triggers>
-                                <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="TextBox">
-                                                <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </DataTrigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBox.Style>
-                </TextBox>
-            </Grid>
-        </DataTemplate>
+            <ControlTemplate x:Key="NoScroll">
+                <ItemsPresenter></ItemsPresenter>
+            </ControlTemplate>
 
-        <DataTemplate x:Key="EditableFieldTemplate">
-            <Grid Margin="0 3 5 3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Style.Triggers>
-                                <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
-                                    <Setter Property="ToolTip" Value="{Binding Label}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <TextBox Grid.Column="1"
-                         Background="{DynamicResource VsBrush.Window}"
-                         Foreground="{DynamicResource VsBrush.WindowText}"
-                         Text="{Binding Content, Mode=TwoWay}"/>
-            </Grid>
-        </DataTemplate>
+            <DataTemplate x:Key="ReadOnlyFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Content, Mode=OneWay}"
+                             Background="{DynamicResource VsBrush.Window}"
+                             Foreground="{DynamicResource VsBrush.WindowText}"
+                             BorderThickness="0">
+                        <TextBox.Style>
+                            <Style TargetType="TextBox">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="TextBox">
+                                                    <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBox.Style>
+                    </TextBox>
+                </Grid>
+            </DataTemplate>
 
-        <DataTemplate x:Key="EditableBooleanFieldTemplate">
-            <Grid Margin="0 3 5 3">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="4*"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
-                    <TextBlock.Style>
-                        <Style TargetType="{x:Type TextBlock}">
-                            <Style.Triggers>
-                                <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
-                                    <Setter Property="ToolTip" Value="{Binding Label}"/>
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </TextBlock.Style>
-                </TextBlock>
-                <ComboBox Grid.Column="1"
-                          Background="{DynamicResource VsBrush.Window}"
-                          SelectedIndex="{Binding Content, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}">
-                    <ComboBox.Items>
-                        <system:Boolean>True</system:Boolean>
-                        <system:Boolean>False</system:Boolean>
-                    </ComboBox.Items>
-                </ComboBox>
-            </Grid>
-        </DataTemplate>
+            <DataTemplate x:Key="EditableFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <TextBox Grid.Column="1"
+                             Background="{DynamicResource VsBrush.Window}"
+                             Foreground="{DynamicResource VsBrush.WindowText}"
+                             Text="{Binding Content, Mode=TwoWay}"/>
+                </Grid>
+            </DataTemplate>
 
-        <view:FieldListDataTemplateSelector x:Key="myDataTemplateSelector"/>
+            <DataTemplate x:Key="EditableBooleanFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ComboBox Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"
+                                  Background="{DynamicResource VsBrush.Window}"
+                                  Foreground="{DynamicResource VsBrush.WindowText}"
+                                  SelectedIndex="{Binding Content, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}">
+                        <ComboBox.Items>
+                            <system:Boolean>True</system:Boolean>
+                            <system:Boolean>False</system:Boolean>
+                        </ComboBox.Items>
+                    </ComboBox>
+                </Grid>
+            </DataTemplate>
 
+            <view:FieldListDataTemplateSelector x:Key="myDataTemplateSelector"/>
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Border Padding="10">
@@ -281,7 +289,9 @@
                                     <TextBlock Text="Move to:"
                                                VerticalAlignment="Center" FontWeight="Bold" 
                                                Margin="5 0 0 0" />
-                                    <ComboBox Background="{DynamicResource VsBrush.Window}"
+                                    <ComboBox Style="{DynamicResource ComboBoxStyle1}" 
+                                              Background="{DynamicResource VsBrush.Window}"
+                                              Foreground="{DynamicResource VsBrush.WindowText}"
                                               VerticalAlignment="Center"
                                               Width="120"
                                               ItemsSource="{Binding NextPhaseNames}"
