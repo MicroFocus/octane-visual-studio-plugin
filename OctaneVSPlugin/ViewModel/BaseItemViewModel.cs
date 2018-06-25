@@ -61,6 +61,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public virtual string Title
         {
             get { return Entity.Name; }
+            set { Entity.Name = value; }
         }
 
         /// <summary>

@@ -418,6 +418,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     entityToUpdate.SetValue(field.Name, field.Content);
                 }
 
+                entityToUpdate.Name = Entity.Name;
+
                 if (SelectedNextPhase != null)
                 {
                     var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);

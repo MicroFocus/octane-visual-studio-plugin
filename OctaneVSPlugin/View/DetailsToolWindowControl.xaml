@@ -272,11 +272,32 @@
                                              Background="{DynamicResource VsBrush.Window}"
                                              Foreground="{DynamicResource VsBrush.WindowText}"
                                              BorderThickness="0"/>
-                                    <TextBlock Text="{Binding Title, FallbackValue=__Item with name__}" Grid.Row="0" Grid.Column="1" FontSize="20" TextTrimming="CharacterEllipsis"/>
+                                    <TextBox  Grid.Row="0" Grid.Column="1"
+                                              FontSize="20"
+                                              Text="{Binding Title, Mode=TwoWay}"
+                                              Background="{DynamicResource VsBrush.Window}"
+                                              Foreground="{DynamicResource VsBrush.WindowText}"
+                                              BorderThickness="1">
+                                        <TextBox.Style>
+                                            <Style TargetType="TextBox">
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
+                                                        <Setter Property="Template">
+                                                            <Setter.Value>
+                                                                <ControlTemplate TargetType="TextBox">
+                                                                    <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
+                                                                </ControlTemplate>
+                                                            </Setter.Value>
+                                                        </Setter>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBox.Style>
+                                    </TextBox>
                                 </Grid>
                             </Grid>
 
-                            <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
+                            <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal" Margin="5 0 0 0">
                                 <StackPanel x:Name="PhaseSection" Orientation="Horizontal"
                                             Visibility="{Binding Path=ShowPhase, Converter={StaticResource BoolToVisConverter}}">
                                     <TextBlock Text="Current phase:"
