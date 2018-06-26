@@ -36,17 +36,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
     public class DetailedItemViewModelTests : BaseOctanePluginTest
     {
         private static Story _story;
+        private static Task _task;
 
         [ClassInitialize]
         public static void ClassInit(TestContext context)
         {
             _story = StoryUtilities.CreateStory();
+            _task = TaskUtilities.CreateTask(_story);
         }
 
         [ClassCleanup]
         public static void ClassCleanup()
         {
             EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
+            EntityService.DeleteById<Task>(WorkspaceContext, _task.Id);
         }
 
         #region EntitySupportsComments
@@ -88,6 +91,59 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             storyPointsField = viewModel.VisibleFields.FirstOrDefault(f => f.Name == CommonFields.StoryPoints);
             Assert.AreEqual(1234, storyPointsField.Content);
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_SaveEntityCommand_ChangePhaseForStory_Success()
+        {
+            ValidateChangePhase(_story);
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_SaveEntityCommand_ChangePhaseForTask_Success()
+        {
+            ValidateChangePhase(_task);
+        }
+
+        private void ValidateChangePhase(BaseEntity entity)
+        {
+            var viewModel = new DetailedItemViewModel(entity);
+            viewModel.InitializeAsync().Wait();
+
+            Assert.IsNull(viewModel.SelectedNextPhase, "SelectedNextPhase should be null after initialization");
+
+            for (int i = 0; i < 5; i++)
+            {
+                Assert.IsTrue(viewModel.NextPhaseNames.Count > 0, "There should be at least one next phase name");
+                var nextPhaseName = viewModel.NextPhaseNames[0];
+                viewModel.SelectedNextPhase = nextPhaseName;
+
+                viewModel.SaveEntityCommand.Execute(null);
+
+                Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded,
+                    "Timeout while refreshing the entity for next phase " + nextPhaseName, new TimeSpan(0, 0, 30));
+
+                Assert.AreEqual(nextPhaseName, viewModel.Phase, "Mismatched entity phase after save");
+                Assert.IsNull(viewModel.SelectedNextPhase, "SelectedNextPhase should be null after save");
+            }
+        }
+
+        [TestMethod]
+        public void DetailedItemViewModelTests_SaveEntityCommand_Name_Success()
+        {
+            var viewModel = new DetailedItemViewModel(_story);
+            viewModel.InitializeAsync().Wait();
+
+            var newName = "New_Story_" + Guid.NewGuid();
+            viewModel.Title = newName;
+            Assert.AreEqual(newName, viewModel.Title, "Mismatched entity name after setting it");
+
+            viewModel.SaveEntityCommand.Execute(null);
+
+            Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded,
+                "Timeout while refreshing the entity", new TimeSpan(0, 0, 30));
+
+            Assert.AreEqual(newName, viewModel.Title, "Mismatched entity name after save");
         }
 
         #endregion
@@ -401,11 +457,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         {
             var viewModel = new DetailedItemViewModel(_story);
             Assert.AreEqual(WindowMode.Loading, viewModel.Mode, "Mismatched initial mode");
-            Assert.AreEqual(string.Empty, viewModel.Phase, "Mismatched initial phase");
 
             viewModel.InitializeAsync().Wait();
             Assert.AreEqual(WindowMode.Loaded, viewModel.Mode, "Mismatched mode after initialization");
-            Assert.AreEqual("New", viewModel.Phase, "Mismatched phase after initialization");
 
             var entityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(_story);
             Assert.AreEqual(entityTypeInformation.ShortLabel, viewModel.IconText, "Mismatched icon text");
