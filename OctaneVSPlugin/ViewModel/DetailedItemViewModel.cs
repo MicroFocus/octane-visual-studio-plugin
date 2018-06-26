@@ -106,7 +106,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (EntitySupportsComments)
                     await RetrieveComments();
 
-                var transitions = await _octaneService.GetPosibbleTransitionsForEntityType(EntityType);
+                var transitions = await _octaneService.GetTransitionsForEntityType(EntityType);
 
                 var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
                 var currentPhaseName = phaseEntity.Name;
@@ -412,7 +412,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Mode = WindowMode.Loading;
                 NotifyPropertyChanged("Mode");
 
-                var entityToUpdate = Entity.SimpleClone();
+                var entityToUpdate = new BaseEntity(Entity.Id);
+                entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
+
                 foreach (var field in _allEntityFields.Where(f => f.IsChanged))
                 {
                     entityToUpdate.SetValue(field.Name, field.Content);

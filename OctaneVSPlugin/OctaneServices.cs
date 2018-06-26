@@ -280,11 +280,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         /// <summary>
-        /// Return all possible transitions for a given entity type
+        /// Return all transitions for a given entity type
         /// </summary>
-        public async Task<List<Transition>> GetPosibbleTransitionsForEntityType(string entityType)
+        public async Task<List<Transition>> GetTransitionsForEntityType(string entityType)
         {
-            var result = await es.GetPosibbleTransitionsForEntityType(workspaceContext, entityType);
+            var result = await es.GetTransitionsForEntityType(workspaceContext, entityType);
             return result?.data;
         }
     }
