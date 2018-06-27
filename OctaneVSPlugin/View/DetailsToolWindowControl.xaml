@@ -323,10 +323,11 @@
                                         Margin="40 0 0 0"
                                         Width="25" Height="25"
                                         BorderThickness="0"
+                                        Background="{DynamicResource VsBrush.Window}"
                                         HorizontalAlignment="Left" VerticalAlignment="Center"
-                                        Command="{Binding SaveEntityCommand}"
-                                        Content="Save"
+                                        Command="{Binding SaveEntityCommand}"                                        
                                         ToolTip="Save">
+                                    <Image Source="/octane-visual-studio-plugin;component/Resources/save.png"/>
                                 </Button>
                                 <ToggleButton x:Name="CustomizeFieldsButton" 
                                               Width="25" Height="25"
