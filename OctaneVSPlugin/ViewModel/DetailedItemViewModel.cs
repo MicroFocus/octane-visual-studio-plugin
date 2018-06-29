@@ -20,6 +20,7 @@ using NSoup.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -292,7 +293,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     viewModels.Add(new CommentViewModel(comment));
                 }
 
-                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => DateTime.Parse(c.CreationTime)));
+                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c =>
+                {
+                    try
+                    {
+                        return DateTime.ParseExact(c.CreationTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return DateTime.Now;
+                    }
+                }));
             }
             catch (Exception)
             {
