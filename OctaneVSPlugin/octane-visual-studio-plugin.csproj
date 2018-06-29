@@ -105,6 +105,8 @@
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
+    <Compile Include="View\BoolToIndexConverter.cs" />
+    <Compile Include="View\FieldListDataTemplateSelector.cs" />
     <Compile Include="View\GifImage.cs" />
     <Compile Include="Common\GreaterThanZeroConverter.cs" />
     <Compile Include="ViewModel\MainWindowMode.cs" />
@@ -186,6 +188,7 @@
     <Content Include="Resources\OctaneToolWindowCommand.png" />
     <Resource Include="Resources\octane_preloader.gif" />
     <Resource Include="Resources\s-rocket.png" />
+    <Resource Include="Resources\save.png" />
     <Content Include="Resources\screen-shot-200x200.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
