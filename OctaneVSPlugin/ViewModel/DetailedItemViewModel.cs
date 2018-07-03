@@ -20,7 +20,7 @@ using NSoup.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,12 +32,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// Detailed view model for an entity
     /// </summary>
-    public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged, IFieldsObserver
+    public class DetailedItemViewModel : BaseItemViewModel, IFieldsObserver
     {
         private readonly OctaneServices _octaneService;
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private readonly List<FieldViewModel> _allEntityFields;
+
+        private readonly List<Phase> _phaseTransitions;
 
         private string _filter = string.Empty;
 
@@ -50,6 +52,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             : base(entity)
         {
             RefreshCommand = new DelegatedCommand(Refresh);
+            SaveEntityCommand = new DelegatedCommand(SaveEntity);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
@@ -57,6 +60,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
             _allEntityFields = new List<FieldViewModel>();
+
+            _phaseTransitions = new List<Phase>();
 
             Mode = WindowMode.Loading;
 
@@ -84,14 +89,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 await _octaneService.Connect();
 
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
-                var updatedFields = fields.Select(fm => fm.Name).ToList();
-                // TODO - investigate why not all entities receive the subtype field by default
-                if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))
-                {
-                    updatedFields.Add(CommonFields.SubType);
-                }
-
-                Entity = await _octaneService.FindEntity(Entity, updatedFields);
+                Entity = await _octaneService.FindEntityAsync(Entity, fields.Select(fm => fm.Name).ToList());
 
                 await HandleImagesInDescription();
 
@@ -101,13 +99,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 var fieldsToHideHashSet = FieldsCache.GetFieldsToHide(Entity);
                 foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
                 {
-                    var fieldViewModel = new FieldViewModel(Entity, field.Name, field.Label, visibleFieldsHashSet.Contains(field.Name));
+                    var fieldViewModel = new FieldViewModel(Entity, field, visibleFieldsHashSet.Contains(field.Name));
 
                     _allEntityFields.Add(fieldViewModel);
                 }
 
                 if (EntitySupportsComments)
                     await RetrieveComments();
+
+                var transitions = await _octaneService.GetTransitionsForEntityType(EntityType);
+
+                var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
+                var currentPhaseName = phaseEntity.Name;
+
+                _phaseTransitions.Clear();
+                SelectedNextPhase = null;
+
+                foreach (var transition in transitions.Where(t => t.SourcePhase.Name == currentPhaseName))
+                {
+                    if (transition.IsPrimary)
+                        _phaseTransitions.Insert(0, transition.TargetPhase);
+                    else
+                        _phaseTransitions.Add(transition.TargetPhase);
+                }
 
                 Mode = WindowMode.Loaded;
             }
@@ -289,7 +303,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public string ErrorMessage { get; private set; }
 
-        private async System.Threading.Tasks.Task RetrieveComments()
+        private async Task RetrieveComments()
         {
             try
             {
@@ -300,13 +314,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     viewModels.Add(new CommentViewModel(comment));
                 }
 
-                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => DateTime.Parse(c.CreationTime)));
+                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c =>
+                {
+                    try
+                    {
+                        return DateTime.ParseExact(c.CreationTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return DateTime.Now;
+                    }
+                }));
             }
             catch (Exception)
             {
                 _commentViewModels.Clear();
             }
         }
+
+        #region Phase
 
         /// <summary>
         /// Flag specifiying whether we need to show the phase section in the UI or not
@@ -335,6 +361,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        /// List of names for possible next phases
+        /// </summary>
+        public List<string> NextPhaseNames
+        {
+            get { return _phaseTransitions.Select(pt => pt.Name).ToList(); }
+        }
+
+        /// <summary>
+        /// Name of the currently selected next phase
+        /// </summary>
+        public string SelectedNextPhase { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Comments associated with the cached entity
@@ -368,6 +409,49 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Requirement.SUBTYPE_DOCUMENT
         };
 
+        #region SaveEntity
+
+        /// <summary>
+        /// Save entity command
+        /// </summary>
+        public ICommand SaveEntityCommand { get; }
+
+        private async void SaveEntity(object param)
+        {
+            try
+            {
+                Mode = WindowMode.Loading;
+                NotifyPropertyChanged("Mode");
+
+                var entityToUpdate = new BaseEntity(Entity.Id);
+                entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
+
+                foreach (var field in _allEntityFields.Where(f => f.IsChanged))
+                {
+                    entityToUpdate.SetValue(field.Name, field.Content);
+                }
+
+                entityToUpdate.Name = Entity.Name;
+
+                if (SelectedNextPhase != null)
+                {
+                    var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);
+                    if (nextPhase != null)
+                        entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
+                }
+                await _octaneService.UpdateEntityAsync(entityToUpdate);
+                await InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            NotifyPropertyChanged();
+        }
+
+        #endregion
+
         #region Refresh
 
         /// <summary>
@@ -377,10 +461,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void Refresh(object param)
         {
-            Mode = WindowMode.Loading;
-            NotifyPropertyChanged("Mode");
+            try
+            {
+                Mode = WindowMode.Loading;
+                NotifyPropertyChanged("Mode");
 
-            InitializeAsync();
+                InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            NotifyPropertyChanged();
         }
 
         #endregion
@@ -427,20 +520,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public string ShowCommentTooltip
         {
             get { return CommentSectionVisibility ? HideCommentsTooltip : ShowCommentsTooltip; }
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        private void NotifyPropertyChanged(string propName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
         }
 
         #endregion

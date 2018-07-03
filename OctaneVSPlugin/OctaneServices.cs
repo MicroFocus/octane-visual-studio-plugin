@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
@@ -24,7 +25,9 @@ using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -165,7 +168,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return workspaceUser;
         }
 
-        public async Task<BaseEntity> FindEntity(BaseEntity entityModel, IList<string> fields)
+        /// <summary>
+        /// Returns the entity with the given ID and the requested fields
+        /// </summary>
+        public async Task<BaseEntity> FindEntityAsync(BaseEntity entityModel, IList<string> fields)
         {
             var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), fields);
             return entity;
@@ -178,6 +184,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             { "run", "owner_run" },
             { "requirement", "owner_requirement" }
         };
+
+        /// <summary>
+        /// Update the properties of the given entity
+        /// </summary>
+        public async Task<BaseEntity> UpdateEntityAsync(BaseEntity entity)
+        {
+            var updatedEntity = await es.UpdateAsync(workspaceContext, entity, Utility.GetConcreteEntityType(entity));
+            return updatedEntity;
+        }
 
         /// <summary>
         /// Retrieves a list of all the comments attached to the given entity
@@ -254,6 +269,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public async Task DownloadAttachmentAsync(string relativeUrl, string destinationPath)
         {
             await es.DownloadAttachmentAsync(relativeUrl, destinationPath);
+        }
+
+        /// <summary>
+        /// Validate given commit message
+        /// </summary>
+        public async Task<CommitPattern> ValidateCommitMessageAsync(string commitMessage)
+        {
+            return await es.ValidateCommitMessageAsync(workspaceContext, HttpUtility.UrlEncode(commitMessage, Encoding.UTF8));
+        }
+
+        /// <summary>
+        /// Return all transitions for a given entity type
+        /// </summary>
+        public async Task<List<Transition>> GetTransitionsForEntityType(string entityType)
+        {
+            var result = await es.GetTransitionsForEntityType(workspaceContext, entityType);
+            return result?.data;
         }
     }
 }
