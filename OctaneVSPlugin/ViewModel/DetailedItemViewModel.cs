@@ -108,19 +108,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     await RetrieveComments();
 
                 var transitions = await _octaneService.GetTransitionsForEntityType(EntityType);
-
-                var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
-                var currentPhaseName = phaseEntity.Name;
-
-                _phaseTransitions.Clear();
-                SelectedNextPhase = null;
-
-                foreach (var transition in transitions.Where(t => t.SourcePhase.Name == currentPhaseName))
+                if (Entity.TypeName != "run")
                 {
-                    if (transition.IsPrimary)
-                        _phaseTransitions.Insert(0, transition.TargetPhase);
-                    else
-                        _phaseTransitions.Add(transition.TargetPhase);
+
+                    var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
+                    var currentPhaseName = phaseEntity.Name;
+
+                    _phaseTransitions.Clear();
+                    SelectedNextPhase = null;
+
+                    foreach (var transition in transitions.Where(t => t.SourcePhase.Name == currentPhaseName))
+                    {
+                        if (transition.IsPrimary)
+                            _phaseTransitions.Insert(0, transition.TargetPhase);
+                        else
+                            _phaseTransitions.Add(transition.TargetPhase);
+                    }
                 }
 
                 Mode = WindowMode.Loaded;
