@@ -100,11 +100,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
                 {
                     var fieldViewModel = new FieldViewModel(Entity, field, visibleFieldsHashSet.Contains(field.Name));
-                    if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase))
-                        {
-                            _allEntityFields.Add(fieldViewModel);
-
-                        }
+                    if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase) && !string.Equals(fieldViewModel.Label, "Name"))
+                    {
+                        _allEntityFields.Add(fieldViewModel);
+                    }
 
                 }
 
