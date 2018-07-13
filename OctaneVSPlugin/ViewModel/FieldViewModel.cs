@@ -104,8 +104,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
                     case "integer":
-                        _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
-                        IsChanged = true;
+                        try
+                        {
+                            _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
+                            IsChanged = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is FormatException || ex is OverflowException)
+                            {
+                                _parentEntity.SetValue(Name, "");
+                                IsChanged = true;
+                            }
+                        }
                         break;
                     case "string":
                         _parentEntity.SetValue(Name, value.ToString());
