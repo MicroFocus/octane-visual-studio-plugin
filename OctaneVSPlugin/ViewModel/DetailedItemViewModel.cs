@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using NSoup.Nodes;
 using System;
@@ -43,7 +44,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private string _filter = string.Empty;
 
+        private bool _selectIsEnabled;
+
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
+       
+        /// <summary>
+        /// Lets you enable or disable the phase ComboBox
+        /// </summary>
+        public bool SelectIsEnabled
+        {
+            get
+            {
+                return this._selectIsEnabled;
+            }
+            set
+            {
+                if (this._selectIsEnabled != value)
+                {
+                    this._selectIsEnabled  = value;
+                    NotifyPropertyChanged("SelectIsEnabled");
+                }
+            }
+        }
 
         /// <summary>
         /// Constructor
@@ -101,10 +123,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     var fieldViewModel = new FieldViewModel(Entity, field, visibleFieldsHashSet.Contains(field.Name));
                     if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase))
-                        {
-                            _allEntityFields.Add(fieldViewModel);
+                    {
+                        _allEntityFields.Add(fieldViewModel);
 
-                        }
+                    }
 
                 }
 
@@ -127,6 +149,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             _phaseTransitions.Insert(0, transition.TargetPhase);
                         else
                             _phaseTransitions.Add(transition.TargetPhase);
+                    }
+
+                    if (_phaseTransitions.Count == 0)
+                    {
+                        this._selectIsEnabled = false;  
+                    } else
+                    {
+                        this._selectIsEnabled = true;
                     }
                 }
 

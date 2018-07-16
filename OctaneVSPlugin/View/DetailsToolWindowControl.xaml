@@ -315,6 +315,7 @@
                                               Foreground="{DynamicResource VsBrush.WindowText}"
                                               VerticalAlignment="Center"
                                               Width="120"
+                                              IsEnabled="{Binding SelectIsEnabled}"
                                               ItemsSource="{Binding NextPhaseNames}"
                                               SelectedItem="{Binding SelectedNextPhase, Mode=TwoWay}"
                                               Margin="5 0 0 0"/>
