@@ -596,8 +596,9 @@
                                 <Button  Margin="10 25 0 10"
                                          HorizontalAlignment="Right"
                                          MinWidth="35" MaxWidth="35"
-                                         MinHeight="20" MaxHeight="20">
-                                    <TextBlock>Post</TextBlock>
+                                         MinHeight="20" MaxHeight="20"
+                                         Command="{Binding RefreshCommand}">
+                                    <TextBlock> Post </TextBlock>
                                 </Button>
 
 
