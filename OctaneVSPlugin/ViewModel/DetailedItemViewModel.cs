@@ -47,7 +47,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private bool _selectIsEnabled;
 
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
-       
+
         /// <summary>
         /// Lets you enable or disable the phase ComboBox
         /// </summary>
@@ -61,7 +61,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (this._selectIsEnabled != value)
                 {
-                    this._selectIsEnabled  = value;
+                    this._selectIsEnabled = value;
                     NotifyPropertyChanged("SelectIsEnabled");
                 }
             }
@@ -150,14 +150,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         else
                             _phaseTransitions.Add(transition.TargetPhase);
                     }
-
-                    if (_phaseTransitions.Count == 0)
-                    {
-                        this._selectIsEnabled = false;  
-                    } else
-                    {
-                        this._selectIsEnabled = true;
-                    }
+                    this._selectIsEnabled = _phaseTransitions.Count != 0;
                 }
 
                 Mode = WindowMode.Loaded;
