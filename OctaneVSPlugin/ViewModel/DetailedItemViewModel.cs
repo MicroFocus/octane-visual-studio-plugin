@@ -493,7 +493,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 NotifyPropertyChanged("Mode");
                 if (EntitySupportsComments)
                     RetrieveComments();
-                Mode = WindowMode.Loaded;
+                AddCommentAsync();
             }
             catch (Exception ex)
             {
@@ -501,6 +501,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 ErrorMessage = ex.Message;
             }
             NotifyPropertyChanged();
+        }
+
+        public async Task AddCommentAsync()
+        {
+
         }
 
 
