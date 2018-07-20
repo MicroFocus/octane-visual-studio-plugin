@@ -77,6 +77,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SaveEntityCommand = new DelegatedCommand(SaveEntity);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+            ToggleAddCommentCommand = new DelegatedCommand(AddComment);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
@@ -129,7 +130,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     }
 
                 }
-
                 if (EntitySupportsComments)
                     await RetrieveComments();
 
@@ -152,7 +152,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     }
                     this._selectIsEnabled = _phaseTransitions.Count != 0;
                 }
-
                 Mode = WindowMode.Loaded;
             }
             catch (Exception ex)
@@ -479,6 +478,31 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             NotifyPropertyChanged();
         }
+
+        #endregion
+
+        #region AddComments
+
+        public ICommand ToggleAddCommentCommand { get; private set; }
+
+        private void AddComment(object param)
+        {
+            try
+            {
+                Mode = WindowMode.LoadingComments;
+                NotifyPropertyChanged("Mode");
+                if (EntitySupportsComments)
+                    RetrieveComments();
+                Mode = WindowMode.Loaded;
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            NotifyPropertyChanged();
+        }
+
 
         #endregion
 
