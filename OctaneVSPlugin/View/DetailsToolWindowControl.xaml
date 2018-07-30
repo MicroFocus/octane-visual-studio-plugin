@@ -620,10 +620,18 @@
                                           FontSize="12"
                                           MinWidth="250" MaxWidth="250"
                                           MinHeight="19" MaxHeight="19"
-                                          Text="{Binding CommentText, Mode=TwoWay}"
+                                         
+                                          Text="{Binding CommentText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Background="{DynamicResource VsBrush.Window}"
                                           Foreground="{DynamicResource VsBrush.WindowText}"
-                                          BorderThickness="1"/>
+                                          BorderThickness="1">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding 
+                                                    Key="Enter" 
+                                                    Command="{Binding ToggleAddCommentCommand}" 
+                                                    CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}" />
+                                            </TextBox.InputBindings>
+                                        </TextBox>
 
                                         <Button  Margin="10 25 0 10"
                                          HorizontalAlignment="Right"
