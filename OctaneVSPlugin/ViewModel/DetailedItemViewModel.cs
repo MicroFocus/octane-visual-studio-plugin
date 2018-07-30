@@ -47,6 +47,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private bool _selectIsEnabled;
 
+        private string _commentText;
+
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
 
         /// <summary>
@@ -413,7 +415,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public IEnumerable<CommentViewModel> Comments
         {
             get { return _commentViewModels; }
-            set { }
         }
 
         /// <summary>
@@ -487,8 +488,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public ICommand ToggleAddCommentCommand { get; private set; }
 
-        private string _commentText;
-
         public string CommentText
         {
             get { return _commentText; }
@@ -527,23 +526,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public async Task AddCommentAsync()
         {
-            //var id = new EntityId("");
             var commentToAdd = new Api.Core.Entities.Comment();
             string encodedCommment = "<html><body>" + CommentText + "</body></html>";
             commentToAdd.Text = encodedCommment;
 
-            BaseEntity mockEntity = new BaseEntity();
-            mockEntity.Id = Entity.Id;
-            mockEntity.TypeName = Entity.AggregateType;
-
-            commentToAdd.OwnerWorkItem = mockEntity;
-
+            BaseEntity commentOwnerWorkItemEntity = new BaseEntity();
+            commentOwnerWorkItemEntity.Id = Entity.Id;
+            commentOwnerWorkItemEntity.TypeName = Entity.AggregateType;
+       
+            commentToAdd.OwnerWorkItem = commentOwnerWorkItemEntity;
             CommentText = "";
 
             await _octaneService.CreateCommentAsync(commentToAdd);
             NotifyPropertyChanged();
         }
-
 
         #endregion
 
