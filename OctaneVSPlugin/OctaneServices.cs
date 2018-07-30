@@ -194,6 +194,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return updatedEntity;
         }
 
+        ///<summary>
+        ///Adds a comment with specified parameters
+        /// </summary>
+        public async Task<Comment> CreateCommentAsync(Comment entity)
+        {
+            var createdEntity = es.Create(workspaceContext, entity, commentFields);
+            return createdEntity;
+        }
+
+
         /// <summary>
         /// Retrieves a list of all the comments attached to the given entity
         /// </summary>

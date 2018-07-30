@@ -15,16 +15,17 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using NSoup.Nodes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
@@ -412,6 +413,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public IEnumerable<CommentViewModel> Comments
         {
             get { return _commentViewModels; }
+            set { }
         }
 
         /// <summary>
@@ -485,27 +487,61 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public ICommand ToggleAddCommentCommand { get; private set; }
 
-        private void AddComment(object param)
+        private string _commentText;
+
+        public string CommentText
+        {
+            get { return _commentText; }
+            set
+            {
+                if (value != _commentText)
+                {
+                    _commentText = value;
+                    NotifyPropertyChanged("CommentText");
+                }
+            }
+        }
+
+
+        private async void AddComment(object param)
         {
             try
             {
                 Mode = WindowMode.LoadingComments;
                 NotifyPropertyChanged("Mode");
                 if (EntitySupportsComments)
-                    RetrieveComments();
-                AddCommentAsync();
+                {
+                    await AddCommentAsync();
+                    NotifyPropertyChanged();
+                    await RetrieveComments();
+                }
             }
             catch (Exception ex)
             {
                 Mode = WindowMode.FailedToLoad;
                 ErrorMessage = ex.Message;
             }
+            Mode = WindowMode.Loaded;
             NotifyPropertyChanged();
         }
 
         public async Task AddCommentAsync()
         {
+            //var id = new EntityId("");
+            var commentToAdd = new Api.Core.Entities.Comment();
+            string encodedCommment = "<html><body>" + CommentText + "</body></html>";
+            commentToAdd.Text = encodedCommment;
 
+            BaseEntity mockEntity = new BaseEntity();
+            mockEntity.Id = Entity.Id;
+            mockEntity.TypeName = Entity.AggregateType;
+
+            commentToAdd.OwnerWorkItem = mockEntity;
+
+            CommentText = "";
+
+            await _octaneService.CreateCommentAsync(commentToAdd);
+            NotifyPropertyChanged();
         }
 
 

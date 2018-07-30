@@ -620,7 +620,7 @@
                                           FontSize="12"
                                           MinWidth="250" MaxWidth="250"
                                           MinHeight="19" MaxHeight="19"
-                                          Text=""
+                                          Text="{Binding CommentText, Mode=TwoWay}"
                                           Background="{DynamicResource VsBrush.Window}"
                                           Foreground="{DynamicResource VsBrush.WindowText}"
                                           BorderThickness="1"/>
