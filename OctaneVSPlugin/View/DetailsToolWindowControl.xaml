@@ -34,7 +34,7 @@
             </ResourceDictionary.MergedDictionaries>
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-        
+
             <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
             <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
 
@@ -226,7 +226,10 @@
                     <Style TargetType="DockPanel">
                         <Setter Property="Visibility" Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="Loaded">
+                            <DataTrigger Binding="{Binding Mode}" Value="Loaded" >
+                                <Setter Property="Visibility" Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}" Value="LoadingComments" >
                                 <Setter Property="Visibility" Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
@@ -500,7 +503,7 @@
                                     <Image Source="/octane-visual-studio-plugin;component/Resources/browser.png"/>
                                 </Button>
                             </StackPanel>
-                            
+
                         </Grid>
                     </Grid>
 
@@ -569,59 +572,114 @@
                                 </Style>
                             </DockPanel.Style>
 
-                            <Border BorderThickness="1,0,0,0"
+                            <Grid>
+                                <DockPanel x:Name="LoadingCommentSection">
+                                    <DockPanel.Style>
+                                        <Style TargetType="DockPanel">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Mode}" Value="LoadingComments">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DockPanel.Style>
+
+                                    <view:GifImage x:Name="gifImageComments" Stretch="None"  GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+                                </DockPanel>
+
+                                <DockPanel x:Name="LoadedCommentSection">
+                                    <DockPanel.Style>
+                                        <Style TargetType="DockPanel">
+                                            <Setter Property="Visibility" Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Mode}" Value="Loaded">
+                                                    <Setter Property="Visibility" Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DockPanel.Style>
+
+                                    <Border BorderThickness="1,0,0,0"
                                     BorderBrush="#FFC5C5C5"
                                     Margin="3 15 3 0"
                                     Width="1"
                                     Background="White"/>
 
-                            <Separator DockPanel.Dock="Top" Margin="0 15 0 15"/>
+                                    <Separator DockPanel.Dock="Top" Margin="0 15 0 15"/>
 
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Comments</TextBlock>
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Comments</TextBlock>
 
-                                <ListView Grid.Row="1" x:Name="results" ItemsSource="{Binding Comments}"
-                                    Background="{DynamicResource VsBrush.Window}"
-                                    Foreground="{DynamicResource VsBrush.WindowText}"
-                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                        <TextBox  Margin="5 25 0 10"
+                                          HorizontalAlignment="Left"
+                                          FontSize="12"
+                                          MinWidth="250" MaxWidth="250"
+                                          MinHeight="19" MaxHeight="19"
+                                          Text="{Binding CommentText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          Background="{DynamicResource VsBrush.Window}"
+                                          Foreground="{DynamicResource VsBrush.WindowText}"
+                                          BorderThickness="1">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding 
+                                                    Key="Enter" 
+                                                    Command="{Binding ToggleAddCommentCommand}" 
+                                                    CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}" />
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+
+                                        <Button  Margin="10 25 0 10"
+                                         HorizontalAlignment="Right"
+                                         MinWidth="35" MaxWidth="35"
+                                         MinHeight="20" MaxHeight="20"
+                                         Command="{Binding ToggleAddCommentCommand}">
+                                            <TextBlock ToolTip="Post a comment"> Post</TextBlock>
+                                        </Button>
+
+                                        <ListView Grid.Row="1" x:Name="results" ItemsSource="{Binding Comments}"
+                                        Background="{DynamicResource VsBrush.Window}"
+                                        Foreground="{DynamicResource VsBrush.WindowText}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                    ScrollViewer.CanContentScroll="False"
-                                    BorderThickness="0">
-                                    <ListView.ItemContainerStyle>
-                                        <Style TargetType="{x:Type ListViewItem}">
-                                            <Setter Property="Background" Value="Transparent" />
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                        <ContentPresenter />
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </Style>
-                                    </ListView.ItemContainerStyle>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Margin="0 5 0 5">
-                                                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                                                    <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
-                                                    <TextBlock Text="{Binding Author}"/>
-                                                    <TextBlock Text=":"/>
-                                                </StackPanel>
-                                                <FlowDocumentScrollViewer
+                                        ScrollViewer.CanContentScroll="False"
+                                        BorderThickness="0">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListViewItem}">
+                                                    <Setter Property="Background" Value="Transparent" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                                <ContentPresenter />
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="0 5 0 5">
+                                                        <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
+                                                            <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
+                                                            <TextBlock Text="{Binding Author}"/>
+                                                            <TextBlock Text=":"/>
+                                                        </StackPanel>
+                                                        <FlowDocumentScrollViewer
                                                     HorizontalScrollBarVisibility="Disabled"
                                                     VerticalScrollBarVisibility="Disabled"
                                                     Margin="-5 0 -5 0"
                                                     Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
                                                     PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
-                                                <Separator/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
+                                                        <Separator/>
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </Grid>
+                                </DockPanel>
                             </Grid>
                         </DockPanel>
 

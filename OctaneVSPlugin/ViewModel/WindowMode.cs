@@ -26,6 +26,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         Loading,
 
+        ///<summary>
+        /// This mode is set during loading of the comments section
+        /// </summary>
+        LoadingComments,
+
+        /// <summary>
+        /// This mode is set after the comments are loaded
+        /// </summary>
+        LoadedComments,
+
         /// <summary>
         /// This mode is set after the window has been loaded.
         /// </summary>

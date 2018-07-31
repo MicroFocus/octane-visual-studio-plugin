@@ -15,16 +15,17 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using NSoup.Nodes;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Web;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
@@ -45,6 +46,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private string _filter = string.Empty;
 
         private bool _selectIsEnabled;
+
+        private string _commentText;
 
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
 
@@ -77,6 +80,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SaveEntityCommand = new DelegatedCommand(SaveEntity);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+            ToggleAddCommentCommand = new DelegatedCommand(AddComment);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
@@ -129,7 +133,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     }
 
                 }
-
                 if (EntitySupportsComments)
                     await RetrieveComments();
 
@@ -152,7 +155,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     }
                     this._selectIsEnabled = _phaseTransitions.Count != 0;
                 }
-
                 Mode = WindowMode.Loaded;
             }
             catch (Exception ex)
@@ -477,6 +479,65 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Mode = WindowMode.FailedToLoad;
                 ErrorMessage = ex.Message;
             }
+            NotifyPropertyChanged();
+        }
+
+        #endregion
+
+        #region AddComments
+
+        public ICommand ToggleAddCommentCommand { get; private set; }
+
+        public string CommentText
+        {
+            get { return _commentText; }
+            set
+            {
+                if (value != _commentText)
+                {
+                    _commentText = value;
+                    NotifyPropertyChanged("CommentText");
+                }
+            }
+        }
+
+
+        private async void AddComment(object param)
+        {
+            try
+            {
+                Mode = WindowMode.LoadingComments;
+                NotifyPropertyChanged("Mode");
+                if (EntitySupportsComments)
+                {
+                    await AddCommentAsync();
+                    NotifyPropertyChanged();
+                    await RetrieveComments();
+                }
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            Mode = WindowMode.Loaded;
+            NotifyPropertyChanged();
+        }
+
+        public async Task AddCommentAsync()
+        {
+            var commentToAdd = new Api.Core.Entities.Comment();
+            string encodedCommment = "<html><body>" + CommentText + "</body></html>";
+            commentToAdd.Text = encodedCommment;
+
+            BaseEntity commentOwnerWorkItemEntity = new BaseEntity();
+            commentOwnerWorkItemEntity.Id = Entity.Id;
+            commentOwnerWorkItemEntity.TypeName = Entity.AggregateType;
+       
+            commentToAdd.OwnerWorkItem = commentOwnerWorkItemEntity;
+            CommentText = "";
+
+            await _octaneService.CreateCommentAsync(commentToAdd);
             NotifyPropertyChanged();
         }
 
