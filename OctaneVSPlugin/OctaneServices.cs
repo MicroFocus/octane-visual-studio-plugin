@@ -199,6 +199,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public async Task<Comment> CreateCommentAsync(Comment entity)
         {
+            RestConnector.AwaitContinueOnCapturedContext = false;
             var createdEntity = es.Create(workspaceContext, entity, commentFields);
             return createdEntity;
         }
