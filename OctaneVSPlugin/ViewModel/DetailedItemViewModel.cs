@@ -530,11 +530,37 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             string encodedCommment = "<html><body>" + CommentText + "</body></html>";
             commentToAdd.Text = encodedCommment;
 
-            BaseEntity commentOwnerWorkItemEntity = new BaseEntity();
-            commentOwnerWorkItemEntity.Id = Entity.Id;
-            commentOwnerWorkItemEntity.TypeName = Entity.AggregateType;
-       
-            commentToAdd.OwnerWorkItem = commentOwnerWorkItemEntity;
+            string entityAggregateType = Entity.AggregateType;
+
+            switch (entityAggregateType)
+            {
+                case "work_item":
+                    BaseEntity commentOwnerWorkItem = new BaseEntity();
+                    commentOwnerWorkItem.Id = Entity.Id;
+                    commentOwnerWorkItem.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerWorkItem = commentOwnerWorkItem;
+                    break;
+                case "test":
+                    Test commentOwnerTest = new Test();
+                    commentOwnerTest.Id = Entity.Id;
+                    commentOwnerTest.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerTest = commentOwnerTest;
+                    break;
+                case "requirement":
+                    Requirement commentOwnerRequirement = new Requirement();
+                    commentOwnerRequirement.Id = Entity.Id;
+                    commentOwnerRequirement.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerRequirement = commentOwnerRequirement;
+                    break;
+                case "run":
+                    Run commentOwnerRun = new Run();
+                    commentOwnerRun.Id = Entity.Id;
+                    commentOwnerRun.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerRun = commentOwnerRun;
+                    break;
+                default:
+                    break;
+            }
             CommentText = "";
 
             await _octaneService.CreateCommentAsync(commentToAdd);
