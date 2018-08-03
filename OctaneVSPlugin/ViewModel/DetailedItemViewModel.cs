@@ -493,6 +493,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return _commentText; }
             set
             {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    value = value.TrimStart();
+                }
+
                 if (value != _commentText)
                 {
                     _commentText = value;

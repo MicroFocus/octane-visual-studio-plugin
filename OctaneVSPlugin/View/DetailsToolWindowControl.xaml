@@ -616,6 +616,7 @@
                                         <TextBlock Grid.Row="0" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Comments</TextBlock>
 
                                         <TextBox  Margin="5 25 0 10"
+                                          Name="commentText"
                                           HorizontalAlignment="Left"
                                           FontSize="12"
                                           MinWidth="250" MaxWidth="250"
@@ -636,6 +637,7 @@
                                          HorizontalAlignment="Right"
                                          MinWidth="35" MaxWidth="35"
                                          MinHeight="20" MaxHeight="20"
+                                         IsEnabled="{Binding ElementName=commentText, Path=Text.Length, Mode=OneWay}"
                                          Command="{Binding ToggleAddCommentCommand}">
                                             <TextBlock ToolTip="Post a comment"> Post</TextBlock>
                                         </Button>
