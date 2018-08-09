@@ -621,6 +621,7 @@
                                           FontSize="12"
                                           MinWidth="250" MaxWidth="250"
                                           MinHeight="19" MaxHeight="19"
+                                          AcceptsReturn="True"
                                           Text="{Binding CommentText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Background="{DynamicResource VsBrush.Window}"
                                           Foreground="{DynamicResource VsBrush.WindowText}"
