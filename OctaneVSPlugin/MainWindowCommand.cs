@@ -39,6 +39,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public const int ShowActiveItemCommandId = 0x0400;
         public const int CopyCommitMessageCommandId = 0x0401;
+        public const int StopWorkCommandId = 0x402;
 
         /// <summary>
         /// Command menu group (command set GUID).
@@ -52,6 +53,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private readonly OleMenuCommand _activeItemMenuCommand;
         private readonly OleMenuCommand _copyCommitMessageCommand;
+        private readonly OleMenuCommand _stopWorkCommand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowCommand"/> class.
@@ -84,6 +86,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 menuCommandID = new CommandID(CommandSet, CopyCommitMessageCommandId);
                 _copyCommitMessageCommand = new OleMenuCommand(CopyCommitMessageCallback, menuCommandID);
                 commandService.AddCommand(_copyCommitMessageCommand);
+
+                // register stop work command
+                menuCommandID = new CommandID(CommandSet, StopWorkCommandId);
+                _stopWorkCommand = new OleMenuCommand(StopWorkCallback, menuCommandID);
+                commandService.AddCommand(_stopWorkCommand);
+                
 
                 DisableActiveItemToolbar();
             }
@@ -133,6 +141,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
+        private static void StopWorkCallback(object caller, EventArgs args)
+        {
+            try
+            {
+                var command = caller as OleMenuCommand;
+                if (command == null)
+                    return;
+                if (OctaneItemViewModel.CurrentActiveItem == null)
+                    return;
+
+                    
+                OctaneItemViewModel.ClearActiveItem();
+                Instance.UpdateActiveItemInToolbar();
+
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Unable to stop work on current item.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+
+        }
+
         /// <summary>
         /// Update active item button in toolbar with the current active item's information
         /// </summary>
@@ -146,8 +177,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 {
                     _activeItemMenuCommand.Text = EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id;
                     _activeItemMenuCommand.Enabled = true;
-
                     _copyCommitMessageCommand.Enabled = true;
+                    _stopWorkCommand.Enabled = true;
                 }
                 else
                 {
@@ -170,8 +201,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 _activeItemMenuCommand.Text = "N/A";
                 _activeItemMenuCommand.Enabled = false;
-
                 _copyCommitMessageCommand.Enabled = false;
+                _stopWorkCommand.Enabled = false;
             }
             catch (Exception ex)
             {
