@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
@@ -500,6 +501,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 if (value != _commentText)
                 {
+                    if (value.Contains("\n"))
+                    {
+                        string valueTrimmed = value.Replace("\n", "<br>");
+                        value = valueTrimmed;
+                    }
                     _commentText = value;
                     NotifyPropertyChanged("CommentText");
                 }
