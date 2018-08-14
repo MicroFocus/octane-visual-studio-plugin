@@ -122,6 +122,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         _parentEntity.SetValue(Name, value.ToString());
                         IsChanged = true;
                         break;
+                    case "date_time":
+                        _parentEntity.SetDateTimeValue(Name, DateTime.Parse(value.ToString()));
+                        IsChanged = true;
+                        break;
                 }
             }
         }

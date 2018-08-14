@@ -45,6 +45,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     case "string":
                         templateName = "EditableFieldTemplate";
                         break;
+                    case "date_time":
+                        templateName = "EditableDateFieldTemplate";
+                        break;
                     default:
                         templateName = "ReadOnlyFieldTemplate";
                         break;
