@@ -103,6 +103,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                     return null;
 
                 var value = entity.GetValue(fieldName);
+                DateTime datetime;
+                string dateString = (String) value;
+                if (DateTime.TryParseExact(dateString, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.NoCurrentDateDefault, out datetime))
+                {
+                    return value;
+                }
                 return func(value);
             }
             catch (Exception)
