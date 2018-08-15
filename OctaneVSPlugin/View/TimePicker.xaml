@@ -18,7 +18,7 @@
             <ColumnDefinition Width="60"/>
         </Grid.ColumnDefinitions>
 
-        <Grid x:Name="hour" Focusable="True" KeyDown="Down">
+        <Grid x:Name="hour" Focusable="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="*"/>
@@ -49,7 +49,7 @@
                        TextAlignment="Center"/>
         </Grid>
 
-        <Grid  Grid.Column="2" x:Name="min" Focusable="True" KeyDown="Down">
+        <Grid  Grid.Column="2" x:Name="min" Focusable="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3.5*"/>
                 <ColumnDefinition Width="*"/>
@@ -58,7 +58,7 @@
             <TextBox x:Name="ddTxt"  
                      Grid.Column="0"
                      TextWrapping="Wrap" 
-                     Text="{Binding Path=Hours, ElementName=UserControl, Mode=Default}"
+                     Text="{Binding Path=Minutes, ElementName=UserControl, Mode=Default}"
                      TextAlignment="Center" 
                      VerticalAlignment="Center"
                      Margin="5 0 3 0" FontSize="12"
@@ -81,7 +81,7 @@
                        TextAlignment="Center"/>
         </Grid>
 
-        <Grid  Grid.Column="4" Name="sec" Focusable="True" KeyDown="Down">
+        <Grid  Grid.Column="4" Name="sec" Focusable="True">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="5*"/>
                 <ColumnDefinition Width="*"/>
@@ -90,7 +90,7 @@
             <TextBox x:Name="yyTxt"   
                      Grid.Column="0"
                      TextWrapping="Wrap" 
-                     Text="{Binding Path=Hours, ElementName=UserControl, Mode=Default}"
+                     Text="{Binding Path=Seconds, ElementName=UserControl, Mode=Default}"
                      TextAlignment="Center" 
                      VerticalAlignment="Center"
                      Margin="5 0 3 0" FontSize="12"

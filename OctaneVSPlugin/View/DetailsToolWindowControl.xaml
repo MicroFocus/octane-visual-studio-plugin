@@ -132,7 +132,10 @@
                             <ColumnDefinition Width="2*"/>
                         </Grid.ColumnDefinitions>
                         <DatePicker                                   
-                            Grid.Column="0">
+                            Grid.Column="0"
+                            SelectedDate="{Binding Content, Mode=TwoWay}"
+                            SelectedDateFormat="Long"
+                            VerticalAlignment="Center">
                             <DatePicker.Resources>
                                 <Style TargetType="{x:Type DatePickerTextBox}">
                                     <Style.Triggers>
@@ -151,7 +154,7 @@
                             Background="{DynamicResource VsBrush.Window}"
                             Foreground="{DynamicResource VsBrush.WindowText}"
                             Grid.Column="1"
-                            Hours="23" Minutes="41" Seconds="59"/>
+                            Hours="23" Minutes="59" Seconds="54"/>
                     </Grid>
                 </Grid>
             </DataTemplate>
