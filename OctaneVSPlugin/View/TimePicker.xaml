@@ -11,53 +11,96 @@
     <Grid x:Name="LayoutRoot" Width="Auto" Height="Auto">
 
         <Grid.ColumnDefinitions>
-
-            <ColumnDefinition Width="35"/>
-
+            <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="5"/>
-
-            <ColumnDefinition Width="35"/>
-
+            <ColumnDefinition Width="60"/>
             <ColumnDefinition Width="5"/>
-
-            <ColumnDefinition Width="35"/>
-
+            <ColumnDefinition Width="60"/>
         </Grid.ColumnDefinitions>
 
         <Grid x:Name="hour" Focusable="True" KeyDown="Down">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="mmTxt" TextWrapping="Wrap" Text="{Binding Path=Hours, ElementName=UserControl, Mode=Default}"
+            <TextBox Grid.Column="0"
+                     x:Name="mmTxt" 
+                     TextWrapping="Wrap" 
+                     Text="{Binding Path=Hours, ElementName=UserControl, Mode=Default}"
+                     TextAlignment="Center" 
+                     VerticalAlignment="Center"
+                     Margin="5 0 3 0" FontSize="12"
+                     Background="{DynamicResource VsBrush.Window}"
+                     Foreground="{DynamicResource VsBrush.WindowText}"/>
 
-                 TextAlignment="Center" VerticalAlignment="Center"/>
-
+            <TextBlock Grid.Column="1"
+                       Text="h"
+                       VerticalAlignment="Center"
+                       FontSize="12"/>
         </Grid>
 
-        <Grid  Grid.Column="1">
-
-            <TextBlock  x:Name="sep1" TextWrapping="Wrap" VerticalAlignment="Center" Background="{x:Null}"  Text=":" TextAlignment="Center"/>
-
+        <Grid Grid.Column="1">
+            <TextBlock x:Name="sep1" 
+                       TextWrapping="Wrap" 
+                       VerticalAlignment="Center" 
+                       Background="{x:Null}" 
+                       Text=":" 
+                       TextAlignment="Center"/>
         </Grid>
 
         <Grid  Grid.Column="2" x:Name="min" Focusable="True" KeyDown="Down">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="3.5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <TextBlock  x:Name="ddTxt"  TextWrapping="Wrap" Text="{Binding Path=Minutes, ElementName=UserControl, Mode=Default}"
+            <TextBox x:Name="ddTxt"  
+                     Grid.Column="0"
+                     TextWrapping="Wrap" 
+                     Text="{Binding Path=Hours, ElementName=UserControl, Mode=Default}"
+                     TextAlignment="Center" 
+                     VerticalAlignment="Center"
+                     Margin="5 0 3 0" FontSize="12"
+                     Background="{DynamicResource VsBrush.Window}"
+                     Foreground="{DynamicResource VsBrush.WindowText}"/>
 
-                  TextAlignment="Center" VerticalAlignment="Center" />
-
+            <TextBlock Grid.Column="1"
+                       Text="m"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontSize="12"/>
         </Grid>
 
         <Grid  Grid.Column="3">
-
-            <TextBlock x:Name="sep2"  TextWrapping="Wrap" VerticalAlignment="Center" Background="{x:Null}" Text=":" TextAlignment="Center"/>
-
+            <TextBlock x:Name="sep2"  
+                       TextWrapping="Wrap" 
+                       VerticalAlignment="Center" 
+                       Background="{x:Null}" 
+                       Text=":" 
+                       TextAlignment="Center"/>
         </Grid>
 
         <Grid  Grid.Column="4" Name="sec" Focusable="True" KeyDown="Down">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="5*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-            <TextBlock x:Name="yyTxt"  TextWrapping="Wrap" Text="{Binding Path=Seconds, ElementName=UserControl, Mode=Default}"
+            <TextBox x:Name="yyTxt"   
+                     Grid.Column="0"
+                     TextWrapping="Wrap" 
+                     Text="{Binding Path=Hours, ElementName=UserControl, Mode=Default}"
+                     TextAlignment="Center" 
+                     VerticalAlignment="Center"
+                     Margin="5 0 3 0" FontSize="12"
+                     Background="{DynamicResource VsBrush.Window}"
+                     Foreground="{DynamicResource VsBrush.WindowText}"/>
 
-                 TextAlignment="Center" VerticalAlignment="Center" />
-
+            <TextBlock Grid.Column="1"
+                       Text="s"
+                       VerticalAlignment="Center"
+                       FontSize="12"/>
         </Grid>
 
 
