@@ -126,11 +126,14 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <Grid Grid.Column="1">
-                        <wpfx:DateTimePicker
-                            DefaultValue="{Binding Content, Mode=TwoWay}"
-                            Grid.Column="1"/>
-                    </Grid>
+                    <wpfx:DateTimePicker
+                            Grid.Column="1"
+                            TextAlignment="Justify"
+                            Background="{DynamicResource VsBrush.Window}"
+                            Foreground="{DynamicResource VsBrush.WindowText}"
+                            DefaultValue="{Binding Content, Mode=TwoWay}">
+
+                    </wpfx:DateTimePicker>
                 </Grid>
             </DataTemplate>
 
