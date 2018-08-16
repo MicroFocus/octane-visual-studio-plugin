@@ -21,7 +21,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:wpfx="http://schemas.microsoft.com/winfx/2006/xaml/presentation/toolkit/extended"
+             xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -127,34 +127,9 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <Grid Grid.Column="1">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="2*"/>
-                        </Grid.ColumnDefinitions>
-                        <DatePicker                                   
-                            Grid.Column="0"
-                            SelectedDate="{Binding Content, Mode=TwoWay}"
-                            SelectedDateFormat="Long"
-                            VerticalAlignment="Center">
-                            <DatePicker.Resources>
-                                <Style TargetType="{x:Type DatePickerTextBox}">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=DatePickerTextBox}}" Value="True">
-                                            <Setter Property="Foreground" Value="{DynamicResource VsBrush.WindowText}"/>
-                                        </DataTrigger>
-                                        <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=DatePicker}}" Value="True">
-                                            <Setter Property="Foreground" Value="{DynamicResource VsBrush.WindowText}"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DatePicker.Resources>
-                        </DatePicker>
-
-                        <view:TimePicker 
-                            Background="{DynamicResource VsBrush.Window}"
-                            Foreground="{DynamicResource VsBrush.WindowText}"
-                            Grid.Column="1"
-                            Hours="23" Minutes="59" Seconds="54"/>
+                        <wpfx:DateTimePicker
+                            DefaultValue="{Binding Content, Mode=TwoWay}"
+                            Grid.Column="1"/>
                     </Grid>
                 </Grid>
             </DataTemplate>

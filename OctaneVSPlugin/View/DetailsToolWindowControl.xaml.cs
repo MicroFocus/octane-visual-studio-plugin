@@ -20,6 +20,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Xceed.Wpf.Toolkit;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {

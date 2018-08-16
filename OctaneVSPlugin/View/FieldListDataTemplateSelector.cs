@@ -17,6 +17,7 @@
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System.Windows;
 using System.Windows.Controls;
+using Xceed.Wpf.Toolkit;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
