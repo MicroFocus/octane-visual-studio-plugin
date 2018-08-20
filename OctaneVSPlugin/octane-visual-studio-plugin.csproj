@@ -148,9 +148,6 @@
       <DependentUpon>SearchToolWindowControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\TextBlockService.cs" />
-    <Compile Include="View\TimePicker.xaml.cs">
-      <DependentUpon>TimePicker.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\ToolWindowHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -220,10 +217,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\SearchToolWindowControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\TimePicker.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -123,7 +123,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
                     case "date_time":
-                        _parentEntity.SetDateTimeValue(Name, DateTime.Parse(value.ToString()));
+                        _parentEntity.SetDateTimeValue(Name, DateTime.Parse(value.ToString()).ToUniversalTime());
                         IsChanged = true;
                         break;
                 }
