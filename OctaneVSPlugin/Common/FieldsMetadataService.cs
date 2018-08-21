@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,7 +106,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 var value = entity.GetValue(fieldName);
                 DateTime datetime;
                 string dateString = (String)value;
-                if (DateTime.TryParseExact(dateString, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out datetime))
+                if (fieldMetadata.GetStringValue("editable") == "True" && DateTime.TryParseExact(dateString, "yyyy-MM-ddTHH:mm:ssZ", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AssumeLocal, out datetime))
                 {
                     return value;
                 }

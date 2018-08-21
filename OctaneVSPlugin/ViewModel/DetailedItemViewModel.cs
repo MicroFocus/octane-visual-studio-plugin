@@ -129,7 +129,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase))
                     {
                         _allEntityFields.Add(fieldViewModel);
-
                     }
 
                 }
@@ -137,7 +136,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     await RetrieveComments();
 
                 var transitions = await _octaneService.GetTransitionsForEntityType(EntityType);
-                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName!= "run_suite")
+                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite")
                 {
 
                     var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;

@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
