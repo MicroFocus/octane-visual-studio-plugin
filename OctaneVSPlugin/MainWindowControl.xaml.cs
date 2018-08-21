@@ -22,7 +22,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Xceed.Wpf.Toolkit;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -88,7 +87,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Unable to obtain commit message.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to obtain commit message.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -115,7 +114,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Unable to start work on current item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to start work on current item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -132,7 +131,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                System.Windows.MessageBox.Show("Unable to stop work on current item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Unable to stop work on current item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

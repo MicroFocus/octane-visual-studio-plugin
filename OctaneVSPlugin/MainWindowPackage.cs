@@ -21,7 +21,6 @@ using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
-using Xceed.Wpf.Toolkit;
 
 namespace octane_visual_studio_plugin
 {

@@ -20,7 +20,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     using octane_visual_studio_plugin;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.InteropServices;
-    using Xceed.Wpf.Toolkit;
 
     /// <summary>
     /// This class implements the tool window exposed by this package and hosts a user control.
