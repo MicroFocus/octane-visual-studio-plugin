@@ -124,7 +124,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
                     case "date_time":
-                        _parentEntity.SetDateTimeValue(Name, DateTime.Parse(value.ToString()).ToUniversalTime());
+                        DateTime newValue = DateTime.MinValue;
+                        if (value is DateTime)
+                        {
+                            newValue = (DateTime)value;
+                            _parentEntity.SetDateTimeValue(Name, newValue.ToUniversalTime());
+                        }
+                        else
+                        {
+                            _parentEntity.SetDateTimeValue(Name, ((DateTime)value).ToUniversalTime());
+                        }
+
                         IsChanged = true;
                         break;
                 }
