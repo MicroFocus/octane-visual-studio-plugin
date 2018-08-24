@@ -127,6 +127,7 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <wpfx:DateTimePicker 
+                        ShowButtonSpinner="False" AllowSpin="False"
                         AutoCloseCalendar="True"
                         Kind="Local"
                         Grid.Column="1"
