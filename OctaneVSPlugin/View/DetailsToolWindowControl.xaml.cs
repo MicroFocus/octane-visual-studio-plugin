@@ -100,5 +100,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             if (((Control)sender).Parent is UIElement parent)
                 parent.RaiseEvent(eventArg);
         }
+
+        private void SetDateClick(object sender, RoutedEventArgs e)
+        {
+            
+            MessageBox.Show("You thought it was click, but it was me, THE dev. HECKIN BAMBOOZLED AGAIN");
+        }
     }
 }

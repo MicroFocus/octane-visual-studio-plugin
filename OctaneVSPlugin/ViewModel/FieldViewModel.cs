@@ -132,7 +132,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         }
                         else
                         {
-                            _parentEntity.SetDateTimeValue(Name, ((DateTime)value).ToUniversalTime());
+                            _parentEntity.SetDateTimeValue(Name, DateTime.UtcNow);
                         }
 
                         IsChanged = true;
