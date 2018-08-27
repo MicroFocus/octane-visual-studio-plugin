@@ -34,6 +34,9 @@
                 <ResourceDictionary Source="ResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
 
+            <Visibility x:Key="DateButtonVisibility">Visible</Visibility>
+            <Visibility x:Key="DatePickerVisibility">Hidden</Visibility>
+
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
             <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
@@ -127,6 +130,7 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <wpfx:DateTimePicker 
+                        x:Name="_dateTimePicker"
                         ShowButtonSpinner="False" AllowSpin="False"
                         AutoCloseCalendar="True"
                         Kind="Local"
@@ -159,13 +163,25 @@
                     <Button Grid.Column="1"
                             Background="{DynamicResource VsBrush.Window}"
                             Foreground="{DynamicResource VsBrush.WindowText}"
+                            Visibility="{DynamicResource DateButtonVisibility}"
                             BorderThickness="1" BorderBrush="CornflowerBlue"
-                            Click="SetDateClick"
+                            Click="ButtonDateClick"
                             HorizontalAlignment="Left"
-                            ToolTip="Set the date and time to this field">
-                        <TextBlock Text="Click to set date"/>
-                    </Button>
+                            ToolTip="Set the date and time to this field"
+                            Content="Set date"/>
 
+                    <wpfx:DateTimePicker 
+                        x:Name="_dateTimePicker"
+                        ShowButtonSpinner="False" AllowSpin="False"
+                        AutoCloseCalendar="True"
+                        Visibility="{DynamicResource DatePickerVisibility}"
+                        Kind="Local"
+                        Grid.Column="2"
+                        TextAlignment="Justify"
+                        Background="{DynamicResource VsBrush.Window}"
+                        Foreground="{DynamicResource VsBrush.WindowText}"
+                        Value="{Binding Content, Mode=TwoWay}">
+                    </wpfx:DateTimePicker>
                 </Grid>
             </DataTemplate>
 

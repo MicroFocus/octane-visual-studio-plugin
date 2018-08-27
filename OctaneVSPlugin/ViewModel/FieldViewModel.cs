@@ -134,7 +134,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         {
                             _parentEntity.SetDateTimeValue(Name, DateTime.UtcNow);
                         }
-
                         IsChanged = true;
                         break;
                 }

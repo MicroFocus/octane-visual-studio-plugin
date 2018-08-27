@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using Xceed.Wpf.Toolkit;
@@ -52,6 +53,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                             templateName = "EditableDateFieldTemplate";
                         } else
                         {
+                            field.Content = DateTime.UtcNow;
                             templateName = "EditableDateFieldTemplateEmpty";
                         }
                         break;
