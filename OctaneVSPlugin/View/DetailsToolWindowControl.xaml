@@ -33,7 +33,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
             <Visibility x:Key="DateButtonVisibility">Visible</Visibility>
             <Visibility x:Key="DatePickerVisibility">Hidden</Visibility>
 
@@ -130,7 +129,6 @@
                         </TextBlock.Style>
                     </TextBlock>
                     <wpfx:DateTimePicker 
-                        x:Name="_dateTimePicker"
                         ShowButtonSpinner="False" AllowSpin="False"
                         AutoCloseCalendar="True"
                         Kind="Local"
@@ -171,7 +169,6 @@
                             Content="Set date"/>
 
                     <wpfx:DateTimePicker 
-                        x:Name="_dateTimePicker"
                         ShowButtonSpinner="False" AllowSpin="False"
                         AutoCloseCalendar="True"
                         Visibility="{DynamicResource DatePickerVisibility}"
