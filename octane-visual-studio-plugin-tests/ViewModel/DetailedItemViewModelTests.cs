@@ -465,7 +465,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
             viewModel.AddCommentCommand.Execute(null);
             Thread.Sleep(2048);
-            Assert.AreEqual(1, viewModel.Comments.Count());
+            int detectedCommentsWithText = 0;
+            foreach(var comment in viewModel.Comments)
+            {
+                if (comment.Text == textForComment)
+                {
+                    detectedCommentsWithText++;
+                }
+            }
+            Assert.AreEqual(1, detectedCommentsWithText);
 
             var commentFromStory = viewModel.Comments.First();
             Assert.AreEqual(commentFromStory.Text, textForComment);
