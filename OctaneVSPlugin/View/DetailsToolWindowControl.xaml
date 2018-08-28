@@ -703,7 +703,7 @@
                                             <TextBox.InputBindings>
                                                 <KeyBinding 
                                                     Key="Enter" 
-                                                    Command="{Binding ToggleAddCommentCommand}" 
+                                                    Command="{Binding AddCommentCommand}" 
                                                     CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}" />
                                             </TextBox.InputBindings>
                                         </TextBox>
@@ -713,7 +713,7 @@
                                          MinWidth="35" MaxWidth="35"
                                          MinHeight="20" MaxHeight="20"
                                          IsEnabled="{Binding ElementName=commentText, Path=Text.Length, Mode=OneWay}"
-                                         Command="{Binding ToggleAddCommentCommand}">
+                                         Command="{Binding AddCommentCommand}">
                                             <TextBlock ToolTip="Post a comment"> Post</TextBlock>
                                         </Button>
 

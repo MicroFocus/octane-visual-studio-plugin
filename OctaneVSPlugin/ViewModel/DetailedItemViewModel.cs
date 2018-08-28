@@ -81,7 +81,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SaveEntityCommand = new DelegatedCommand(SaveEntity);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
-            ToggleAddCommentCommand = new DelegatedCommand(AddComment);
+            AddCommentCommand = new DelegatedCommand(AddComment);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
@@ -486,7 +486,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #region AddComments
 
-        public ICommand ToggleAddCommentCommand { get; private set; }
+        public ICommand AddCommentCommand { get; private set; }
 
         public string CommentText
         {
