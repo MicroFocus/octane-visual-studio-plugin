@@ -95,7 +95,7 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\OctaneLogo16x16.png" usedList="logo" />
+      <Bitmap guid="guidImages" href="Resources\copy-icon.png" usedList="logo" />
       <Bitmap guid="guidImages1" href="Resources\OctaneCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="guidImages2" href="Resources\OctaneToolWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="guidImages3" href="Resources\stopTimer-16x16.png" usedList="stopWork" />

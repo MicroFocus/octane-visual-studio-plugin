@@ -321,23 +321,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         || entityType == WorkItem.SUBTYPE_DEFECT
                         || entityType == Task.TYPE_TASK))
                 {
-                    // copy commit message
-                    if (copyCommitMessageDelegate != null)
-                    {
-                        if (octaneItem.IsSupportCopyCommitMessage)
-                        {
-                            cm.Items.Add(new MenuItem
-                            {
-                                Header = CopyCommitMessageHeader,
-                                Command = new DelegatedCommand(copyCommitMessageDelegate)
-                            });
-                        }
-                    }
-
                     cm.Items.Add(new MenuItem
                     {
                         Header = StopWorkHeader,
                         Command = new DelegatedCommand(stopWorkDelegate)
+                    });
+                }
+
+                //copy commit message
+                if (octaneItem.IsSupportCopyCommitMessage && octaneItem != null
+                   && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK))
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = CopyCommitMessageHeader,
+                        Command = new DelegatedCommand(copyCommitMessageDelegate)
                     });
                 }
             }
