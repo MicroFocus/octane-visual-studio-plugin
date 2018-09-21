@@ -650,26 +650,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         #endregion
-
-        //public object ReferenceFieldContentz
-        //{
-        //    get
-        //    {
-        //        BaseEntity fieldTypeData = FieldMetadata.GetValue("field_type_data") as BaseEntity;
-        //        fieldTypeData.Id = _parentEntity.Id;
-        //        ArrayList targets = new ArrayList();
-        //        foreach (var elem in fieldTypeData.GetValue("targets") as ArrayList)
-        //        {
-        //            targets.Add(elem);
-        //        }
-        //        IDictionary targetDictionary = targets[0] as IDictionary;
-        //        string targetType = targetDictionary["type"] as string;
-        //        string logical_name = targetDictionary["logical_name"] as string;
-
-
-        //        return true;
-        //    }
-
-        //}
     }
 }

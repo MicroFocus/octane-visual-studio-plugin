@@ -307,13 +307,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result?.data;
         }
 
-        public List<Sprint> GetSprintsForEntityType(string entityType)
-        {
-            var result = es.Get<Sprint>(workspaceContext);
-            return result.data;
-        }
-
-        public EntityListResult<BaseEntity> GetEntities(string entityType)
+        public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType)
         {
             return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, 100).Result;
         }

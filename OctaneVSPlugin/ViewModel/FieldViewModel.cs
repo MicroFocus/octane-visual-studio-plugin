@@ -105,7 +105,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     {
                         await _octaneService.Connect();
 
-                        EntityListResult<BaseEntity> entities = _octaneService.GetEntities(_fieldEntity.ApiEntityName);
+                        EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
                         _referenceFieldContent = entities.data;
 
                         uiDispatcher.Invoke(() =>
