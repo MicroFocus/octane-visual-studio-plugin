@@ -38,7 +38,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     internal class OctaneServices
     {
         private RestConnector rest;
+
         private EntityService es;
+
+        public EntityService GetEntityService
+        {
+            get { return es; }
+        }
 
         private string url;
         private string user;
@@ -61,6 +67,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             workspaceContext = new WorkspaceContext(sharedspaceId, workspaceId);
             sharedSpaceContext = new SharedSpaceContext(sharedspaceId);
         }
+
+
 
         public async Task Connect()
         {
@@ -298,5 +306,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             var result = await es.GetTransitionsForEntityType(workspaceContext, entityType);
             return result?.data;
         }
+
+        public List<Sprint> GetSprintsForEntityType(string entityType)
+        {
+            var result = es.Get<Sprint>(workspaceContext);
+            return result.data;
+        }
+
+        public EntityListResult<BaseEntity> GetEntities(string entityType)
+        {
+            return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, 100).Result;
+        }
+
     }
+
 }

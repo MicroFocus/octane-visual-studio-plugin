@@ -18,29 +18,36 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
-using System.Globalization;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
+using System.Windows.Threading;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
     /// <summary>
     /// View model representation for an entity field
     /// </summary>
-    public class FieldViewModel
+    public class FieldViewModel: BaseItemViewModel
     {
         private readonly BaseEntity _parentEntity;
         private readonly string _emptyPlaceholder;
         private readonly Func<BaseEntity, object> _customContentFunc;
 
-        public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected)
+        private Dispatcher uiDispatcher;
+
+        public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected) : base(entity)
         {
+            
             _parentEntity = entity;
             Name = fieldName;
             Label = fieldValue;
             IsSelected = isSelected;
+            uiDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
         }
 
-        public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected)
+        public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected) : base(entity)
         {
             _parentEntity = entity;
             Metadata = metadata;
@@ -48,15 +55,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Name = metadata.Name;
             Label = metadata.Label;
             IsSelected = isSelected;
+            uiDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
         }
 
-        public FieldViewModel(BaseEntity entity, FieldInfo fieldInfo)
+        public FieldViewModel(BaseEntity entity, FieldInfo fieldInfo) : base(entity)
         {
             _parentEntity = entity;
             Name = fieldInfo.Name;
             Label = fieldInfo.Title;
             _emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             _customContentFunc = fieldInfo.ContentFunc;
+            uiDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
         }
 
         public FieldMetadata Metadata { get; }
@@ -72,12 +81,85 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public bool IsSelected { get; set; }
 
+        private List<Object> _allValuesReferenceField;
+
+        public async Task<List<FieldMetadata>> RetrieveEntityMetadata(BaseEntity entity)
+        {
+            List<FieldMetadata> myList = await FieldsMetadataService.GetFieldMetadata(entity);
+            return myList;
+        }
+
+        private OctaneServices _octaneService;
+        private List<BaseEntity> _referenceFieldContent;
+        public List<BaseEntity> ReferenceFieldContent
+        {
+            get
+            {
+                if (_referenceFieldContent == null)
+                {
+                    //first item is target, second one is logical name; conenction to octaneService is also in this method
+                    List<String> targetAndLogicalName = getTargetAndLogicalName(); 
+                    EntityReference _fieldEntity = getEntityType(targetAndLogicalName[0]);
+
+                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
+                    {
+                        await _octaneService.Connect();
+
+                        EntityListResult<BaseEntity> entities = _octaneService.GetEntities(_fieldEntity.ApiEntityName);
+                        _referenceFieldContent = entities.data;
+
+                        uiDispatcher.Invoke(() =>
+                        {
+                            NotifyPropertyChanged("ReferenceFieldContent");
+                        });
+                    });
+
+                    taskRetrieveData.Start();
+                }
+                return _referenceFieldContent;
+            }
+        }
+
+        private List<String> getTargetAndLogicalName()
+        {
+            BaseEntity fieldTypeData = Metadata.GetValue("field_type_data") as BaseEntity;
+            ArrayList targets = new ArrayList();
+            foreach (var elem in fieldTypeData.GetValue("targets") as ArrayList)
+            {
+                targets.Add(elem);
+            }
+            IDictionary targetDictionary = targets[0] as IDictionary;
+            string targetType = targetDictionary["type"] as string;
+            string logical_name = targetDictionary["logical_name"] as string;
+
+            List<String> result = new List<String>();
+            result.Add(targetType);
+            result.Add(logical_name);
+
+            _octaneService = new OctaneServices(
+                OctaneConfiguration.Url,
+                OctaneConfiguration.SharedSpaceId,
+                OctaneConfiguration.WorkSpaceId,
+                OctaneConfiguration.Username,
+                OctaneConfiguration.Password);
+
+            return result;
+
+        }
+
+        private EntityReference getEntityType(string type)
+        {
+            EntityReference entityReference = EntityReference.createEntityReferenceWithType(type);
+            return entityReference;
+        }
+
         public object Content
         {
             get
             {
                 if (_customContentFunc != null)
                     return _customContentFunc(_parentEntity);
+
 
                 var formattedValue = FieldsMetadataService.GetFormattedValue(_parentEntity, Name);
                 if (formattedValue != null)

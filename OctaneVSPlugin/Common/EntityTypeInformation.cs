@@ -53,6 +53,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         public Color Color { get; }
 
+        public string ApiEntityName { get;  }
         /// <summary>
         /// Constructor
         /// </summary>
