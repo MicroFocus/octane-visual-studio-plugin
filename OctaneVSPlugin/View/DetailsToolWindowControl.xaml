@@ -231,7 +231,7 @@
                     <ComboBox Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
-                              ItemsSource="{Binding ReferenceFieldContent}">
+                              ItemsSource="{Binding ReferenceFieldContent}" SelectedValue="{Binding Content}">
                     </ComboBox>
                 </Grid>
             </DataTemplate>

@@ -29,7 +29,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// View model representation for an entity field
     /// </summary>
-    public class FieldViewModel: BaseItemViewModel
+    public class FieldViewModel : BaseItemViewModel
     {
         private readonly BaseEntity _parentEntity;
         private readonly string _emptyPlaceholder;
@@ -39,7 +39,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected) : base(entity)
         {
-            
+
             _parentEntity = entity;
             Name = fieldName;
             Label = fieldValue;
@@ -81,8 +81,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public bool IsSelected { get; set; }
 
-        private List<Object> _allValuesReferenceField;
-
         public async Task<List<FieldMetadata>> RetrieveEntityMetadata(BaseEntity entity)
         {
             List<FieldMetadata> myList = await FieldsMetadataService.GetFieldMetadata(entity);
@@ -91,14 +89,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private OctaneServices _octaneService;
         private List<BaseEntity> _referenceFieldContent;
-        public List<BaseEntity> ReferenceFieldContent
+        private List<string> myList = new List<string>();
+        public List<String> ReferenceFieldContent
         {
             get
             {
                 if (_referenceFieldContent == null)
                 {
-                    //first item is target, second one is logical name; conenction to octaneService is also in this method
-                    List<String> targetAndLogicalName = getTargetAndLogicalName(); 
+
+                    List<String> targetAndLogicalName = getTargetAndLogicalName();
                     EntityReference _fieldEntity = getEntityType(targetAndLogicalName[0]);
 
                     System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
@@ -107,6 +106,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                         EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
                         _referenceFieldContent = entities.data;
+                        if (_referenceFieldContent != null)
+                            foreach (BaseEntity be in _referenceFieldContent)
+                            {
+                                myList.Add(be.Name);
+                            }
 
                         uiDispatcher.Invoke(() =>
                         {
@@ -116,12 +120,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     taskRetrieveData.Start();
                 }
-                return _referenceFieldContent;
+                return myList;
             }
         }
 
         private List<String> getTargetAndLogicalName()
         {
+            //first item is target, second one is logical name; conenction to octaneService is also in this method
             BaseEntity fieldTypeData = Metadata.GetValue("field_type_data") as BaseEntity;
             ArrayList targets = new ArrayList();
             foreach (var elem in fieldTypeData.GetValue("targets") as ArrayList)
