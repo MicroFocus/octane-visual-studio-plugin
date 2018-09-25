@@ -35,6 +35,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly string _emptyPlaceholder;
         private readonly Func<BaseEntity, object> _customContentFunc;
 
+        private OctaneServices _octaneService;
+        private List<BaseEntity> _referenceFieldContent;
+        private List<string> _referenceFieldContentName = new List<string>();
         private Dispatcher uiDispatcher;
 
         public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected) : base(entity)
@@ -87,9 +90,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             return myList;
         }
 
-        private OctaneServices _octaneService;
-        private List<BaseEntity> _referenceFieldContent;
-        private List<string> myList = new List<string>();
         public List<String> ReferenceFieldContent
         {
             get
@@ -105,11 +105,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         await _octaneService.Connect();
 
                         EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
-                        _referenceFieldContent = entities.data;
+                        if (_fieldEntity.ApiEntityName == "sprints")
+                        {
+                            _referenceFieldContent = new List<BaseEntity>();
+                            foreach (BaseEntity be in entities.data)
+                            {
+                                BaseEntity be1 = (BaseEntity) be.GetValue("release");
+                                BaseEntity parentsRelease =(BaseEntity) _parentEntity.GetValue("release");
+                                if (be1.Name.Equals(parentsRelease.Name)) 
+                                {
+                                    _referenceFieldContent.Add(be);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            _referenceFieldContent = entities.data;
+                        }
                         if (_referenceFieldContent != null)
                             foreach (BaseEntity be in _referenceFieldContent)
                             {
-                                myList.Add(be.Name);
+                                _referenceFieldContentName.Add(be.Name);
                             }
 
                         uiDispatcher.Invoke(() =>
@@ -117,10 +133,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             NotifyPropertyChanged("ReferenceFieldContent");
                         });
                     });
-
                     taskRetrieveData.Start();
                 }
-                return myList;
+                return _referenceFieldContentName;
             }
         }
 
