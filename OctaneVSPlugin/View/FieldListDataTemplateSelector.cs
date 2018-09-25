@@ -18,7 +18,6 @@ using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using Xceed.Wpf.Toolkit;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -60,10 +59,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     case "reference":
                         if (field.IsMultiple)
                         {
+                            if (field.IsMoreThanOneTarget)
+                            {
+                                templateName = "ReadOnlyFieldTemplate";
+                                break;
+                            }
                             templateName = "EditableReferenceFieldTemplateMultiple";
+                            
                         }
                         else
                         {
+                            if (field.IsMoreThanOneTarget)
+                            {
+                                templateName = "ReadOnlyFieldTemplate";
+                                break;
+                            }
                             templateName = "EditableReferenceFieldTemplateSimple";
                         }
                         break;

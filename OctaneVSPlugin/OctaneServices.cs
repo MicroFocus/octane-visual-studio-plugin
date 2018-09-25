@@ -54,7 +54,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private static readonly EntityComparerByLastModified EntityComparer = new EntityComparerByLastModified();
 
-        public OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
+        private static OctaneServices instance = null;
+
+        private OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
         {
             this.url = url;
 
@@ -68,7 +70,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             sharedSpaceContext = new SharedSpaceContext(sharedspaceId);
         }
 
+        public static OctaneServices GetInstance()
+        {
+            if(instance == null)
+            {
+                throw new Exception("Object not created");
+            }
+            return instance;   
+        }
 
+        public static void Create(string url, long sharedspaceId, long workspaceId, string user, string password)
+        {
+            if(instance != null)
+            {
+                throw new Exception("Object already created");
+            }
+            instance = new OctaneServices(url, sharedspaceId, workspaceId, user, password);
+        }
+
+        public static void Reset()
+        {
+            instance = null;
+        }
 
         public async Task Connect()
         {

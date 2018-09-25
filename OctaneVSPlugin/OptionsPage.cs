@@ -41,6 +41,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             base.OnApply(e);
 
+            // reset and thus require a new octane service obj
+            OctaneServices.Reset();
+            
             // close all opened details windows so that we don't have details windows
             // for entities from different workspaces
             PluginWindowManager.CloseAllDetailsWindows();

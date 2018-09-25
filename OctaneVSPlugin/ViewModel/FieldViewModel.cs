@@ -103,8 +103,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
                     {
-                        await _octaneService.Connect();
-
                         EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
                         if (_fieldEntity.ApiEntityName == "sprints")
                         {
@@ -176,6 +174,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 targets.Add(elem);
             }
+            IsMoreThanOneTarget = false;
+            if (targets.Count != 1)
+            {
+                IsMoreThanOneTarget = true;
+            }
             IDictionary targetDictionary = targets[0] as IDictionary;
             string targetType = targetDictionary["type"] as string;
             string logical_name = targetDictionary["logical_name"] as string;
@@ -183,13 +186,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             List<String> result = new List<String>();
             result.Add(targetType);
             result.Add(logical_name);
+            if(_octaneService == null)
+            {
+                _octaneService = OctaneServices.GetInstance();
+                _octaneService.Connect();
+            }
 
-            _octaneService = new OctaneServices(
-                OctaneConfiguration.Url,
-                OctaneConfiguration.SharedSpaceId,
-                OctaneConfiguration.WorkSpaceId,
-                OctaneConfiguration.Username,
-                OctaneConfiguration.Password);
 
             return result;
 
@@ -202,6 +204,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         public bool IsMultiple {get; set;}
+
+        public bool IsMoreThanOneTarget { get; set; }
 
         public object Content
         {

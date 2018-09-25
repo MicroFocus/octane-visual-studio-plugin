@@ -169,17 +169,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             try
             {
-                OctaneServices octane = new OctaneServices(OctaneConfiguration.Url,
-                    OctaneConfiguration.SharedSpaceId,
-                    OctaneConfiguration.WorkSpaceId,
-                    OctaneConfiguration.Username,
-                    OctaneConfiguration.Password);
-                await octane.Connect();
+                OctaneServices octaneService;
+                try
+                {
+                    octaneService = OctaneServices.GetInstance();
+                } catch (Exception e)
+                {
+                    if(e.GetBaseException().Message.Equals("Object not created"))
+                    {
+                        OctaneServices.Create(OctaneConfiguration.Url,
+                           OctaneConfiguration.SharedSpaceId,
+                           OctaneConfiguration.WorkSpaceId,
+                           OctaneConfiguration.Username,
+                           OctaneConfiguration.Password);
+                    }
+                    
+                    octaneService = OctaneServices.GetInstance();
+                    await octaneService.Connect();
+
+                }
 
                 _myItems.Clear();
 
                 bool foundActiveItem = false;
-                IList<BaseEntity> items = await octane.GetMyItems();
+                IList<BaseEntity> items = await octaneService.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
                     var octaneItem = new OctaneItemViewModel(entity);
@@ -198,7 +211,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 }
 
-                IList<BaseEntity> comments = await octane.GetMyCommentItems();
+                IList<BaseEntity> comments = await octaneService.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
                     _myItems.Add(new CommentViewModel(comment));

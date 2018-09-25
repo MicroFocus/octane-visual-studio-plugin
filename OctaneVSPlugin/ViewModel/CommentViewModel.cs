@@ -55,7 +55,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (ParentEntity == null)
                     return "Unable to determine the comment's owner";
-
                 var parentEntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(ParentEntity);
                 if (parentEntityTypeInformation == null)
                     return string.Empty;
