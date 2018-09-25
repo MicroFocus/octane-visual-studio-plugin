@@ -174,7 +174,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
 
                 if (activeEntity != null)
-                {
+                {   
                     _activeItemMenuCommand.Text = EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id;
                     _activeItemMenuCommand.Enabled = true;
                     _copyCommitMessageCommand.Enabled = true;

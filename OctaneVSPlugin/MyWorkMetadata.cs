@@ -150,7 +150,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                     var parentEntity = entity.GetValue("story") as BaseEntity;
                     if (parentEntity == null)
                         return string.Empty;
-
+                    
                     var parentEntityInformation = EntityTypeRegistry.GetEntityTypeInformation(parentEntity);
                     if (parentEntityInformation == null)
                         return string.Empty;
