@@ -15,7 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -60,18 +59,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             if (entity == null)
                 return new List<FieldMetadata>();
 
-            if (_octaneService == null)
-            {
-                _octaneService = new OctaneServices(
-                    OctaneConfiguration.Url,
-                    OctaneConfiguration.SharedSpaceId,
-                    OctaneConfiguration.WorkSpaceId,
-                    OctaneConfiguration.Username,
-                    OctaneConfiguration.Password);
-
-                await _octaneService.Connect();
-            }
-
+            _octaneService = OctaneServices.GetInstance();
+           
             List<FieldMetadata> fields = Cache.GetFieldMetadataList(entity);
             if (fields == null)
             {
