@@ -193,15 +193,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 if (test == null)
                     return;
 
-                OctaneServices octane = new OctaneServices(
-                    OctaneConfiguration.Url,
-                    OctaneConfiguration.SharedSpaceId,
-                    OctaneConfiguration.WorkSpaceId,
-                    OctaneConfiguration.Username,
-                    OctaneConfiguration.Password);
-                await octane.Connect();
+                OctaneServices octaneService;
+                octaneService = OctaneServices.GetInstance();    
 
-                var testScript = await octane.GetTestScript(test.Id);
+                var testScript = await octaneService.GetTestScript(test.Id);
                 MainWindow.PluginPackage.CreateFile(test.Name, testScript.Script);
             }
             catch (Exception ex)

@@ -18,15 +18,12 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using NSoup.Nodes;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
-using System.Windows;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
@@ -94,13 +91,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             EntitySupportsComments = EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity));
 
-            _octaneService = new OctaneServices(
-                OctaneConfiguration.Url,
-                OctaneConfiguration.SharedSpaceId,
-                OctaneConfiguration.WorkSpaceId,
-                OctaneConfiguration.Username,
-                OctaneConfiguration.Password);
-
+            _octaneService = OctaneServices.GetInstance();
+            
             Id = (long)entity.Id;
             EntityType = Utility.GetConcreteEntityType(Entity);
             FieldsCache.Instance.Attach(this);
