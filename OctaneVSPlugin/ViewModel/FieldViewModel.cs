@@ -99,6 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     List<String> targetAndLogicalName = getTargetAndLogicalName();
                     EntityReference _fieldEntity = getEntityType(targetAndLogicalName[0]);
+                    string logicalName = targetAndLogicalName[1];
 
                     System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
                     {
@@ -109,7 +110,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         {
                             _referenceFieldContent = getSprintFields(entities.data);
                         }
-                        else
+                        else if (_fieldEntity.ApiEntityName.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
+                        {
+                            _referenceFieldContent = getListNodes(entities.data, logicalName);
+                        }
+                        else 
                         {
                             _referenceFieldContent = entities.data;
                         }
@@ -130,13 +135,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        private List<BaseEntity> getListNodes(List<BaseEntity> data, string logicalName)
+        {
+            List<BaseEntity> referenceFieldContent = new List<BaseEntity>();
+
+            foreach (BaseEntity be in data)
+            {
+                string currentItemsLogicalName = be.GetStringValue("logical_name");
+                if (!string.IsNullOrEmpty(currentItemsLogicalName) && currentItemsLogicalName.Contains(logicalName))
+                {
+                    referenceFieldContent.Add(be);
+                }
+            }
+            return referenceFieldContent;
+        }
+
         private List<BaseEntity> getSprintFields(List<BaseEntity> data)
         {
             List<BaseEntity> referenceFieldContent = new List<BaseEntity>();
+            BaseEntity parentsRelease = (BaseEntity)_parentEntity.GetValue("release");
+
             foreach (BaseEntity be in data)
             {
                 BaseEntity sprintRelease = (BaseEntity)be.GetValue("release");
-                BaseEntity parentsRelease = (BaseEntity)_parentEntity.GetValue("release");
                 if ( parentsRelease != null && sprintRelease.Name.Equals(parentsRelease.Name))
                 {
                     referenceFieldContent.Add(be);
