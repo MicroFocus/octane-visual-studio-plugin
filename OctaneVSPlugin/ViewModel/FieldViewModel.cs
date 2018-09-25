@@ -107,16 +107,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
                         if (_fieldEntity.ApiEntityName == "sprints")
                         {
-                            _referenceFieldContent = new List<BaseEntity>();
-                            foreach (BaseEntity be in entities.data)
-                            {
-                                BaseEntity be1 = (BaseEntity) be.GetValue("release");
-                                BaseEntity parentsRelease =(BaseEntity) _parentEntity.GetValue("release");
-                                if (be1.Name.Equals(parentsRelease.Name)) 
-                                {
-                                    _referenceFieldContent.Add(be);
-                                }
-                            }
+                            _referenceFieldContent = getSprintFields(_referenceFieldContent, entities.data);
                         }
                         else
                         {
@@ -137,6 +128,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
                 return _referenceFieldContentName;
             }
+        }
+
+        private List<BaseEntity> getSprintFields(List<BaseEntity> referenceFieldContent, List<BaseEntity> data)
+        {
+            referenceFieldContent = new List<BaseEntity>();
+            foreach (BaseEntity be in data)
+            {
+                BaseEntity be1 = (BaseEntity)be.GetValue("release");
+                BaseEntity parentsRelease = (BaseEntity)_parentEntity.GetValue("release");
+                if (be1.Name.Equals(parentsRelease.Name))
+                {
+                    referenceFieldContent.Add(be);
+                }
+            }
+            return referenceFieldContent;
         }
 
         private List<String> getTargetAndLogicalName()
