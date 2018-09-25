@@ -171,6 +171,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             //first item is target, second one is logical name; conenction to octaneService is also in this method
             BaseEntity fieldTypeData = Metadata.GetValue("field_type_data") as BaseEntity;
             ArrayList targets = new ArrayList();
+            IsMultiple = (bool)fieldTypeData.GetValue("multiple");
             foreach (var elem in fieldTypeData.GetValue("targets") as ArrayList)
             {
                 targets.Add(elem);
@@ -199,6 +200,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             EntityReference entityReference = EntityReference.createEntityReferenceWithType(type);
             return entityReference;
         }
+
+        public bool IsMultiple {get; set;}
 
         public object Content
         {

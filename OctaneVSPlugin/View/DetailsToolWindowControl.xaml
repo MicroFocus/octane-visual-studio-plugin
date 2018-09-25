@@ -211,7 +211,7 @@
                 </Grid>
             </DataTemplate>
 
-            <DataTemplate x:Key="EditableReferenceFieldTemplate">
+            <DataTemplate x:Key="EditableReferenceFieldTemplateSimple">
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -232,6 +232,38 @@
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
                               ItemsSource="{Binding ReferenceFieldContent}" SelectedValue="{Binding Content}">
+                    </ComboBox>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableReferenceFieldTemplateMultiple">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <ComboBox Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"
+                              Background="{DynamicResource VsBrush.Window}"
+                              Foreground="{DynamicResource VsBrush.WindowText}"
+                              ItemsSource="{Binding ReferenceFieldContent}" SelectedValue="{Binding Content}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <CheckBox IsChecked="True" Width="20"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
                     </ComboBox>
                 </Grid>
             </DataTemplate>

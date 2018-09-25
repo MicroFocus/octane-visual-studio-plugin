@@ -58,7 +58,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         }
                         break;
                     case "reference":
-                        templateName = "EditableReferenceFieldTemplate";
+                        if (field.IsMultiple)
+                        {
+                            templateName = "EditableReferenceFieldTemplateMultiple";
+                        }
+                        else
+                        {
+                            templateName = "EditableReferenceFieldTemplateSimple";
+                        }
                         break;
                     default:
                         templateName = "ReadOnlyFieldTemplate";
