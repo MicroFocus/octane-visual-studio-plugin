@@ -26,6 +26,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using System.Windows;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
 
@@ -80,7 +81,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             SaveEntityCommand = new DelegatedCommand(SaveEntity);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
-            ToggleAddCommentCommand = new DelegatedCommand(AddComment);
+            AddCommentCommand = new DelegatedCommand(AddComment);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
@@ -129,7 +130,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase))
                     {
                         _allEntityFields.Add(fieldViewModel);
-
                     }
 
                 }
@@ -137,7 +137,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     await RetrieveComments();
 
                 var transitions = await _octaneService.GetTransitionsForEntityType(EntityType);
-                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName!= "run_suite")
+                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite")
                 {
 
                     var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
@@ -486,15 +486,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #region AddComments
 
-        public ICommand ToggleAddCommentCommand { get; private set; }
+        public ICommand AddCommentCommand { get; private set; }
 
         public string CommentText
         {
             get { return _commentText; }
             set
             {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    value = value.TrimStart();
+                }
+
                 if (value != _commentText)
                 {
+                    if (value.Contains("\n"))
+                    {
+                        string valueTrimmed = value.Replace("\n", "<br>");
+                        value = valueTrimmed;
+                    }
                     _commentText = value;
                     NotifyPropertyChanged("CommentText");
                 }

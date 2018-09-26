@@ -8,5 +8,8 @@
     <Setting Name="WorkspaceSessionMetadata" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="DateTimePicker" Type="Xceed.Wpf.Toolkit.DateTimePicker" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -50,13 +50,13 @@ Test > Test Settings > Select Test Settings File
 
   <!-- Parameters used by tests at runtime -->
   <TestRunParameters>
-    <Parameter name="webAppUrl" value="http://octane.ide.octane.work" />
+    <Parameter name="webAppUrl" value="octane_url" />
 
-    <Parameter name="userName" value="sa@nga" />
-    <Parameter name="password" value="Welcome1" />
+    <Parameter name="userName" value="username" />
+    <Parameter name="password" value="password" />
 
     <Parameter name="sharedSpaceId" value="1001" />
-    <!--<Parameter name="workspaceId" value="1002" />-->
+    <Parameter name="workspaceId" value="1002" />
 
     <!-- If you use secured connection(https) but sertificates are not installed correctly, set value to true to ignore validation -->
     <Parameter name="ignoreServerCertificateValidation" value="false" />
