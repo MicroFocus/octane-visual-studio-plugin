@@ -15,7 +15,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,8 +32,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         {
 
             _octaneService = OctaneServices.GetInstance();
-           
-            Console.Write("Did not have to reconnect, will wait for entityLabelMetadata");
+
+            await _octaneService.Connect();
+
             List<EntityLabelMetadata> entityLabelMetadatas = await _octaneService.GetEntityLabelMedata();
             Dictionary<string,EntityLabelMetadata> result = new Dictionary<string, EntityLabelMetadata>();
             foreach (EntityLabelMetadata elm in entityLabelMetadatas)
