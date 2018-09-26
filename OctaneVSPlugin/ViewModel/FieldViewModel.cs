@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
+using System.Globalization;
 using System.Linq;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -120,6 +121,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         break;
                     case "string":
                         _parentEntity.SetValue(Name, value.ToString());
+                        IsChanged = true;
+                        break;
+                    case "date_time":
+                        DateTime newValue = DateTime.MinValue;
+                        if (value is DateTime)
+                        {
+                            newValue = (DateTime)value;
+                            _parentEntity.SetDateTimeValue(Name, newValue.ToUniversalTime());
+                        }
+                        else
+                        {
+                            _parentEntity.SetDateTimeValue(Name, DateTime.UtcNow);
+                        }
                         IsChanged = true;
                         break;
                 }

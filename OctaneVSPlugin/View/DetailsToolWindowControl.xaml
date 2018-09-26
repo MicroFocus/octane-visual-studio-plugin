@@ -21,6 +21,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
@@ -32,6 +33,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="ResourceDictionary.xaml" />
             </ResourceDictionary.MergedDictionaries>
+            <Visibility x:Key="DateButtonVisibility">Visible</Visibility>
+            <Visibility x:Key="DatePickerVisibility">Hidden</Visibility>
 
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
 
@@ -105,6 +108,77 @@
                              Background="{DynamicResource VsBrush.Window}"
                              Foreground="{DynamicResource VsBrush.WindowText}"
                              Text="{Binding Content, Mode=TwoWay}"/>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableDateFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <wpfx:DateTimePicker 
+                        ShowButtonSpinner="False" AllowSpin="False"
+                        AutoCloseCalendar="True"
+                        Kind="Local"
+                        Grid.Column="1"
+                        TextAlignment="Justify"
+                        Background="{DynamicResource VsBrush.Window}"
+                        Foreground="{DynamicResource VsBrush.WindowText}"
+                        Value="{Binding Content, Mode=TwoWay}">
+                    </wpfx:DateTimePicker>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableDateFieldTemplateEmpty">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
+                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Button Grid.Column="1"
+                            Background="{DynamicResource VsBrush.Window}"
+                            Foreground="{DynamicResource VsBrush.WindowText}"
+                            Visibility="{DynamicResource DateButtonVisibility}"
+                            BorderThickness="1" BorderBrush="CornflowerBlue"
+                            Click="ButtonDateClick"
+                            HorizontalAlignment="Left"
+                            ToolTip="Set the date and time to this field"
+                            Content="Set date"/>
+
+                    <wpfx:DateTimePicker 
+                        ShowButtonSpinner="False" AllowSpin="False"
+                        AutoCloseCalendar="True"
+                        Visibility="{DynamicResource DatePickerVisibility}"
+                        Kind="Local"
+                        Grid.Column="1"
+                        TextAlignment="Justify"
+                        Background="{DynamicResource VsBrush.Window}"
+                        Foreground="{DynamicResource VsBrush.WindowText}"
+                        Value="{Binding Content, Mode=TwoWay}">
+                    </wpfx:DateTimePicker>
                 </Grid>
             </DataTemplate>
 
@@ -616,10 +690,12 @@
                                         <TextBlock Grid.Row="0" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Comments</TextBlock>
 
                                         <TextBox  Margin="5 25 0 10"
+                                          Name="commentText"
                                           HorizontalAlignment="Left"
                                           FontSize="12"
                                           MinWidth="250" MaxWidth="250"
                                           MinHeight="19" MaxHeight="19"
+                                          AcceptsReturn="True"
                                           Text="{Binding CommentText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                           Background="{DynamicResource VsBrush.Window}"
                                           Foreground="{DynamicResource VsBrush.WindowText}"
@@ -627,7 +703,7 @@
                                             <TextBox.InputBindings>
                                                 <KeyBinding 
                                                     Key="Enter" 
-                                                    Command="{Binding ToggleAddCommentCommand}" 
+                                                    Command="{Binding AddCommentCommand}" 
                                                     CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}" />
                                             </TextBox.InputBindings>
                                         </TextBox>
@@ -636,7 +712,8 @@
                                          HorizontalAlignment="Right"
                                          MinWidth="35" MaxWidth="35"
                                          MinHeight="20" MaxHeight="20"
-                                         Command="{Binding ToggleAddCommentCommand}">
+                                         IsEnabled="{Binding ElementName=commentText, Path=Text.Length, Mode=OneWay}"
+                                         Command="{Binding AddCommentCommand}">
                                             <TextBlock ToolTip="Post a comment"> Post</TextBlock>
                                         </Button>
 

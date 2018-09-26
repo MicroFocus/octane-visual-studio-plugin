@@ -15,8 +15,10 @@
 */
 
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using System;
 using System.Windows;
 using System.Windows.Controls;
+using Xceed.Wpf.Toolkit;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -44,6 +46,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     case "integer":
                     case "string":
                         templateName = "EditableFieldTemplate";
+                        break;
+                    case "date_time":
+                        if (field.Content != null)
+                        {
+                            templateName = "EditableDateFieldTemplate";
+                        } else
+                        {
+                            field.Content = DateTime.UtcNow;
+                            templateName = "EditableDateFieldTemplateEmpty";
+                        }
                         break;
                     default:
                         templateName = "ReadOnlyFieldTemplate";
