@@ -59,7 +59,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     case "reference":
                         if (field.IsMultiple)
                         {
-                            if (field.IsMoreThanOneTarget)
+                            if (field.IsMoreThanOneTarget || field.FieldNotCompatible)
                             {
                                 templateName = "ReadOnlyFieldTemplate";
                                 break;
@@ -69,7 +69,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         }
                         else
                         {
-                            if (field.IsMoreThanOneTarget)
+                            if (field.IsMoreThanOneTarget || field.FieldNotCompatible)
                             {
                                 templateName = "ReadOnlyFieldTemplate";
                                 break;

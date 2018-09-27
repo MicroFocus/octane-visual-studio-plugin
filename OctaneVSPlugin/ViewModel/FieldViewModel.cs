@@ -96,36 +96,43 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (_referenceFieldContent == null)
                 {
-
+                    _octaneService = OctaneServices.GetInstance();
+                    _octaneService.Connect();
                     List<String> targetAndLogicalName = getTargetAndLogicalName();
                     EntityReference _fieldEntity = getEntityType(targetAndLogicalName[0]);
                     string logicalName = targetAndLogicalName[1];
 
-                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
+                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(() =>
                     {
-                        EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
-                        if (_fieldEntity.ApiEntityName == "sprints")
+                        try
                         {
-                            _referenceFieldContent = getSprintFields(entities.data);
-                        }
-                        else if (_fieldEntity.ApiEntityName.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
-                        {
-                            _referenceFieldContent = getListNodes(entities.data, logicalName);
-                        }
-                        else 
-                        {
-                            _referenceFieldContent = entities.data;
-                        }
-                        if (_referenceFieldContent != null)
-                            foreach (BaseEntity be in _referenceFieldContent)
+                            EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
+                            if (_fieldEntity.ApiEntityName == "sprints")
                             {
-                                _referenceFieldContentName.Add(be.Name);
+                                _referenceFieldContent = getSprintFields(entities.data);
                             }
+                            else if (_fieldEntity.ApiEntityName.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
+                            {
+                                _referenceFieldContent = getListNodes(entities.data, logicalName);
+                            }
+                            else
+                            {
+                                _referenceFieldContent = entities.data;
+                            }
+                            if (_referenceFieldContent != null)
+                                foreach (BaseEntity be in _referenceFieldContent)
+                                {
+                                    _referenceFieldContentName.Add(be.Name);
+                                }
 
-                        uiDispatcher.Invoke(() =>
+                            uiDispatcher.Invoke(() =>
+                            {
+                                NotifyPropertyChanged("ReferenceFieldContent");
+                            });
+                        } catch (Exception e)
                         {
-                            NotifyPropertyChanged("ReferenceFieldContent");
-                        });
+                            throw new Exception("No entities found");
+                        }
                     });
                     taskRetrieveData.Start();
                 }
@@ -166,7 +173,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private List<String> getTargetAndLogicalName()
         {
-            //first item is target, second one is logical name; conenction to octaneService is also in this method
+            //first item is target, second one is logical name;
             BaseEntity fieldTypeData = Metadata.GetValue("field_type_data") as BaseEntity;
             ArrayList targets = new ArrayList();
             IsMultiple = (bool)fieldTypeData.GetValue("multiple");
@@ -186,21 +193,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             List<String> result = new List<String>();
             result.Add(targetType);
             result.Add(logical_name);
-            if(_octaneService == null)
-            {
-                _octaneService = OctaneServices.GetInstance();
-                _octaneService.Connect();
-            }
-
 
             return result;
 
         }
+        public bool FieldNotCompatible { get; set; }
 
         private EntityReference getEntityType(string type)
         {
-            EntityReference entityReference = EntityReference.createEntityReferenceWithType(type);
-            return entityReference;
+            try
+            {
+                EntityReference entityReference = EntityReference.createEntityReferenceWithType(type);
+                FieldNotCompatible = false;
+                return entityReference;
+
+            }
+            catch (Exception e)
+            {
+                FieldNotCompatible = true;
+            }
+            return null;
         }
 
         public bool IsMultiple {get; set;}
