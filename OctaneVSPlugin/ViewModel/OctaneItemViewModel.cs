@@ -149,9 +149,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             if (!EntityTypeInformation.IsCopyCommitMessageSupported)
                 return;
 
-            OctaneServices octaneService;
-
-            octaneService = OctaneServices.GetInstance();
+            OctaneServices octaneService = OctaneServices.GetInstance();
            
             var commitPatterns = await octaneService.ValidateCommitMessageAsync(CommitMessage);
 

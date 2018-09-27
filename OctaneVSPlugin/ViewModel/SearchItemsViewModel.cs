@@ -30,7 +30,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// </summary>
     public class SearchItemsViewModel : INotifyPropertyChanged
     {
-        private readonly OctaneServices _octaneService;
         private readonly string _searchFilter;
         private readonly IList<BaseItemViewModel> _searchResults = new List<BaseItemViewModel>();
 
@@ -51,8 +50,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             RefreshCommand = new DelegatedCommand(Refresh);
 
             Mode = WindowMode.Loading;
-
-            _octaneService = OctaneServices.GetInstance();
            
         }
 
@@ -71,8 +68,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     return;
                 }
 
-                await _octaneService.Connect();
-                var results = await _octaneService.SearchEntities(_searchFilter, 20);
+                OctaneServices octaneService = OctaneServices.GetInstance();
+                
+                var results = await octaneService.SearchEntities(_searchFilter, 20);
                 foreach (var entity in results)
                 {
                     // TODO - invetigate showing in bold the matching sections in Name and Description

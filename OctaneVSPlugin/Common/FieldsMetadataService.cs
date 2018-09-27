@@ -34,8 +34,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
         private static readonly MetadataCache Cache = new MetadataCache();
 
-        private static OctaneServices _octaneService;
-
         static FieldsMetadataService()
         {
             Converter.Add("date_time", value => DateTime.Parse(value.ToString()).ToString("MM/dd/yyyy HH:mm:ss"));
@@ -46,8 +44,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// </summary>
         internal static void Reset()
         {
-            _octaneService = null;
-
             Cache.Clear();
         }
 
@@ -59,13 +55,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             if (entity == null)
                 return new List<FieldMetadata>();
 
-            _octaneService = OctaneServices.GetInstance();
+            OctaneServices octaneService = OctaneServices.GetInstance();
            
             List<FieldMetadata> fields = Cache.GetFieldMetadataList(entity);
             if (fields == null)
             {
                 var entityType = Utility.GetConcreteEntityType(entity);
-                var fieldsMetadata = await _octaneService.GetFieldsMetadata(entityType);
+                var fieldsMetadata = await octaneService.GetFieldsMetadata(entityType);
                 fields = fieldsMetadata.Where(fm => fm.VisibleInUI).ToList();
 
                 Cache.Add(entity, fields);

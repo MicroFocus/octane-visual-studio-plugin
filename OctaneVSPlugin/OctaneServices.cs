@@ -85,6 +85,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public static void Reset()
         {
+            instance.rest.DisconnectAsync();          
             instance = null;
         }
 
