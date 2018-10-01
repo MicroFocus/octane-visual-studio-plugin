@@ -39,6 +39,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private List<BaseEntity> _referenceFieldContent;
         private List<string> _referenceFieldContentName = new List<string>();
         private Dispatcher uiDispatcher;
+        private EntityReference _fieldEntity;
+        private string logicalName;
 
         public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected) : base(entity)
         {
@@ -50,25 +52,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             uiDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
         }
 
-        public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected) : base(entity)
+        public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected) : this(entity, metadata.Name, metadata.Label, isSelected)
         {
-            _parentEntity = entity;
             Metadata = metadata;
 
-            Name = metadata.Name;
-            Label = metadata.Label;
-            IsSelected = isSelected;
-            uiDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
+            if (this.Metadata.FieldType == "reference")
+            {
+                List<String> targetAndLogicalName = getTargetAndLogicalName();
+                _fieldEntity = getEntityType(targetAndLogicalName[0]);
+                logicalName = targetAndLogicalName[1];
+            }
         }
 
-        public FieldViewModel(BaseEntity entity, FieldInfo fieldInfo) : base(entity)
+        public FieldViewModel(BaseEntity entity, FieldInfo fieldInfo) : this(entity, fieldInfo.Name, fieldInfo.Title, false)
         {
-            _parentEntity = entity;
-            Name = fieldInfo.Name;
-            Label = fieldInfo.Title;
             _emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             _customContentFunc = fieldInfo.ContentFunc;
-            uiDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
         }
 
         public FieldMetadata Metadata { get; }
@@ -97,9 +96,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (_referenceFieldContent == null)
                 {
                     _octaneService = OctaneServices.GetInstance();
-                    List<String> targetAndLogicalName = getTargetAndLogicalName();
-                    EntityReference _fieldEntity = getEntityType(targetAndLogicalName[0]);
-                    string logicalName = targetAndLogicalName[1];
 
                     System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task( async () =>
                     {
@@ -119,15 +115,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             {
                                 _referenceFieldContent = entities.data;
                             }
+
                             if (_referenceFieldContent != null)
+                            {
                                 foreach (BaseEntity be in _referenceFieldContent)
                                 {
                                     _referenceFieldContentName.Add(be.Name);
                                 }
+                            }
 
                             uiDispatcher.Invoke(() =>
                             {
                                 NotifyPropertyChanged("ReferenceFieldContent");
+                                NotifyPropertyChanged("Content");
                             });
                         } catch (Exception)
                         {
@@ -196,6 +196,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             return result;
 
         }
+
         public bool FieldNotCompatible { get; set; }
 
         private EntityReference getEntityType(string type)
