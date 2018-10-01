@@ -97,15 +97,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (_referenceFieldContent == null)
                 {
                     _octaneService = OctaneServices.GetInstance();
-                    _octaneService.Connect();
                     List<String> targetAndLogicalName = getTargetAndLogicalName();
                     EntityReference _fieldEntity = getEntityType(targetAndLogicalName[0]);
                     string logicalName = targetAndLogicalName[1];
 
-                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(() =>
+                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task( async () =>
                     {
                         try
                         {
+                            await _octaneService.Connect();
                             EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
                             if (_fieldEntity.ApiEntityName == "sprints")
                             {
@@ -129,9 +129,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             {
                                 NotifyPropertyChanged("ReferenceFieldContent");
                             });
-                        } catch (Exception e)
+                        } catch (Exception)
                         {
-                            throw new Exception("No entities found");
                         }
                     });
                     taskRetrieveData.Start();

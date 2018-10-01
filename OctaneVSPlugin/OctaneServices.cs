@@ -330,6 +330,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result?.data;
         }
 
+        /// <summary>
+        /// Returns all reference fields values for a given entity tpye 
+        /// </summary>
         public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType)
         {
             return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, 100).Result;
