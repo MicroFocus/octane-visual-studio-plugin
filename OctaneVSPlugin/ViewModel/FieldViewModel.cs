@@ -237,7 +237,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     case null:
                         return _emptyPlaceholder;
                     case BaseEntity entity:
-                        return entity.Name;
+                        return new BaseEntityWrapper(entity);
                     case EntityList<BaseEntity> entityList:
                         return FormatEntityList(entityList);
                     default:
@@ -300,7 +300,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 return _emptyPlaceholder;
             }
-
+            
             string[] entityNames = value.data.Select(x => x.Name).ToArray();
             return string.Join(", ", entityNames);
         }
@@ -318,6 +318,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public override string ToString()
         {
             return BaseEntity.Name;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if(obj is BaseEntityWrapper)
+            {
+                return this.BaseEntity.Name.Equals(((BaseEntityWrapper)obj).BaseEntity.Name);
+            } 
+            else
+            {
+                return false;
+            }
+            
         }
     }
 }
