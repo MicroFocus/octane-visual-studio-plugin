@@ -37,9 +37,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private OctaneServices _octaneService;
         private List<BaseEntity> _referenceFieldContent;
-        private List<string> _referenceFieldContentName = new List<string>();
+        private List<BaseEntityWrapper> _referenceFieldContentName = new List<BaseEntityWrapper>();
         private Dispatcher uiDispatcher;
-        private EntityReference _fieldEntity;
+        private string _fieldEntity;
         private string logicalName;
 
         public List<BaseEntity> ReferenceFieldContentBaseEntity
@@ -57,7 +57,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Name = fieldName;
             Label = fieldValue;
             IsSelected = isSelected;
-            uiDispatcher = System.Windows.Threading.Dispatcher.CurrentDispatcher;
+            uiDispatcher = Dispatcher.CurrentDispatcher;
         }
 
         public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected) : this(entity, metadata.Name, metadata.Label, isSelected)
@@ -67,7 +67,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             if (this.Metadata.FieldType == "reference")
             {
                 List<String> targetAndLogicalName = getTargetAndLogicalName();
-                _fieldEntity = getEntityType(targetAndLogicalName[0]);
+                try
+                {
+                    _fieldEntity = ReferenceEntityUtil.getApiEntityName(targetAndLogicalName[0]);
+                } catch (Exception)
+                {
+                    FieldNotCompatible = true;
+                    _fieldEntity = null;
+                }
+                
                 logicalName = targetAndLogicalName[1];
             }
         }
@@ -97,7 +105,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             return myList;
         }
 
-        public List<String> ReferenceFieldContent
+        public List<BaseEntityWrapper> ReferenceFieldContent
         {
             get
             {
@@ -110,12 +118,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         try
                         {
                             await _octaneService.Connect();
-                            EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity.ApiEntityName);
-                            if (_fieldEntity.ApiEntityName == "sprints")
+                            EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                            if (_fieldEntity.Equals("sprints"))
                             {
                                 _referenceFieldContent = getSprintFields(entities.data);
                             }
-                            else if (_fieldEntity.ApiEntityName.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
+                            else if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
                             {
                                 _referenceFieldContent = getListNodes(entities.data, logicalName);
                             }
@@ -128,7 +136,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             {
                                 foreach (BaseEntity be in _referenceFieldContent)
                                 {
-                                    _referenceFieldContentName.Add(be.Name);
+                                    _referenceFieldContentName.Add(new BaseEntityWrapper(be));
                                 }
                             }
 
@@ -205,23 +213,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         }
 
-        public bool FieldNotCompatible { get; set; }
-
-        private EntityReference getEntityType(string type)
-        {
-            try
-            {
-                EntityReference entityReference = EntityReference.createEntityReferenceWithType(type);
-                FieldNotCompatible = false;
-                return entityReference;
-
-            }
-            catch (Exception e)
-            {
-                FieldNotCompatible = true;
-            }
-            return null;
-        }
+        public bool FieldNotCompatible { get; set; }       
 
         public bool IsMultiple {get; set;}
 
@@ -293,14 +285,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
                     case "reference":
-                        foreach (BaseEntity be in _referenceFieldContent)
-                        {
-                            if (string.Equals(be.Name, value))
-                            {
-                                _parentEntity.SetValue(Name, be);
-                                IsChanged = true;
-                            }
-                        }
+                        _parentEntity.SetValue(Name, ((BaseEntityWrapper) value).BaseEntity);
+                        IsChanged = true;
                         break;
                 }
             }
@@ -317,6 +303,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             string[] entityNames = value.data.Select(x => x.Name).ToArray();
             return string.Join(", ", entityNames);
+        }
+    }
+
+    public class BaseEntityWrapper
+    {
+        public BaseEntity BaseEntity { get; }
+
+        public BaseEntityWrapper(BaseEntity entity)
+        {
+            BaseEntity = entity;
+        }
+
+        public override string ToString()
+        {
+            return BaseEntity.Name;
         }
     }
 }
