@@ -42,6 +42,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private EntityReference _fieldEntity;
         private string logicalName;
 
+        public List<BaseEntity> ReferenceFieldContentBaseEntity
+        {
+            get
+            {
+                return _referenceFieldContent;
+            }
+        }
+
         public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected) : base(entity)
         {
 
@@ -283,6 +291,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             _parentEntity.SetDateTimeValue(Name, DateTime.UtcNow);
                         }
                         IsChanged = true;
+                        break;
+                    case "reference":
+                        foreach (BaseEntity be in _referenceFieldContent)
+                        {
+                            if (string.Equals(be.Name, value))
+                            {
+                                _parentEntity.SetValue(Name, be);
+                                IsChanged = true;
+                            }
+                        }
                         break;
                 }
             }

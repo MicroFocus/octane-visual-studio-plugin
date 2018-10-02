@@ -452,7 +452,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 foreach (var field in _allEntityFields.Where(f => f.IsChanged))
                 {
-                    entityToUpdate.SetValue(field.Name, field.Content);
+                    if (!field.Metadata.FieldType.Equals("reference"))
+                    {
+                        entityToUpdate.SetValue(field.Name, field.Content);
+                    } else
+                    {
+                        foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
+                        {
+                            if (field.Content.Equals(be.Name))
+                            {
+                                entityToUpdate.SetValue(field.Name, be);
+                            }
+                        }
+                    }
                 }
 
                 entityToUpdate.Name = Entity.Name;
