@@ -459,7 +459,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     {
                         foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
                         {
-                            if (field.Content.Equals(be.Name))
+                            if (field.Content.Equals(new BaseEntityWrapper(be)))
                             {
                                 entityToUpdate.SetValue(field.Name, be);
                             }
