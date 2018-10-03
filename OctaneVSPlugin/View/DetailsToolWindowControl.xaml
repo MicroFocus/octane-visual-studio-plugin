@@ -233,7 +233,13 @@
                               Foreground="{DynamicResource VsBrush.WindowText}"
                               ItemsSource="{Binding ReferenceFieldContent}" 
                               SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                              IsSynchronizedWithCurrentItem="True">
+                              IsSynchronizedWithCurrentItem="True"
+                              ScrollViewer.CanContentScroll="False">
+                        <ComboBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel RequestBringIntoView="OnRequestBringIntoView"/>
+                            </ItemsPanelTemplate>
+                        </ComboBox.ItemsPanel>
                     </ComboBox>
                 </Grid>
             </DataTemplate>

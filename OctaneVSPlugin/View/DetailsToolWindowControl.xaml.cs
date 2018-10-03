@@ -107,5 +107,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             this.Resources["DateButtonVisibility"] = Visibility.Hidden;
             this.Resources["DatePickerVisibility"] = Visibility.Visible;
         }
+
+        private void OnRequestBringIntoView(object sender, RequestBringIntoViewEventArgs e)
+        {
+            //Allows the keyboard to bring the items into view as expected:
+            if (Keyboard.IsKeyDown(Key.Down) || Keyboard.IsKeyDown(Key.Up))
+                return;
+            e.Handled = true;
+        }
     }
 }
