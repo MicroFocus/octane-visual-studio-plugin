@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
 using NSoup.Nodes;
 using System;
 using System.Collections.Generic;
@@ -444,8 +445,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             try
             {
-                Mode = WindowMode.Loading;
-                NotifyPropertyChanged("Mode");
+                //Mode = WindowMode.Loading;
+                //NotifyPropertyChanged("Mode");
 
                 var entityToUpdate = new BaseEntity(Entity.Id);
                 entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
@@ -480,8 +481,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             catch (Exception ex)
             {
-                Mode = WindowMode.FailedToLoad;
-                ErrorMessage = ex.Message;
+                //Mode = WindowMode.FailedToLoad;
+                //ErrorMessage = ex.Message;
+                BusinessErrorDialog bed = new BusinessErrorDialog(this, ex);
+                bed.ShowDialog();
+               
             }
             NotifyPropertyChanged();
         }
