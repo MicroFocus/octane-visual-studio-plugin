@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Connector.Exceptions;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
@@ -481,11 +482,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             catch (Exception ex)
             {
-                //Mode = WindowMode.FailedToLoad;
-                //ErrorMessage = ex.Message;
-                BusinessErrorDialog bed = new BusinessErrorDialog(this, ex);
+                BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
                 bed.ShowDialog();
-               
             }
             NotifyPropertyChanged();
         }
