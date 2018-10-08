@@ -190,6 +190,7 @@
     <Resource Include="Resources\octane_preloader.gif" />
     <Resource Include="Resources\s-rocket.png" />
     <Resource Include="Resources\save.png" />
+    <Resource Include="Resources\octane_remove.png" />
     <Content Include="Resources\screen-shot-200x200.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>

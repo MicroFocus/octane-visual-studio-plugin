@@ -51,7 +51,7 @@
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
                         <TextBlock.Style>
@@ -64,26 +64,32 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Content, Mode=OneWay}"
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" IsReadOnly="True" Text="{Binding Content, Mode=OneWay}"
                              Background="{DynamicResource VsBrush.Window}"
                              Foreground="{DynamicResource VsBrush.WindowText}"
                              BorderThickness="0">
-                        <TextBox.Style>
-                            <Style TargetType="TextBox">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
-                                        <Setter Property="Template">
-                                            <Setter.Value>
-                                                <ControlTemplate TargetType="TextBox">
-                                                    <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
-                                                </ControlTemplate>
-                                            </Setter.Value>
-                                        </Setter>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </TextBox.Style>
-                    </TextBox>
+                            <TextBox.Style>
+                                <Style TargetType="TextBox">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
+                                            <Setter Property="Template">
+                                                <Setter.Value>
+                                                    <ControlTemplate TargetType="TextBox">
+                                                        <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
+                                                    </ControlTemplate>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBox.Style>
+                        </TextBox>
+                    </Grid>
                 </Grid>
             </DataTemplate>
 
@@ -91,7 +97,7 @@
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
                         <TextBlock.Style>
@@ -104,10 +110,17 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <TextBox Grid.Column="1"
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
                              Background="{DynamicResource VsBrush.Window}"
                              Foreground="{DynamicResource VsBrush.WindowText}"
                              Text="{Binding Content, Mode=TwoWay}"/>
+                    </Grid>
+
                 </Grid>
             </DataTemplate>
 
@@ -115,7 +128,7 @@
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
                         <TextBlock.Style>
@@ -128,16 +141,22 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <wpfx:DateTimePicker 
-                        ShowButtonSpinner="False" AllowSpin="False"
-                        AutoCloseCalendar="True"
-                        Kind="Local"
-                        Grid.Column="1"
-                        TextAlignment="Justify"
-                        Background="{DynamicResource VsBrush.Window}"
-                        Foreground="{DynamicResource VsBrush.WindowText}"
-                        Value="{Binding Content, Mode=TwoWay}">
-                    </wpfx:DateTimePicker>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <wpfx:DateTimePicker 
+                            Grid.Column="0"
+                            ShowButtonSpinner="False" AllowSpin="False"
+                            AutoCloseCalendar="True"
+                            Kind="Local"
+                            TextAlignment="Justify"
+                            Background="{DynamicResource VsBrush.Window}"
+                            Foreground="{DynamicResource VsBrush.WindowText}"
+                            Value="{Binding Content, Mode=TwoWay}">
+                        </wpfx:DateTimePicker>
+                    </Grid>
                 </Grid>
             </DataTemplate>
 
@@ -145,7 +164,7 @@
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
                         <TextBlock.Style>
@@ -158,7 +177,12 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <Button Grid.Column="1"
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
                             Background="{DynamicResource VsBrush.Window}"
                             Foreground="{DynamicResource VsBrush.WindowText}"
                             Visibility="{DynamicResource DateButtonVisibility}"
@@ -168,17 +192,18 @@
                             ToolTip="Set the date and time to this field"
                             Content="Set date"/>
 
-                    <wpfx:DateTimePicker 
-                        ShowButtonSpinner="False" AllowSpin="False"
-                        AutoCloseCalendar="True"
-                        Visibility="{DynamicResource DatePickerVisibility}"
-                        Kind="Local"
-                        Grid.Column="1"
-                        TextAlignment="Justify"
-                        Background="{DynamicResource VsBrush.Window}"
-                        Foreground="{DynamicResource VsBrush.WindowText}"
-                        Value="{Binding Content, Mode=TwoWay}">
-                    </wpfx:DateTimePicker>
+                        <wpfx:DateTimePicker 
+                            Grid.Column="0"
+                            ShowButtonSpinner="False" AllowSpin="False"
+                            AutoCloseCalendar="True"
+                            Visibility="{DynamicResource DatePickerVisibility}"
+                            Kind="Local"
+                            TextAlignment="Justify"
+                            Background="{DynamicResource VsBrush.Window}"
+                            Foreground="{DynamicResource VsBrush.WindowText}"
+                            Value="{Binding Content, Mode=TwoWay}">
+                        </wpfx:DateTimePicker>
+                    </Grid>
                 </Grid>
             </DataTemplate>
 
@@ -186,7 +211,7 @@
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
                         <TextBlock.Style>
@@ -199,15 +224,21 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <ComboBox Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Style="{DynamicResource ComboBoxStyle1}"
                                   Background="{DynamicResource VsBrush.Window}"
                                   Foreground="{DynamicResource VsBrush.WindowText}"
                                   SelectedIndex="{Binding Content, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}">
-                        <ComboBox.Items>
-                            <system:Boolean>True</system:Boolean>
-                            <system:Boolean>False</system:Boolean>
-                        </ComboBox.Items>
-                    </ComboBox>
+                            <ComboBox.Items>
+                                <system:Boolean>True</system:Boolean>
+                                <system:Boolean>False</system:Boolean>
+                            </ComboBox.Items>
+                        </ComboBox>
+                    </Grid>
                 </Grid>
             </DataTemplate>
 
@@ -215,7 +246,7 @@
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
                         <TextBlock.Style>
@@ -228,18 +259,32 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <ComboBox Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox Grid.Column="0" Style="{DynamicResource ComboBoxStyle1}"
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
                               ItemsSource="{Binding ReferenceFieldContent}" 
                               SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
                               ScrollViewer.CanContentScroll="False">
-                        <ComboBox.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <StackPanel RequestBringIntoView="OnRequestBringIntoView"/>
-                            </ItemsPanelTemplate>
-                        </ComboBox.ItemsPanel>
-                    </ComboBox>
+                            <ComboBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel RequestBringIntoView="OnRequestBringIntoView"/>
+                                </ItemsPanelTemplate>
+                            </ComboBox.ItemsPanel>
+                        </ComboBox>
+                        <Button Grid.Column="1" 
+                              Background="{DynamicResource VsBrush.Window}"
+                              Foreground="{DynamicResource VsBrush.WindowText}"
+                              BorderThickness="0"
+                              Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                            <Image Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane_remove.png"/>
+                        </Button>
+                    </Grid>
+
                 </Grid>
             </DataTemplate>
 
@@ -247,7 +292,7 @@
                 <Grid Margin="0 3 5 3">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="4*"/>
+                        <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
                         <TextBlock.Style>
@@ -260,12 +305,25 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <wpfx:CheckComboBox Grid.Column="1"
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <wpfx:CheckComboBox Grid.Column="0"
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
                               ItemsSource="{Binding ReferenceFieldContent}" 
                               SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                    </wpfx:CheckComboBox>
+                        </wpfx:CheckComboBox>
+                        <Button Grid.Column="1" 
+                              Background="{DynamicResource VsBrush.Window}"
+                              Foreground="{DynamicResource VsBrush.WindowText}"
+                              BorderThickness="0"
+                              Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                            <Image Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane_remove.png"/>
+                        </Button>
+                    </Grid>
                 </Grid>
             </DataTemplate>
 
