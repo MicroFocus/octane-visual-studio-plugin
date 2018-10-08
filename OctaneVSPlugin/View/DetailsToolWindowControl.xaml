@@ -233,7 +233,6 @@
                               Foreground="{DynamicResource VsBrush.WindowText}"
                               ItemsSource="{Binding ReferenceFieldContent}" 
                               SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                              IsSynchronizedWithCurrentItem="True"
                               ScrollViewer.CanContentScroll="False">
                         <ComboBox.ItemsPanel>
                             <ItemsPanelTemplate>
@@ -261,18 +260,12 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <ComboBox Grid.Column="1" Style="{DynamicResource ComboBoxStyle1}"
+                    <wpfx:CheckComboBox Grid.Column="1"
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
-                              ItemsSource="{Binding ReferenceFieldContent}" SelectedValue="{Binding Content}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <CheckBox IsChecked="True" Width="20"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                              ItemsSource="{Binding ReferenceFieldContent}" 
+                              SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                    </wpfx:CheckComboBox>
                 </Grid>
             </DataTemplate>
 

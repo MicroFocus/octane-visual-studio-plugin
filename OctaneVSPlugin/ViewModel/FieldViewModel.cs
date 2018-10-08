@@ -70,12 +70,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 try
                 {
                     _fieldEntity = ReferenceEntityUtil.getApiEntityName(targetAndLogicalName[0]);
-                } catch (Exception)
+                }
+                catch (Exception)
                 {
                     FieldNotCompatible = true;
                     _fieldEntity = null;
                 }
-                
+
                 logicalName = targetAndLogicalName[1];
             }
         }
@@ -113,42 +114,43 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     _octaneService = OctaneServices.GetInstance();
 
-                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task( async () =>
-                    {
-                        try
-                        {
-                            await _octaneService.Connect();
-                            EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
-                            if (_fieldEntity.Equals("sprints"))
-                            {
-                                _referenceFieldContent = getSprintFields(entities.data);
-                            }
-                            else if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
-                            {
-                                _referenceFieldContent = getListNodes(entities.data, logicalName);
-                            }
-                            else
-                            {
-                                _referenceFieldContent = entities.data;
-                            }
+                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
+                   {
+                       try
+                       {
+                           await _octaneService.Connect();
+                           EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                           if (_fieldEntity.Equals("sprints"))
+                           {
+                               _referenceFieldContent = getSprintFields(entities.data);
+                           }
+                           else if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
+                           {
+                               _referenceFieldContent = getListNodes(entities.data, logicalName);
+                           }
+                           else
+                           {
+                               _referenceFieldContent = entities.data;
+                           }
 
-                            if (_referenceFieldContent != null)
-                            {
-                                foreach (BaseEntity be in _referenceFieldContent)
-                                {
-                                    _referenceFieldContentName.Add(new BaseEntityWrapper(be));
-                                }
-                            }
+                           if (_referenceFieldContent != null)
+                           {
+                               foreach (BaseEntity be in _referenceFieldContent)
+                               {
+                                   _referenceFieldContentName.Add(new BaseEntityWrapper(be));
+                               }
+                           }
 
-                            uiDispatcher.Invoke(() =>
-                            {
-                                NotifyPropertyChanged("ReferenceFieldContent");
-                                NotifyPropertyChanged("Content");
-                            });
-                        } catch (Exception)
-                        {
-                        }
-                    });
+                           uiDispatcher.Invoke(() =>
+                           {
+                               NotifyPropertyChanged("ReferenceFieldContent");
+                               NotifyPropertyChanged("Content");
+                           });
+                       }
+                       catch (Exception)
+                       {
+                       }
+                   });
                     taskRetrieveData.Start();
                 }
                 return _referenceFieldContentName;
@@ -178,7 +180,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             foreach (BaseEntity be in data)
             {
                 BaseEntity sprintRelease = (BaseEntity)be.GetValue("release");
-                if ( parentsRelease != null && sprintRelease.Name.Equals(parentsRelease.Name))
+                if (parentsRelease != null && sprintRelease.Name.Equals(parentsRelease.Name))
                 {
                     referenceFieldContent.Add(be);
                 }
@@ -213,9 +215,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         }
 
-        public bool FieldNotCompatible { get; set; }       
+        public bool FieldNotCompatible { get; set; }
 
-        public bool IsMultiple {get; set;}
+        public bool IsMultiple { get; set; }
 
         public bool IsMoreThanOneTarget { get; set; }
 
@@ -285,9 +287,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
                     case "reference":
-                        _parentEntity.SetValue(Name, ((BaseEntityWrapper) value).BaseEntity);
+                        _parentEntity.SetValue(Name, ((BaseEntityWrapper)value).BaseEntity);
                         IsChanged = true;
                         break;
+
                 }
             }
         }
@@ -300,9 +303,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 return _emptyPlaceholder;
             }
-            
+
             string[] entityNames = value.data.Select(x => x.Name).ToArray();
-            return string.Join(", ", entityNames);
+            return string.Join(",", entityNames);
         }
     }
 
@@ -310,9 +313,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         public BaseEntity BaseEntity { get; }
 
+        public EntityList<BaseEntity> BaseEntityList { get; }
+
         public BaseEntityWrapper(BaseEntity entity)
         {
             BaseEntity = entity;
+        }
+
+        public BaseEntityWrapper(EntityList<BaseEntity> entityList)
+        {
+            BaseEntityList = entityList;
         }
 
         public override string ToString()
@@ -322,15 +332,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public override bool Equals(object obj)
         {
-            if(obj is BaseEntityWrapper)
+            if (obj is BaseEntityWrapper)
             {
                 return this.BaseEntity.Name.Equals(((BaseEntityWrapper)obj).BaseEntity.Name);
-            } 
+            }
             else
             {
                 return false;
             }
-            
+
         }
     }
 }
