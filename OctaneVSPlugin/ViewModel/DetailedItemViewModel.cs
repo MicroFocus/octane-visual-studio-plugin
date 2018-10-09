@@ -110,7 +110,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 await _octaneService.Connect();
 
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
-                Entity = await _octaneService.FindEntityAsync(Entity, fields.Select(fm => fm.Name).ToList());
+                List<string> fieldNames = fields.Select(fm => fm.Name).ToList();
+
+                // add client lock stamp to the fields that we want to retrieve
+                fieldNames.Add("client_lock_stamp");
+
+                Entity = await _octaneService.FindEntityAsync(Entity, fieldNames);
 
                 await HandleImagesInDescription();
 
@@ -446,11 +451,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             try
             {
-                //Mode = WindowMode.Loading;
-                //NotifyPropertyChanged("Mode");
-
+                
                 var entityToUpdate = new BaseEntity(Entity.Id);
                 entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
+
+                // add the client lock stamp if it exists
+                if(Entity.GetLongValue(lockStamp) != null)
+                {
+                    entityToUpdate.SetLongValue(lockStamp, (long)Entity.GetLongValue(lockStamp));
+                }
 
                 foreach (var field in _allEntityFields.Where(f => f.IsChanged))
                 {
