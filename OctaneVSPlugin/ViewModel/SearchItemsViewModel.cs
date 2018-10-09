@@ -52,12 +52,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             Mode = WindowMode.Loading;
 
-            _octaneService = new OctaneServices(
-                OctaneConfiguration.Url,
-                OctaneConfiguration.SharedSpaceId,
-                OctaneConfiguration.WorkSpaceId,
-                OctaneConfiguration.Username,
-                OctaneConfiguration.Password);
+            _octaneService = OctaneServices.GetInstance();
+           
         }
 
         /// <summary>

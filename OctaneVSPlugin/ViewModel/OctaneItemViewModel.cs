@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -148,14 +149,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             if (!EntityTypeInformation.IsCopyCommitMessageSupported)
                 return;
 
-            var octane = new OctaneServices(OctaneConfiguration.Url,
-                OctaneConfiguration.SharedSpaceId,
-                OctaneConfiguration.WorkSpaceId,
-                OctaneConfiguration.Username,
-                OctaneConfiguration.Password);
-            await octane.Connect();
+            OctaneServices octaneService;
 
-            var commitPatterns = await octane.ValidateCommitMessageAsync(CommitMessage);
+            octaneService = OctaneServices.GetInstance();
+           
+            var commitPatterns = await octaneService.ValidateCommitMessageAsync(CommitMessage);
 
             var type = Utility.GetConcreteEntityType(Entity);
             var expectedId = Entity.Id;
