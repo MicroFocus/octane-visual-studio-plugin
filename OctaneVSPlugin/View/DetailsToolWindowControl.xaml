@@ -280,7 +280,8 @@
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
                               BorderThickness="0"
-                              Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                              Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                              Command="{Binding MakeValueNull}">
                             <Image Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane_remove.png"/>
                         </Button>
                     </Grid>
@@ -321,6 +322,7 @@
                               Foreground="{DynamicResource VsBrush.WindowText}"
                               BorderThickness="0"
                               Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                            
                             <Image Stretch="None" Source="/octane-visual-studio-plugin;component/Resources/octane_remove.png"/>
                         </Button>
                     </Grid>

@@ -92,7 +92,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             EntitySupportsComments = EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity));
 
             _octaneService = OctaneServices.GetInstance();
-            
+
             Id = (long)entity.Id;
             EntityType = Utility.GetConcreteEntityType(Entity);
             FieldsCache.Instance.Attach(this);
@@ -455,14 +455,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     if (!field.Metadata.FieldType.Equals("reference"))
                     {
                         entityToUpdate.SetValue(field.Name, field.Content);
-                    } else
+                    }
+                    else
                     {
-                        foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
+                        if (field.Content == null || field.Content.Equals(""))
                         {
-                            if (field.Content.Equals(new BaseEntityWrapper(be)))
+                            entityToUpdate.SetValue(field.Name, null);
+                        }
+                        else
+                        {
+                            foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
                             {
-                                entityToUpdate.SetValue(field.Name, be);
+                                if (field.Content.Equals(new BaseEntityWrapper(be)))
+                                {
+                                    entityToUpdate.SetValue(field.Name, be);
+                                }
                             }
+
                         }
                     }
                 }

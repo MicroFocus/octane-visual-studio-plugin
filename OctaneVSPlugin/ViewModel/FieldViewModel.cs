@@ -22,6 +22,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows.Input;
 using System.Windows.Threading;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -58,12 +59,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Label = fieldValue;
             IsSelected = isSelected;
             uiDispatcher = Dispatcher.CurrentDispatcher;
+            MakeValueNull = new DelegatedCommand(SetMakeValueNull);
+
         }
 
         public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected) : this(entity, metadata.Name, metadata.Label, isSelected)
         {
             Metadata = metadata;
-
             if (this.Metadata.FieldType == "reference")
             {
                 List<String> targetAndLogicalName = getTargetAndLogicalName();
@@ -291,6 +293,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
 
+                }
+            }
+        }
+
+        public ICommand MakeValueNull { get; }
+        
+        private void SetMakeValueNull(object param)
+        {
+            if (Metadata.FieldType.Equals("reference"))
+            {
+                if (IsMultiple)
+                {
+                    _parentEntity.SetValue(Name, null);
+                    IsChanged = true;
+                    NotifyPropertyChanged();
+                } else
+                {
+                    _parentEntity.SetValue(Name, null);
+                    IsChanged = true;
+                    NotifyPropertyChanged();
                 }
             }
         }
