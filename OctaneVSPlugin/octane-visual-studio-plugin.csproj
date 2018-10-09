@@ -107,7 +107,6 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
     <Compile Include="View\BoolToIndexConverter.cs" />
-    <Compile Include="View\BusinessErrorDialog.cs" />
     <Compile Include="View\BusinessErrorDialog.xaml.cs">
       <DependentUpon>BusinessErrorDialog.xaml</DependentUpon>
     </Compile>
