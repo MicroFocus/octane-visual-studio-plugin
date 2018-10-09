@@ -303,13 +303,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             if (Metadata.FieldType.Equals("reference"))
             {
-                if (IsMultiple)
+                if (!IsMultiple)
                 {
                     _parentEntity.SetValue(Name, null);
                     IsChanged = true;
                     NotifyPropertyChanged();
                 } else
                 {
+                    //Because of how the multiple list will be implemented, this might work or not - currently is not working
+                    //Check with both setValue for Name (maybe with simple null will work, instead of appending an emptyList)
+                    //IList<BaseEntity> emptyList = new BaseEntity[0];
+                    //_parentEntity.SetValue(Name, emptyList)
                     _parentEntity.SetValue(Name, null);
                     IsChanged = true;
                     NotifyPropertyChanged();
