@@ -50,7 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             RefreshCommand = new DelegatedCommand(Refresh);
 
             Mode = WindowMode.Loading;
-           
+
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 OctaneServices octaneService = OctaneServices.GetInstance();
-                
+
                 var results = await octaneService.SearchEntities(_searchFilter, 20);
                 foreach (var entity in results)
                 {

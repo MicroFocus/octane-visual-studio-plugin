@@ -102,7 +102,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             try
             {
                 OctaneServices octaneService = OctaneServices.GetInstance();
-                
+
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
                 Entity = await octaneService.FindEntityAsync(Entity, fields.Select(fm => fm.Name).ToList());
 
@@ -464,7 +464,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     if (nextPhase != null)
                         entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
                 }
-                
+
                 await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
                 await InitializeAsync();
             }

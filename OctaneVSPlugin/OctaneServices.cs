@@ -71,7 +71,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 throw new Exception("Object not created");
             }
-            return instance;   
+            return instance;
         }
 
         public static void Create(string url, long sharedspaceId, long workspaceId, string user, string password)
@@ -85,7 +85,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public static void Reset()
         {
-            instance.rest.DisconnectAsync();          
+            instance.rest.DisconnectAsync();
             instance = null;
         }
 

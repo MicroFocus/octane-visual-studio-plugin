@@ -56,7 +56,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 return new List<FieldMetadata>();
 
             OctaneServices octaneService = OctaneServices.GetInstance();
-           
+
             List<FieldMetadata> fields = Cache.GetFieldMetadataList(entity);
             if (fields == null)
             {

@@ -150,7 +150,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 return;
 
             OctaneServices octaneService = OctaneServices.GetInstance();
-           
+
             var commitPatterns = await octaneService.ValidateCommitMessageAsync(CommitMessage);
 
             var type = Utility.GetConcreteEntityType(Entity);
