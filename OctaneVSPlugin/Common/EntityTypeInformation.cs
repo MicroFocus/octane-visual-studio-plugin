@@ -36,7 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// <summary>
         /// Type display name
         /// </summary>
-        public string DisplayName { get; set; }
+        public string DisplayName { get; }
 
         /// <summary>
         /// Commit header associated with current entity type
@@ -46,7 +46,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         /// <summary>
         /// Type abreviation
         /// </summary>
-        public string ShortLabel { get; set; }
+        public string ShortLabel { get; }
 
         /// <summary>
         /// Type color
