@@ -97,8 +97,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             EntitySupportsComments = EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity));
 
-            _octaneService = OctaneServices.GetInstance();
-            
             Id = (long)entity.Id;
             EntityType = Utility.GetConcreteEntityType(Entity);
             FieldsCache.Instance.Attach(this);
@@ -111,7 +109,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             try
             {
-                await _octaneService.Connect();
+                OctaneServices octaneService = OctaneServices.GetInstance();
 
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
                 List<string> fieldNames = fields.Select(fm => fm.Name).ToList();
@@ -120,7 +118,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     octaneVersion = await _octaneService.GetOctaneVersion();
                 }
-                
+
                 // client lock stamp was introduced in octane 12.55.8
                 if(octaneVersion.CompareTo(OctaneVersion.FENER_P3) > 0)
                 {
@@ -149,7 +147,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (EntitySupportsComments)
                     await RetrieveComments();
 
-                var transitions = await _octaneService.GetTransitionsForEntityType(EntityType);
+                var transitions = await octaneService.GetTransitionsForEntityType(EntityType);
                 if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite")
                 {
 
@@ -210,8 +208,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     var imagePath = TempPath + EntityType + Entity.Id + imageName;
                     if (!File.Exists(imagePath))
                     {
+                        OctaneServices octaneService = OctaneServices.GetInstance();
+
                         imageNodes.Add(new Tuple<Element, string>(image, imagePath));
-                        downloadTasks.Add(_octaneService.DownloadAttachmentAsync(relativeUrl, imagePath));
+                        downloadTasks.Add(octaneService.DownloadAttachmentAsync(relativeUrl, imagePath));
                     }
                     else
                     {
@@ -353,7 +353,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             try
             {
                 var viewModels = new List<CommentViewModel>();
-                var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
+
+                OctaneServices octaneServices = OctaneServices.GetInstance();
+
+                var commentEntities = await octaneServices.GetAttachedCommentsToEntity(Entity);
                 foreach (var comment in commentEntities)
                 {
                     viewModels.Add(new CommentViewModel(comment));
@@ -465,7 +468,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             try
             {
-                
+
                 var entityToUpdate = new BaseEntity(Entity.Id);
                 entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
 
@@ -500,7 +503,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     if (nextPhase != null)
                         entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
                 }
-                await _octaneService.UpdateEntityAsync(entityToUpdate);
+
+                await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
                 await InitializeAsync();
             }
             catch (Exception ex)
@@ -602,7 +606,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             CommentText = "";
 
-            await _octaneService.CreateCommentAsync(commentToAdd);
+            await OctaneServices.GetInstance().CreateCommentAsync(commentToAdd);
             NotifyPropertyChanged();
         }
 

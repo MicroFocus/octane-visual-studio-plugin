@@ -58,6 +58,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (OctaneMyItemsViewModel.Instance != null)
             {
                 OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+                EntityTypeRegistry.Init();
             }
         }
 

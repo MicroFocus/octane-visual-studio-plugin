@@ -77,7 +77,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 throw new Exception("Object not created");
             }
-            return instance;   
+            return instance;
         }
 
         public static void Create(string url, long sharedspaceId, long workspaceId, string user, string password)
@@ -91,6 +91,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public static void Reset()
         {
+            instance.rest.DisconnectAsync();
             instance = null;
         }
 
@@ -307,6 +308,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         /// <summary>
+        /// Return the label metadata for the entities
+        /// </summary>
+        public async Task<List<EntityLabelMetadata>> GetEntityLabelMedata()
+        {
+            var result = await es.GetLabelMetadataAsync(workspaceContext);
+            return result?.data;
+        }
+
+
+        /// <summary>
         /// Async operation for downloading the attachment at the url and store it locally at the given location
         /// </summary>
         public async Task DownloadAttachmentAsync(string relativeUrl, string destinationPath)
@@ -332,7 +343,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         /// <summary>
-        /// Returns all reference fields values for a given entity tpye 
+        /// Returns all reference fields values for a given entity tpye
         /// </summary>
         public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType)
         {
@@ -340,7 +351,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         /// <summary>
-        /// Returns the version of octane 
+        /// Returns the version of octane
         /// </summary>
         public async Task<OctaneVersion> GetOctaneVersion()
         {

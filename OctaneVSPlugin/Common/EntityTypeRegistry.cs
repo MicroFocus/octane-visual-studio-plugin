@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System.Collections.Generic;
 using System.Windows.Media;
 
+
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
@@ -25,7 +26,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
     /// </summary>
     public static class EntityTypeRegistry
     {
-        private static readonly Dictionary<string, EntityTypeInformation> Registry = new Dictionary<string, EntityTypeInformation>
+
+        private static Dictionary<string, EntityTypeInformation> DefaultRegistry = new Dictionary<string, EntityTypeInformation>
         {
             { WorkItem.SUBTYPE_DEFECT, new EntityTypeInformation(
                 WorkItem.SUBTYPE_DEFECT, "Defect", "defect", "D", Color.FromRgb(178, 22, 70)) },
@@ -70,6 +72,90 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 "comment", "Comment", EntityTypeInformation.CommitMessageNotApplicable, "C", Color.FromRgb(253, 225, 89)) }
         };
 
+        private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;
+
+        static EntityTypeRegistry()
+        {
+            Init();
+        }
+
+        public static async System.Threading.Tasks.Task Init()
+        {
+            Dictionary<string, EntityLabelMetadata> em = await EntityLabelService.GetEntityLabelMetadataAsync();
+            if(em != null && em.Count > 0)
+            {
+                EntityLabelMetadata entityLabelMetadata;
+                EntityTypeInformation info;
+
+                em.TryGetValue(WorkItem.SUBTYPE_DEFECT, out entityLabelMetadata);              
+                Registry.TryGetValue(WorkItem.SUBTYPE_DEFECT, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue(WorkItem.SUBTYPE_STORY, out entityLabelMetadata);
+                Registry.TryGetValue(WorkItem.SUBTYPE_STORY, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+             
+                em.TryGetValue(WorkItem.SUBTYPE_QUALITY_STORY, out entityLabelMetadata);
+                Registry.TryGetValue(WorkItem.SUBTYPE_QUALITY_STORY, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+                
+                em.TryGetValue(WorkItem.SUBTYPE_EPIC, out entityLabelMetadata);
+                Registry.TryGetValue(WorkItem.SUBTYPE_EPIC, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                
+                em.TryGetValue(WorkItem.SUBTYPE_FEATURE, out entityLabelMetadata);
+                Registry.TryGetValue(WorkItem.SUBTYPE_FEATURE, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue("requirement_root", out entityLabelMetadata);
+                Registry.TryGetValue(Requirement.SUBTYPE_DOCUMENT, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+            }
+            else
+            {              
+                EntityTypeInformation oldInfo;
+                EntityTypeInformation newInfo;
+
+                DefaultRegistry.TryGetValue(WorkItem.SUBTYPE_DEFECT, out newInfo);
+                Registry.TryGetValue(WorkItem.SUBTYPE_DEFECT, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+                
+                DefaultRegistry.TryGetValue(WorkItem.SUBTYPE_STORY, out newInfo);
+                Registry.TryGetValue(WorkItem.SUBTYPE_STORY, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+                
+                DefaultRegistry.TryGetValue(WorkItem.SUBTYPE_QUALITY_STORY, out newInfo);
+                Registry.TryGetValue(WorkItem.SUBTYPE_QUALITY_STORY, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+                
+                DefaultRegistry.TryGetValue(WorkItem.SUBTYPE_EPIC, out newInfo);
+                Registry.TryGetValue(WorkItem.SUBTYPE_EPIC, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+                
+                DefaultRegistry.TryGetValue(WorkItem.SUBTYPE_FEATURE, out newInfo);
+                Registry.TryGetValue(WorkItem.SUBTYPE_FEATURE, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+                
+                DefaultRegistry.TryGetValue(Requirement.SUBTYPE_DOCUMENT, out newInfo);
+                Registry.TryGetValue(Requirement.SUBTYPE_DOCUMENT, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+            }
+        }
+
         /// <summary>
         /// Return the associated entity type information based on the given entity
         /// </summary>
@@ -80,7 +166,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             var entityType = Utility.GetConcreteEntityType(entity);
 
-            EntityTypeInformation info;
+            EntityTypeInformation info;           
             Registry.TryGetValue(entityType, out info);
             return info;
         }
