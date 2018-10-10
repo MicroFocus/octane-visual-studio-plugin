@@ -20,6 +20,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using MicroFocus.Adm.Octane.Api.Core.Services.Version;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
 using System;
@@ -338,6 +339,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, 100).Result;
         }
 
+        /// <summary>
+        /// Returns the version of octane 
+        /// </summary>
+        public async Task<OctaneVersion> GetOctaneVersion()
+        {
+            return await es.GetOctaneVersion();
+        }
     }
 
 }

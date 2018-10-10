@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Connector.Exceptions;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Services.Version;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using NSoup.Nodes;
@@ -38,6 +39,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         private readonly OctaneServices _octaneService;
 
+        private OctaneVersion octaneVersion;
+
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private readonly List<FieldViewModel> _allEntityFields;
 
@@ -51,6 +54,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
 
+        private string lockStamp = "client_lock_stamp";
         /// <summary>
         /// Lets you enable or disable the phase ComboBox
         /// </summary>
@@ -112,8 +116,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
                 List<string> fieldNames = fields.Select(fm => fm.Name).ToList();
 
-                // add client lock stamp to the fields that we want to retrieve
-                fieldNames.Add("client_lock_stamp");
+                if(octaneVersion == null)
+                {
+                    octaneVersion = await _octaneService.GetOctaneVersion();
+                }
+                
+                // client lock stamp was introduced in octane 12.55.8
+                if(octaneVersion.CompareTo(OctaneVersion.FENER_P3) > 0)
+                {
+                    // add client lock stamp to the fields that we want to retrieve
+                    fieldNames.Add(lockStamp);
+
+                }
 
                 Entity = await _octaneService.FindEntityAsync(Entity, fieldNames);
 
