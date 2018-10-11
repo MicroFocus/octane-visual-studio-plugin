@@ -49,9 +49,19 @@
                      IsReadOnly="True">
             </TextBox>
         </Grid>
-        <Button Content="Open in browser" Click="OpenInBrowser_Click"  Height="25" Width="100" HorizontalAlignment="Right" VerticalAlignment ="Bottom"  Margin="0,0,5,5"/>
-        <Button Content="Refresh" Click="DoRefresh_Click" Height="25" Width="75" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,110,5" />
-        <Button Content="Back" Click="Back_Click" Height="25" Width="75" HorizontalAlignment="Right" VerticalAlignment ="Bottom"  Margin="0,0,190,5" />
+        <Button Content="Open in browser" 
+                Command="{Binding OpenInBrowserCommand}" 
+                Click="Close"
+                Height="25" Width="100" 
+                HorizontalAlignment="Right" VerticalAlignment ="Bottom"  
+                Margin="0,0,5,5"/>
+        <Button Content="Refresh" 
+                Command="{Binding RefreshCommand}"
+                Click="Close"
+                Height="25" Width="75" 
+                HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                Margin="0,0,110,5" />
+        <Button Content="Back" Click="Close" Height="25" Width="75" HorizontalAlignment="Right" VerticalAlignment ="Bottom"  Margin="0,0,190,5" />
         
     </Grid>
 </ui1:DialogWindow>

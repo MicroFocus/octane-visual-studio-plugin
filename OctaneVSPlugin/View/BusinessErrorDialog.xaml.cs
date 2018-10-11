@@ -28,11 +28,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// </summary>
     public partial class BusinessErrorDialog : DialogWindow
     {
-        private DetailedItemViewModel viewModel;
 
         public BusinessErrorDialog(DetailedItemViewModel viewModel, MqmRestException ex) : base()
-        {
+        { 
             InitializeComponent();
+            this.DataContext = viewModel;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
             Owner = Application.Current.MainWindow;
 
@@ -41,22 +41,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             httpStatus.Content = ex.StatusCode;
             correlationId.Content = ex.CorrelationInfo;
             stackTrace.Text = ex.StackTrace;
-            this.viewModel = viewModel;
         }
 
-        public void DoRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            viewModel.RefreshCommand.Execute(sender);
-            this.Close();
-        }
-
-        public void OpenInBrowser_Click(object sender, RoutedEventArgs e)
-        {
-            viewModel.OpenInBrowserCommand.Execute(sender);
-            this.Close();
-        }
-
-        public void Back_Click(object sender, RoutedEventArgs e)
+        public void Close(object sender, RoutedEventArgs e)
         {
             this.Close();
         }
