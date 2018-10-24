@@ -107,8 +107,13 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
     <Compile Include="View\BoolToIndexConverter.cs" />
+
     <Compile Include="View\EntityComboBox.xaml.cs">
       <DependentUpon>EntityComboBox.xaml</DependentUpon>
+
+    <Compile Include="View\BusinessErrorDialog.xaml.cs">
+      <DependentUpon>BusinessErrorDialog.xaml</DependentUpon>
+
     </Compile>
     <Compile Include="View\FieldListDataTemplateSelector.cs" />
     <Compile Include="View\GifImage.cs" />
@@ -206,6 +211,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="MyItemControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\BusinessErrorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -393,7 +402,7 @@
     <Error Condition="!Exists('..\packages\Microsoft.VSSDK.BuildTools.15.1.192\build\Microsoft.VSSDK.BuildTools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.VSSDK.BuildTools.15.1.192\build\Microsoft.VSSDK.BuildTools.targets'))" />
   </Target>
   <Import Project="..\packages\Microsoft.VSSDK.BuildTools.15.1.192\build\Microsoft.VSSDK.BuildTools.targets" Condition="Exists('..\packages\Microsoft.VSSDK.BuildTools.15.1.192\build\Microsoft.VSSDK.BuildTools.targets')" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
