@@ -107,6 +107,9 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
     <Compile Include="View\BoolToIndexConverter.cs" />
+    <Compile Include="View\EntityComboBox.xaml.cs">
+      <DependentUpon>EntityComboBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\FieldListDataTemplateSelector.cs" />
     <Compile Include="View\GifImage.cs" />
     <Compile Include="Common\GreaterThanZeroConverter.cs" />
@@ -207,6 +210,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\DetailsToolWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EntityComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -20,6 +20,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -42,6 +43,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private Dispatcher uiDispatcher;
         private string _fieldEntity;
         private string logicalName;
+
+        public ObservableCollection<string> ObservableItems = new ObservableCollection<string>(new List<string>(new string[] { "element1", "element2", "element3" }));
+
+        public IEnumerable<string> Items
+        {
+            get
+            {
+                return ObservableItems;
+            }
+        }
 
         public List<BaseEntity> ReferenceFieldContentBaseEntity
         {
@@ -289,7 +300,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
                     case "reference":
-                        _parentEntity.SetValue(Name, ((BaseEntityWrapper)value).BaseEntity);
+                        //_parentEntity.SetValue(Name, ((BaseEntityWrapper)value).BaseEntity);
                         IsChanged = true;
                         break;
 
