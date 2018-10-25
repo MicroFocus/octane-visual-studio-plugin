@@ -43,6 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private Dispatcher uiDispatcher;
         private string _fieldEntity;
         private string logicalName;
+        private string _filter = string.Empty;
 
         public ObservableCollection<string> ObservableItems = new ObservableCollection<string>(new List<string>(new string[] { "element1", "element2", "element3" }));
 
@@ -122,51 +123,68 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public List<BaseEntityWrapper> ReferenceFieldContent
         {
             get
-            {
-                if (_referenceFieldContent == null)
+            {   
+                if (_referenceFieldContentName.Count() == 0)
                 {
-                    _octaneService = OctaneServices.GetInstance();
 
-                    System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
-                   {
-                       try
-                       {
-                           await _octaneService.Connect();
-                           EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
-                           if (_fieldEntity.Equals("sprints"))
-                           {
-                               _referenceFieldContent = getSprintFields(entities.data);
-                           }
-                           else if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
-                           {
-                               _referenceFieldContent = getListNodes(entities.data, logicalName);
-                           }
-                           else
-                           {
-                               _referenceFieldContent = entities.data;
-                           }
+                    if (Metadata.FieldType.Equals("boolean"))
+                    {
+                        BaseEntity falseBaseEntity = new BaseEntity();
+                        falseBaseEntity.Name = "false";
+                       
 
-                           if (_referenceFieldContent != null)
-                           {
-                               foreach (BaseEntity be in _referenceFieldContent)
-                               {
-                                   _referenceFieldContentName.Add(new BaseEntityWrapper(be));
-                               }
-                           }
+                        BaseEntity trueBaseEntity = new BaseEntity();
+                        trueBaseEntity.Name = "true";
 
-                           uiDispatcher.Invoke(() =>
-                           {
-                               NotifyPropertyChanged("ReferenceFieldContent");
-                               NotifyPropertyChanged("Content");
-                           });
-                       }
-                       catch (Exception)
-                       {
-                       }
-                   });
-                    taskRetrieveData.Start();
+                        _referenceFieldContentName.Add(new BaseEntityWrapper(falseBaseEntity));
+                        _referenceFieldContentName.Add(new BaseEntityWrapper(trueBaseEntity));
+                    }
+                    else
+                    {
+                        _octaneService = OctaneServices.GetInstance();
+
+                        System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
+                        {
+                            try
+                            {
+                                await _octaneService.Connect();
+                                EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                if (_fieldEntity.Equals("sprints"))
+                                {
+                                    _referenceFieldContent = getSprintFields(entities.data);
+                                }
+                                else if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
+                                {
+                                    _referenceFieldContent = getListNodes(entities.data, logicalName);
+                                }
+                                else
+                                {
+                                    _referenceFieldContent = entities.data;
+                                }
+
+                                if (_referenceFieldContent != null)
+                                {
+                                    foreach (BaseEntity be in _referenceFieldContent)
+                                    {
+                                        _referenceFieldContentName.Add(new BaseEntityWrapper(be));
+                                    }
+                                }
+                            }
+                            catch (Exception)
+                            {
+                            }
+
+                        });
+                        taskRetrieveData.Start();
+                    }
                 }
-                return _referenceFieldContentName;
+                if (_filter.Equals(""))
+                {
+                    return _referenceFieldContentName;
+                } else
+                {
+                    return _referenceFieldContentName.Where(f => f.BaseEntity.Name.ToLowerInvariant().Contains(_filter)).ToList();
+                }
             }
         }
 
@@ -344,7 +362,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             string[] entityNames = value.data.Select(x => x.Name).ToArray();
             return string.Join(",", entityNames);
         }
+
+
+        /// <summary>
+    /// Search filter applied on the entity fields
+    /// </summary>
+    public string Filter
+    {
+        get { return _filter; }
+        set
+        {
+            _filter = value?.ToLowerInvariant() ?? string.Empty;
+            NotifyPropertyChanged("ReferenceFieldContent");
+        }
     }
+    }
+
+    
 
     public class BaseEntityWrapper
     {
