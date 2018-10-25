@@ -276,6 +276,7 @@
                         </ComboBox>-->
                         <view:EntityComboBox Grid.Column="0"
                                              HasSearchBox="Collapsed"
+                                             MultiSelectVisibility="Collapsed"
                                              Background="{DynamicResource VsBrush.Window}"
                                              Foreground="{DynamicResource VsBrush.WindowText}">
                         </view:EntityComboBox>
@@ -325,6 +326,7 @@
                         <!--</ComboBox>-->
                         <view:EntityComboBox Grid.Column="0"
                                              HasSearchBox="Visible"
+                                             MultiSelectVisibility="Collapsed"
                                              Background="{DynamicResource VsBrush.Window}"
                                              Foreground="{DynamicResource VsBrush.WindowText}">
                         </view:EntityComboBox>
@@ -370,12 +372,18 @@
                             <ColumnDefinition Width="25*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <wpfx:CheckComboBox Grid.Column="0"
+                        <!--<wpfx:CheckComboBox Grid.Column="0"
                                             Background="{DynamicResource VsBrush.Window}"
                                             Foreground="{DynamicResource VsBrush.WindowText}"
                                             ItemsSource="{Binding ReferenceFieldContent}"
                                             SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                        </wpfx:CheckComboBox>
+                        </wpfx:CheckComboBox>-->
+                        <view:EntityComboBox Grid.Column="0"
+                                             HasSearchBox="Visible"
+                                             MultiSelectVisibility="Visible"
+                                             Background="{DynamicResource VsBrush.Window}"
+                                             Foreground="{DynamicResource VsBrush.WindowText}">
+                        </view:EntityComboBox>
                         <Button Grid.Column="1"
                                 Background="{DynamicResource VsBrush.Window}"
                                 Foreground="{DynamicResource VsBrush.WindowText}"

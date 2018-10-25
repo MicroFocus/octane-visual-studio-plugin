@@ -16,13 +16,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         public Visibility HasSearchBox
         {
             get { return SearchBox.Visibility; }
-            set { SearchBox.Visibility = value; }
+            set { SearchBox.Visibility = value;}
         }
 
+        private Visibility _MultiSelectVisibility;
+        
+        public Visibility MultiSelectVisibility {
+            get { return _MultiSelectVisibility; }
+            set { _MultiSelectVisibility = value; }
+        }
 
         public EntityComboBox()
         {
-            InitializeComponent();            
+            InitializeComponent();  
+            
         }
 
         private void ShowPopup(object sender, RoutedEventArgs e)
