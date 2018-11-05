@@ -45,15 +45,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private string logicalName;
         private string _filter = string.Empty;
 
-        public ObservableCollection<string> ObservableItems = new ObservableCollection<string>(new List<string>(new string[] { "element1", "element2", "element3" }));
-
-        public IEnumerable<string> Items
-        {
-            get
-            {
-                return ObservableItems;
-            }
-        }
 
         public List<BaseEntity> ReferenceFieldContentBaseEntity
         {
@@ -166,7 +157,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                                 {
                                     foreach (BaseEntity be in _referenceFieldContent)
                                     {
-                                        _referenceFieldContentName.Add(new BaseEntityWrapper(be));
+                                        BaseEntityWrapper bew = new BaseEntityWrapper(be);
+                                        _referenceFieldContentName.Add(bew);
+                                        try
+                                        {
+                                            EntityList<BaseEntity> selectedEntities = (EntityList<BaseEntity>)_parentEntity.GetValue(Name);
+
+                                            foreach (BaseEntity sbe in selectedEntities.data)
+                                            {
+                                                if (bew.Equals(new BaseEntityWrapper(sbe)))
+                                                {
+                                                    bew.IsSelected = true;
+                                                }
+                                            }
+                                        }
+                                        catch (Exception)
+                                        {
+                                        }
+                                        
                                     }
                                 }
                             }
@@ -318,11 +326,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         IsChanged = true;
                         break;
                     case "reference":
-                        //_parentEntity.SetValue(Name, ((BaseEntityWrapper)value).BaseEntity);
+                        if (!IsMultiple)
+                        {
+                            _parentEntity.SetValue(Name, (BaseEntity)value);
+                        }
+                        else
+                        {
+                            _parentEntity.SetValue(Name, value);
+                        }
                         IsChanged = true;
                         break;
 
                 }
+            }
+        }
+
+        public EntityList<BaseEntity> GetSelectedEntities()
+        {
+            object value = _parentEntity.GetValue(Name);
+            switch (value)
+            {
+                case null:
+                    return new EntityList<BaseEntity>();
+                case EntityList<BaseEntity> entityList:
+                    return entityList;
+                default:
+                    return null;
             }
         }
 
@@ -334,19 +363,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (!IsMultiple)
                 {
-                    _parentEntity.SetValue(Name, null);
+                    Content = null;
                     IsChanged = true;
-                    NotifyPropertyChanged();
                 } else
                 {
                     //Because of how the multiple list will be implemented, this might work or not - currently is not working
                     //Check with both setValue for Name (maybe with simple null will work, instead of appending an emptyList)
                     //IList<BaseEntity> emptyList = new BaseEntity[0];
                     //_parentEntity.SetValue(Name, emptyList)
-                    _parentEntity.SetValue(Name, null);
-                    IsChanged = true;
-                    NotifyPropertyChanged();
+                    EntityList<BaseEntity> entities = _parentEntity.GetValue(Name) as EntityList<BaseEntity>;
+                    entities.data.Clear();
+                    //make sure to deselect the items in the reference list
+                    Content = entities;
+                    foreach(BaseEntityWrapper bew in _referenceFieldContentName)
+                    {
+                        bew.IsSelected = false;
+                    }
+                    NotifyPropertyChanged("ReferenceFieldContent");
                 }
+                NotifyPropertyChanged("Content");
             }
         }
 
@@ -384,6 +419,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         public BaseEntity BaseEntity { get; }
 
+        public bool IsSelected { get; set; }
+
         public EntityList<BaseEntity> BaseEntityList { get; }
 
         public BaseEntityWrapper(BaseEntity entity)
@@ -400,6 +437,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             return BaseEntity.Name;
         }
+
+        public override int GetHashCode()
+        {
+            return BaseEntity.Name.GetHashCode();
+        }
+
 
         public override bool Equals(object obj)
         {

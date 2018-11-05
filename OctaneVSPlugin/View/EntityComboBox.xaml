@@ -19,6 +19,7 @@
             </Grid.ColumnDefinitions>
             <TextBlock Grid.Column="0"
                        x:Name="EditorLabelName"
+                       Text="{Binding Content, Mode=OneWay}"
                        MouseDown="ShowPopup"
                        MinWidth="100"
                        HorizontalAlignment="Stretch"
@@ -102,14 +103,18 @@
                                         <Setter Property="Background"
                                                 Value="DodgerBlue" />
                                     </Trigger>
+                                    <!--<EventSetter Event="PreviewMouseLeftButtonDown"
+                                                 Handler="SelectionHandler" />-->
                                 </Style.Triggers>
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate >
                                 <StackPanel Orientation="Horizontal"
-                                            Margin="0 2 0 2">
-                                    <CheckBox Margin="2 0 2 0"
+                                            Margin="0 2 0 2"
+                                            MouseLeftButtonDown="SelectionHandler">
+                                    <CheckBox IsChecked="{Binding IsSelected}"
+                                              Margin="2 0 2 0"
                                               Visibility="{Binding Path=MultiSelectVisibility, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}}"
                                               VerticalAlignment="Center">
                                     </CheckBox>

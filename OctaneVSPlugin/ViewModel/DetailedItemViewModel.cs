@@ -481,16 +481,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     {
                         entityToUpdate.SetValue(field.Name, field.Content);
                     }
-                    else
+                    else if (!field.IsMultiple)
                     {
                         if (field.Content == null || field.Content.Equals(""))
                         {
                             entityToUpdate.SetValue(field.Name, null);
                         }
-                        else
+                        else 
                         {
                             foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
                             {
+                                // todo: you need to look into this tibi
                                 if (field.Content.Equals(new BaseEntityWrapper(be)))
                                 {
                                     entityToUpdate.SetValue(field.Name, be);
@@ -498,6 +499,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             }
 
                         }
+                       
+                    }
+                    else if(field.IsMultiple)
+                    {                        
+                        entityToUpdate.SetValue(field.Name, field.GetSelectedEntities());    
                     }
                 }
 
