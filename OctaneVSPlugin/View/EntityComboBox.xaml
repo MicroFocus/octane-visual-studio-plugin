@@ -86,7 +86,8 @@
                         </TextBlock>
                     </Grid>
 
-                    <ListView Grid.Row="1" 
+                    <ListView Grid.Row="1"
+                              Name="listView"
                               ItemsSource="{Binding ReferenceFieldContent}"                                                       
                               HorizontalAlignment="Stretch"
                               VerticalAlignment="Stretch"
@@ -103,8 +104,6 @@
                                         <Setter Property="Background"
                                                 Value="DodgerBlue" />
                                     </Trigger>
-                                    <!--<EventSetter Event="PreviewMouseLeftButtonDown"
-                                                 Handler="SelectionHandler" />-->
                                 </Style.Triggers>
                             </Style>
                         </ListView.ItemContainerStyle>

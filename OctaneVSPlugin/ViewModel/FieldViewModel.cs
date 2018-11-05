@@ -345,20 +345,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         break;
 
                 }
+                NotifyPropertyChanged("Content");
             }
         }
 
         public EntityList<BaseEntity> GetSelectedEntities()
         {
             object value = _parentEntity.GetValue(Name);
-            switch (value)
+            if (value == null)
             {
-                case null:
-                    return new EntityList<BaseEntity>();
-                case EntityList<BaseEntity> entityList:
-                    return entityList;
-                default:
-                    return null;
+                return new EntityList<BaseEntity>();
+            }
+            else
+            {
+                return (EntityList<BaseEntity>) value;
             }
         }
 
@@ -371,24 +371,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (!IsMultiple)
                 {
                     Content = null;
-                    IsChanged = true;
                 } else
                 {
-                    //Because of how the multiple list will be implemented, this might work or not - currently is not working
-                    //Check with both setValue for Name (maybe with simple null will work, instead of appending an emptyList)
-                    //IList<BaseEntity> emptyList = new BaseEntity[0];
-                    //_parentEntity.SetValue(Name, emptyList)
+                    //clear the parent entity's selected values
                     EntityList<BaseEntity> entities = _parentEntity.GetValue(Name) as EntityList<BaseEntity>;
                     entities.data.Clear();
-                    //make sure to deselect the items in the reference list
+                    //clear the selected fields also
+                    GetSelectedEntities().data.Clear();
                     Content = entities;
-                    foreach(BaseEntityWrapper bew in _referenceFieldContentName)
+                    //make sure to deselect the items in the reference list
+                    foreach (BaseEntityWrapper bew in _referenceFieldContentName)
                     {
                         bew.IsSelected = false;
                     }
                     NotifyPropertyChanged("ReferenceFieldContent");
                 }
-                NotifyPropertyChanged("Content");
             }
         }
 

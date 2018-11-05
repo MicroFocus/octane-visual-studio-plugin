@@ -39,7 +39,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         private void SelectionHandler(object sender, MouseButtonEventArgs e)
         {
             var item = sender as StackPanel;
-            
             if (item != null)
             {
                
@@ -50,11 +49,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     {
                         //take the selected item out of the selected items list
                         EntityList<BaseEntity> selectedEntities = ((FieldViewModel)DataContext).GetSelectedEntities();
-                        if (selectedEntities is null)
-                        {
-                            selectedEntities = new EntityList<BaseEntity>();
-                        }
+                       
                         BaseEntityWrapper selectedEntity = (BaseEntityWrapper)item.DataContext;
+                        
                         BaseEntity entityToRemove = null;
                         foreach (BaseEntity baseEntity in selectedEntities.data)
                         {
@@ -66,21 +63,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         }
                         selectedEntities.data.Remove(entityToRemove);
                         ((FieldViewModel)EditorLabelName.DataContext).Content = selectedEntities;
-                        EditorLabelName.Text = (string)((FieldViewModel)EditorLabelName.DataContext).Content;
-
+                        
                         cb.IsChecked = false;
                     }
                     else
                     {
-                        //insert this into the selected items list
+                        //insert the selected value into the selected items list
                         EntityList<BaseEntity> selectedEntities = ((FieldViewModel)DataContext).GetSelectedEntities();
-                        if (selectedEntities is null)
-                        {
-                            selectedEntities = new EntityList<BaseEntity>();
-                        }
-                        selectedEntities.data.Add(((BaseEntityWrapper)item.DataContext).BaseEntity);
+
+                        BaseEntityWrapper entityToInsert = ((BaseEntityWrapper)item.DataContext);
+                        
+                        selectedEntities.data.Add(entityToInsert.BaseEntity);
                         ((FieldViewModel)EditorLabelName.DataContext).Content = selectedEntities;
-                        EditorLabelName.Text = (string)((FieldViewModel)EditorLabelName.DataContext).Content;
+                        
                         cb.IsChecked = true;
                     }
 
@@ -88,7 +83,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     ComboBoxPopup.IsOpen = false;
                     ((FieldViewModel)EditorLabelName.DataContext).Content = ((BaseEntityWrapper)item.DataContext).BaseEntity;
-                    EditorLabelName.Text = ((BaseEntityWrapper)item.DataContext).BaseEntity.Name;
                 }
             }
             
@@ -96,6 +90,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private void ShowPopup(object sender, RoutedEventArgs e)
         {
+            listView.Items.Refresh();
             ComboBoxPopup.IsOpen = true;
         }
     }
