@@ -121,11 +121,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     if (Metadata.FieldType.Equals("boolean"))
                     {
                         BaseEntity falseBaseEntity = new BaseEntity();
-                        falseBaseEntity.Name = "false";
+                        falseBaseEntity.Name = "False";
                        
 
                         BaseEntity trueBaseEntity = new BaseEntity();
-                        trueBaseEntity.Name = "true";
+                        trueBaseEntity.Name = "True";
 
                         _referenceFieldContentName.Add(new BaseEntityWrapper(falseBaseEntity));
                         _referenceFieldContentName.Add(new BaseEntityWrapper(trueBaseEntity));
@@ -290,7 +290,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 switch (Metadata.FieldType)
                 {
                     case "boolean":
-                        _parentEntity.SetValue(Name, value);
+                        if (((BaseEntity)value).Name.Equals("False"))
+                        {
+                            _parentEntity.SetValue(Name, false);
+                        }
+                        else
+                        {
+                            _parentEntity.SetValue(Name, true);
+                        }
                         IsChanged = true;
                         break;
                     case "integer":
