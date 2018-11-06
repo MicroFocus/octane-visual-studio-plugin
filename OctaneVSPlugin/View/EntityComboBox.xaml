@@ -20,9 +20,9 @@
             <TextBlock Grid.Column="0"
                        x:Name="EditorLabelName"
                        Text="{Binding Content, Mode=OneWay}"
-                       MouseDown="ShowPopup"
                        MinWidth="100"
                        HorizontalAlignment="Stretch"
+                       PreviewMouseDown="ShowPopup"
                        Padding="3"
                        Visibility="Visible" />
             <Button Grid.Column="1"
@@ -95,6 +95,7 @@
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
+                              PreviewMouseLeftButtonUp="SelectionHandler"
                               Margin="3 3 3 3">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="{x:Type ListViewItem}">
@@ -110,15 +111,13 @@
                         <ListView.ItemTemplate>
                             <DataTemplate >
                                 <StackPanel Orientation="Horizontal"
-                                            Margin="0 2 0 2"
-                                            MouseLeftButtonDown="SelectionHandler">
+                                            Margin="0 2 0 2">
                                     <CheckBox IsChecked="{Binding IsSelected}"
                                               Margin="2 0 2 0"
                                               Visibility="{Binding Path=MultiSelectVisibility, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}}"
                                               VerticalAlignment="Center">
                                     </CheckBox>
                                     <TextBlock Text="{Binding BaseEntity.Name}"
-                                               MaxWidth="150"
                                                VerticalAlignment="Center"
                                                TextTrimming="CharacterEllipsis">
                                         <TextBlock.Style>

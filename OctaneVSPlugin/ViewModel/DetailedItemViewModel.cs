@@ -479,7 +479,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     if (!field.Metadata.FieldType.Equals("reference"))
                     {
-                        entityToUpdate.SetValue(field.Name, field.Content);
+                        if("".Equals(field.Content))
+                        {
+                            entityToUpdate.SetValue(field.Name, null);
+                        }
+                        else
+                        {
+                            entityToUpdate.SetValue(field.Name, field.Content);
+                        }
                     }
                     else if (!field.IsMultiple)
                     {

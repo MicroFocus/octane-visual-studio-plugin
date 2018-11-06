@@ -38,24 +38,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private void SelectionHandler(object sender, MouseButtonEventArgs e)
         {
-            var item = sender as StackPanel;
+            var item = ((sender as ListView).SelectedItem as BaseEntityWrapper);
+            
             if (item != null)
             {
-               
                 if (MultiSelectVisibility == Visibility.Visible)
                 {
-                    CheckBox cb = (CheckBox)item.Children[0];
-                    if (cb.IsChecked.Equals(true))
+                    if (item.IsSelected.Equals(true))
                     {
                         //take the selected item out of the selected items list
                         EntityList<BaseEntity> selectedEntities = ((FieldViewModel)DataContext).GetSelectedEntities();
-                       
-                        BaseEntityWrapper selectedEntity = (BaseEntityWrapper)item.DataContext;
                         
                         BaseEntity entityToRemove = null;
                         foreach (BaseEntity baseEntity in selectedEntities.data)
                         {
-                            if(selectedEntity.Equals(new BaseEntityWrapper(baseEntity)))
+                            if(item.Equals(new BaseEntityWrapper(baseEntity)))
                             {
                                 entityToRemove = baseEntity;
                                 break;
@@ -63,27 +60,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         }
                         selectedEntities.data.Remove(entityToRemove);
                         ((FieldViewModel)EditorLabelName.DataContext).Content = selectedEntities;
-                        
-                        cb.IsChecked = false;
+
+                        item.IsSelected = false;
                     }
                     else
                     {
                         //insert the selected value into the selected items list
                         EntityList<BaseEntity> selectedEntities = ((FieldViewModel)DataContext).GetSelectedEntities();
-
-                        BaseEntityWrapper entityToInsert = ((BaseEntityWrapper)item.DataContext);
                         
-                        selectedEntities.data.Add(entityToInsert.BaseEntity);
+                        selectedEntities.data.Add(item.BaseEntity);
                         ((FieldViewModel)EditorLabelName.DataContext).Content = selectedEntities;
-                        
-                        cb.IsChecked = true;
+
+                        item.IsSelected = true;
                     }
 
                 } else
                 {
                     ComboBoxPopup.IsOpen = false;
-                    ((FieldViewModel)EditorLabelName.DataContext).Content = ((BaseEntityWrapper)item.DataContext).BaseEntity;
+                    ((FieldViewModel)EditorLabelName.DataContext).Content = item.BaseEntity;
                 }
+                listView.Items.Refresh();
             }
             
         }

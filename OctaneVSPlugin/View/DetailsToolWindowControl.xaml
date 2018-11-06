@@ -265,15 +265,6 @@
                             <ColumnDefinition Width="25*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <!--<ComboBox Grid.Column="0" Style="{DynamicResource ComboBoxStyle1}"
-                                  Background="{DynamicResource VsBrush.Window}"
-                                  Foreground="{DynamicResource VsBrush.WindowText}"
-                                  SelectedIndex="{Binding Content, Mode=TwoWay, Converter={StaticResource BoolToIndexConverter}}">
-                            <ComboBox.Items>
-                                <system:Boolean>True</system:Boolean>
-                                <system:Boolean>False</system:Boolean>
-                            </ComboBox.Items>
-                        </ComboBox>-->
                         <view:EntityComboBox Grid.Column="0"
                                              HasSearchBox="Collapsed"
                                              MultiSelectVisibility="Collapsed"
@@ -312,18 +303,6 @@
                             <ColumnDefinition Width="25*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <!--<ComboBox Grid.Column="0" Style="{DynamicResource ComboBoxStyle1}"
-                              Background="{DynamicResource VsBrush.Window}"
-                              Foreground="{DynamicResource VsBrush.WindowText}"
-                              ItemsSource="{Binding ReferenceFieldContent}" 
-                              SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
-                              ScrollViewer.CanContentScroll="False">
-                            <ComboBox.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel RequestBringIntoView="OnRequestBringIntoView"/>
-                                </ItemsPanelTemplate>
-                            </ComboBox.ItemsPanel>-->
-                        <!--</ComboBox>-->
                         <view:EntityComboBox Grid.Column="0"
                                              HasSearchBox="Visible"
                                              MultiSelectVisibility="Collapsed"
@@ -372,12 +351,6 @@
                             <ColumnDefinition Width="25*" />
                             <ColumnDefinition Width="*" />
                         </Grid.ColumnDefinitions>
-                        <!--<wpfx:CheckComboBox Grid.Column="0"
-                                            Background="{DynamicResource VsBrush.Window}"
-                                            Foreground="{DynamicResource VsBrush.WindowText}"
-                                            ItemsSource="{Binding ReferenceFieldContent}"
-                                            SelectedItem="{Binding Content, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
-                        </wpfx:CheckComboBox>-->
                         <view:EntityComboBox Grid.Column="0"
                                              HasSearchBox="Visible"
                                              MultiSelectVisibility="Visible"
