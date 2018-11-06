@@ -30,8 +30,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         public EntityComboBox()
         {
-            InitializeComponent();  
-            
+            InitializeComponent();
         }
 
         public ObservableCollection<BaseEntity> SelectedValues;
@@ -83,12 +82,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
             
         }
-
+        
         private void ShowPopup(object sender, RoutedEventArgs e)
         {
             listView.Items.Refresh();
             ComboBoxPopup.IsOpen = true;
         }
+
     }
 
 

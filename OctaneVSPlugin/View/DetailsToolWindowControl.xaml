@@ -260,7 +260,7 @@
                             </Style>
                         </TextBlock.Style>
                     </TextBlock>
-                    <Grid Grid.Column="1">
+                    <Grid Grid.Column="1" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="25*" />
                             <ColumnDefinition Width="*" />

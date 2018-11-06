@@ -530,6 +530,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
                 bed.ShowDialog();
             }
+            //trigger a refresh after save so the user is aware of the changes
+            RefreshCommand.Execute(param);
             NotifyPropertyChanged();
         }
 
