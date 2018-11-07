@@ -24,6 +24,7 @@ using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities;
 using MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
@@ -50,26 +51,31 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
         [AssemblyInitialize]
         public static void AssemblyInitialize(TestContext context)
         {
-            var ignoreServerCertificateValidation = ConfigurationManager.AppSettings["ignoreServerCertificateValidation"];
+			// Check if .runsettings is configured properly
+			EnsurePropertiesSet(context.Properties, 
+				"ignoreServerCertificateValidation", 
+				"webAppUrl",
+				"userName",
+				"password",
+				"sharedSpaceId",
+				"workspaceId");
+
+			var ignoreServerCertificateValidation = context.Properties["ignoreServerCertificateValidation"].ToString();
             if (ignoreServerCertificateValidation != null && ignoreServerCertificateValidation.ToLower().Equals("true"))
             {
                 NetworkSettings.IgnoreServerCertificateValidation();
             }
             NetworkSettings.EnableAllSecurityProtocols();
-
-            OctaneConfiguration.Url = ConfigurationManager.AppSettings["webAppUrl"];
-            // If webAppUrl is empty we do not try to connect.
-            if (string.IsNullOrWhiteSpace(OctaneConfiguration.Url))
-                return;
-
-            OctaneConfiguration.Username = ConfigurationManager.AppSettings["userName"];
-            OctaneConfiguration.Password = ConfigurationManager.AppSettings["password"];
-            var connectionInfo = new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password);
+		
+			OctaneConfiguration.Url = context.Properties["webAppUrl"].ToString();
+            OctaneConfiguration.Username = context.Properties["userName"].ToString();
+            OctaneConfiguration.Password = context.Properties["password"].ToString();
+			var connectionInfo = new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password);
 
             RestConnector.Connect(OctaneConfiguration.Url, connectionInfo);
 
-            var sharedSpaceId = int.Parse(ConfigurationManager.AppSettings["sharedSpaceId"]);
-            var workspaceId = int.Parse(ConfigurationManager.AppSettings["workspaceId"]);
+            var sharedSpaceId = int.Parse(context.Properties["sharedSpaceId"].ToString());
+            var workspaceId = int.Parse(context.Properties["workspaceId"].ToString());
 
             WorkspaceContext = new WorkspaceContext(sharedSpaceId, workspaceId);
             OctaneConfiguration.WorkSpaceId = WorkspaceContext.WorkspaceId;
@@ -82,7 +88,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
             CurrentRelease = ReleaseUtilities.CreateRelease();
         }
 
-        [AssemblyCleanup]
+		private static void EnsurePropertiesSet(IDictionary dictionary, params string[] properties)
+		{
+			foreach (string prop in properties)
+			{
+				if (!dictionary.Contains(prop))
+				{
+					throw new Exception("Test context missing property \"" + prop + "\". Is the .runsettings file configured? Check default.runsettings file.");
+				}
+			}
+		}		
+
+		[AssemblyCleanup]
         public static void AssemblyCleanup()
         {
             EntityService.DeleteById<Release>(WorkspaceContext, CurrentRelease.Id);
