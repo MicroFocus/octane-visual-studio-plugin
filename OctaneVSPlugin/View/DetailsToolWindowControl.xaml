@@ -82,23 +82,6 @@
                                  Background="{DynamicResource VsBrush.Window}"
                                  Foreground="{DynamicResource VsBrush.WindowText}"
                                  BorderThickness="0">
-                            <TextBox.Style>
-                                <Style TargetType="TextBox">
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}"
-                                                     Value="false">
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="TextBox">
-                                                        <TextBlock Text="{TemplateBinding Text}"
-                                                                   TextTrimming="CharacterEllipsis" />
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBox.Style>
                         </TextBox>
                     </Grid>
                 </Grid>
