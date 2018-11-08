@@ -55,7 +55,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
 
-        private string lockStamp = "client_lock_stamp";
+        private static readonly string lockStamp = "client_lock_stamp";
         /// <summary>
         /// Lets you enable or disable the phase ComboBox
         /// </summary>
@@ -114,6 +114,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
                 List<string> fieldNames = fields.Select(fm => fm.Name).ToList();
+
+                OctaneServices _octaneService = OctaneServices.GetInstance();
 
                 if(octaneVersion == null)
                 {
