@@ -646,7 +646,7 @@
                                                          HorizontalAlignment="Stretch"
                                                          Background="{DynamicResource VsBrush.Window}"
                                                          Foreground="{DynamicResource VsBrush.WindowText}"
-                                                         Text="{Binding Filtero, UpdateSourceTrigger=PropertyChanged}"
+                                                         Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
                                                          view:FocusBehavior.IsFocus="True"
                                                          Margin="5" />
                                                 <TextBlock IsHitTestVisible="False"

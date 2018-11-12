@@ -103,11 +103,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             listView.Items.Refresh();
             ComboBoxPopup.IsOpen = true;
         }
-
     }
-
-
-    
-
-
 }
