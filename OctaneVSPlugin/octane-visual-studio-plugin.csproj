@@ -78,6 +78,7 @@
     <Compile Include="Common\Collector\EntitiesCollector.cs" />
     <Compile Include="Common\Collector\MyWorkEntitiesCollector.cs" />
     <Compile Include="Common\Collector\SearchEntitiesCollector.cs" />
+    <Compile Include="Common\EntityReference.cs" />
     <Compile Include="Common\EntityTypeInformation.cs" />
     <Compile Include="Common\EntityTypeRegistry.cs" />
     <Compile Include="Common\FieldsCache.cs" />
@@ -107,6 +108,13 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
     <Compile Include="View\BoolToIndexConverter.cs" />
+
+    <Compile Include="View\EntityComboBox.xaml.cs">
+      <DependentUpon>EntityComboBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\BusinessErrorDialog.xaml.cs">
+      <DependentUpon>BusinessErrorDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\FieldListDataTemplateSelector.cs" />
     <Compile Include="View\GifImage.cs" />
     <Compile Include="Common\GreaterThanZeroConverter.cs" />
@@ -190,6 +198,7 @@
     <Resource Include="Resources\octane_preloader.gif" />
     <Resource Include="Resources\s-rocket.png" />
     <Resource Include="Resources\save.png" />
+    <Resource Include="Resources\octane_remove.png" />
     <Content Include="Resources\screen-shot-200x200.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
@@ -205,7 +214,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="View\BusinessErrorDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\DetailsToolWindowControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EntityComboBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

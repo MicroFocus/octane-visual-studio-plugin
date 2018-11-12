@@ -18,7 +18,6 @@ using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
 using System.Windows;
 using System.Windows.Controls;
-using Xceed.Wpf.Toolkit;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -55,6 +54,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         {
                             field.Content = DateTime.UtcNow;
                             templateName = "EditableDateFieldTemplateEmpty";
+                        }
+                        break;
+                    case "reference":
+                        if (field.IsMultiple)
+                        {
+                            if (field.IsMoreThanOneTarget || field.FieldNotCompatible)
+                            {
+                                templateName = "ReadOnlyFieldTemplate";
+                                break;
+                            }
+                            templateName = "EditableReferenceFieldTemplateMultiple";
+                            
+                        }
+                        else
+                        {
+                            if (field.IsMoreThanOneTarget || field.FieldNotCompatible)
+                            {
+                                templateName = "ReadOnlyFieldTemplate";
+                                break;
+                            }
+                            templateName = "EditableReferenceFieldTemplateSimple";
                         }
                         break;
                     default:

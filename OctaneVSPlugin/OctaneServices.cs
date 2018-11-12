@@ -20,6 +20,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using MicroFocus.Adm.Octane.Api.Core.Services.Version;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
 using System;
@@ -38,7 +39,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     internal class OctaneServices
     {
         private RestConnector rest;
+
         private EntityService es;
+
+        public EntityService GetEntityService
+        {
+            get { return es; }
+        }
 
         private string url;
         private string user;
@@ -63,7 +70,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             workspaceContext = new WorkspaceContext(sharedspaceId, workspaceId);
             sharedSpaceContext = new SharedSpaceContext(sharedspaceId);
         }
-
 
         public static OctaneServices GetInstance()
         {
@@ -335,5 +341,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             var result = await es.GetTransitionsForEntityType(workspaceContext, entityType);
             return result?.data;
         }
+
+        /// <summary>
+        /// Returns all reference fields values for a given entity tpye
+        /// </summary>
+        public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType)
+        {
+            return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, 100).Result;
+        }
+
+        /// <summary>
+        /// Returns the version of octane
+        /// </summary>
+        public async Task<OctaneVersion> GetOctaneVersion()
+        {
+            return await es.GetOctaneVersion();
+        }
     }
+
 }
