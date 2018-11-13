@@ -118,6 +118,7 @@
                         <TextBox Grid.Column="0"
                                  Background="{DynamicResource VsBrush.Window}"
                                  Foreground="{DynamicResource VsBrush.WindowText}"
+                                 VerticalContentAlignment="Center"
                                  Text="{Binding Content, Mode=TwoWay}" />
                     </Grid>
 
