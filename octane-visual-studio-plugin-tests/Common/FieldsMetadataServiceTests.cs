@@ -42,42 +42,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Common
             EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
         }
 
-        protected override void TestInitializeInternal()
-        {
-            FieldsMetadataService.Reset();
-        }
-
-        #region GetFormattedValue
-
-        [TestMethod]
-        public void FieldsMetadataServiceTests_GetFormattedValue_EntityNotInCache_Null()
-        {
-            Assert.IsNull(FieldsMetadataService.GetFormattedValue(_story, "creation_time"), "GetFormattedValue on an empty cache should return null");
-        }
-
-        [TestMethod]
-        public void FieldsMetadataServiceTests_GetFormattedValue_EntityInCache_ReturnsMetadata()
-        {
-            var viewModel = new DetailedItemViewModel(_story);
-            viewModel.InitializeAsync().Wait();
-
-            var metadata = FieldsMetadataService.GetFieldMetadata(viewModel.Entity).Result;
-            Assert.IsTrue(metadata.Count > 0, "Cache should contain field metadata");
-
-            Assert.IsNotNull(FieldsMetadataService.GetFormattedValue(viewModel.Entity, "creation_time"), "GetFormattedValue should return a valid value");
-        }
-
-        [TestMethod]
-        public void FieldsMetadataServiceTests_GetFormattedValue_UnknownField_Null()
-        {
-            var metadata = FieldsMetadataService.GetFieldMetadata(_story).Result;
-            Assert.IsTrue(metadata.Count > 0, "Cache should contain field metadata");
-
-            Assert.IsNull(FieldsMetadataService.GetFormattedValue(_story, "unknown_field"), "Trying to get the value of an unknown field should return null");
-        }
-
-        #endregion
-
         #region GetFieldMetadata
 
         [TestMethod]
