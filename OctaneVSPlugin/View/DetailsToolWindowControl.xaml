@@ -576,7 +576,7 @@
                                                Margin="5 0 0 0" />
                                     <ComboBox Style="{DynamicResource ComboBoxStyle1}"
                                               Background="{DynamicResource VsBrush.Window}"
-                                              Foreground="{DynamicResource VsBrush.WindowText}"
+                                              
                                               VerticalAlignment="Center"
                                               Width="120"
                                               IsEnabled="{Binding SelectIsEnabled}"
