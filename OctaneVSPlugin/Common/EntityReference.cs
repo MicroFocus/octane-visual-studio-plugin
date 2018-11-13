@@ -105,7 +105,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             {
                 return ApiEntityNameTypePairs[type];
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 throw new Exception("Reference entity type not supported: " + type);
             }

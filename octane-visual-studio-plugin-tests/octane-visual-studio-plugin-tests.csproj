@@ -56,7 +56,6 @@
     <Compile Include="BaseOctanePluginTest.cs" />
     <Compile Include="Common\EntityComparerByLastModifiedTests.cs" />
     <Compile Include="Common\FieldsCacheTests.cs" />
-    <Compile Include="Common\FieldsMetadataServiceTests.cs" />
     <Compile Include="Common\GreaterThanZeroConverterTests.cs" />
     <Compile Include="Common\WorkspaceSessionPersistanceManagerTests.cs" />
     <Compile Include="Common\UtilityTests.cs" />
