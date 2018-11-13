@@ -267,8 +267,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (_customContentFunc != null)
                     return _customContentFunc(_parentEntity);
 
-
-                var formattedValue = FieldsMetadataService.GetFormattedValue(_parentEntity, Name);
+                var formattedValue = FieldsMetadataService.GetFormattedValue(_parentEntity, Name, Metadata);
                 if (formattedValue != null)
                     return formattedValue;
 

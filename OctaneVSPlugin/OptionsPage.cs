@@ -47,9 +47,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             // close all opened details windows so that we don't have details windows
             // for entities from different workspaces
             PluginWindowManager.CloseAllDetailsWindows();
-
-            FieldsMetadataService.Reset();
-
+        
             // disable the active item toolbar because we don't know yet
             // whether we can connect with the new Octane credentials
             MainWindowCommand.Instance.DisableActiveItemToolbar();
