@@ -36,7 +36,7 @@
             <Button Grid.Column="0"
                     x:Name="EditorLabelName"
                     Background="Transparent"
-                    Foreground="White"
+                    Foreground="{DynamicResource VsBrush.WindowText}"
                     Content="{Binding Content, Mode=OneWay}"
                     HorizontalAlignment="Stretch"
                     Padding="3"
