@@ -531,15 +531,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
                 await InitializeAsync();
+
+                //trigger a refresh after save so the user is aware of the changes
+                RefreshCommand.Execute(param);
+                NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
                 BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
                 bed.ShowDialog();
             }
-            //trigger a refresh after save so the user is aware of the changes
-            RefreshCommand.Execute(param);
-            NotifyPropertyChanged();
+           
         }
 
         #endregion
