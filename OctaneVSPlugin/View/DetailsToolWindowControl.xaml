@@ -58,6 +58,7 @@
                                Text="{Binding Label}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
                                Margin="0 0 5 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
@@ -65,7 +66,7 @@
                                     <Trigger Property="view:TextBlockService.IsTextTrimmed"
                                              Value="True">
                                         <Setter Property="ToolTip"
-                                                Value="{Binding Label}" />
+                                                Value="{Binding Label}"/>
                                     </Trigger>
                                 </Style.Triggers>
                             </Style>
@@ -79,9 +80,10 @@
                         <TextBox Grid.Column="0"
                                  IsReadOnly="True"
                                  Text="{Binding Content, Mode=OneWay}"
+                                 IsEnabled="False"
+                                 VerticalContentAlignment="Center"
                                  Background="{DynamicResource VsBrush.Window}"
-                                 Foreground="{DynamicResource VsBrush.WindowText}"
-                                 BorderThickness="0">
+                                 Foreground="{DynamicResource VsBrush.WindowText}">
                         </TextBox>
                     </Grid>
                 </Grid>
@@ -97,6 +99,7 @@
                                Text="{Binding Label}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
                                Margin="0 0 5 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
@@ -135,6 +138,7 @@
                                Text="{Binding Label}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
                                Margin="0 0 5 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
@@ -177,6 +181,7 @@
                                Text="{Binding Label}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
                                Margin="0 0 5 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
@@ -231,6 +236,7 @@
                                Text="{Binding Label}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
                                Margin="0 0 5 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
@@ -269,6 +275,7 @@
                                Text="{Binding Label}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
                                Margin="0 0 5 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
@@ -317,6 +324,7 @@
                                Text="{Binding Label}"
                                FontWeight="Bold"
                                TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
                                Margin="0 0 5 0">
                         <TextBlock.Style>
                             <Style TargetType="{x:Type TextBlock}">
