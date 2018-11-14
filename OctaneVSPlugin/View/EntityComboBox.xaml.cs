@@ -52,7 +52,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private void SelectionHandler(object sender, MouseButtonEventArgs e)
         {
-            var item = ((sender as ListView).SelectedItem as BaseEntityWrapper);
+            var item = ((sender as ListViewItem).DataContext as BaseEntityWrapper);
             
             if (item != null)
             {
