@@ -129,7 +129,6 @@
                               ScrollViewer.VerticalScrollBarVisibility="Auto"
                               Background="{DynamicResource VsBrush.Window}"
                               Foreground="{DynamicResource VsBrush.WindowText}"
-                              MouseLeftButtonUp="SelectionHandler"
                               Margin="3 3 3 3">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="{x:Type ListViewItem}">
@@ -140,6 +139,8 @@
                                                 Value="DodgerBlue" />
                                     </Trigger>
                                 </Style.Triggers>
+                                <EventSetter Event="PreviewMouseLeftButtonUp"
+                                             Handler="SelectionHandler" />
                             </Style>
                         </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>

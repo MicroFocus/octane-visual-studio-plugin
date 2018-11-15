@@ -139,19 +139,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             try
                             {
                                 await _octaneService.Connect();
-                                EntityListResult<BaseEntity> entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                EntityListResult<BaseEntity> entities;
+                                if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
+                                {
+                                    entities = _octaneService.GetEntitesReferenceListNodes(_fieldEntity, logicalName);
+                                }
+                                else
+                                {
+                                    entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                }
+
+
                                 if (_fieldEntity.Equals("sprints"))
                                 {
                                     _referenceFieldContent = getSprintFields(entities.data);
-                                }
-                                else if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
-                                {
-                                    _referenceFieldContent = getListNodes(entities.data, logicalName);
                                 }
                                 else
                                 {
                                     _referenceFieldContent = entities.data;
                                 }
+
 
                                 if (_referenceFieldContent != null)
                                 {
