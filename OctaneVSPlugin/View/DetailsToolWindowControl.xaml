@@ -80,6 +80,7 @@
                         <TextBox Grid.Column="0"
                                  IsReadOnly="True"
                                  Text="{Binding Content, Mode=OneWay}"
+                                 ToolTip="{Binding Content, Mode=OneWay}"
                                  IsEnabled="False"
                                  VerticalContentAlignment="Center"
                                  Background="{DynamicResource VsBrush.Window}"
@@ -122,6 +123,7 @@
                                  Background="{DynamicResource VsBrush.Window}"
                                  Foreground="{DynamicResource VsBrush.WindowText}"
                                  VerticalContentAlignment="Center"
+                                 ToolTip="{Binding Content, Mode=OneWay}"
                                  Text="{Binding Content, Mode=TwoWay}" />
                     </Grid>
 
