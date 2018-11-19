@@ -37,6 +37,7 @@
                     x:Name="EditorLabelName"
                     Background="Transparent"
                     Foreground="{DynamicResource VsBrush.WindowText}"
+                    ToolTip="{Binding Content, Mode=OneWay}"
                     Content="{Binding Content, Mode=OneWay}"
                     HorizontalAlignment="Stretch"
                     Padding="3"
