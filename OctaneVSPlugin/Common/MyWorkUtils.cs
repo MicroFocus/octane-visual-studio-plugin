@@ -35,18 +35,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         {
             UserItem newUserItem = new UserItem();
             newUserItem.SetLongValue("origin", 1L);
-            newUserItem.Id = 5;
+            // dummy value in order to be able to serialise the useritem object
+            newUserItem.Id = 0;
             newUserItem.SetValue("is_new", true);
             newUserItem.SetValue("reason", null);
-
             newUserItem.SetValue("entity_type", wrappedBaseEntity.TypeName);
 
             WorkspaceUser workspaceUser = await OctaneServices.GetInstance().GetCurrentUser();
-
             newUserItem.SetValue(UserItem.USER_FIELD, workspaceUser);
 
             String followField = "my_follow_items_" + wrappedBaseEntity.TypeName;
-
             newUserItem.SetValue(followField, wrappedBaseEntity);
 
             return newUserItem;
@@ -69,14 +67,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 return;
             }
 
-            String id = userItem.GetValue("id").ToString();
-            try
-            {
-                octaneService.RemoveFromMyWork(userItem);
-            }
-            catch (Exception)
-            {
-            }
+            octaneService.RemoveFromMyWork(userItem);
+           
         }
     }
 }

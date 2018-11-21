@@ -54,8 +54,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private SharedSpaceContext sharedSpaceContext;
 
         WorkspaceUser currentUser;
-        private string lastUser;
-        private string lastPassword;
         
         private static readonly EntityComparerByLastModified EntityComparer = new EntityComparerByLastModified();
 
@@ -111,11 +109,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public async Task<WorkspaceUser> GetCurrentUser()
         {
-            if (currentUser == null || (!lastUser.Equals(user) && !lastPassword.Equals(password)))
+            if (currentUser == null)
             {
                 currentUser = await GetWorkspaceUser();
-                lastUser = user;
-                lastPassword = password;
             }
             return currentUser;
         }
