@@ -26,6 +26,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         public const string Release = "release";
         public const string Owner = "owner";
         public const string Phase = "phase";
+        public const string Origin = "origin";
         public const string StoryPoints = "story_points";
         public const string InvestedHours = "invested_hours";
         public const string RemainingHours = "remaining_hours";

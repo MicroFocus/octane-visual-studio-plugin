@@ -53,6 +53,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private WorkspaceContext workspaceContext;
         private SharedSpaceContext sharedSpaceContext;
 
+        WorkspaceUser currentUser;
+        private string lastUser;
+        private string lastPassword;
+        
         private static readonly EntityComparerByLastModified EntityComparer = new EntityComparerByLastModified();
 
         private static OctaneServices instance = null;
@@ -104,6 +108,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         }
 
+
+        public async Task<WorkspaceUser> GetCurrentUser()
+        {
+            if (currentUser == null || (!lastUser.Equals(user) && !lastPassword.Equals(password)))
+            {
+                currentUser = await GetWorkspaceUser();
+                lastUser = user;
+                lastPassword = password;
+            }
+            return currentUser;
+        }
+
+
         private IList<QueryPhrase> ToQueryList(QueryPhrase query)
         {
             List<QueryPhrase> queries = new List<QueryPhrase>
@@ -118,6 +135,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             List<QueryPhrase> queries = new List<QueryPhrase>
             {
                 new CrossQueryPhrase("user", new LogicalQueryPhrase("id", user.Id)),
+            };
+
+            return queries;
+        }
+
+        private IList<QueryPhrase> BuildFindUserItemCriteria(BaseEntity user,BaseEntity baseEntity)
+        {
+            List<QueryPhrase> queries = new List<QueryPhrase>
+            {
+                new CrossQueryPhrase("my_follow_items_" + baseEntity.TypeName, new LogicalQueryPhrase("id", baseEntity.Id)),
+                new CrossQueryPhrase("user", new LogicalQueryPhrase("id", user.Id))             
             };
 
             return queries;
@@ -151,6 +179,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             return result;
         }
+
+        public async Task<UserItem> FindUserItemForEntity(BaseEntity baseEntity)
+        {
+            var owner = await GetCurrentUser();
+            EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext, 
+                BuildFindUserItemCriteria(owner, baseEntity), BuildUserItemFields());
+
+            if(userItems.data.Count == 1)
+            {
+                return userItems.data[0];
+            }
+            else
+            {
+                return null;
+            }
+        }
+        
 
         public async Task<IList<BaseEntity>> SearchEntities(string searchString, int limitPerType)
         {
@@ -234,7 +279,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             var updatedEntity = await es.UpdateAsync(workspaceContext, entity, Utility.GetConcreteEntityType(entity));
             return updatedEntity;
         }
-
+        
         ///<summary>
         ///Adds a comment with specified parameters
         /// </summary>
@@ -243,6 +288,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             RestConnector.AwaitContinueOnCapturedContext = false;
             var createdEntity = await es.CreateAsync(workspaceContext, entity, commentFields);
             return createdEntity;
+        }
+
+        ///<summary>
+        ///Adds an entity to my work
+        /// </summary>
+        public async void AddToMyWork(UserItem entity)
+        {
+            RestConnector.AwaitContinueOnCapturedContext = false;
+            var craetedEntity = await es.CreateAsync(workspaceContext, entity, null);
+        }
+
+        ///<summary>
+        ///Removes an entity from my work
+        /// </summary>
+        public async void RemoveFromMyWork(UserItem entity)
+        {
+            RestConnector.AwaitContinueOnCapturedContext = false;
+            await es.DeleteByIdAsync<UserItem>(workspaceContext, entity.Id);
         }
 
 
@@ -296,6 +359,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 UserItem.ENTITY_TYPE_FIELD,
                 UserItem.REASON_FIELD,
+                UserItem.ORIGIN,
                 UserItem.USER_FIELD,
                 UserItem.WORK_ITEM_REFERENCE,
                 UserItem.TEST_REFERENCE,

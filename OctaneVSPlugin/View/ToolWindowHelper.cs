@@ -40,6 +40,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         internal const string DownloadGherkinScriptHeader = "Download Script";
         internal const string StartWorkHeader = "Start Work";
         internal const string StopWorkHeader = "Stop Work";
+        internal const string AddToMyWorkHeader = "Add to \"My Work\"";
+        internal const string RemoveFromMyWorkHeader = "Dismiss";
 
         /// <summary>
         /// Handle double-click event on a backlog item
@@ -97,6 +99,46 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Add item to my work
+        /// </summary>
+        [ExcludeFromCodeCoverage]
+        public async static void AddToMyWork(BaseEntity entity)
+        {
+            try
+            {
+                if (entity == null)
+                    return;
+
+                MyWorkUtils.AddToMyWork(entity);
+                OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to add item to my work.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Dismiss item from my work
+        /// </summary>
+        [ExcludeFromCodeCoverage]
+        public static async void RemoveFromMyWork(BaseEntity entity)
+        {
+            try
+            {
+                if (entity == null)
+                    return;
+
+                MyWorkUtils.RemoveFromMyWork(entity);
+                OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to remove item to my work.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -178,6 +220,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+        
 
         /// <summary>
         /// Download the gherkin script for the selected item if possible
@@ -216,7 +259,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             Action<object> copyCommitMessageDelegate,
             Action<object> downloadGherkinScriptDelegate,
             Action<object> startWorkDelegate,
-            Action<object> stopWorkDelegate)
+            Action<object> stopWorkDelegate,
+            Action<object> addToMyWorkDelegate,
+            Action<object> removeFromMyWorkDelegate)
         {
             try
             {
@@ -307,7 +352,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
-                //copy commit message
+                // copy commit message
                 if (octaneItem != null 
                    && octaneItem.IsSupportCopyCommitMessage 
                    && (entityType == WorkItem.SUBTYPE_STORY
@@ -338,7 +383,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
-           
+                // add to my work 
+                if (addToMyWorkDelegate != null) 
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = AddToMyWorkHeader,
+                        Command = new DelegatedCommand(addToMyWorkDelegate)
+                    });
+                }
+
+                // remove from my work
+                if (removeFromMyWorkDelegate != null)
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = RemoveFromMyWorkHeader,
+                        Command = new DelegatedCommand(removeFromMyWorkDelegate)
+                    });
+                }
+
             }
             catch (Exception ex)
             {

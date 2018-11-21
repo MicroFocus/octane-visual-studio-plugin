@@ -91,6 +91,7 @@
     <Compile Include="Common\HTMLConverter\HtmlTokenType.cs" />
     <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
     <Compile Include="Common\IFieldsObserver.cs" />
+    <Compile Include="Common\MyWorkUtils.cs" />
     <Compile Include="Common\OctaneConfiguration.cs" />
     <Compile Include="Common\WorkspaceSessionPersistanceManager.cs" />
     <Compile Include="OctanePluginSettings.Designer.cs">
@@ -108,7 +109,6 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
     <Compile Include="View\BoolToIndexConverter.cs" />
-
     <Compile Include="View\EntityComboBox.xaml.cs">
       <DependentUpon>EntityComboBox.xaml</DependentUpon>
     </Compile>
