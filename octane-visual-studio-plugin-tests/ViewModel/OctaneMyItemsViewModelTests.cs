@@ -32,6 +32,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
     [TestClass]
     public class OctaneMyItemsViewModelTests : BaseOctanePluginTest
     {
+
+        private static Story _addedStory; 
+        private static Story _dismissedStory; 
+
+        [ClassCleanup]
+        public static void ClassCleanup()
+        {
+            EntityService.DeleteById<Story>(WorkspaceContext, _addedStory.Id);
+            EntityService.DeleteById<Story>(WorkspaceContext, _dismissedStory.Id);
+        }
+
+
         [TestMethod]
         public void OctaneMyItemsViewModelTests_Constructor_DefaultValues_Success()
         {
@@ -152,6 +164,41 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         }
 
         #endregion
+        // add here tests to add and remove items from my work
+        [TestMethod]
+        public void AddToMyWork()
+        {
+            _addedStory = StoryUtilities.CreateStory();
+            var viewModel = new OctaneMyItemsViewModel();
+
+            viewModel.LoadMyItemsAsync();
+            var searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_addedStory.Id));
+            Assert.IsTrue(searchedMyWorkItem == null);
+
+            MyWorkUtils.AddToMyWork(_addedStory);
+
+            viewModel.LoadMyItemsAsync();
+            searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_addedStory.Id));
+            Assert.IsTrue(searchedMyWorkItem.ID.Equals(_addedStory.Id));
+        }
+
+        [TestMethod]
+        public void DismissFromMyWork()
+        {
+            _dismissedStory = StoryUtilities.CreateStory();
+            var viewModel = new OctaneMyItemsViewModel();
+
+            MyWorkUtils.AddToMyWork(_dismissedStory);
+
+            viewModel.LoadMyItemsAsync();
+            var searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_dismissedStory.Id));
+            Assert.IsTrue(searchedMyWorkItem.ID.Equals(_dismissedStory.Id));
+
+            MyWorkUtils.RemoveFromMyWork(_dismissedStory);
+            viewModel.LoadMyItemsAsync();
+            searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_dismissedStory.Id));
+            Assert.IsTrue(searchedMyWorkItem == null);
+        }
 
         #region Refresh
 
