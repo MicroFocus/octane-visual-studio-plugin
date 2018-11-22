@@ -37,7 +37,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
     {
         private static Story _story;
         private static Task _task;
-        private static Story _updatedStory;
 
         [ClassInitialize]
         public static void ClassInit(TestContext context)
@@ -50,7 +49,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public static void ClassCleanup()
         {
             EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
-            EntityService.DeleteById<Story>(WorkspaceContext, _updatedStory.Id);
             EntityService.DeleteById<Task>(WorkspaceContext, _task.Id);
         }
 
@@ -149,12 +147,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         }
 
         #endregion
-        [TestMethod]
-        public void UpdateEntity()
-        {
-            _updatedStory = StoryUtilities.CreateStory();
-        }
-
+       
         #region RefreshCommand
 
         [TestMethod]
