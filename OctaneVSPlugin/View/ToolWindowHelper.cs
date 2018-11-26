@@ -220,7 +220,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 MessageBox.Show("Unable to open item in browser.\n\n" + "Failed with message: " + ex.Message, AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        
+
 
         /// <summary>
         /// Download the gherkin script for the selected item if possible
@@ -237,7 +237,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     return;
 
                 OctaneServices octaneService;
-                octaneService = OctaneServices.GetInstance();    
+                octaneService = OctaneServices.GetInstance();
 
                 var testScript = await octaneService.GetTestScript(test.Id);
                 MainWindow.PluginPackage.CreateFile(test.Name, testScript.Script);
@@ -353,8 +353,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
 
                 // copy commit message
-                if (octaneItem != null 
-                   && octaneItem.IsSupportCopyCommitMessage 
+                if (octaneItem != null
+                   && octaneItem.IsSupportCopyCommitMessage
                    && (entityType == WorkItem.SUBTYPE_STORY
                         || entityType == WorkItem.SUBTYPE_QUALITY_STORY
                         || entityType == WorkItem.SUBTYPE_DEFECT
@@ -378,13 +378,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     cm.Items.Add(new MenuItem
                     {
-                        Header = StopWorkHeader,
-                        Command = new DelegatedCommand(stopWorkDelegate)
+                        Header = CopyCommitMessageHeader,
+                        Command = new DelegatedCommand(copyCommitMessageDelegate)
                     });
                 }
 
-                // add to my work 
-                if (addToMyWorkDelegate != null) 
+                // add to my work
+                if (addToMyWorkDelegate != null)
                 {
                     cm.Items.Add(new MenuItem
                     {
@@ -402,6 +402,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         Command = new DelegatedCommand(removeFromMyWorkDelegate)
                     });
                 }
+                // stop work
+                if (stopWorkDelegate != null
+                    && octaneItem != null
+                    && octaneItem.IsActiveWorkItem
+                    && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK))
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = StopWorkHeader,
+                        Command = new DelegatedCommand(stopWorkDelegate)
+                    });
+                }
+
 
             }
             catch (Exception ex)
