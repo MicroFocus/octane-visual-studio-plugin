@@ -237,7 +237,7 @@
                                   IsEditable="True"
                                   Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
                                   Background="{DynamicResource VsBrush.Window}"
-                                  Foreground="{DynamicResource VsBrush.WindowText}"
+                                  Foreground="Black"
                                   ItemsSource="{Binding SearchHistory}">
                             <ComboBox.InputBindings>
                                 <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
@@ -248,8 +248,7 @@
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    Margin="7 0 0 0"
-                                   Background="{DynamicResource VsBrush.Window}"
-                                   Foreground="DarkGray">
+                                   Foreground="Black">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Visibility" Value="Collapsed"/>

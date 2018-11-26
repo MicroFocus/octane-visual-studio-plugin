@@ -55,7 +55,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 if (ParentEntity == null)
                     return "Unable to determine the comment's owner";
-
                 var parentEntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(ParentEntity);
                 if (parentEntityTypeInformation == null)
                     return string.Empty;
@@ -92,21 +91,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// <summary>
         /// Returns person who posted the comment
         /// </summary>
-        public string Author { get; }
+        public string Author { get; set; }
 
         /// <summary>
         /// Return the time the comment was created
         /// </summary>
-        public string CreationTime { get; }
+        public string CreationTime { get; set; }
 
         /// <summary>
         /// Receives comment text with stripped HTML tags
         /// </summary>
-        public string Text { get; }
+        public string Text { get; set; }
 
         /// <summary>
         /// Returns original text as it was received from Octane
         /// </summary>
-        public string OriginalText { get; }
+        public string OriginalText { get; set; }
     }
 }

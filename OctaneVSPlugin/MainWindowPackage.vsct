@@ -30,6 +30,16 @@
     called "command set" and is used to group different command inside a logically related
     group; your package should define its own command set in order to avoid collisions
     with command ids defined by other packages. -->
+    <Menus>
+      <Menu guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" priority="0x0000" type="Toolbar">
+        <Parent guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" />
+        <CommandFlag>DefaultDocked</CommandFlag>
+        <Strings>
+          <CommandName>ALM Octane Active Item</CommandName>
+          <ButtonText>ALM Octane Active Item</ButtonText>
+        </Strings>
+      </Menu>
+    </Menus>
 
     <!--Buttons section. -->
     <!--This section defines the elements the user can interact with, like a menu command or a button
@@ -49,6 +59,33 @@
           <ButtonText>ALM Octane</ButtonText>
         </Strings>
       </Button>
+
+      <Button guid="guidMainWindowPackageCmdSet" id="ShowActiveItemCommandId" priority="0x0100" type="Button">
+        <Parent guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbarGroup" />
+        <CommandFlag>TextChanges</CommandFlag>
+        <Strings>
+          <CommandName>ShowActiveItemCommand</CommandName>
+          <ButtonText>No active item</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidMainWindowPackageCmdSet" id="CopyCommitMessageCommandId" priority="0x0101" type="Button">
+        <Parent guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbarGroup" />
+          <Icon guid="guidImages" id="logo" />
+        <Strings>
+          <CommandName>CopyCommitMessageCommand</CommandName>
+          <ButtonText>Generate and copy commit message to clipboard</ButtonText>
+        </Strings>
+      </Button>
+      
+      <Button guid="guidMainWindowPackageCmdSet" id="StopWorkCommandId" priority="0x0102" type="Button">
+        <Parent guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbarGroup" />
+          <Icon guid="guidImages3" id="stopWork" />
+        <Strings>
+          <CommandName>StopWorkCommand</CommandName>
+          <ButtonText>Stop work on current entity</ButtonText>
+        </Strings>
+      </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -58,16 +95,33 @@
             bitmap strip containing the bitmaps and then there are the numeric ids of the elements used
             inside a button definition. An important aspect of this declaration is that the element id
             must be the actual index (1-based) of the bitmap inside the bitmap strip. -->
-      <Bitmap guid="guidImages" href="Resources\OctaneLogo16x16.png" usedList="logo" />
+      <Bitmap guid="guidImages" href="Resources\copy-icon.png" usedList="logo" />
       <Bitmap guid="guidImages1" href="Resources\OctaneCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
       <Bitmap guid="guidImages2" href="Resources\OctaneToolWindowCommand.png" usedList="bmpPic1, bmpPic2, bmpPicSearch, bmpPicX, bmpPicArrows, bmpPicStrikethrough" />
+      <Bitmap guid="guidImages3" href="Resources\stopTimer-16x16.png" usedList="stopWork" />
+
     </Bitmaps>
     <Groups>
       <Group guid="guidMainWindowPackageCmdSet1" id="MyMenuGroup" priority="0x0600">
         <Parent guid="guidSHLMainMenu" id="IDM_VS_MENU_TOOLS" />
       </Group>
+      <Group guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbarGroup" priority="0x0600">
+        <Parent guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar"/>
+      </Group>
     </Groups>
   </Commands>
+
+  <VisibilityConstraints>
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_NoSolution" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_SolutionExists" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_EmptySolution" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_SolutionHasSingleProject" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_SolutionHasMultipleProjects" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_SolutionBuilding" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_Debugging" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_DesignMode" />
+    <VisibilityItem guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" context="UICONTEXT_FullScreenMode" />
+  </VisibilityConstraints>
 
   <Symbols>
     <!-- This is the package guid. -->
@@ -77,12 +131,17 @@
     <GuidSymbol name="guidMainWindowPackageCmdSet" value="{085d7d5b-5b56-4870-80b4-0ca77f9cf140}">
       <IDSymbol name="MainWindowCommandId" value="0x0100" />
       <IDSymbol value="257" name="cmdidOctaneToolWindowCommand" />
+      <IDSymbol name="ALMOctaneActiveItemToolbar" value="0x0200" />
+      <IDSymbol name="ALMOctaneActiveItemToolbarGroup" value="0x0300" />
+      <IDSymbol name="ShowActiveItemCommandId" value="0x0400" />
+      <IDSymbol name="CopyCommitMessageCommandId" value="0x0401" />
+      <IDSymbol name ="StopWorkCommandId" value ="0x402"/>
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{c19a5160-0b5e-4bbd-8829-21ee8a924f6d}">
       <IDSymbol name="logo" value="1" />
     </GuidSymbol>
- 
+
     <GuidSymbol value="{6f9e6ad7-4824-488f-8670-c819ab073e82}" name="guidMainWindowPackageCmdSet1">
       <IDSymbol value="4128" name="MyMenuGroup" />
       <IDSymbol value="256" name="cmdidOctaneCommand" />
@@ -104,6 +163,10 @@
       <IDSymbol name="bmpPicX" value="4" />
       <IDSymbol name="bmpPicArrows" value="5" />
       <IDSymbol name="bmpPicStrikethrough" value="6" />
+    </GuidSymbol>
+
+    <GuidSymbol value ="{3DFBEFA6-4E28-4582-BD89-D7689E8F33BD}" name ="guidImages3">
+      <IDSymbol name="stopWork" value="1" />
     </GuidSymbol>
   </Symbols>
 </CommandTable>

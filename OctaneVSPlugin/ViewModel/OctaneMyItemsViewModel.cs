@@ -85,11 +85,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             SearchFilter = SearchFilter.Trim();
 
-            SearchHistoryManager.UpdateHistory(SearchFilter);
+            WorkspaceSessionPersistanceManager.UpdateHistory(SearchFilter);
             NotifyPropertyChanged("SearchHistory");
 
-            var searchWindow = PluginWindowManager.ObtainSearchWindow(MainWindow.PluginPackage);
-            searchWindow?.Search(SearchFilter);
+            PluginWindowManager.ShowSearchWindow(MainWindow.PluginPackage, SearchFilter);
         }
 
         /// <summary>
@@ -100,7 +99,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get
             {
                 return new ObservableCollection<string>(_mode == MainWindowMode.ItemsLoaded
-                           ? SearchHistoryManager.History
+                           ? WorkspaceSessionPersistanceManager.History
                            : new List<string>());
             }
         }
@@ -170,22 +169,49 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             try
             {
-                OctaneServices octane = new OctaneServices(OctaneConfiguration.Url,
-                    OctaneConfiguration.SharedSpaceId,
-                    OctaneConfiguration.WorkSpaceId,
-                    OctaneConfiguration.Username,
-                    OctaneConfiguration.Password);
-                await octane.Connect();
+                OctaneServices octaneService;
+                try
+                {
+                    octaneService = OctaneServices.GetInstance();
+                } catch (Exception e)
+                {
+                    if(e.GetBaseException().Message.Equals("Object not created"))
+                    {
+                        OctaneServices.Create(OctaneConfiguration.Url,
+                           OctaneConfiguration.SharedSpaceId,
+                           OctaneConfiguration.WorkSpaceId,
+                           OctaneConfiguration.Username,
+                           OctaneConfiguration.Password);
+                    }
+                    
+                    octaneService = OctaneServices.GetInstance();
+                    await octaneService.Connect();
+
+                }
 
                 _myItems.Clear();
 
-                IList<BaseEntity> items = await octane.GetMyItems();
+                bool foundActiveItem = false;
+                IList<BaseEntity> items = await octaneService.GetMyItems();
                 foreach (BaseEntity entity in items)
                 {
-                    _myItems.Add(new OctaneItemViewModel(entity));
+                    var octaneItem = new OctaneItemViewModel(entity);
+
+                    if (WorkspaceSessionPersistanceManager.IsActiveEntity(entity))
+                    {
+                        foundActiveItem = true;
+                        OctaneItemViewModel.SetActiveItem(octaneItem);
+                    }
+                    _myItems.Add(octaneItem);
                 }
 
-                IList<BaseEntity> comments = await octane.GetMyCommentItems();
+                if (!foundActiveItem)
+                {
+                    OctaneItemViewModel.ClearActiveItem();
+                    MainWindowCommand.Instance?.DisableActiveItemToolbar();
+                }
+
+                IList<BaseEntity> comments = await octaneService.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
                     _myItems.Add(new CommentViewModel(comment));
@@ -194,10 +220,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 Mode = MainWindowMode.ItemsLoaded;
 
                 SearchFilter = "";
+                MainWindowCommand.Instance?.UpdateActiveItemInToolbar();
                 NotifyPropertyChanged();
             }
             catch (Exception ex)
             {
+                MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
                 LastExceptionMessage = ex.Message;
             }

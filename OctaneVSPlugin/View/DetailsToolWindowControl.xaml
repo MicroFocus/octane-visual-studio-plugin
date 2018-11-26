@@ -19,20 +19,353 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:visualStudio="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
              xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:wpfx="http://schemas.xceed.com/wpf/xaml/toolkit"
              Background="{DynamicResource VsBrush.Window}"
              Foreground="{DynamicResource VsBrush.WindowText}"
              mc:Ignorable="d"
-             d:DesignHeight="300" d:DesignWidth="600"
+             d:DesignHeight="300"
+             d:DesignWidth="600"
              Name="MyToolWindow">
 
     <UserControl.Resources>
-        <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter"/>
-        <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
-        <ControlTemplate x:Key="NoScroll">
-            <ItemsPresenter></ItemsPresenter>
-        </ControlTemplate>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="ResourceDictionary.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <Visibility x:Key="DateButtonVisibility">Visible</Visibility>
+            <Visibility x:Key="DatePickerVisibility">Hidden</Visibility>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+            <view:HtmlToFlowDocumentConverter x:Key="HtmlToFlowDocumentConverter" />
+            <BooleanToVisibilityConverter x:Key="BoolToVisConverter" />
+
+            <view:BoolToIndexConverter x:Key="BoolToIndexConverter" />
+
+            <ControlTemplate x:Key="NoScroll">
+                <ItemsPresenter></ItemsPresenter>
+            </ControlTemplate>
+
+            <DataTemplate x:Key="ReadOnlyFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}"
+                               FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                             Value="True">
+                                        <Setter Property="ToolTip"
+                                                Value="{Binding Label}"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 IsReadOnly="True"
+                                 Text="{Binding Content, Mode=OneWay}"
+                                 ToolTip="{Binding Content, Mode=OneWay}"
+                                 IsEnabled="False"
+                                 VerticalContentAlignment="Center"
+                                 Background="{DynamicResource VsBrush.Window}"
+                                 Foreground="{DynamicResource VsBrush.WindowText}">
+                        </TextBox>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}"
+                               FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                             Value="True">
+                                        <Setter Property="ToolTip"
+                                                Value="{Binding Label}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 Background="{DynamicResource VsBrush.Window}"
+                                 Foreground="{DynamicResource VsBrush.WindowText}"
+                                 VerticalContentAlignment="Center"
+                                 ToolTip="{Binding Content, Mode=OneWay}"
+                                 Text="{Binding Content, Mode=TwoWay}" />
+                    </Grid>
+
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableDateFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}"
+                               FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                             Value="True">
+                                        <Setter Property="ToolTip"
+                                                Value="{Binding Label}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <wpfx:DateTimePicker Grid.Column="0"
+                                             ShowButtonSpinner="False"
+                                             AllowSpin="False"
+                                             AutoCloseCalendar="True"
+                                             Kind="Local"
+                                             TextAlignment="Justify"
+                                             Background="{DynamicResource VsBrush.Window}"
+                                             Foreground="{DynamicResource VsBrush.WindowText}"
+                                             Value="{Binding Content, Mode=TwoWay}">
+                        </wpfx:DateTimePicker>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableDateFieldTemplateEmpty">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}"
+                               FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                             Value="True">
+                                        <Setter Property="ToolTip"
+                                                Value="{Binding Label}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Button Grid.Column="0"
+                                Background="{DynamicResource VsBrush.Window}"
+                                Foreground="{DynamicResource VsBrush.WindowText}"
+                                Visibility="{DynamicResource DateButtonVisibility}"
+                                BorderThickness="1"
+                                BorderBrush="CornflowerBlue"
+                                Click="ButtonDateClick"
+                                HorizontalAlignment="Left"
+                                ToolTip="Set the date and time to this field"
+                                Content="Set date" />
+
+                        <wpfx:DateTimePicker Grid.Column="0"
+                                             ShowButtonSpinner="False"
+                                             AllowSpin="False"
+                                             AutoCloseCalendar="True"
+                                             Visibility="{DynamicResource DatePickerVisibility}"
+                                             Kind="Local"
+                                             TextAlignment="Justify"
+                                             Background="{DynamicResource VsBrush.Window}"
+                                             Foreground="{DynamicResource VsBrush.WindowText}"
+                                             Value="{Binding Content, Mode=TwoWay}">
+                        </wpfx:DateTimePicker>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableBooleanFieldTemplate">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}"
+                               FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                             Value="True">
+                                        <Setter Property="ToolTip"
+                                                Value="{Binding Label}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Grid Grid.Column="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <view:EntityComboBox Grid.Column="0"
+                                             HasSearchBox="Collapsed"
+                                             MultiSelectVisibility="Collapsed"
+                                             Background="{DynamicResource VsBrush.Window}"
+                                             Foreground="{DynamicResource VsBrush.WindowText}">
+                        </view:EntityComboBox>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableReferenceFieldTemplateSimple">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}"
+                               FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                             Value="True">
+                                        <Setter Property="ToolTip"
+                                                Value="{Binding Label}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <view:EntityComboBox Grid.Column="0"
+                                             HasSearchBox="Visible"
+                                             MultiSelectVisibility="Collapsed"
+                                             Background="{DynamicResource VsBrush.Window}"
+                                             Foreground="{DynamicResource VsBrush.WindowText}">
+                        </view:EntityComboBox>
+                        <Button Grid.Column="1"
+                                Background="{DynamicResource VsBrush.Window}"
+                                Foreground="{DynamicResource VsBrush.WindowText}"
+                                BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                Command="{Binding MakeValueNull}">
+                            <Image Stretch="None"
+                                   Source="/octane-visual-studio-plugin;component/Resources/octane_remove.png" />
+                        </Button>
+                    </Grid>
+
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="EditableReferenceFieldTemplateMultiple">
+                <Grid Margin="0 3 5 3">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="5*" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Grid.Column="0"
+                               Text="{Binding Label}"
+                               FontWeight="Bold"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"
+                               Margin="0 0 5 0">
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Style.Triggers>
+                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                             Value="True">
+                                        <Setter Property="ToolTip"
+                                                Value="{Binding Label}" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                    <Grid Grid.Column="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <view:EntityComboBox Grid.Column="0"
+                                             HasSearchBox="Visible"
+                                             MultiSelectVisibility="Visible"
+                                             Background="{DynamicResource VsBrush.Window}"
+                                             Foreground="{DynamicResource VsBrush.WindowText}">
+                        </view:EntityComboBox>
+                        <Button Grid.Column="1"
+                                Background="{DynamicResource VsBrush.Window}"
+                                Foreground="{DynamicResource VsBrush.WindowText}"
+                                BorderThickness="0"
+                                Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                                Command="{Binding MakeValueNull}">
+                            <Image Stretch="None"
+                                   Source="/octane-visual-studio-plugin;component/Resources/octane_remove.png" />
+                        </Button>
+                    </Grid>
+                </Grid>
+            </DataTemplate>
+
+            <view:FieldListDataTemplateSelector x:Key="myDataTemplateSelector" />
+        </ResourceDictionary>
     </UserControl.Resources>
 
     <Border Padding="10">
@@ -40,26 +373,35 @@
             <DockPanel x:Name="LoadingItemPanel">
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
-                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="Loading">
-                                <Setter Property="Visibility" Value="Visible" />
+                            <DataTrigger Binding="{Binding Mode}"
+                                         Value="Loading">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
                 </DockPanel.Style>
 
-                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+                <view:GifImage x:Name="gifImage"
+                               Stretch="None"
+                               GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif"
+                               AutoStart="True" />
 
             </DockPanel>
 
             <DockPanel x:Name="FailedToLoadPanel">
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
-                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="FailedToLoad">
-                                <Setter Property="Visibility" Value="Visible" />
+                            <DataTrigger Binding="{Binding Mode}"
+                                         Value="FailedToLoad">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -67,26 +409,34 @@
 
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="50"/>
+                        <RowDefinition Height="50" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Center" Orientation="Horizontal">
-                        <Button Width="25" Height="25" 
+                    <StackPanel Grid.Row="0"
+                                HorizontalAlignment="Right"
+                                VerticalAlignment="Center"
+                                Orientation="Horizontal">
+                        <Button Width="25"
+                                Height="25"
                                 BorderThickness="0"
                                 Background="{DynamicResource VsBrush.Window}"
                                 Command="{Binding RefreshCommand}"
                                 ToolTip="Refresh details">
                             <!--This text-block show the reload sign as unicode character-->
-                            <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
-                                       FontWeight="Bold" FontSize="24"
+                            <TextBlock Text="&#x50;"
+                                       FontFamily="Wingdings 3"
+                                       FontWeight="Bold"
+                                       FontSize="24"
                                        Foreground="LightSkyBlue"
-                                       HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
                         </Button>
 
                     </StackPanel>
 
-                    <Grid Grid.Row="1" HorizontalAlignment="Stretch">
+                    <Grid Grid.Row="1"
+                          HorizontalAlignment="Stretch">
                         <Grid.RowDefinitions>
                             <RowDefinition />
                             <RowDefinition />
@@ -95,22 +445,29 @@
                             <RowDefinition />
                         </Grid.RowDefinitions>
 
-                        <Image Grid.Row="1" Stretch="None"
-                           RenderOptions.BitmapScalingMode="Fant"
-                           Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png"/>
+                        <Image Grid.Row="1"
+                               Stretch="None"
+                               RenderOptions.BitmapScalingMode="Fant"
+                               Source="/octane-visual-studio-plugin;component/Resources/octane-logo.png" />
 
-                        <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel Grid.Row="2"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Center">
                             <TextBlock>Unable to retrieve entity information</TextBlock>
 
                             <TextBlock Text="{Binding ErrorMessage, FallbackValue=this will show the error message}"
-                                   HorizontalAlignment="Center" VerticalAlignment="Center"
-                                   Foreground="Red"/>
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center"
+                                       Foreground="Red" />
                         </StackPanel>
 
-                        <Image Grid.Row="4" Stretch="None"
-                           HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
-                           RenderOptions.BitmapScalingMode="Fant"
-                           Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png"/>
+                        <Image Grid.Row="4"
+                               Stretch="None"
+                               HorizontalAlignment="Right"
+                               VerticalAlignment="Bottom"
+                               Margin="0, 0, 10, 10"
+                               RenderOptions.BitmapScalingMode="Fant"
+                               Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png" />
                     </Grid>
                 </Grid>
             </DockPanel>
@@ -118,10 +475,18 @@
             <DockPanel x:Name="ShowDetailedView">
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
-                        <Setter Property="Visibility" Value="Collapsed" />
+                        <Setter Property="Visibility"
+                                Value="Collapsed" />
                         <Style.Triggers>
-                            <DataTrigger Binding="{Binding Mode}" Value="Loaded">
-                                <Setter Property="Visibility" Value="Visible" />
+                            <DataTrigger Binding="{Binding Mode}"
+                                         Value="Loaded">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Mode}"
+                                         Value="LoadingComments">
+                                <Setter Property="Visibility"
+                                        Value="Visible" />
                             </DataTrigger>
                         </Style.Triggers>
                     </Style>
@@ -132,253 +497,370 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition />
                     </Grid.RowDefinitions>
-
-                    <Grid Grid.Column="0" Grid.Row="0">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" MinWidth="300"/>
-                                <ColumnDefinition Width="Auto" />
-                            </Grid.ColumnDefinitions>
-
-                            <Grid Grid.Column="0">
+                    <Grid Grid.Column="0"
+                        Grid.Row="0">
+                        <StackPanel Orientation="Vertical">
+                            <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto"/>
-                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*"
+                                                      MinWidth="300" />
+                                    <ColumnDefinition Width="Auto" />
                                 </Grid.ColumnDefinitions>
-
-                                <Border Grid.Column="0" BorderThickness="1" Height="40" Width="40" DockPanel.Dock="Left" Margin="0 0 5 0">
-                                    <Border.Background>
-                                        <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
-                                    </Border.Background>
-                                    <TextBlock Foreground="White" FontWeight="Bold" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" />
-                                </Border>
-
-                                <Grid Grid.Column="1" VerticalAlignment="Center">
+                                <Grid Grid.Column="0">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
 
-                                    <TextBox Grid.Row="0" Grid.Column="0" 
-                                             IsReadOnly="True" 
-                                             Margin="0 0 5 0" FontSize="20" VerticalAlignment="Center"
-                                             Text="{Binding ID, FallbackValue=123, Mode=OneWay}"
-                                             Background="{DynamicResource VsBrush.Window}"
-                                             Foreground="{DynamicResource VsBrush.WindowText}"
-                                             BorderThickness="0"/>
-                                    <TextBlock Text="{Binding Title, FallbackValue=__Item with name__}" Grid.Row="0" Grid.Column="1" FontSize="20" TextTrimming="CharacterEllipsis"/>
+                                    <Ellipse Grid.Column="0"
+                                             Height="40"
+                                             Width="40"
+                                             DockPanel.Dock="Left"
+                                             Margin="0 0 5 0">
+                                        <Ellipse.Fill>
+                                            <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
+                                        </Ellipse.Fill>
+                                    </Ellipse>
+                                    <TextBlock Grid.Column="0"
+                                               DockPanel.Dock="Left"
+                                               Margin="0 0 5 0"
+                                               Foreground="White"
+                                               FontWeight="Bold"
+                                               Text="{Binding IconText, FallbackValue='LE'}"
+                                               VerticalAlignment="Center"
+                                               TextAlignment="Center" />
+
+                                    <Grid Grid.Column="1"
+                                          VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <TextBox Grid.Row="0"
+                                                 Grid.Column="0"
+                                                 IsReadOnly="True"
+                                                 Margin="0 0 5 0"
+                                                 FontSize="20"
+                                                 VerticalAlignment="Center"
+                                                 Text="{Binding ID, FallbackValue=123, Mode=OneWay}"
+                                                 Background="{DynamicResource VsBrush.Window}"
+                                                 Foreground="{DynamicResource VsBrush.WindowText}"
+                                                 BorderThickness="0" />
+                                        <TextBox  Grid.Row="0"
+                                                  Grid.Column="1"
+                                                  FontSize="20"
+                                                  Text="{Binding Title, Mode=TwoWay}"
+                                                  Background="{DynamicResource VsBrush.Window}"
+                                                  Foreground="{DynamicResource VsBrush.WindowText}"
+                                                  BorderThickness="1">
+                                            <TextBox.Style>
+                                                <Style TargetType="TextBox">
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}"
+                                                                     Value="false">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="TextBox">
+                                                                        <TextBlock Text="{TemplateBinding Text}"
+                                                                                   TextTrimming="CharacterEllipsis" />
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBox.Style>
+                                        </TextBox>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
 
-                            <StackPanel Grid.Column="1" DockPanel.Dock="Right" Orientation="Horizontal">
-                                <StackPanel x:Name="PhaseSection" Orientation="Horizontal"
-                                            Visibility="{Binding Path=ShowPhase, Converter={StaticResource BoolToVisConverter}}">
-                                    <TextBlock Text="Phase:"
-                                               VerticalAlignment="Center" FontWeight="Bold" />
-                                    <TextBlock Text="{Binding Phase}"
-                                               VerticalAlignment="Center" Margin="5 0 0 0" />
-                                </StackPanel>
-                                <ToggleButton x:Name="CustomizeFieldsButton" 
-                                              Width="25" Height="25"
-                                              Margin="40 0 0 0"
-                                              HorizontalAlignment="Left" VerticalAlignment="Center"
-                                              ToolTip="Customize fields">
-                                    <ToggleButton.Template>
-                                        <ControlTemplate TargetType="ToggleButton">
-                                            <Image>
-                                                <Image.Style>
-                                                    <Style TargetType="{x:Type Image}">
-                                                        <Setter Property="Source" Value="/octane-visual-studio-plugin;component/Resources/customize-fields-off.png"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}" Value="False">
-                                                                <Setter Property="Source" Value="/octane-visual-studio-plugin;component/Resources/customize-fields-on.png"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Image.Style>
-                                            </Image>
-                                        </ControlTemplate>
-                                    </ToggleButton.Template>
-                                </ToggleButton>
-                                <Popup Width="200" Height="250"
-                                       Placement="Bottom"
-                                       HorizontalOffset="-175"
-                                       PlacementTarget="{Binding ElementName=CustomizeFieldsButton}"
-                                       IsOpen="{Binding IsChecked, ElementName=CustomizeFieldsButton}"
-                                       StaysOpen="False">
-                                    <Border BorderThickness="1" Background="Transparent" BorderBrush="Silver">
-                                        <Grid Background="{DynamicResource VsBrush.Window}">
-                                            <Grid.RowDefinitions>
-                                                <RowDefinition Height="Auto"/>
-                                                <RowDefinition/>
-                                                <RowDefinition Height="Auto"/>
-                                            </Grid.RowDefinitions>
-
-                                            <Grid Grid.Row="0">
-                                                <TextBox x:Name="SearchFieldsTextBox"
-                                                         VerticalAlignment="Center"
-                                                         HorizontalAlignment="Stretch"
-                                                         Background="{DynamicResource VsBrush.Window}"
-                                                         Foreground="{DynamicResource VsBrush.WindowText}"
-                                                         Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
-                                                         view:FocusBehavior.IsFocus="True"
-                                                         Margin="5"/>
-                                                <TextBlock IsHitTestVisible="False"
-                                                           Text="Search fields"
-                                                           VerticalAlignment="Center"
-                                                           HorizontalAlignment="Left"
-                                                           Margin="9 0 0 0"
-                                                           Background="{DynamicResource VsBrush.Window}"
-                                                           Foreground="DarkGray">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="{x:Type TextBlock}">
-                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                <StackPanel Grid.Column="1"
+                                            DockPanel.Dock="Right"
+                                            Orientation="Horizontal"
+                                            Margin="5 0 0 0">
+                                    <StackPanel x:Name="PhaseSection"
+                                                Orientation="Horizontal"
+                                                Visibility="{Binding Path=ShowPhase, Converter={StaticResource BoolToVisConverter}}">
+                                        <TextBlock Text="Current phase:"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Phase}"
+                                                   VerticalAlignment="Center"
+                                                   Margin="5 0 0 0" />
+                                        <TextBlock Text="|"
+                                                   Margin="5 0 0 0"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Text="Move to:"
+                                                   VerticalAlignment="Center"
+                                                   FontWeight="Bold"
+                                                   Margin="5 0 0 0" />
+                                        <ComboBox Style="{DynamicResource ComboBoxStyle1}"
+                                                  Background="{DynamicResource VsBrush.Window}"
+                                                  VerticalAlignment="Center"
+                                                  Width="120"
+                                                  IsEnabled="{Binding SelectIsEnabled}"
+                                                  ItemsSource="{Binding NextPhaseNames}"
+                                                  SelectedItem="{Binding SelectedNextPhase, Mode=TwoWay}"
+                                                  Margin="5 0 0 0" />
+                                    </StackPanel>
+                                    <Button x:Name="SaveEntityButton"
+                                            Margin="40 0 0 0"
+                                            Width="25"
+                                            Height="25"
+                                            BorderThickness="0"
+                                            Background="{DynamicResource VsBrush.Window}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Command="{Binding SaveEntityCommand}"
+                                            ToolTip="Save">
+                                        <Image Source="/octane-visual-studio-plugin;component/Resources/save.png" />
+                                    </Button>
+                                    <ToggleButton x:Name="CustomizeFieldsButton"
+                                                  Width="25"
+                                                  Height="25"
+                                                  Margin="8 0 0 0"
+                                                  HorizontalAlignment="Left"
+                                                  VerticalAlignment="Center"
+                                                  ToolTip="Customize fields">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate TargetType="ToggleButton">
+                                                <Image>
+                                                    <Image.Style>
+                                                        <Style TargetType="{x:Type Image}">
+                                                            <Setter Property="Source"
+                                                                    Value="/octane-visual-studio-plugin;component/Resources/customize-fields-off.png" />
                                                             <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding Text, ElementName=SearchFieldsTextBox}" Value="">
-                                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                                <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}"
+                                                                             Value="False">
+                                                                    <Setter Property="Source"
+                                                                            Value="/octane-visual-studio-plugin;component/Resources/customize-fields-on.png" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
+                                                    </Image.Style>
+                                                </Image>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+
+                                    <Popup Width="200"
+                                           Height="250"
+                                           Placement="Bottom"
+                                           HorizontalOffset="-175"
+                                           PlacementTarget="{Binding ElementName=CustomizeFieldsButton}"
+                                           IsOpen="{Binding IsChecked, ElementName=CustomizeFieldsButton}"
+                                           StaysOpen="False">
+                                        <Border BorderThickness="1"
+                                                Background="Transparent"
+                                                BorderBrush="Silver">
+                                            <Grid Background="{DynamicResource VsBrush.Window}">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+
+                                                <Grid Grid.Row="0">
+                                                    <TextBox x:Name="SearchFieldsTextBox"
+                                                             VerticalAlignment="Center"
+                                                             HorizontalAlignment="Stretch"
+                                                             Background="{DynamicResource VsBrush.Window}"
+                                                             Foreground="{DynamicResource VsBrush.WindowText}"
+                                                             Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
+                                                             view:FocusBehavior.IsFocus="True"
+                                                             Margin="5" />
+                                                    <TextBlock IsHitTestVisible="False"
+                                                               Text="Search fields"
+                                                               VerticalAlignment="Center"
+                                                               HorizontalAlignment="Left"
+                                                               Margin="9 0 0 0"
+                                                               Background="{DynamicResource VsBrush.Window}"
+                                                               Foreground="DarkGray">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="{x:Type TextBlock}">
+                                                                <Setter Property="Visibility"
+                                                                        Value="Collapsed" />
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding Text, ElementName=SearchFieldsTextBox}"
+                                                                                 Value="">
+                                                                        <Setter Property="Visibility"
+                                                                                Value="Visible" />
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Grid>
+
+                                                <ListView Grid.Row="1"
+                                                          ItemsSource="{Binding FilteredEntityFields}"
+                                                          HorizontalAlignment="Stretch"
+                                                          VerticalAlignment="Stretch"
+                                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                          ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                          Background="{DynamicResource VsBrush.Window}"
+                                                          Foreground="{DynamicResource VsBrush.WindowText}"
+                                                          Margin="3 0 3 0">
+                                                    <ListView.ItemContainerStyle>
+                                                        <Style TargetType="{x:Type ListViewItem}">
+                                                            <Setter Property="Background"
+                                                                    Value="Transparent" />
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                                        <ContentPresenter />
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </Style>
+                                                    </ListView.ItemContainerStyle>
+                                                    <ListView.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <StackPanel Orientation="Horizontal"
+                                                                        x:Name="Element"
+                                                                        Margin="0 2 0 2">
+                                                                <CheckBox IsChecked="{Binding IsSelected}"
+                                                                          Margin="2 0 2 0"
+                                                                          VerticalAlignment="Center"
+                                                                          Command="{Binding DataContext.ToggleEntityFieldVisibilityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}" />
+                                                                <TextBlock Text="{Binding Label}"
+                                                                           MaxWidth="150"
+                                                                           VerticalAlignment="Center"
+                                                                           TextTrimming="CharacterEllipsis">
+                                                                    <TextBlock.Style>
+                                                                        <Style TargetType="{x:Type TextBlock}">
+                                                                            <Style.Triggers>
+                                                                                <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                                                                         Value="True">
+                                                                                    <Setter Property="ToolTip"
+                                                                                            Value="{Binding Label}" />
+                                                                                </Trigger>
+                                                                            </Style.Triggers>
+                                                                        </Style>
+                                                                    </TextBlock.Style>
+                                                                </TextBlock>
+                                                            </StackPanel>
+                                                            <DataTemplate.Triggers>
+                                                                <DataTrigger Binding="{Binding Path=DataContext.IsSelected, RelativeSource={RelativeSource TemplatedParent}}"
+                                                                             Value="True">
+                                                                    <Setter Property="Background"
+                                                                            TargetName="Element"
+                                                                            Value="DodgerBlue">
+                                                                    </Setter>
+                                                                </DataTrigger>
+                                                            </DataTemplate.Triggers>
+                                                        </DataTemplate>
+                                                    </ListView.ItemTemplate>
+                                                </ListView>
+                                                <Button Grid.Row="2"
+                                                        x:Name="ResetFieldsCustomizationButton"
+                                                        Margin="5 5 5 5"
+                                                        Width="40"
+                                                        Height="25"
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Center"
+                                                        Background="{DynamicResource VsBrush.Window}"
+                                                        Foreground="{DynamicResource VsBrush.WindowText}"
+                                                        Content="Reset"
+                                                        Command="{Binding ResetFieldsCustomizationCommand}">
+                                                    <Button.Style>
+                                                        <Style TargetType="{x:Type Button}">
+                                                            <Setter Property="IsEnabled"
+                                                                    Value="True" />
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}"
+                                                                             Value="True">
+                                                                    <Setter Property="IsEnabled"
+                                                                            Value="False" />
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Button.Style>
+                                                </Button>
                                             </Grid>
-
-                                            <ListView Grid.Row="1"
-                                                      ItemsSource="{Binding FilteredEntityFields}"
-                                                      HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                                      ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                      Background="{DynamicResource VsBrush.Window}"
-                                                      Foreground="{DynamicResource VsBrush.WindowText}"
-                                                      Margin="3 0 3 0">
-                                                <ListView.ItemContainerStyle>
-                                                    <Style TargetType="{x:Type ListViewItem}">
-                                                        <Setter Property="Background" Value="Transparent" />
-                                                        <Setter Property="Template">
-                                                            <Setter.Value>
-                                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                                    <ContentPresenter />
-                                                                </ControlTemplate>
-                                                            </Setter.Value>
-                                                        </Setter>
-                                                    </Style>
-                                                </ListView.ItemContainerStyle>
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <StackPanel Orientation="Horizontal" x:Name="Element" Margin="0 2 0 2">
-                                                            <CheckBox IsChecked="{Binding IsSelected}"
-                                                                      Margin="2 0 2 0"
-                                                                      VerticalAlignment="Center"
-                                                                      Command="{Binding DataContext.ToggleEntityFieldVisibilityCommand, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type UserControl}}}"/>
-                                                            <TextBlock Text="{Binding Label}" MaxWidth="150" VerticalAlignment="Center" TextTrimming="CharacterEllipsis">
-                                                                <TextBlock.Style>
-                                                                    <Style TargetType="{x:Type TextBlock}">
-                                                                        <Style.Triggers>
-                                                                            <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
-                                                                                <Setter Property="ToolTip" Value="{Binding Label}"/>
-                                                                            </Trigger>
-                                                                        </Style.Triggers>
-                                                                    </Style>
-                                                                </TextBlock.Style>
-                                                            </TextBlock>
-                                                        </StackPanel>
-                                                        <DataTemplate.Triggers>
-                                                            <DataTrigger 
-                                                                Binding="{Binding Path=DataContext.IsSelected, RelativeSource={RelativeSource TemplatedParent}}" 
-                                                                Value="True">
-                                                                <Setter Property="Background" TargetName="Element"  Value="DodgerBlue">
-                                                                </Setter>
-                                                            </DataTrigger>
-                                                        </DataTemplate.Triggers>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
-                                            <Button Grid.Row="2" x:Name="ResetFieldsCustomizationButton"
-                                                    Margin="5 5 5 5"
-                                                    Width="40" Height="25"
-                                                    HorizontalAlignment="Right" VerticalAlignment="Center"
-                                                    Background="{DynamicResource VsBrush.Window}"
-                                                    Foreground="{DynamicResource VsBrush.WindowText}"
-                                                    Content="Reset"
-                                                    Command="{Binding ResetFieldsCustomizationCommand}">
-                                                <Button.Style>
-                                                    <Style TargetType="{x:Type Button}">
-                                                        <Setter Property="IsEnabled" Value="True"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}" Value="True">
-                                                                <Setter Property="IsEnabled" Value="False"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Button.Style>
-                                            </Button>
-                                        </Grid>
-                                    </Border>
-                                </Popup>
-                                <Button x:Name="ShowCommentsButton"
-                                        Margin="8 0 0 0"
-                                        Width="25" Height="25"
-                                        BorderThickness="0"
-                                        Background="{DynamicResource VsBrush.Window}"
-                                        HorizontalAlignment="Left" VerticalAlignment="Center"
-                                        Command="{Binding ToggleCommentSectionCommand}"
-                                        Visibility="{Binding Path=EntitySupportsComments, Converter={StaticResource BoolToVisConverter}}"
-                                        ToolTip="{Binding ShowCommentTooltip}">
-                                    <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png"/>
-                                </Button>
-                                <Button Width="25" Height="25" 
-                                        BorderThickness="0"
-                                        Background="{DynamicResource VsBrush.Window}"
-                                        Command="{Binding RefreshCommand}"
-                                        Margin="5 0 0 0"
-                                        ToolTip="Refresh details">
-                                    <!--This text-block show the reload sign as unicode character-->
-                                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
-                                               FontWeight="Bold" FontSize="24"
-                                               Foreground="LightSkyBlue"
-                                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Button>
-                                <Button x:Name="OpenInBrowserButton"
-                                        Margin="5 0 0 0"
-                                        Width="25" Height="25"
-                                        BorderThickness="0"
-                                        Background="{DynamicResource VsBrush.Window}"
-                                        Command="{Binding OpenInBrowserCommand}"
-                                        ToolTip="Open in browser">
-                                    <Image Source="/octane-visual-studio-plugin;component/Resources/browser.png"/>
-                                </Button>
-                            </StackPanel>
-                            
-                        </Grid>
+                                        </Border>
+                                    </Popup>
+                                    <Button x:Name="ShowCommentsButton"
+                                            Margin="8 0 0 0"
+                                            Width="25"
+                                            Height="25"
+                                            BorderThickness="0"
+                                            Background="{DynamicResource VsBrush.Window}"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Command="{Binding ToggleCommentSectionCommand}"
+                                            Visibility="{Binding Path=EntitySupportsComments, Converter={StaticResource BoolToVisConverter}}"
+                                            ToolTip="{Binding ShowCommentTooltip}">
+                                        <Image Source="/octane-visual-studio-plugin;component/Resources/comments.png" />
+                                    </Button>
+                                    <Button Width="25"
+                                            Height="25"
+                                            BorderThickness="0"
+                                            Background="{DynamicResource VsBrush.Window}"
+                                            Command="{Binding RefreshCommand}"
+                                            Margin="5 0 0 0"
+                                            ToolTip="Refresh details">
+                                        <!--This text-block show the reload sign as unicode character-->
+                                        <TextBlock Text="&#x50;"
+                                                   FontFamily="Wingdings 3"
+                                                   FontWeight="Bold"
+                                                   FontSize="24"
+                                                   Foreground="LightSkyBlue"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center" />
+                                    </Button>
+                                    <Button x:Name="OpenInBrowserButton"
+                                            Margin="5 0 0 0"
+                                            Width="25"
+                                            Height="25"
+                                            BorderThickness="0"
+                                            Background="{DynamicResource VsBrush.Window}"
+                                            Command="{Binding OpenInBrowserCommand}"
+                                            ToolTip="Open in browser">
+                                        <Image Source="/octane-visual-studio-plugin;component/Resources/browser.png" />
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                            <Separator Margin="0 15 0 15" />
+                        </StackPanel>
                     </Grid>
+                        
 
-                    <Grid  Grid.Row="1" >
+                <Grid  Grid.Row="1">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
                         </Grid.ColumnDefinitions>
 
-                        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto">
+                        <ScrollViewer Grid.Column="0"
+                                      VerticalScrollBarVisibility="Auto">
                             <Grid>
                                 <StackPanel Orientation="Vertical">
-                                    <Separator Margin="0 15 0 15"/>
-                                    <TextBlock  DockPanel.Dock="Top" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">General</TextBlock>
+                                   
+                                    <TextBlock  DockPanel.Dock="Top"
+                                                Margin="10 0 0 10"
+                                                FontSize="16"
+                                                FontWeight="Bold">General</TextBlock>
 
                                     <ListView ItemsSource="{Binding VisibleFields}"
-                                            Background="{DynamicResource VsBrush.Window}"
-                                            Foreground="{DynamicResource VsBrush.WindowText}"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                            ScrollViewer.CanContentScroll="False"
-                                            BorderThickness="0"
-                                            Template="{StaticResource NoScroll}">
+                                              ItemTemplateSelector="{StaticResource myDataTemplateSelector}"
+                                              Background="{DynamicResource VsBrush.Window}"
+                                              Foreground="{DynamicResource VsBrush.WindowText}"
+                                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                              ScrollViewer.CanContentScroll="False"
+                                              BorderThickness="0"
+                                              Template="{StaticResource NoScroll}">
                                         <ListView.ItemsPanel>
                                             <ItemsPanelTemplate>
-                                                <UniformGrid Columns="2"/>
+                                                <UniformGrid Columns="2" />
                                             </ItemsPanelTemplate>
                                         </ListView.ItemsPanel>
                                         <ListView.ItemContainerStyle>
                                             <Style TargetType="{x:Type ListViewItem}">
-                                                <Setter Property="Background" Value="Transparent" />
+                                                <Setter Property="Background"
+                                                        Value="Transparent" />
                                                 <Setter Property="Template">
                                                     <Setter.Value>
                                                         <ControlTemplate TargetType="{x:Type ListViewItem}">
@@ -388,129 +870,174 @@
                                                 </Setter>
                                             </Style>
                                         </ListView.ItemContainerStyle>
-                                        <ListView.ItemTemplate>
-                                            <DataTemplate>
-                                                <Grid Margin="0 3 5 3">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition Width="*"/>
-                                                        <ColumnDefinition Width="4*"/>
-                                                    </Grid.ColumnDefinitions>
-                                                    <TextBlock Grid.Column="0" Text="{Binding Label}" FontWeight="Bold" TextTrimming="CharacterEllipsis" Margin="0 0 5 0">
-                                                        <TextBlock.Style>
-                                                            <Style TargetType="{x:Type TextBlock}">
-                                                                <Style.Triggers>
-                                                                    <Trigger Property="view:TextBlockService.IsTextTrimmed" Value="True">
-                                                                        <Setter Property="ToolTip" Value="{Binding Label}"/>
-                                                                    </Trigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBlock.Style>
-                                                    </TextBlock>
-                                                    <TextBox Grid.Column="1" IsReadOnly="True" Text="{Binding Content, Mode=OneWay}"
-                                                             Background="{DynamicResource VsBrush.Window}"
-                                                             Foreground="{DynamicResource VsBrush.WindowText}"
-                                                             BorderThickness="0">
-                                                        <TextBox.Style>
-                                                            <Style TargetType="TextBox">
-                                                                <Style.Triggers>
-                                                                    <DataTrigger Binding="{Binding IsKeyboardFocused, RelativeSource={RelativeSource Self}}" Value="false">
-                                                                        <Setter Property="Template">
-                                                                            <Setter.Value>
-                                                                                <ControlTemplate TargetType="TextBox">
-                                                                                    <TextBlock Text="{TemplateBinding Text}"  TextTrimming="CharacterEllipsis"/>
-                                                                                </ControlTemplate>
-                                                                            </Setter.Value>
-                                                                        </Setter>
-                                                                    </DataTrigger>
-                                                                </Style.Triggers>
-                                                            </Style>
-                                                        </TextBox.Style>
-                                                    </TextBox>
-                                                </Grid>
-                                            </DataTemplate>
-                                        </ListView.ItemTemplate>
                                     </ListView>
 
-                                    <Separator Margin="0 15 0 15"/>
-                                    <TextBlock  DockPanel.Dock="Top" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Description</TextBlock>
-                                    <!--WebBrowser Grid.Row="2" x:Name="DescBrowser" view:OctaneToolWindowControl.BindableSource="{Binding Description}" Navigating="DescBrowser_Navigating"/-->
-                                    <Border BorderThickness="1" Background="Transparent" BorderBrush="Silver">
-                                        <FlowDocumentScrollViewer
-                                            HorizontalScrollBarVisibility="Disabled"
-                                            VerticalScrollBarVisibility="Disabled"
-                                            Margin="-5 0 -5 0"
-                                            Document="{Binding Description, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                                            PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
+                                    <Separator Margin="0 15 0 15" />
+                                    <TextBlock  DockPanel.Dock="Top"
+                                                Margin="10 0 0 10"
+                                                FontSize="16"
+                                                FontWeight="Bold">Description</TextBlock>
+                                    <Border BorderThickness="1"
+                                            Background="Transparent"
+                                            BorderBrush="Silver">
+                                        <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                                                  VerticalScrollBarVisibility="Disabled"
+                                                                  Margin="-5 0 -5 0"
+                                                                  Document="{Binding Description, Converter={StaticResource HtmlToFlowDocumentConverter}}"
+                                                                  PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel" />
                                     </Border>
                                 </StackPanel>
                             </Grid>
                         </ScrollViewer>
 
-                        <DockPanel Grid.Column="1" Width="300" Margin="5 0 0 0">
+                        <DockPanel Grid.Column="1"
+                                   Width="300"
+                                   Margin="5 0 0 0">
                             <DockPanel.Style>
                                 <Style TargetType="DockPanel">
-                                    <Setter Property="Visibility" Value="Collapsed" />
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
                                     <Style.Triggers>
-                                        <DataTrigger Binding="{Binding CommentSectionVisibility}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible" />
+                                        <DataTrigger Binding="{Binding CommentSectionVisibility}"
+                                                     Value="True">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible" />
                                         </DataTrigger>
                                     </Style.Triggers>
                                 </Style>
                             </DockPanel.Style>
 
-                            <Border BorderThickness="1,0,0,0"
-                                    BorderBrush="#FFC5C5C5"
-                                    Margin="3 15 3 0"
-                                    Width="1"
-                                    Background="White"/>
-
-                            <Separator DockPanel.Dock="Top" Margin="0 15 0 15"/>
-
                             <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="Auto"/>
-                                    <RowDefinition/>
-                                </Grid.RowDefinitions>
-                                <TextBlock Grid.Row="0" Margin="10 0 0 10" FontSize="16" FontWeight="Bold">Comments</TextBlock>
-
-                                <ListView Grid.Row="1" x:Name="results" ItemsSource="{Binding Comments}"
-                                    Background="{DynamicResource VsBrush.Window}"
-                                    Foreground="{DynamicResource VsBrush.WindowText}"
-                                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                        ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                    ScrollViewer.CanContentScroll="False"
-                                    BorderThickness="0">
-                                    <ListView.ItemContainerStyle>
-                                        <Style TargetType="{x:Type ListViewItem}">
-                                            <Setter Property="Background" Value="Transparent" />
-                                            <Setter Property="Template">
-                                                <Setter.Value>
-                                                    <ControlTemplate TargetType="{x:Type ListViewItem}">
-                                                        <ContentPresenter />
-                                                    </ControlTemplate>
-                                                </Setter.Value>
-                                            </Setter>
+                                <DockPanel x:Name="LoadingCommentSection">
+                                    <DockPanel.Style>
+                                        <Style TargetType="DockPanel">
+                                            <Setter Property="Visibility"
+                                                    Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Mode}"
+                                                             Value="LoadingComments">
+                                                    <Setter Property="Visibility"
+                                                            Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
                                         </Style>
-                                    </ListView.ItemContainerStyle>
-                                    <ListView.ItemTemplate>
-                                        <DataTemplate>
-                                            <StackPanel Margin="0 5 0 5">
-                                                <StackPanel Orientation="Horizontal" Margin="5 0 0 0">
-                                                    <TextBlock Text="{Binding CreationTime}" Margin="0 0 5 0"/>
-                                                    <TextBlock Text="{Binding Author}"/>
-                                                    <TextBlock Text=":"/>
-                                                </StackPanel>
-                                                <FlowDocumentScrollViewer
-                                                    HorizontalScrollBarVisibility="Disabled"
-                                                    VerticalScrollBarVisibility="Disabled"
-                                                    Margin="-5 0 -5 0"
-                                                    Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
-                                                    PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel"/>
-                                                <Separator/>
-                                            </StackPanel>
-                                        </DataTemplate>
-                                    </ListView.ItemTemplate>
-                                </ListView>
+                                    </DockPanel.Style>
+
+                                    <view:GifImage x:Name="gifImageComments"
+                                                   Stretch="None"
+                                                   GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif"
+                                                   AutoStart="True" />
+                                </DockPanel>
+
+                                <DockPanel x:Name="LoadedCommentSection">
+                                    <DockPanel.Style>
+                                        <Style TargetType="DockPanel">
+                                            <Setter Property="Visibility"
+                                                    Value="Collapsed" />
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding Mode}"
+                                                             Value="Loaded">
+                                                    <Setter Property="Visibility"
+                                                            Value="Visible" />
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </DockPanel.Style>
+
+                                    <Border BorderThickness="1,0,0,0"
+                                            BorderBrush="#FFC5C5C5"
+                                            Margin="3 15 3 0"
+                                            Width="1"
+                                            Background="White" />
+
+                                    <Separator DockPanel.Dock="Top"
+                                               Margin="0 15 0 15" />
+
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto" />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <TextBlock Grid.Row="0"
+                                                   Margin="10 0 0 10"
+                                                   FontSize="16"
+                                                   FontWeight="Bold">Comments</TextBlock>
+
+                                        <TextBox  Margin="5 25 0 10"
+                                                  Name="commentText"
+                                                  HorizontalAlignment="Left"
+                                                  FontSize="12"
+                                                  MinWidth="250"
+                                                  MaxWidth="250"
+                                                  MinHeight="19"
+                                                  MaxHeight="19"
+                                                  AcceptsReturn="True"
+                                                  Text="{Binding CommentText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                  Background="{DynamicResource VsBrush.Window}"
+                                                  Foreground="{DynamicResource VsBrush.WindowText}"
+                                                  BorderThickness="1">
+                                            <TextBox.InputBindings>
+                                                <KeyBinding Key="Enter"
+                                                            Command="{Binding AddCommentCommand}"
+                                                            CommandParameter="{Binding Path=Text, RelativeSource={RelativeSource AncestorType={x:Type TextBox}}}" />
+                                            </TextBox.InputBindings>
+                                        </TextBox>
+
+                                        <Button  Margin="10 25 0 10"
+                                                 HorizontalAlignment="Right"
+                                                 MinWidth="35"
+                                                 MaxWidth="35"
+                                                 MinHeight="20"
+                                                 MaxHeight="20"
+                                                 IsEnabled="{Binding ElementName=commentText, Path=Text.Length, Mode=OneWay}"
+                                                 Command="{Binding AddCommentCommand}">
+                                            <TextBlock ToolTip="Post a comment"> Post</TextBlock>
+                                        </Button>
+
+                                        <ListView Grid.Row="1"
+                                                  x:Name="results"
+                                                  ItemsSource="{Binding Comments}"
+                                                  Background="{DynamicResource VsBrush.Window}"
+                                                  Foreground="{DynamicResource VsBrush.WindowText}"
+                                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                                  ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                  ScrollViewer.CanContentScroll="False"
+                                                  BorderThickness="0">
+                                            <ListView.ItemContainerStyle>
+                                                <Style TargetType="{x:Type ListViewItem}">
+                                                    <Setter Property="Background"
+                                                            Value="Transparent" />
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                                <ContentPresenter />
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </ListView.ItemContainerStyle>
+                                            <ListView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackPanel Margin="0 5 0 5">
+                                                        <StackPanel Orientation="Horizontal"
+                                                                    Margin="5 0 0 0">
+                                                            <TextBlock Text="{Binding CreationTime}"
+                                                                       Margin="0 0 5 0" />
+                                                            <TextBlock Text="{Binding Author}" />
+                                                            <TextBlock Text=":" />
+                                                        </StackPanel>
+                                                        <FlowDocumentScrollViewer HorizontalScrollBarVisibility="Disabled"
+                                                                                  VerticalScrollBarVisibility="Disabled"
+                                                                                  Margin="-5 0 -5 0"
+                                                                                  Document="{Binding OriginalText, Converter={StaticResource HtmlToFlowDocumentConverter}}"
+                                                                                  PreviewMouseWheel="FlowDocumentScrollViewer_PreviewMouseWheel" />
+                                                        <Separator />
+                                                    </StackPanel>
+                                                </DataTemplate>
+                                            </ListView.ItemTemplate>
+                                        </ListView>
+                                    </Grid>
+                                </DockPanel>
                             </Grid>
                         </DockPanel>
 

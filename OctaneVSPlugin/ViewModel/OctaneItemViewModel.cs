@@ -16,52 +16,109 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows;
+using Task = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
+    /// <summary>
+    /// View model for an entity directly related to the current user
+    /// </summary>
     public class OctaneItemViewModel : BaseItemViewModel
     {
-        private readonly List<FieldViewModel> topFields;
-        private readonly List<FieldViewModel> bottomFields;
-        private readonly FieldViewModel subTitleField;
+        private bool _isActiveItem;
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
         public OctaneItemViewModel(BaseEntity entity)
             : base(entity)
         {
-            topFields = new List<FieldViewModel>();
-            bottomFields = new List<FieldViewModel>();
+            SubTitleField = new FieldViewModel(Entity, MyWorkMetadata.Instance.GetSubTitleFieldInfo(entity));
 
-            subTitleField = new FieldViewModel(Entity, MyWorkMetadata.Instance.GetSubTitleFieldInfo(entity));
-
+            var topFields = new List<FieldViewModel>();
             foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetTopFieldsInfo(entity))
             {
                 topFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
+            TopFields = FieldsWithSeparators(topFields).ToList();
 
+            var bottomFields = new List<FieldViewModel>();
             foreach (FieldInfo fieldInfo in MyWorkMetadata.Instance.GetBottomFieldsInfo(entity))
             {
                 bottomFields.Add(new FieldViewModel(Entity, fieldInfo));
             }
+            BottomFields = FieldsWithSeparators(bottomFields).ToList();
         }
 
         public virtual bool VisibleID { get { return true; } }
 
-        public string TypeName
+        #region ActiveItem
+
+        /// <summary>
+        /// Flag specifying whether this entity is the current active work item
+        /// </summary>
+        public bool IsActiveWorkItem
         {
-            get { return Entity.TypeName; }
+            get { return _isActiveItem; }
+            private set
+            {
+                _isActiveItem = value;
+                NotifyPropertyChanged("IsActiveWorkItem");
+            }
         }
 
-        public string SubType
+        /// <summary>
+        /// Reference to current active item
+        /// </summary>
+        public static OctaneItemViewModel CurrentActiveItem { get; private set; }
+
+        /// <summary>
+        /// Set the given item as the current active item
+        /// </summary>
+        public static void SetActiveItem(OctaneItemViewModel octaneItem)
         {
-            get { return Entity.GetStringValue(CommonFields.SubType); }
+            if (octaneItem == null)
+                return;
+
+            if (CurrentActiveItem != null)
+                CurrentActiveItem.IsActiveWorkItem = false;
+
+            CurrentActiveItem = octaneItem;
+
+            CurrentActiveItem.IsActiveWorkItem = true;
+            WorkspaceSessionPersistanceManager.SetActiveEntity(CurrentActiveItem.Entity);
         }
 
+        /// <summary>
+        /// Clear the current active item
+        /// </summary>
+        public static void ClearActiveItem()
+        {
+            if (CurrentActiveItem != null)
+                CurrentActiveItem.IsActiveWorkItem = false;
+
+            CurrentActiveItem = null;
+            WorkspaceSessionPersistanceManager.ClearActiveEntity();
+        }
+
+        #endregion
+
+        #region CommitMessage
+
+        /// <summary>
+        /// Commit message for item
+        /// </summary>
         public string CommitMessage
         {
             get
             {
+                if (!IsSupportCopyCommitMessage)
+                    return string.Empty;
+
                 if (Entity.TypeName == Task.TYPE_TASK)
                 {
                     var parentEntity = Utility.GetTaskParentEntity(Entity);
@@ -76,30 +133,73 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        /// <summary>
+        /// Flag whether the current item supports a commit message
+        /// </summary>
         public bool IsSupportCopyCommitMessage
         {
             get { return EntityTypeInformation.IsCopyCommitMessageSupported; }
         }
 
-        public FieldViewModel SubTitleField
+        /// <summary>
+        /// Validate current item's commit mesasge against Octane's template
+        /// </summary>
+        public async System.Threading.Tasks.Task ValidateCommitMessage()
         {
-            get { return subTitleField; }
+            if (!EntityTypeInformation.IsCopyCommitMessageSupported)
+                return;
+
+            OctaneServices octaneService = OctaneServices.GetInstance();
+
+            var commitPatterns = await octaneService.ValidateCommitMessageAsync(CommitMessage);
+
+            var type = Utility.GetConcreteEntityType(Entity);
+            var expectedId = Entity.Id;
+            if (type == Task.TYPE_TASK)
+            {
+                var parentEntity = Utility.GetTaskParentEntity(Entity);
+
+                type = Utility.GetConcreteEntityType(parentEntity);
+                expectedId = parentEntity.Id;
+            }
+
+            var result = false;
+            switch (type)
+            {
+                case WorkItem.SUBTYPE_STORY:
+                    result = commitPatterns.story.Contains(expectedId);
+                    break;
+                case WorkItem.SUBTYPE_DEFECT:
+                    result = commitPatterns.defect.Contains(expectedId);
+                    break;
+                case WorkItem.SUBTYPE_QUALITY_STORY:
+                    result = commitPatterns.quality_story.Contains(expectedId);
+                    break;
+            }
+
+            if (result)
+                Clipboard.SetText(CommitMessage);
         }
 
-        public IEnumerable<object> TopFields
-        {
-            get
-            {
-                return FieldsWithSeparators(topFields);
-            }
-        }
-        public IEnumerable<object> BottomFields
-        {
-            get
-            {
-                return FieldsWithSeparators(bottomFields);
-            }
-        }
+        #endregion
+
+
+        #region Fields
+
+        /// <summary>
+        /// Field info shown below the title
+        /// </summary>
+        public FieldViewModel SubTitleField { get; }
+
+        /// <summary>
+        /// Field enumeration shown at the top of the view
+        /// </summary>
+        public IEnumerable<object> TopFields { get; }
+
+        /// <summary>
+        /// Field enumeration shown at the bottom of the view
+        /// </summary>
+        public IEnumerable<object> BottomFields { get; }
 
         private IEnumerable<object> FieldsWithSeparators(List<FieldViewModel> fields)
         {
@@ -117,5 +217,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             yield return fields.Last();
         }
+
+        #endregion
     }
 }

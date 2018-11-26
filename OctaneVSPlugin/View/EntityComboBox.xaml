@@ -1,0 +1,181 @@
+﻿<!--
+* (c) 2016-2018 EntIT Software LLC, a Micro Focus company
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+-->
+<UserControl x:Class="MicroFocus.Adm.Octane.VisualStudio.View.EntityComboBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
+             xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
+             mc:Ignorable="d"
+             DataContext="{Binding Path=DataContext, RelativeSource={RelativeSource AncestorType={x:Type ContentControl}}}">
+
+    <Grid >
+		<Border BorderBrush="{DynamicResource {x:Static SystemColors.ActiveBorderBrushKey}}"
+                BorderThickness="1">
+		</Border>
+
+		<Grid Name="EditorGrid" Cursor="Hand">
+
+			<Grid.ColumnDefinitions>
+				<ColumnDefinition Width="25*"></ColumnDefinition>
+				<ColumnDefinition Width="*"></ColumnDefinition>
+			</Grid.ColumnDefinitions>
+
+			<Button Grid.Column="0"
+                    x:Name="EditorLabelName"
+                    Background="Transparent"
+                    Foreground="{DynamicResource VsBrush.WindowText}"
+                    ToolTip="{Binding Content, Mode=OneWay}"
+                    Content="{Binding Content, Mode=OneWay}"
+                    HorizontalAlignment="Stretch"
+                    Padding="3"
+                    HorizontalContentAlignment="Left"
+                    Click="ShowPopup">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="{x:Type Button}">
+                                    <Border Background="{TemplateBinding Background}">
+                                        <ContentPresenter HorizontalAlignment="Left"
+                                                          VerticalAlignment="Center"
+                                                          Margin="3" />
+                                    </Border>
+                                </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Button.Style>
+            </Button>
+
+            <Button Grid.Column="1"
+                    x:Name="DropDownButton"
+                    Click="ShowPopup"
+                    Background="Transparent"
+                    Foreground="Gray"
+                    BorderBrush="Transparent"
+                    FontFamily="Marlett"
+                    FontSize="20"
+                    Content="6" />
+        </Grid>
+        <Popup Name="ComboBoxPopup"
+               Width="{Binding ActualWidth, ElementName=EditorGrid}"
+               Height="150"
+               Placement="Bottom"
+               PlacementTarget="{Binding ElementName=EditorLabelName}"
+               StaysOpen="False">
+
+            <Border BorderThickness="1"
+                    Background="Transparent"
+                    BorderBrush="Silver">
+                <Grid Background="{DynamicResource VsBrush.Window}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0"
+                          Name="SearchBox">
+                        <TextBox x:Name="SearchFieldsTextBox"
+                                 VerticalAlignment="Center"
+                                 HorizontalAlignment="Stretch"
+                                 Background="{DynamicResource VsBrush.Window}"
+                                 Foreground="{DynamicResource VsBrush.WindowText}"
+                                 Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
+                                 view:FocusBehavior.IsFocus="True"
+                                 Height="20"
+                                 Margin="3 3 3 0" />
+                        <TextBlock IsHitTestVisible="False"
+                                   Text="Search"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Margin="9 0 0 0"
+                                   Background="{DynamicResource VsBrush.Window}"
+                                   Foreground="DarkGray">
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility"
+                                            Value="Collapsed" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Text, ElementName=SearchFieldsTextBox}"
+                                                     Value="">
+                                            <Setter Property="Visibility"
+                                                    Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </Grid>
+
+                    <ListView Grid.Row="1"
+                              Name="listView"
+                              ItemsSource="{Binding ReferenceFieldContent}"
+                              HorizontalAlignment="Stretch"
+                              VerticalAlignment="Stretch"
+                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                              ScrollViewer.VerticalScrollBarVisibility="Auto"
+                              Background="{DynamicResource VsBrush.Window}"
+                              Foreground="{DynamicResource VsBrush.WindowText}"
+                              Margin="3 3 3 3">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="{x:Type ListViewItem}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver"
+                                             Value="True">
+                                        <Setter Property="Background"
+                                                Value="DodgerBlue" />
+                                    </Trigger>
+                                </Style.Triggers>
+                                <EventSetter Event="PreviewMouseLeftButtonUp"
+                                             Handler="SelectionHandler" />
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal"
+                                            Margin="0 2 0 2">
+                                    <CheckBox IsChecked="{Binding IsSelected}"
+                                              Margin="2 0 2 0"
+                                              Visibility="{Binding Path=MultiSelectVisibility, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}}"
+                                              VerticalAlignment="Center">
+                                    </CheckBox>
+                                    <TextBlock Text="{Binding BaseEntity.Name}"
+                                               VerticalAlignment="Center"
+                                               TextTrimming="CharacterEllipsis">
+                                        <TextBlock.Style>
+                                            <Style TargetType="{x:Type TextBlock}">
+                                                <Style.Triggers>
+                                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                                             Value="True">
+                                                        <Setter Property="ToolTip"
+                                                                Value="{Binding BaseEntity.Name}" />
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </TextBlock.Style>
+                                    </TextBlock>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>

@@ -5,7 +5,10 @@
     <Setting Name="EntityFields" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="SearchHistory" Type="System.String" Scope="User">
+    <Setting Name="WorkspaceSessionMetadata" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DateTimePicker" Type="Xceed.Wpf.Toolkit.DateTimePicker" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

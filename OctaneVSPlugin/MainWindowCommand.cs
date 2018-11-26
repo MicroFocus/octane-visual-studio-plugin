@@ -14,11 +14,15 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
+using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel.Design;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -33,6 +37,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public const int CommandId = 0x0100;
 
+        public const int ShowActiveItemCommandId = 0x0400;
+        public const int CopyCommitMessageCommandId = 0x0401;
+        public const int StopWorkCommandId = 0x402;
+
         /// <summary>
         /// Command menu group (command set GUID).
         /// </summary>
@@ -41,7 +49,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// <summary>
         /// VS Package that provides this command, not null.
         /// </summary>
-        private readonly Package package;
+        private readonly Package _package;
+
+        private readonly OleMenuCommand _activeItemMenuCommand;
+        private readonly OleMenuCommand _copyCommitMessageCommand;
+        private readonly OleMenuCommand _stopWorkCommand;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindowCommand"/> class.
@@ -55,14 +67,147 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 throw new ArgumentNullException("package");
             }
 
-            this.package = package;
+            _package = package;
 
-            OleMenuCommandService commandService = this.ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
+            var commandService = ServiceProvider.GetService(typeof(IMenuCommandService)) as OleMenuCommandService;
             if (commandService != null)
             {
+                // register show tool window command
                 var menuCommandID = new CommandID(CommandSet, CommandId);
-                var menuItem = new MenuCommand(this.ShowToolWindow, menuCommandID);
+                var menuItem = new MenuCommand(ShowToolWindow, menuCommandID);
                 commandService.AddCommand(menuItem);
+
+                // register active item command
+                menuCommandID = new CommandID(CommandSet, ShowActiveItemCommandId);
+                _activeItemMenuCommand = new OleMenuCommand(OpenActiveItemInDetailsWindowCallback, menuCommandID);
+                commandService.AddCommand(_activeItemMenuCommand);
+
+                // register copy commit message command
+                menuCommandID = new CommandID(CommandSet, CopyCommitMessageCommandId);
+                _copyCommitMessageCommand = new OleMenuCommand(CopyCommitMessageCallback, menuCommandID);
+                commandService.AddCommand(_copyCommitMessageCommand);
+
+                // register stop work command
+                menuCommandID = new CommandID(CommandSet, StopWorkCommandId);
+                _stopWorkCommand = new OleMenuCommand(StopWorkCallback, menuCommandID);
+                commandService.AddCommand(_stopWorkCommand);
+                
+
+                DisableActiveItemToolbar();
+            }
+        }
+
+        private static void OpenActiveItemInDetailsWindowCallback(object caller, EventArgs args)
+        {
+            try
+            {
+                var command = caller as OleMenuCommand;
+                if (command == null)
+                    return;
+
+                var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
+                if (activeEntity == null)
+                    return;
+
+                PluginWindowManager.ShowDetailsWindow(MainWindow.PluginPackage, activeEntity);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to open details window for active item.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void CopyCommitMessageCallback(object caller, EventArgs args)
+        {
+            try
+            {
+                var command = caller as OleMenuCommand;
+                if (command == null)
+                    return;
+
+                if (OctaneItemViewModel.CurrentActiveItem == null)
+                    return;
+
+                if (!OctaneItemViewModel.CurrentActiveItem.IsSupportCopyCommitMessage)
+                    return;
+
+                OctaneItemViewModel.CurrentActiveItem.ValidateCommitMessage();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to generate and copy commit message to clipboard.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        private static void StopWorkCallback(object caller, EventArgs args)
+        {
+            try
+            {
+                var command = caller as OleMenuCommand;
+                if (command == null)
+                    return;
+                if (OctaneItemViewModel.CurrentActiveItem == null)
+                    return;
+
+                    
+                OctaneItemViewModel.ClearActiveItem();
+                Instance.UpdateActiveItemInToolbar();
+
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Unable to stop work on current item.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
+
+        }
+
+        /// <summary>
+        /// Update active item button in toolbar with the current active item's information
+        /// </summary>
+        public void UpdateActiveItemInToolbar()
+        {
+            try
+            {
+                var activeEntity = WorkspaceSessionPersistanceManager.GetActiveEntity();
+
+                if (activeEntity != null)
+                {   
+                    _activeItemMenuCommand.Text = EntityTypeRegistry.GetEntityTypeInformation(activeEntity).ShortLabel + " " + activeEntity.Id;
+                    _activeItemMenuCommand.Enabled = true;
+                    _copyCommitMessageCommand.Enabled = true;
+                    _stopWorkCommand.Enabled = true;
+                }
+                else
+                {
+                    DisableActiveItemToolbar();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to update active item in Octane toolbar.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Disable active item toolbar
+        /// </summary>
+        public void DisableActiveItemToolbar()
+        {
+            try
+            {
+                _activeItemMenuCommand.Text = "N/A";
+                _activeItemMenuCommand.Enabled = false;
+                _copyCommitMessageCommand.Enabled = false;
+                _stopWorkCommand.Enabled = false;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to disable active item in Octane toolbar.\n\n" + "Failed with message: " + ex.Message,
+                    ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -82,7 +227,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             get
             {
-                return this.package;
+                return _package;
             }
         }
 
@@ -105,7 +250,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             // Get the instance number 0 of this tool window. This window is single instance so this instance
             // is actually the only one.
             // The last flag is set to true so that if the tool window does not exists it will be created.
-            ToolWindowPane window = this.package.FindToolWindow(typeof(MainWindow), 0, true);
+            ToolWindowPane window = _package.FindToolWindow(typeof(MainWindow), 0, true);
             if ((null == window) || (null == window.Frame))
             {
                 throw new NotSupportedException("Cannot create tool window");

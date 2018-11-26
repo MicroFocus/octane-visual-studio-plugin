@@ -14,13 +14,16 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Connector.Exceptions;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Services.Version;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
+using MicroFocus.Adm.Octane.VisualStudio.View;
 using NSoup.Nodes;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,16 +35,45 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// <summary>
     /// Detailed view model for an entity
     /// </summary>
-    public class DetailedItemViewModel : BaseItemViewModel, INotifyPropertyChanged, IFieldsObserver
+    public class DetailedItemViewModel : BaseItemViewModel, IFieldsObserver
     {
-        private readonly OctaneServices _octaneService;
+
+
+        private OctaneVersion octaneVersion;
+
 
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private readonly List<FieldViewModel> _allEntityFields;
 
+        private readonly List<Phase> _phaseTransitions;
+
         private string _filter = string.Empty;
 
+        private bool _selectIsEnabled;
+
+        private string _commentText;
+
         internal static readonly string TempPath = Path.GetTempPath() + "\\Octane_pictures\\";
+
+        private static readonly string lockStamp = "client_lock_stamp";
+        /// <summary>
+        /// Lets you enable or disable the phase ComboBox
+        /// </summary>
+        public bool SelectIsEnabled
+        {
+            get
+            {
+                return this._selectIsEnabled;
+            }
+            set
+            {
+                if (this._selectIsEnabled != value)
+                {
+                    this._selectIsEnabled = value;
+                    NotifyPropertyChanged("SelectIsEnabled");
+                }
+            }
+        }
 
         /// <summary>
         /// Constructor
@@ -50,24 +82,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             : base(entity)
         {
             RefreshCommand = new DelegatedCommand(Refresh);
+            SaveEntityCommand = new DelegatedCommand(SaveEntity);
             OpenInBrowserCommand = new DelegatedCommand(OpenInBrowser);
             ToggleCommentSectionCommand = new DelegatedCommand(SwitchCommentSectionVisibility);
+            AddCommentCommand = new DelegatedCommand(AddComment);
             ToggleEntityFieldVisibilityCommand = new DelegatedCommand(ToggleEntityFieldVisibility);
             ResetFieldsCustomizationCommand = new DelegatedCommand(ResetFieldsCustomization);
 
             _commentViewModels = new ObservableCollection<CommentViewModel>();
             _allEntityFields = new List<FieldViewModel>();
 
+            _phaseTransitions = new List<Phase>();
+
             Mode = WindowMode.Loading;
 
             EntitySupportsComments = EntityTypesSupportingComments.Contains(Utility.GetConcreteEntityType(entity));
-
-            _octaneService = new OctaneServices(
-                OctaneConfiguration.Url,
-                OctaneConfiguration.SharedSpaceId,
-                OctaneConfiguration.WorkSpaceId,
-                OctaneConfiguration.Username,
-                OctaneConfiguration.Password);
 
             Id = (long)entity.Id;
             EntityType = Utility.GetConcreteEntityType(Entity);
@@ -81,17 +110,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             try
             {
-                await _octaneService.Connect();
+                OctaneServices octaneService = OctaneServices.GetInstance();
 
                 List<FieldMetadata> fields = await FieldsMetadataService.GetFieldMetadata(Entity);
-                var updatedFields = fields.Select(fm => fm.Name).ToList();
-                // TODO - investigate why not all entities receive the subtype field by default
-                if (MyWorkMetadata.IsAggregateEntity(Entity.GetType()))
+                List<string> fieldNames = fields.Select(fm => fm.Name).ToList();
+
+                OctaneServices _octaneService = OctaneServices.GetInstance();
+
+                if(octaneVersion == null)
                 {
-                    updatedFields.Add(CommonFields.SubType);
+                    octaneVersion = await _octaneService.GetOctaneVersion();
                 }
 
-                Entity = await _octaneService.FindEntity(Entity, updatedFields);
+                // client lock stamp was introduced in octane 12.55.8
+                if(octaneVersion.CompareTo(OctaneVersion.FENER_P3) > 0)
+                {
+                    // add client lock stamp to the fields that we want to retrieve
+                    fieldNames.Add(lockStamp);
+
+                }
+
+                Entity = await _octaneService.FindEntityAsync(Entity, fieldNames);
 
                 await HandleImagesInDescription();
 
@@ -101,14 +140,35 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 var fieldsToHideHashSet = FieldsCache.GetFieldsToHide(Entity);
                 foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
                 {
-                    var fieldViewModel = new FieldViewModel(Entity, field.Name, field.Label, visibleFieldsHashSet.Contains(field.Name));
+                    var fieldViewModel = new FieldViewModel(Entity, field, visibleFieldsHashSet.Contains(field.Name));
+                    if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase))
+                    {
+                        _allEntityFields.Add(fieldViewModel);
+                    }
 
-                    _allEntityFields.Add(fieldViewModel);
                 }
-
                 if (EntitySupportsComments)
                     await RetrieveComments();
 
+                var transitions = await octaneService.GetTransitionsForEntityType(EntityType);
+                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite")
+                {
+
+                    var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
+                    var currentPhaseName = phaseEntity.Name;
+
+                    _phaseTransitions.Clear();
+                    SelectedNextPhase = null;
+
+                    foreach (var transition in transitions.Where(t => t.SourcePhase.Name == currentPhaseName))
+                    {
+                        if (transition.IsPrimary)
+                            _phaseTransitions.Insert(0, transition.TargetPhase);
+                        else
+                            _phaseTransitions.Add(transition.TargetPhase);
+                    }
+                    this._selectIsEnabled = _phaseTransitions.Count != 0;
+                }
                 Mode = WindowMode.Loaded;
             }
             catch (Exception ex)
@@ -151,8 +211,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     var imagePath = TempPath + EntityType + Entity.Id + imageName;
                     if (!File.Exists(imagePath))
                     {
+                        OctaneServices octaneService = OctaneServices.GetInstance();
+
                         imageNodes.Add(new Tuple<Element, string>(image, imagePath));
-                        downloadTasks.Add(_octaneService.DownloadAttachmentAsync(relativeUrl, imagePath));
+                        downloadTasks.Add(octaneService.DownloadAttachmentAsync(relativeUrl, imagePath));
                     }
                     else
                     {
@@ -289,24 +351,39 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public string ErrorMessage { get; private set; }
 
-        private async System.Threading.Tasks.Task RetrieveComments()
+        private async Task RetrieveComments()
         {
             try
             {
                 var viewModels = new List<CommentViewModel>();
-                var commentEntities = await _octaneService.GetAttachedCommentsToEntity(Entity);
+
+                OctaneServices octaneServices = OctaneServices.GetInstance();
+
+                var commentEntities = await octaneServices.GetAttachedCommentsToEntity(Entity);
                 foreach (var comment in commentEntities)
                 {
                     viewModels.Add(new CommentViewModel(comment));
                 }
 
-                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c => DateTime.Parse(c.CreationTime)));
+                _commentViewModels = new ObservableCollection<CommentViewModel>(viewModels.OrderByDescending(c =>
+                {
+                    try
+                    {
+                        return DateTime.ParseExact(c.CreationTime, "MM/dd/yyyy HH:mm:ss", CultureInfo.InvariantCulture);
+                    }
+                    catch (Exception)
+                    {
+                        return DateTime.Now;
+                    }
+                }));
             }
             catch (Exception)
             {
                 _commentViewModels.Clear();
             }
         }
+
+        #region Phase
 
         /// <summary>
         /// Flag specifiying whether we need to show the phase section in the UI or not
@@ -335,6 +412,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 return string.Empty;
             }
         }
+
+        /// <summary>
+        /// List of names for possible next phases
+        /// </summary>
+        public List<string> NextPhaseNames
+        {
+            get { return _phaseTransitions.Select(pt => pt.Name).ToList(); }
+        }
+
+        /// <summary>
+        /// Name of the currently selected next phase
+        /// </summary>
+        public string SelectedNextPhase { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Comments associated with the cached entity
@@ -368,6 +460,187 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Requirement.SUBTYPE_DOCUMENT
         };
 
+        #region SaveEntity
+
+        /// <summary>
+        /// Save entity command
+        /// </summary>
+        public ICommand SaveEntityCommand { get; }
+
+        private async void SaveEntity(object param)
+        {
+            try
+            {
+
+                var entityToUpdate = new BaseEntity(Entity.Id);
+                entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
+
+                // add the client lock stamp if it exists
+                if(Entity.GetLongValue(lockStamp) != null)
+                {
+                    entityToUpdate.SetLongValue(lockStamp, (long)Entity.GetLongValue(lockStamp));
+                }
+
+                foreach (var field in _allEntityFields.Where(f => f.IsChanged))
+                {
+                    if (!field.Metadata.FieldType.Equals("reference"))
+                    {
+                        if("".Equals(field.Content))
+                        {
+                            entityToUpdate.SetValue(field.Name, null);
+                        }
+                        else
+                        {
+                            entityToUpdate.SetValue(field.Name, field.Content);
+                        }
+                    }
+                    else if (!field.IsMultiple)
+                    {
+                        if (field.Content == null || field.Content.Equals(""))
+                        {
+                            entityToUpdate.SetValue(field.Name, null);
+                        }
+                        else
+                        {
+                            foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
+                            {
+                                // todo: you need to look into this tibi
+                                if (field.Content.Equals(new BaseEntityWrapper(be)))
+                                {
+                                    entityToUpdate.SetValue(field.Name, be);
+                                }
+                            }
+
+                        }
+
+                    }
+                    else if(field.IsMultiple)
+                    {
+                        entityToUpdate.SetValue(field.Name, field.GetSelectedEntities());
+                    }
+                }
+
+                entityToUpdate.Name = Entity.Name;
+
+                if (SelectedNextPhase != null)
+                {
+                    var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);
+                    if (nextPhase != null)
+                        entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
+                }
+
+                await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
+                await InitializeAsync();
+
+                //trigger a refresh after save so the user is aware of the changes
+                RefreshCommand.Execute(param);
+                NotifyPropertyChanged();
+            }
+            catch (Exception ex)
+            {
+                BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
+                bed.ShowDialog();
+            }
+           
+        }
+
+        #endregion
+
+        #region AddComments
+
+        public ICommand AddCommentCommand { get; private set; }
+
+        public string CommentText
+        {
+            get { return _commentText; }
+            set
+            {
+                if (!string.IsNullOrEmpty(value))
+                {
+                    value = value.TrimStart();
+                }
+
+                if (value != _commentText)
+                {
+                    if (value.Contains("\n"))
+                    {
+                        string valueTrimmed = value.Replace("\n", "<br>");
+                        value = valueTrimmed;
+                    }
+                    _commentText = value;
+                    NotifyPropertyChanged("CommentText");
+                }
+            }
+        }
+
+
+        private async void AddComment(object param)
+        {
+            try
+            {
+                Mode = WindowMode.LoadingComments;
+                NotifyPropertyChanged("Mode");
+                if (EntitySupportsComments)
+                {
+                    await AddCommentAsync();
+                    NotifyPropertyChanged();
+                    await RetrieveComments();
+                }
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            Mode = WindowMode.Loaded;
+            NotifyPropertyChanged();
+        }
+
+        public async Task AddCommentAsync()
+        {
+            var commentToAdd = new Api.Core.Entities.Comment();
+            string encodedCommment = "<html><body>" + CommentText + "</body></html>";
+            commentToAdd.Text = encodedCommment;
+
+            string entityAggregateType = Entity.AggregateType;
+
+            switch (entityAggregateType)
+            {
+                case "work_item":
+                    BaseEntity commentOwnerWorkItem = new BaseEntity();
+                    commentOwnerWorkItem.Id = Entity.Id;
+                    commentOwnerWorkItem.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerWorkItem = commentOwnerWorkItem;
+                    break;
+                case "test":
+                    Test commentOwnerTest = new Test();
+                    commentOwnerTest.Id = Entity.Id;
+                    commentOwnerTest.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerTest = commentOwnerTest;
+                    break;
+                case "requirement":
+                    Requirement commentOwnerRequirement = new Requirement();
+                    commentOwnerRequirement.Id = Entity.Id;
+                    commentOwnerRequirement.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerRequirement = commentOwnerRequirement;
+                    break;
+                case "run":
+                    Run commentOwnerRun = new Run();
+                    commentOwnerRun.Id = Entity.Id;
+                    commentOwnerRun.TypeName = Entity.TypeName;
+                    commentToAdd.OwnerRun = commentOwnerRun;
+                    break;
+                default:
+                    break;
+            }
+            CommentText = "";
+
+            await OctaneServices.GetInstance().CreateCommentAsync(commentToAdd);
+            NotifyPropertyChanged();
+        }
+
+        #endregion
+
         #region Refresh
 
         /// <summary>
@@ -377,10 +650,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void Refresh(object param)
         {
-            Mode = WindowMode.Loading;
-            NotifyPropertyChanged("Mode");
+            try
+            {
+                Mode = WindowMode.Loading;
+                NotifyPropertyChanged("Mode");
 
-            InitializeAsync();
+                InitializeAsync();
+            }
+            catch (Exception ex)
+            {
+                Mode = WindowMode.FailedToLoad;
+                ErrorMessage = ex.Message;
+            }
+            NotifyPropertyChanged();
         }
 
         #endregion
@@ -427,20 +709,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public string ShowCommentTooltip
         {
             get { return CommentSectionVisibility ? HideCommentsTooltip : ShowCommentsTooltip; }
-        }
-
-        #endregion
-
-        #region INotifyPropertyChanged
-
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
-
-        private void NotifyPropertyChanged(string propName = "")
-        {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
         }
 
         #endregion

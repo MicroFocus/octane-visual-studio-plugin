@@ -16,15 +16,19 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
+using MicroFocus.Adm.Octane.Api.Core.Services.Version;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 using Task = System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -35,7 +39,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     internal class OctaneServices
     {
         private RestConnector rest;
+
         private EntityService es;
+
+        public EntityService GetEntityService
+        {
+            get { return es; }
+        }
 
         private string url;
         private string user;
@@ -45,7 +55,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private static readonly EntityComparerByLastModified EntityComparer = new EntityComparerByLastModified();
 
-        public OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
+        private static OctaneServices instance = null;
+
+        private OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
         {
             this.url = url;
 
@@ -57,6 +69,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             workspaceContext = new WorkspaceContext(sharedspaceId, workspaceId);
             sharedSpaceContext = new SharedSpaceContext(sharedspaceId);
+        }
+
+        public static OctaneServices GetInstance()
+        {
+            if(instance == null)
+            {
+                throw new Exception("Object not created");
+            }
+            return instance;
+        }
+
+        public static void Create(string url, long sharedspaceId, long workspaceId, string user, string password)
+        {
+            if(instance != null)
+            {
+                throw new Exception("Object already created");
+            }
+            instance = new OctaneServices(url, sharedspaceId, workspaceId, user, password);
+        }
+
+        public static void Reset()
+        {
+            instance.rest.DisconnectAsync();
+            instance = null;
         }
 
         public async Task Connect()
@@ -137,6 +173,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             };
         }
 
+        private IList<QueryPhrase> BuildListNodeCriteria(string listName)
+        {
+            return new List<QueryPhrase>
+            {
+                new CrossQueryPhrase("list_root", new LogicalQueryPhrase("logical_name", listName))
+            };
+        }
+
         private readonly List<string> commentFields = new List<string>
         {
             Comment.AUTHOR_FIELD,
@@ -165,9 +209,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return workspaceUser;
         }
 
-        public async Task<BaseEntity> FindEntity(BaseEntity entityModel, IList<string> fields)
+        /// <summary>
+        /// Returns the entity with the given ID and the requested fields
+        /// </summary>
+        public async Task<BaseEntity> FindEntityAsync(BaseEntity entityModel, IList<string> fields)
         {
-            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetBaseEntityType(entityModel), fields);
+            var entity = await es.GetByIdAsync(workspaceContext, entityModel.Id, Utility.GetConcreteEntityType(entityModel), fields);
             return entity;
         }
 
@@ -178,6 +225,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             { "run", "owner_run" },
             { "requirement", "owner_requirement" }
         };
+
+        /// <summary>
+        /// Update the properties of the given entity
+        /// </summary>
+        public async Task<BaseEntity> UpdateEntityAsync(BaseEntity entity)
+        {
+            var updatedEntity = await es.UpdateAsync(workspaceContext, entity, Utility.GetConcreteEntityType(entity));
+            return updatedEntity;
+        }
+
+        ///<summary>
+        ///Adds a comment with specified parameters
+        /// </summary>
+        public async Task<Comment> CreateCommentAsync(Comment entity)
+        {
+            RestConnector.AwaitContinueOnCapturedContext = false;
+            var createdEntity = await es.CreateAsync(workspaceContext, entity, commentFields);
+            return createdEntity;
+        }
+
 
         /// <summary>
         /// Retrieves a list of all the comments attached to the given entity
@@ -249,11 +316,63 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         /// <summary>
+        /// Return the label metadata for the entities
+        /// </summary>
+        public async Task<List<EntityLabelMetadata>> GetEntityLabelMedata()
+        {
+            var result = await es.GetLabelMetadataAsync(workspaceContext);
+            return result?.data;
+        }
+
+
+        /// <summary>
         /// Async operation for downloading the attachment at the url and store it locally at the given location
         /// </summary>
         public async Task DownloadAttachmentAsync(string relativeUrl, string destinationPath)
         {
             await es.DownloadAttachmentAsync(relativeUrl, destinationPath);
         }
+
+        /// <summary>
+        /// Validate given commit message
+        /// </summary>
+        public async Task<CommitPattern> ValidateCommitMessageAsync(string commitMessage)
+        {
+            return await es.ValidateCommitMessageAsync(workspaceContext, HttpUtility.UrlEncode(commitMessage, Encoding.UTF8));
+        }
+
+        /// <summary>
+        /// Return all transitions for a given entity type
+        /// </summary>
+        public async Task<List<Transition>> GetTransitionsForEntityType(string entityType)
+        {
+            var result = await es.GetTransitionsForEntityType(workspaceContext, entityType);
+            return result?.data;
+        }
+
+        /// <summary>
+        /// Returns all reference fields values for a given entity tpye
+        /// </summary>
+        public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType)
+        {
+            return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, 100).Result;
+        }
+
+        /// <summary>
+        /// Returns all reference fields list node values for a given entity tpye
+        /// </summary>
+        public EntityListResult<BaseEntity> GetEntitesReferenceListNodes(string entityType, string listName)
+        {
+            return es.GetAsyncReferenceFields(workspaceContext, entityType, BuildListNodeCriteria(listName), null, 100).Result;
+        }
+
+        /// <summary>
+        /// Returns the version of octane
+        /// </summary>
+        public async Task<OctaneVersion> GetOctaneVersion()
+        {
+            return await es.GetOctaneVersion();
+        }
     }
+
 }

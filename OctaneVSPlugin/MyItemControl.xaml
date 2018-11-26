@@ -61,13 +61,20 @@
 
     <Border Padding="10">
         <DockPanel>
-            <Border BorderThickness="1" MinHeight="50" MinWidth="50" DockPanel.Dock="Left" Margin="0 0 5 0">
-                <Border.Background>
-                    <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
-                </Border.Background>
-                <TextBlock Foreground="White" FontWeight="Bold" FontSize="16" Text="{Binding IconText, FallbackValue='LE'}" VerticalAlignment="Center" TextAlignment="Center" Margin="0,11.2,0,10.8" />
-            </Border>
-
+            <Grid>
+                <Ellipse  MinHeight="50" MinWidth="50" DockPanel.Dock="Left" Margin="0 0 5 0">
+                    <Ellipse.Fill>
+                        <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Polygon Points="25,50 50,25 50,50" StrokeThickness="0" Fill="#bdbec0" Visibility="{Binding Path=IsActiveWorkItem, Converter={StaticResource BoolToVisConverter}}"/>
+                <TextBlock DockPanel.Dock="Left" MinWidth="50" Text="{Binding IconText, FallbackValue='LE'}"
+                        Foreground="White"
+                        FontWeight="Bold" FontSize="16"
+                        VerticalAlignment="Center" TextAlignment="Center"
+                        Margin="0,11.2,5,10.8"/>
+            </Grid>
+            
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition />
