@@ -111,6 +111,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #endregion
 
+
+        public int TotalItems;
+
         /// <summary>
         /// Enumeration containing entities related to the current user
         /// </summary>
@@ -220,8 +223,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     {
                         itemSublist.Items.Add(octaneItem);
                     }
-
-                    _myItems.Add(octaneItem);
                 }
 
                 myWorkItemSublislts = sublistsMap.Values.ToList();
@@ -235,8 +236,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 IList<BaseEntity> comments = await octaneService.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
-                    _myItems.Add(new CommentViewModel(comment));
+                    MyWorkItemsSublist itemSublist;
+                    if (sublistsMap.TryGetValue("comment", out itemSublist))
+                    {
+                        itemSublist.Items.Add(new CommentViewModel(comment));
+                    }
                 }
+
+                myWorkItemSublislts.ForEach(ms =>
+                {
+                    foreach (var myWorkItem in ms.Items) _myItems.Add(myWorkItem);
+                });
+
+                TotalItems = _myItems.Count;
 
                 Mode = MainWindowMode.ItemsLoaded;
 
@@ -252,6 +264,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        public void ApplyFilter()
+        {
+            _myItems.Clear();
+            myWorkItemSublislts.ForEach(ms =>
+            {
+                if (ms.IsSelected)
+                {
+                    foreach (var myWorkItem in ms.Items) _myItems.Add(myWorkItem);
+                }
+            });
+        }
 
         private Dictionary<string, MyWorkItemsSublist> createMyWorkItemsSublistsMap()
         {

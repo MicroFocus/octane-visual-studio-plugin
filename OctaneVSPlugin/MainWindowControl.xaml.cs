@@ -167,5 +167,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             return selectedEntity;
         }
+
+        private void SelectionHandler(object sender, RoutedEventArgs e)
+        {
+            var item = ((sender as CheckBox).DataContext as MyWorkItemsSublist);
+
+            if (item != null)
+            {
+                ((OctaneMyItemsViewModel)FilterListBoxName.DataContext).ApplyFilter();    
+            }
+        }
     }
 }

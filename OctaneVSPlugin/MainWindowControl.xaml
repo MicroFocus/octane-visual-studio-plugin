@@ -230,6 +230,7 @@
 
                 <!--<Create the list of filtering items>-->
                 <ListBox ItemsSource="{Binding MyWorkSublists}"
+                         Name="FilterListBoxName"
                          Background="Transparent"
                          BorderThickness="0">
                     
@@ -245,7 +246,9 @@
                                   Height="40">
                                 <CheckBox VerticalAlignment="Center"
                                           Margin="0"
-                                          IsChecked="{Binding IsSelected}" />
+                                          IsChecked="{Binding IsSelected}"
+                                          Checked="SelectionHandler"
+                                          Unchecked="SelectionHandler"/>
                                 <Ellipse  MaxHeight="30"
                                           MaxWidth="30"
                                           DockPanel.Dock="Left"
