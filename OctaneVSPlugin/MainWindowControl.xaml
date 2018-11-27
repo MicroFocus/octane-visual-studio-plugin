@@ -223,7 +223,7 @@
            
             <Grid DockPanel.Dock="Top"  Margin="5 5 5 5">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="65*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
@@ -232,6 +232,7 @@
                 <ListBox ItemsSource="{Binding MyWorkSublists}"
                          Background="Transparent"
                          BorderThickness="0">
+                    
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel IsItemsHost="True"
@@ -240,10 +241,12 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="50"
-                                  Height="50">
-                                <Ellipse  MaxHeight="40"
-                                          MaxWidth="40"
+                            <Grid Width="70"
+                                  Height="40">
+                                <CheckBox VerticalAlignment="Center"
+                                          Margin="0" />
+                                <Ellipse  MaxHeight="30"
+                                          MaxWidth="30"
                                           DockPanel.Dock="Left"
                                           Margin="0 0 0 0">
                                     <Ellipse.Fill>
@@ -251,17 +254,38 @@
                                     </Ellipse.Fill>
                                 </Ellipse>
                                 <TextBlock DockPanel.Dock="Left"
-                                           MaxWidth="40"
+                                           MaxWidth="30"
                                            Text="{Binding TypeInformation.ShortLabel, FallbackValue='LE'}"
                                            Foreground="White"
                                            FontWeight="Bold"
-                                           FontSize="16"
+                                           FontSize="12"
                                            VerticalAlignment="Center"
                                            TextAlignment="Center"
                                            Margin="0,0,0,0" />
+                                <TextBlock DockPanel.Dock="Left"
+                                           MaxWidth="15"
+                                           Text="{Binding Items.Count, FallbackValue=0}"
+                                           Foreground="{DynamicResource VsBrush.WindowText}"
+                                           FontWeight="Bold"
+                                           FontSize="12"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center"
+                                           Margin="50,0,0,0" />
+
                             </Grid>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <ContentPresenter />
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
                 </ListBox>
 
                 <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="1 0 5 0">
