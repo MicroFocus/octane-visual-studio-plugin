@@ -170,5 +170,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             Registry.TryGetValue(entityType, out info);
             return info;
         }
-    }
+
+        /// <summary>
+        /// Return the associated entity type information based on the given entity type
+        /// </summary>
+        public static EntityTypeInformation GetEntityTypeInformation(string entityType)
+        {
+            EntityTypeInformation info;
+            Registry.TryGetValue(entityType, out info);
+            return info;
+        }
+}
 }

@@ -198,6 +198,8 @@
             </Grid>
         </DockPanel>
 
+        
+
         <DockPanel>
             <DockPanel.Resources>
                 <common:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
@@ -218,16 +220,53 @@
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
-
+           
             <Grid DockPanel.Dock="Top"  Margin="5 5 5 5">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
+                <!--<Create the list of filtering items>-->
+                <ListBox ItemsSource="{Binding MyWorkSublists}"
+                         Background="Transparent"
+                         BorderThickness="0">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <VirtualizingStackPanel IsItemsHost="True"
+                                                    Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Width="50"
+                                  Height="50">
+                                <Ellipse  MaxHeight="40"
+                                          MaxWidth="40"
+                                          DockPanel.Dock="Left"
+                                          Margin="0 0 0 0">
+                                    <Ellipse.Fill>
+                                        <SolidColorBrush Color="{Binding TypeInformation.Color, FallbackValue=LightBlue}" />
+                                    </Ellipse.Fill>
+                                </Ellipse>
+                                <TextBlock DockPanel.Dock="Left"
+                                           MaxWidth="40"
+                                           Text="{Binding TypeInformation.ShortLabel, FallbackValue='LE'}"
+                                           Foreground="White"
+                                           FontWeight="Bold"
+                                           FontSize="16"
+                                           VerticalAlignment="Center"
+                                           TextAlignment="Center"
+                                           Margin="0,0,0,0" />
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
                 <Grid Grid.Column="0" HorizontalAlignment="Right" Margin="1 0 5 0">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
+                        <ColumnDefinition />
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <Grid>
@@ -237,7 +276,7 @@
                                   IsEditable="True"
                                   Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
                                   Background="{DynamicResource VsBrush.Window}"
-                                  Foreground="DarkGray"
+                                  Foreground="Black"
                                   ItemsSource="{Binding SearchHistory}">
                             <ComboBox.InputBindings>
                                 <KeyBinding Command="{Binding SearchCommand}" Key="Return" />
@@ -248,7 +287,7 @@
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    Margin="7 0 0 0"
-                                   Foreground="DarkGray">
+                                   Foreground="Black">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Visibility" Value="Collapsed"/>
@@ -294,8 +333,9 @@
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
+               
             </Grid>
-
+          
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
                     Background="{DynamicResource VsBrush.Window}"
                     Foreground="{DynamicResource VsBrush.WindowText}"

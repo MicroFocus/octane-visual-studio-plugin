@@ -30,7 +30,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     public class OctaneItemViewModel : BaseItemViewModel
     {
         private bool _isActiveItem;
-
+ 
         /// <summary>
         /// Constructor
         /// </summary>
