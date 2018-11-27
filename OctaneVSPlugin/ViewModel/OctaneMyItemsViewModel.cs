@@ -297,6 +297,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     public class MyWorkItemsSublist
     {
         private string entityType { get; set; }
+        public bool IsSelected { get; set; } = true;
         public EntityTypeInformation TypeInformation { get; }
         public ObservableCollection<OctaneItemViewModel> Items { get; set; }
 

@@ -244,7 +244,8 @@
                             <Grid Width="70"
                                   Height="40">
                                 <CheckBox VerticalAlignment="Center"
-                                          Margin="0" />
+                                          Margin="0"
+                                          IsChecked="{Binding IsSelected}" />
                                 <Ellipse  MaxHeight="30"
                                           MaxWidth="30"
                                           DockPanel.Dock="Left"
