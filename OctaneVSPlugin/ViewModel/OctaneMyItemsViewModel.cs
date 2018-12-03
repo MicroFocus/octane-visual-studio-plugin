@@ -111,8 +111,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #endregion
 
+        private int _totalItems;
 
-        public int TotalItems;
+        public int TotalItems
+        {
+            get { return _totalItems; }
+        }
 
         /// <summary>
         /// Enumeration containing entities related to the current user
@@ -248,7 +252,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     foreach (var myWorkItem in ms.Items) _myItems.Add(myWorkItem);
                 });
 
-                TotalItems = _myItems.Count;
+                _totalItems = _myItems.Count;
 
                 Mode = MainWindowMode.ItemsLoaded;
 
