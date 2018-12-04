@@ -31,7 +31,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     internal static class ToolWindowHelper
     {
         internal const string AppName = "ALM Octane";
-
         internal const string ViewDetailsHeader = "View details (DblClick)";
         internal const string ViewTaskParentDetailsHeader = "View parent details (DblClick)";
         internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
@@ -427,8 +426,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         Command = new DelegatedCommand(stopWorkDelegate)
                     });
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -442,7 +439,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             {
                 return commentViewModel.ParentEntity;
             }
-
             return null;
         }
     }

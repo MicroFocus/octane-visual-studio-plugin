@@ -36,9 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private readonly ObservableCollection<OctaneItemViewModel> _myItems;
 
         private List<MyWorkItemsSublist> myWorkItemSublislts;
-
-        //private readonly IList<> filterItemsList;
-
+        
         /// <summary>
         /// Store the exception message from the loading items operation
         /// </summary>
@@ -200,7 +198,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                            OctaneConfiguration.Username,
                            OctaneConfiguration.Password);
                     }
-
                     octaneService = OctaneServices.GetInstance();
                     await octaneService.Connect();
 
@@ -251,7 +248,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     foreach (var myWorkItem in ms.Items) _myItems.Add(myWorkItem);
                 });
-
                 _totalItems = _myItems.Count;
 
                 Mode = MainWindowMode.ItemsLoaded;
@@ -285,23 +281,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             return new Dictionary<string, MyWorkItemsSublist>
                 {
                     { WorkItem.SUBTYPE_STORY, new MyWorkItemsSublist(WorkItem.SUBTYPE_STORY) },
-
                     { WorkItem.SUBTYPE_QUALITY_STORY, new MyWorkItemsSublist(WorkItem.SUBTYPE_QUALITY_STORY) },
-
                     { WorkItem.SUBTYPE_DEFECT, new MyWorkItemsSublist(WorkItem.SUBTYPE_DEFECT)},
-
                     { Task.TYPE_TASK, new MyWorkItemsSublist(Task.TYPE_TASK) },
-
                     { Requirement.SUBTYPE_DOCUMENT, new MyWorkItemsSublist(Requirement.SUBTYPE_DOCUMENT) },
-
                     { Test.SUBTYPE_MANUAL_TEST, new MyWorkItemsSublist(Test.SUBTYPE_MANUAL_TEST) },
-
                     { TestGherkin.SUBTYPE_GHERKIN_TEST, new MyWorkItemsSublist(TestGherkin.SUBTYPE_GHERKIN_TEST) },
-
                     { RunSuite.SUBTYPE_RUN_SUITE, new MyWorkItemsSublist(RunSuite.SUBTYPE_RUN_SUITE) },
-
                     { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
-
                     { "comment", new MyWorkItemsSublist( "comment" )}
                 };
         }
@@ -331,7 +318,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public MyWorkItemsSublist(string entityType)
         {
             TypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entityType);
-            
             Items = new ObservableCollection<OctaneItemViewModel>();
         }
 
