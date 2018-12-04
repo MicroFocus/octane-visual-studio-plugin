@@ -379,7 +379,7 @@
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
-                <Separator Grid.ColumnSpan="2" Margin="10 50 10 0" />
+                <Separator Grid.ColumnSpan="2" Margin="0 50 0 0" />
             </Grid>
            
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
