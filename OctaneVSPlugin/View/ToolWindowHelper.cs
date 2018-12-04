@@ -384,7 +384,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
 
                 // add to my work
-                if (addToMyWorkDelegate != null)
+                if (addToMyWorkDelegate != null 
+                    && octaneItem != null
+                    && octaneItem.IsActiveWorkItem
+                    && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK
+                        || entityType == Test.SUBTYPE_MANUAL_TEST
+                        || entityType == TestGherkin.SUBTYPE_GHERKIN_TEST
+                        || entityType == RunManual.SUBTYPE_RUN_MANUAL
+                        || entityType == TestSuite.SUBTYPE_TEST_SUITE))
                 {
                     cm.Items.Add(new MenuItem
                     {
