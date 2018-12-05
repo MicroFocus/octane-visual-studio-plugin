@@ -22,6 +22,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio"
              xmlns:viewModel="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.ViewModel"
+             xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              mc:Ignorable="d" 
              d:DesignHeight="70" d:DesignWidth="500"
              MaxHeight="70">
@@ -62,17 +63,13 @@
     <Border Padding="10">
         <DockPanel>
             <Grid>
-                <Ellipse  MinHeight="50" MinWidth="50" DockPanel.Dock="Left" Margin="0 0 5 0">
-                    <Ellipse.Fill>
-                        <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
-                    </Ellipse.Fill>
-                </Ellipse>
+                <view:EntityIcon Height="50"
+                                 Width="50"
+                                 Margin="0 0 5 0"
+                                 FontSize="16"
+                                 IconColor="{Binding IconBackgroundColor}"
+                                 Text="{Binding IconText}" />
                 <Polygon Points="25,50 50,25 50,50" StrokeThickness="0" Fill="#bdbec0" Visibility="{Binding Path=IsActiveWorkItem, Converter={StaticResource BoolToVisConverter}}"/>
-                <TextBlock DockPanel.Dock="Left" MinWidth="50" Text="{Binding IconText, FallbackValue='LE'}"
-                        Foreground="White"
-                        FontWeight="Bold" FontSize="16"
-                        VerticalAlignment="Center" TextAlignment="Center"
-                        Margin="0,11.2,5,10.8"/>
             </Grid>
             
             <Grid>

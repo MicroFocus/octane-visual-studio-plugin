@@ -20,22 +20,19 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:view="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              mc:Ignorable="d" 
              d:DesignHeight="70" d:DesignWidth="500">
     <Border Padding="10">
         <DockPanel>
             <Grid>
-                <Ellipse  MinHeight="50" MinWidth="50" DockPanel.Dock="Left" Margin=" 0 0 5 0">
-                    <Ellipse.Fill>
-                        <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
-                    </Ellipse.Fill>
-                </Ellipse>
-                <TextBlock DockPanel.Dock="Left" MinWidth="50" Text="{Binding IconText, FallbackValue='LE'}"
-                        Foreground="White"
-                        FontWeight="Bold" FontSize="16"
-                        VerticalAlignment="Center" TextAlignment="Center"
-                        Margin="0,11.2,5,10.8"/>
+                <view:EntityIcon Height="50"
+                                 Width="50"
+                                 Margin="0 0 5 0"
+                                 IconColor="{Binding IconBackgroundColor}"
+                                 Text="{Binding IconText}" />
+
             </Grid>
             <Grid>
                 <Grid.RowDefinitions>

@@ -115,6 +115,9 @@
     <Compile Include="View\BusinessErrorDialog.xaml.cs">
       <DependentUpon>BusinessErrorDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\EntityIcon.xaml.cs">
+      <DependentUpon>EntityIcon.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\FieldListDataTemplateSelector.cs" />
     <Compile Include="View\GifImage.cs" />
     <Compile Include="Common\GreaterThanZeroConverter.cs" />
@@ -223,6 +226,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\EntityComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EntityIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

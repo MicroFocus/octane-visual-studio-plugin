@@ -511,25 +511,11 @@
                                         <ColumnDefinition Width="Auto" />
                                         <ColumnDefinition Width="*" />
                                     </Grid.ColumnDefinitions>
-
-                                    <Ellipse Grid.Column="0"
-                                             Height="40"
-                                             Width="40"
-                                             DockPanel.Dock="Left"
-                                             Margin="0 0 5 0">
-                                        <Ellipse.Fill>
-                                            <SolidColorBrush Color="{Binding IconBackgroundColor, FallbackValue=LightBlue}" />
-                                        </Ellipse.Fill>
-                                    </Ellipse>
-                                    <TextBlock Grid.Column="0"
-                                               DockPanel.Dock="Left"
-                                               Margin="0 0 5 0"
-                                               Foreground="White"
-                                               FontWeight="Bold"
-                                               Text="{Binding IconText, FallbackValue='LE'}"
-                                               VerticalAlignment="Center"
-                                               TextAlignment="Center" />
-
+                                    <view:EntityIcon Height="40"
+                                                     Width="40"
+                                                     Margin="0 0 5 0"
+                                                     IconColor="{Binding IconBackgroundColor}"
+                                                     Text="{Binding IconText}" />
                                     <Grid Grid.Column="1"
                                           VerticalAlignment="Center">
                                         <Grid.ColumnDefinitions>
@@ -596,8 +582,7 @@
                                                    VerticalAlignment="Center"
                                                    FontWeight="Bold"
                                                    Margin="5 0 0 0" />
-                                        <ComboBox Style="{DynamicResource ComboBoxStyle1}"
-                                                  Background="{DynamicResource VsBrush.Window}"
+                                        <ComboBox Background="{DynamicResource VsBrush.Window}"
                                                   VerticalAlignment="Center"
                                                   Width="120"
                                                   IsEnabled="{Binding SelectIsEnabled}"

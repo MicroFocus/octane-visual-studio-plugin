@@ -120,33 +120,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private void StopWork(object sender)
         {
-            try
-            {
-                if (SelectedItem?.Entity == null)
-                    return;
+            if (SelectedItem?.Entity == null)
+                return;
 
-                OctaneItemViewModel.ClearActiveItem();
+            OctaneItemViewModel.ClearActiveItem();
 
-                MainWindowCommand.Instance.UpdateActiveItemInToolbar();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to stop work on current item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            MainWindowCommand.Instance.UpdateActiveItemInToolbar();  
         }
 
         private void RemoveFromMyWork(object sender)
         {
-            try
-            {
-                if (SelectedItem?.Entity == null)
-                    return;
-                ToolWindowHelper.RemoveFromMyWork(GetSelectedEntity());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable add to my work the selected item.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            if (SelectedItem?.Entity == null)
+                return;
+            ToolWindowHelper.RemoveFromMyWork(GetSelectedEntity());   
         }
 
         private void ListMenu_Opened(object sender, RoutedEventArgs e)

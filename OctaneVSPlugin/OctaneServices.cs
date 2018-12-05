@@ -292,7 +292,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public async void AddToMyWork(UserItem entity)
         {
             RestConnector.AwaitContinueOnCapturedContext = false;
-            var craetedEntity = await es.CreateAsync(workspaceContext, entity, null);
+            var createdEntity = await es.CreateAsync(workspaceContext, entity, null);
         }
 
         ///<summary>

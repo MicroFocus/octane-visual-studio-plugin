@@ -252,23 +252,11 @@
                                           IsChecked="{Binding IsSelected}"
                                           Checked="SelectionHandler"
                                           Unchecked="SelectionHandler"/>
-                                <Ellipse  MaxHeight="30"
-                                          MaxWidth="30"
-                                          DockPanel.Dock="Left"
-                                          Margin="0 0 0 0">
-                                    <Ellipse.Fill>
-                                        <SolidColorBrush Color="{Binding TypeInformation.Color, FallbackValue=LightBlue}" />
-                                    </Ellipse.Fill>
-                                </Ellipse>
-                                <TextBlock DockPanel.Dock="Left"
-                                           MaxWidth="30"
-                                           Text="{Binding TypeInformation.ShortLabel, FallbackValue='LE'}"
-                                           Foreground="White"
-                                           FontWeight="Bold"
-                                           FontSize="12"
-                                           VerticalAlignment="Center"
-                                           TextAlignment="Center"
-                                           Margin="0,0,0,0" />
+                                <view:EntityIcon MaxHeight="30"
+                                                 MaxWidth="30"
+                                                 FontSize="12"
+                                                 IconColor="{Binding TypeInformation.Color}"
+                                                 Text="{Binding TypeInformation.ShortLabel}"/>
                                 <TextBlock DockPanel.Dock="Left"
                                            MaxWidth="15"
                                            Text="{Binding Items.Count, FallbackValue=0}"
@@ -304,7 +292,6 @@
                     </Grid.ColumnDefinitions>
                     <Grid>
                         <ComboBox x:Name="SearchHistoryComboBox"
-                                  Style="{DynamicResource ComboBoxStyle1}"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Center"
                                   Width="180"
