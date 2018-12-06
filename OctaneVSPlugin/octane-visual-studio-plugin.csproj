@@ -91,6 +91,7 @@
     <Compile Include="Common\HTMLConverter\HtmlTokenType.cs" />
     <Compile Include="Common\HTMLConverter\HtmlToXamlConverter.cs" />
     <Compile Include="Common\IFieldsObserver.cs" />
+    <Compile Include="Common\MyWorkUtils.cs" />
     <Compile Include="Common\OctaneConfiguration.cs" />
     <Compile Include="Common\WorkspaceSessionPersistanceManager.cs" />
     <Compile Include="OctanePluginSettings.Designer.cs">
@@ -108,12 +109,14 @@
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
     <Compile Include="View\BoolToIndexConverter.cs" />
-
     <Compile Include="View\EntityComboBox.xaml.cs">
       <DependentUpon>EntityComboBox.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\BusinessErrorDialog.xaml.cs">
       <DependentUpon>BusinessErrorDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\EntityIcon.xaml.cs">
+      <DependentUpon>EntityIcon.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\FieldListDataTemplateSelector.cs" />
     <Compile Include="View\GifImage.cs" />
@@ -223,6 +226,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\EntityComboBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="View\EntityIcon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

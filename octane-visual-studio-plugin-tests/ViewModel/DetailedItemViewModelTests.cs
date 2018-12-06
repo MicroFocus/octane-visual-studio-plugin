@@ -147,7 +147,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         }
 
         #endregion
-
+       
         #region RefreshCommand
 
         [TestMethod]

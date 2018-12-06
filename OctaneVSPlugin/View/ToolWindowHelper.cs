@@ -31,7 +31,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     internal static class ToolWindowHelper
     {
         internal const string AppName = "ALM Octane";
-
         internal const string ViewDetailsHeader = "View details (DblClick)";
         internal const string ViewTaskParentDetailsHeader = "View parent details (DblClick)";
         internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
@@ -40,6 +39,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         internal const string DownloadGherkinScriptHeader = "Download Script";
         internal const string StartWorkHeader = "Start Work";
         internal const string StopWorkHeader = "Stop Work";
+        internal const string AddToMyWorkHeader = "Add to \"My Work\"";
+        internal const string RemoveFromMyWorkHeader = "Dismiss";
 
         /// <summary>
         /// Handle double-click event on a backlog item
@@ -97,6 +98,46 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             catch (Exception ex)
             {
                 MessageBox.Show("Unable to open details window.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Add item to my work
+        /// </summary>
+        [ExcludeFromCodeCoverage]
+        public async static void AddToMyWork(BaseEntity entity)
+        {
+            try
+            {
+                if (entity == null)
+                    return;
+
+                MyWorkUtils.AddToMyWork(entity);
+                OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to add item to my work.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+
+        /// <summary>
+        /// Dismiss item from my work
+        /// </summary>
+        [ExcludeFromCodeCoverage]
+        public static async void RemoveFromMyWork(BaseEntity entity)
+        {
+            try
+            {
+                if (entity == null)
+                    return;
+
+                MyWorkUtils.RemoveFromMyWork(entity);
+                OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Unable to remove item to my work.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -179,6 +220,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+
         /// <summary>
         /// Download the gherkin script for the selected item if possible
         /// </summary>
@@ -194,7 +236,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     return;
 
                 OctaneServices octaneService;
-                octaneService = OctaneServices.GetInstance();    
+                octaneService = OctaneServices.GetInstance();
 
                 var testScript = await octaneService.GetTestScript(test.Id);
                 MainWindow.PluginPackage.CreateFile(test.Name, testScript.Script);
@@ -216,7 +258,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             Action<object> copyCommitMessageDelegate,
             Action<object> downloadGherkinScriptDelegate,
             Action<object> startWorkDelegate,
-            Action<object> stopWorkDelegate)
+            Action<object> stopWorkDelegate,
+            Action<object> addToMyWorkDelegate,
+            Action<object> removeFromMyWorkDelegate)
         {
             try
             {
@@ -307,9 +351,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     });
                 }
 
-                //copy commit message
-                if (octaneItem != null 
-                   && octaneItem.IsSupportCopyCommitMessage 
+                // copy commit message
+                if (octaneItem != null
+                   && octaneItem.IsSupportCopyCommitMessage
                    && (entityType == WorkItem.SUBTYPE_STORY
                         || entityType == WorkItem.SUBTYPE_QUALITY_STORY
                         || entityType == WorkItem.SUBTYPE_DEFECT
@@ -333,12 +377,55 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 {
                     cm.Items.Add(new MenuItem
                     {
+                        Header = CopyCommitMessageHeader,
+                        Command = new DelegatedCommand(copyCommitMessageDelegate)
+                    });
+                }
+
+                // add to my work
+                if (addToMyWorkDelegate != null 
+                    && octaneItem != null
+                    && octaneItem.IsActiveWorkItem
+                    && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK
+                        || entityType == Test.SUBTYPE_MANUAL_TEST
+                        || entityType == TestGherkin.SUBTYPE_GHERKIN_TEST
+                        || entityType == RunManual.SUBTYPE_RUN_MANUAL
+                        || entityType == TestSuite.SUBTYPE_TEST_SUITE))
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = AddToMyWorkHeader,
+                        Command = new DelegatedCommand(addToMyWorkDelegate)
+                    });
+                }
+
+                // remove from my work
+                if (removeFromMyWorkDelegate != null)
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = RemoveFromMyWorkHeader,
+                        Command = new DelegatedCommand(removeFromMyWorkDelegate)
+                    });
+                }
+                // stop work
+                if (stopWorkDelegate != null
+                    && octaneItem != null
+                    && octaneItem.IsActiveWorkItem
+                    && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK))
+                {
+                    cm.Items.Add(new MenuItem
+                    {
                         Header = StopWorkHeader,
                         Command = new DelegatedCommand(stopWorkDelegate)
                     });
                 }
-
-           
             }
             catch (Exception ex)
             {
@@ -352,7 +439,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             {
                 return commentViewModel.ParentEntity;
             }
-
             return null;
         }
     }
