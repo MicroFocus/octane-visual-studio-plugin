@@ -321,6 +321,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             }
                         }
                         break;
+                    case "float":
+                        try
+                        {
+                            _parentEntity.SetValue(Name, float.Parse(value.ToString()));
+                            IsChanged = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is FormatException || ex is OverflowException)
+                            {
+                                _parentEntity.SetValue(Name, "");
+                                IsChanged = true;
+                            }
+                        }
+                        break;
                     case "string":
                         _parentEntity.SetValue(Name, value.ToString());
                         IsChanged = true;
