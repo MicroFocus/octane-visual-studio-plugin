@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="MicroFocus.Adm.Octane.VisualStudio.View.ConnectionSettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        
+        <Label Grid.Row="0" Content="ALM Octane Settings" FontWeight="Bold" />
+        
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"></ColumnDefinition>
+                <ColumnDefinition Width="6*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+                <RowDefinition Height="30" />
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" Grid.Column="0"
+                   Content="Server URL" />
+            <TextBox Grid.Row="0"
+                       Grid.Column="1"
+                       Name="serverUrlTextBox"
+                       Height="30"
+                       Margin="5"
+                       Text="Copy Paste your octane URL from the browser here...">
+            </TextBox>
+
+            <Label Grid.Row="1"
+                   Grid.Column="0"
+                   Content="Shared Space" />
+            <TextBox Grid.Row="1"
+                     Grid.Column="1"
+                     Name="sharedSpaceTextBox"
+                     Height="30"
+                     Margin="5"
+                     Text="Shared space Id">
+            </TextBox>
+
+            <Label Grid.Row="2"
+                   Grid.Column="0"
+                   Content="Workspace" />
+            <TextBox Grid.Row="2"
+                     Grid.Column="1"
+                     Name="workspaceTextBox"
+                     Height="30"
+                     Margin="5"
+                     Text="Workspace Id">
+            </TextBox>
+
+            <Label Grid.Row="2"
+                   Content="Authentication"
+                   FontWeight="Bold" />
+
+        </Grid>
+        
+
+    </Grid>
+</UserControl>
