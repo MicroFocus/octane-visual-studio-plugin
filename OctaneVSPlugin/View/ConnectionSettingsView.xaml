@@ -6,64 +6,148 @@
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="30"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
-        
-        <Label Grid.Row="0" Content="ALM Octane Settings" FontWeight="Bold" />
-        
-        <Grid Grid.Row="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="2*"></ColumnDefinition>
-                <ColumnDefinition Width="6*"></ColumnDefinition>
-            </Grid.ColumnDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Visible">
+        <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
-                <RowDefinition Height="30" />
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="100"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="130"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
+                <RowDefinition Height="10"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" Grid.Column="0"
-                   Content="Server URL" />
-            <TextBox Grid.Row="0"
-                       Grid.Column="1"
-                       Name="serverUrlTextBox"
-                       Height="30"
-                       Margin="5"
-                       Text="Copy Paste your octane URL from the browser here...">
-            </TextBox>
 
-            <Label Grid.Row="1"
-                   Grid.Column="0"
-                   Content="Shared Space" />
-            <TextBox Grid.Row="1"
-                     Grid.Column="1"
-                     Name="sharedSpaceTextBox"
-                     Height="30"
-                     Margin="5"
-                     Text="Shared space Id">
-            </TextBox>
+            <Label Grid.Row="0"
+                   Content="ALM Octane Settings"
+                   FontWeight="Bold" />
 
-            <Label Grid.Row="2"
-                   Grid.Column="0"
-                   Content="Workspace" />
-            <TextBox Grid.Row="2"
-                     Grid.Column="1"
-                     Name="workspaceTextBox"
-                     Height="30"
-                     Margin="5"
-                     Text="Workspace Id">
-            </TextBox>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1*"></ColumnDefinition>
+                    <ColumnDefinition Width="6*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="10" />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Content="Server URL:" />
+                <TextBox Grid.Row="0"
+                         Grid.Column="1"
+                         Name="serverUrlTextBox"
+                         Margin="5"
+                         Text="" />
 
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Content="Shared Space:" />
+                <TextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Name="sharedSpaceTextBox"
+                         Margin="5"
+                         Text="" />
+
+                <Label Grid.Row="2"
+                       Grid.Column="0"
+                       Content="Workspace:" />
+                <TextBox Grid.Row="2"
+                         Grid.Column="1"
+                         Name="workspaceTextBox"
+                         Margin="5"
+                         Text="" />
+
+                <Separator Grid.ColumnSpan="2"
+                           Grid.Row="3" />
+            </Grid>
             <Label Grid.Row="2"
                    Content="Authentication"
                    FontWeight="Bold" />
 
-        </Grid>
-        
+            <Grid Grid.Row="3">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="60" />
+                    <RowDefinition Height="30" />
+                    <RowDefinition Height="10" />
+                </Grid.RowDefinitions>
+                <RadioButton Grid.Row="0"
+                             Name="userPassRadioButton"
+                             VerticalAlignment="Center"
+                             Margin="5" />
+                <Label Grid.Row="0"
+                       Grid.Column="0"
+                       Margin="20 0 0 0"
+                       VerticalAlignment="Center"
+                       Content="Login with username and password" />
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="2*"></ColumnDefinition>
+                        <ColumnDefinition Width="7*"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="30" />
+                        <RowDefinition Height="30" />
+                    </Grid.RowDefinitions>
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="25 0 0 0"
+                           Content="Username:" />
+                    <TextBox Grid.Row="0"
+                             Grid.Column="1"
+                             Name="usernameTextBox"
+                             IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton}"
+                             Margin="5"
+                             Text="" />
 
-    </Grid>
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Margin="25 0 0 0"
+                           Content="Password:" />
+                    <TextBox Grid.Row="1"
+                             Grid.Column="1"
+                             Name="passwordTextBox"
+                             Margin="5"
+                             IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton}"
+                             Text="" />
+                </Grid>
+
+                <RadioButton Grid.Row="2"
+                             Name="browserRadioButton"
+                             VerticalAlignment="Center"
+                             Margin="5" />
+                <Label Grid.Row="2"
+                       Margin="20 0 0 0"
+                       VerticalAlignment="Center"
+                       Content="Login using a browser" />
+
+                <Button  Grid.Row="2"
+                         Content="Change user"
+                         IsEnabled="{Binding IsChecked, ElementName=browserRadioButton}"
+                         Width="150"
+                         HorizontalAlignment="Left"
+                         Margin="175 5 5 5" />
+
+                <Separator Grid.ColumnSpan="2"
+                           Grid.Row="4" />
+            </Grid>
+            <Button  Grid.Row="4"
+                     Content="Test Connection"
+                     Margin="5"
+                     Width="150"
+                     HorizontalAlignment="Left" />
+            <Label Grid.Row="4"
+                   Name="infoLabel"
+                   Margin="170 5 5 5" />
+            <Separator Grid.Row="5" />
+            <Button  Grid.Row="6"
+                     Content="Clear settings"
+                     Width="150"
+                     HorizontalAlignment="Left"
+                     Margin="5" />
+        </Grid>
+    </ScrollViewer>
 </UserControl>
