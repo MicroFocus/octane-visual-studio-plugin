@@ -30,11 +30,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         public void Initialize()
         {
             //textBox1.Text = optionsPage.OptionString;
+            //populate the details from persistance url shid wid user and pass
         }
 
-        private void textBox1_Leave(object sender, EventArgs e)
+        private void TestConnection(object sender, RoutedEventArgs e)
         {
-            //optionsPage.OptionString = textBox1.Text;
+            // do something
+        }
+
+        private void ClearSettings(object sender, RoutedEventArgs e)
+        {
+            // do something
         }
     }
 }
