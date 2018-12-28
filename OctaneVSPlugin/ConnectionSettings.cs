@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
@@ -31,13 +33,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     [Guid("1D9ECCF3-5D2F-4112-9B25-264596873DC9")]
     internal class ConnectionSettings : UIElementDialogPage
     {
-        private string optionValue = "alpha";
-
-        public string OptionString
-        {
-            get { return optionValue; }
-            set { optionValue = value; }
-        }
 
         private string url = string.Empty;
         private int ssid = 1001;
@@ -45,13 +40,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private string user = string.Empty;
         private string password = string.Empty;
 
-        /// <inheritdoc/>
+        public bool credentialLogin { get; set; }
+        public bool ssoLogin { get; set; }
+    
+
         protected override void OnApply(PageApplyEventArgs e)
         {
             base.OnApply(e);
 
             // reset and thus require a new octane service obj
             OctaneServices.Reset();
+
+            // create the authentication strategy that is going to be used by the octane services class
+            if(credentialLogin)
+            {
+                OctaneConfiguration.authenticationStrategy = new LwssoAuthenticationStrategy(new UserPassConnectionInfo(user, password));
+            } else if(ssoLogin)
+            {
+                OctaneConfiguration.authenticationStrategy = new SsoAuthenticationStrategy();
+            }
 
             // close all opened details windows so that we don't have details windows
             // for entities from different workspaces
@@ -109,7 +116,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 OctaneConfiguration.Username = user;
             }
         }
-        
+
+        [PasswordPropertyText(true)]
         public string Password
         {
             get { return password; }

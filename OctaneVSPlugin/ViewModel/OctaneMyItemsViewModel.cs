@@ -195,8 +195,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         OctaneServices.Create(OctaneConfiguration.Url,
                            OctaneConfiguration.SharedSpaceId,
                            OctaneConfiguration.WorkSpaceId,
-                           OctaneConfiguration.Username,
-                           OctaneConfiguration.Password);
+                           OctaneConfiguration.authenticationStrategy);
                     }
                     octaneService = OctaneServices.GetInstance();
                     await octaneService.Connect();

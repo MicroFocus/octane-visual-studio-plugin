@@ -31,6 +31,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         {
             //textBox1.Text = optionsPage.OptionString;
             //populate the details from persistance url shid wid user and pass
+            this.DataContext = optionsPage;
         }
 
         private void TestConnection(object sender, RoutedEventArgs e)

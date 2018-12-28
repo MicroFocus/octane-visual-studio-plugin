@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.Api.Core.Services;
@@ -42,6 +43,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private EntityService es;
 
+        private AuthenticationStrategy authenticationStrategy;
+
         public EntityService GetEntityService
         {
             get { return es; }
@@ -59,12 +62,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private static OctaneServices instance = null;
 
-        private OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
+        private OctaneServices(string url, long sharedspaceId, long workspaceId, AuthenticationStrategy authenticationStrategy)
         {
             this.url = url;
-
-            this.user = user;
-            this.password = password;
+            
+            this.authenticationStrategy = authenticationStrategy;
 
             rest = new RestConnector();
             es = new EntityService(rest);
@@ -82,13 +84,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return instance;
         }
 
-        public static void Create(string url, long sharedspaceId, long workspaceId, string user, string password)
+        public static void Create(string url, long sharedspaceId, long workspaceId, AuthenticationStrategy authenticationStrategy)
         {
             if(instance != null)
             {
                 throw new Exception("Object already created");
             }
-            instance = new OctaneServices(url, sharedspaceId, workspaceId, user, password);
+            instance = new OctaneServices(url, sharedspaceId, workspaceId, authenticationStrategy);
         }
 
         public static void Reset()
@@ -97,13 +99,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             instance = null;
         }
 
+        //public async Task Connect()
+        //{
+        //    if (!rest.IsConnected())
+        //    {
+        //        await rest.ConnectAsync(url, new UserPassConnectionInfo(user, password));
+        //    }
+
+        //}
+
         public async Task Connect()
         {
             if (!rest.IsConnected())
             {
-                await rest.ConnectAsync(url, new UserPassConnectionInfo(user, password));
+                await rest.ConnectAsync(url, authenticationStrategy);
             }
-
         }
 
 
