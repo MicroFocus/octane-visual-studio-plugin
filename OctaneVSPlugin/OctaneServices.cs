@@ -95,8 +95,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public static void Reset()
         {
-            instance.rest.DisconnectAsync();
-            instance = null;
+            if(instance != null)
+            {
+                instance.rest.DisconnectAsync();
+                instance = null;
+            }
         }
 
         //public async Task Connect()
@@ -113,6 +116,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (!rest.IsConnected())
             {
                 await rest.ConnectAsync(url, authenticationStrategy);
+                user = await authenticationStrategy.GetWorkspaceUser();
             }
         }
 

@@ -32,6 +32,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             //textBox1.Text = optionsPage.OptionString;
             //populate the details from persistance url shid wid user and pass
             this.DataContext = optionsPage;
+            passwordTextBox.Password = optionsPage.Password;
         }
 
         private void TestConnection(object sender, RoutedEventArgs e)
@@ -42,6 +43,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         private void ClearSettings(object sender, RoutedEventArgs e)
         {
             // do something
+        }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (optionsPage != null)
+            {
+                optionsPage.Password = ((PasswordBox)sender).Password;
+            }
         }
     }
 }

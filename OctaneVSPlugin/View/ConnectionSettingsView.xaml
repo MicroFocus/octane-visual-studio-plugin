@@ -113,7 +113,7 @@
                              Name="passwordTextBox"
                              Margin="5"
                              IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton}"
-                             Password="{Binding Password, Mode=TwoWay}"/>
+                             PasswordChanged="PasswordBox_PasswordChanged" />
                 </Grid>
 
                 <RadioButton Grid.Row="2"
