@@ -57,7 +57,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 OctaneConfiguration.authenticationStrategy = new LwssoAuthenticationStrategy(new UserPassConnectionInfo(user, password));
             } else if(ssoLogin)
             {
-                OctaneConfiguration.authenticationStrategy = new SsoAuthenticationStrategy();
+                SsoAuthenticationStrategy authenticationStrategy = new SsoAuthenticationStrategy();
+                authenticationStrategy.SetConnectionListener(new SsoConnectionListener());
+                OctaneConfiguration.authenticationStrategy = authenticationStrategy;
             }
 
             // close all opened details windows so that we don't have details windows
