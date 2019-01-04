@@ -42,7 +42,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private void ClearSettings(object sender, RoutedEventArgs e)
         {
-            // do something
+            serverUrlTextBox.Text = "";
+            sharedSpaceTextBox.Text = "";
+            workspaceTextBox.Text = "";
+            usernameTextBox.Text = "";
+            passwordTextBox.Password = "";
         }
 
         private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
