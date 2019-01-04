@@ -76,7 +76,7 @@
                 </Grid.RowDefinitions>
                 <RadioButton Grid.Row="0"
                              Name="userPassRadioButton"
-                             IsChecked="{Binding credentialLogin, Mode=TwoWay}"
+                             IsChecked="{Binding CredentialLogin, Mode=TwoWay}"
                              VerticalAlignment="Center"
                              Margin="5" />
                 <Label Grid.Row="0"
@@ -119,19 +119,12 @@
                 <RadioButton Grid.Row="2"
                              Name="browserRadioButton"
                              VerticalAlignment="Center"
-                             IsChecked="{Binding ssoLogin, Mode=TwoWay}"
+                             IsChecked="{Binding SsoLogin, Mode=TwoWay}"
                              Margin="5" />
                 <Label Grid.Row="2"
                        Margin="20 0 0 0"
                        VerticalAlignment="Center"
                        Content="Login using a browser" />
-
-                <Button  Grid.Row="2"
-                         Content="Change user"
-                         IsEnabled="{Binding IsChecked, ElementName=browserRadioButton}"
-                         Width="150"
-                         HorizontalAlignment="Left"
-                         Margin="175 5 5 5" />
 
                 <Separator Grid.ColumnSpan="2"
                            Grid.Row="4" />

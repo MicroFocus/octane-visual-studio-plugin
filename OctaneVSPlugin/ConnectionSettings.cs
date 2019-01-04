@@ -14,15 +14,12 @@
 * limitations under the License.
 */
 
-using MicroFocus.Adm.Octane.Api.Core.Connector;
-using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -39,10 +36,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private int wsid = 1002;
         private string user = string.Empty;
         private string password = string.Empty;
-
-        public bool credentialLogin { get; set; }
-        public bool ssoLogin { get; set; }
-    
+        private bool credentialLogin = true;
+        private bool ssologin = false;
 
         protected override void OnApply(PageApplyEventArgs e)
         {
@@ -50,18 +45,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             // reset and thus require a new octane service obj
             OctaneServices.Reset();
-
-            // create the authentication strategy that is going to be used by the octane services class
-            if(credentialLogin)
-            {
-                OctaneConfiguration.authenticationStrategy = new LwssoAuthenticationStrategy(new UserPassConnectionInfo(user, password));
-            } else if(ssoLogin)
-            {
-                SsoAuthenticationStrategy authenticationStrategy = new SsoAuthenticationStrategy();
-                authenticationStrategy.SetConnectionListener(new SsoConnectionListener());
-                OctaneConfiguration.authenticationStrategy = authenticationStrategy;
-            }
-
+            
             // close all opened details windows so that we don't have details windows
             // for entities from different workspaces
             PluginWindowManager.CloseAllDetailsWindows();
@@ -78,6 +62,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
         
+
         public string Url
         {
             get { return url; }
@@ -129,6 +114,30 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 OctaneConfiguration.Password = password;
             }
         }
+        public bool CredentialLogin
+        {
+            get
+            {
+                return credentialLogin;
+            }
+            set
+            {
+                credentialLogin = value;
+                OctaneConfiguration.CredentialLogin = credentialLogin;
+            }
+        }
+        public bool SsoLogin
+        {
+            get
+            {
+                return ssologin;
+            }
+            set
+            {
+                ssologin = value;
+                OctaneConfiguration.SsoLogin = ssologin;
+            }
+        }
 
         public override void LoadSettingsFromStorage()
         {
@@ -162,6 +171,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 Password = DataProtector.Unprotect(Password);
             }
         }
+
 
 
         protected override System.Windows.UIElement Child
