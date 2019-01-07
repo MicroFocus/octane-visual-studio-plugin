@@ -16,20 +16,8 @@
 
 using Microsoft.VisualStudio.PlatformUI;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -41,11 +29,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 	{
 		public string Url { get; set; }
 
-		public BrowserDialog(String Url)
+		public BrowserDialog()
 		{
 			InitializeComponent();
-			this.Url = Url;
-			browser.Navigate(new Uri(Url));
 		}
 
 		private void hyperlink_Click(object sender, RoutedEventArgs e)
@@ -53,5 +39,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 			// Open the URL in the user's default browser.
 			Process.Start(Url);
 		}
+
+        public void Show(string Url)
+        {
+            this.Url = Url;
+            browser.Navigate(new Uri(Url));
+            Show();
+        }
 	}
 }
