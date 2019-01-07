@@ -11,5 +11,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             // Open the URL in the user's default browser.
             Process.Start(url);
         }
+
+        public void CloseBrowser()
+        {
+
+        }
     }
 }
