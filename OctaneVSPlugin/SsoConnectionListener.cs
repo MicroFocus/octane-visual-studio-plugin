@@ -8,8 +8,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     {
         public void OpenBrowser(string url)
         {
-            // Open the URL in the user's default browser.
-            Process.Start(url);
+
+			// Currently won't work because the polling is blocking the main thread, need to disucss futher
+			// BrowserDialog browserDialog = new BrowserDialog(url);
+			// browserDialog.Show();
+
+			// Open the URL in the user's default browser.
+			Process.Start(url);
         }
 
         public void CloseBrowser()
