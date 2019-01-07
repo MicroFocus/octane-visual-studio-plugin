@@ -159,7 +159,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void OpenOctaneOptionsDialog(object parameter)
         {
-            MainWindow.PluginPackage.ShowOptionPage(typeof(OptionsPage));
+            MainWindow.PluginPackage.ShowOptionPage(typeof(ConnectionSettings));
         }
 
         /// <summary>
@@ -194,8 +194,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     {
                         OctaneServices.Create(OctaneConfiguration.Url,
                            OctaneConfiguration.SharedSpaceId,
-                           OctaneConfiguration.WorkSpaceId,
-                           OctaneConfiguration.authenticationStrategy);
+                           OctaneConfiguration.WorkSpaceId);
                     }
                     octaneService = OctaneServices.GetInstance();
                     await octaneService.Connect();

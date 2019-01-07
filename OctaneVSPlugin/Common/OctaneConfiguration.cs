@@ -33,6 +33,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
         internal static long SharedSpaceId { get; set; }
 
-        internal static AuthenticationStrategy authenticationStrategy;
+        internal static bool CredentialLogin { get; set; }
+
+        internal static bool SsoLogin { get; set; }
     }
 }
