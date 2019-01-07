@@ -62,6 +62,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
         
+        //public bool TestConnection()
+        //{
+        //    if (credentialLogin)
+        //    {
+
+        //    }
+        //    else if(ssologin)
+        //    {
+
+        //    }
+        //}
 
         public string Url
         {
@@ -172,8 +183,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-
-
+        
         protected override System.Windows.UIElement Child
         {
             get
