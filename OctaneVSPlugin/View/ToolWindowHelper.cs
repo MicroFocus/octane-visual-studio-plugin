@@ -384,8 +384,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 // add to my work
                 if (addToMyWorkDelegate != null 
-                    && octaneItem != null
-                    && octaneItem.IsActiveWorkItem
                     && (entityType == WorkItem.SUBTYPE_STORY
                         || entityType == WorkItem.SUBTYPE_QUALITY_STORY
                         || entityType == WorkItem.SUBTYPE_DEFECT
