@@ -45,6 +45,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 		private const string BrowserEmulationKey = InternetExplorerRootKey + @"\Main\FeatureControl\FEATURE_BROWSER_EMULATION";
 
+		private const string ExtensionName = "ALM Octane Visual Studio Plugin";
+
 		public static BrowserEmulationVersion GetBrowserEmulationVersion()
 		{
 			BrowserEmulationVersion result;
@@ -114,13 +116,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 					result = true;
 				}
 			}
-			catch (SecurityException)
+			catch (Exception)
 			{
-				// The user does not have the permissions required to read from the registry key.
-			}
-			catch (UnauthorizedAccessException)
-			{
-				// The user does not have the necessary registry rights.
+				ActivityLog.LogWarning(ExtensionName, "Failed to set the registry key for FEATURE_BROWSER_EMULATION");
 			}
 
 			return result;
@@ -194,7 +192,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 			catch (Exception ex)
 			{
 				// The user does not have the permissions required to read from the registry key.
-				ActivityLog.LogError("Octane Visual Studio Plugin", ex.Message);
+				ActivityLog.LogError(ExtensionName, ex.Message);
 			}
 
 			return result;
