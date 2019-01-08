@@ -168,6 +168,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                                         _referenceFieldContentName.Add(bew);
                                         try
                                         {
+											// THIS SPAMS CODE WITH EXCEPTIONS, WHY
                                             EntityList<BaseEntity> selectedEntities = (EntityList<BaseEntity>)_parentEntity.GetValue(Name);
 
                                             foreach (BaseEntity sbe in selectedEntities.data)
@@ -180,6 +181,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                                         }
                                         catch (Exception)
                                         {
+											// BAAAAAAAAAAAAAAAD
                                         }
                                         
                                     }
@@ -187,9 +189,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             }
                             catch (Exception)
                             {
-                            }
+								// BAAAAAAAAAAAAAAAD
+							}
 
-                        });
+						});
                         taskRetrieveData.Start();
                     }
                 }
