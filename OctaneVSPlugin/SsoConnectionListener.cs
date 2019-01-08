@@ -24,16 +24,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 {
     class SsoConnectionListener : ConnectionListener
     {
+
         private BrowserDialog browserDialog;
 
         public SsoConnectionListener()
         {
-            browserDialog = new BrowserDialog();
+			browserDialog = new BrowserDialog();
         }
 
         public void OpenBrowser(string url)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() =>
+			// Something keeps settings this back to IE9, force reset it to latest every time the window opens
+			EmbeddedBrowserUtil.SetBrowserEmulationVersionToLatestIE();
+
+			Application.Current.Dispatcher.Invoke(new Action(() =>
             {
                 browserDialog.Show(url);
             }));
