@@ -22,34 +22,34 @@ using System.Windows;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
-    class SsoConnectionListener : ConnectionListener
-    {
+	class SsoConnectionListener : ConnectionListener
+	{
 
-        private BrowserDialog browserDialog;
+		private BrowserDialog browserDialog;
 
-        public SsoConnectionListener()
-        {
+		public SsoConnectionListener()
+		{
 			browserDialog = new BrowserDialog();
-        }
+		}
 
-        public void OpenBrowser(string url)
-        {
+		public void OpenBrowser(string url)
+		{
 			// Something keeps settings this back to IE9, force reset it to latest every time the window opens
 			EmbeddedBrowserUtil.SetBrowserEmulationVersionToLatestIE();
 
 			Application.Current.Dispatcher.Invoke(new Action(() =>
-            {
-                browserDialog.Show(url);
-            }));
-            
-        }
+			{
+				browserDialog.Show(url);
+			}));
 
-        public void CloseBrowser()
-        {
-            Application.Current.Dispatcher.Invoke(new Action(() =>
-            {
-                browserDialog.Close();
-            }));
-        }
-    }
+		}
+
+		public void CloseBrowser()
+		{
+			Application.Current.Dispatcher.Invoke(new Action(() =>
+			{
+				browserDialog.Close();
+			}));
+		}
+	}
 }
