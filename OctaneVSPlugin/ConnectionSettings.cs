@@ -82,21 +82,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             try
             {
-                bool connected = await authenticationStrategy.TestConnection(url);
+                await authenticationStrategy.TestConnection(url);
 
-                if (connected)
-                {
-                    InfoLabel = "Connection successful.";
-                }
-                else
-                {
-                    InfoLabel = "Your Octane version is incompatible with the login type you selected!";
-                }
+                InfoLabel = "Connection successful.";
             }
             catch (Exception ex)
             {
                 InfoLabel = ex.Message;
             }
+            
             NotifyPropertyChanged("InfoLabel");
         }
 

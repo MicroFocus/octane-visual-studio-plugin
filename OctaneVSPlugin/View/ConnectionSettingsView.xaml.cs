@@ -41,6 +41,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private void TestConnection(object sender, RoutedEventArgs e)
         {
+            optionsPage.InfoLabel = "";
             optionsPage.TestConnection();
         }
 
