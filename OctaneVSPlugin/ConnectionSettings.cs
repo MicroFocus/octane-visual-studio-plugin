@@ -14,12 +14,16 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
+using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
+using System.Threading.Tasks;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -28,7 +32,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
     /// This class is presented to the user as a page in Visual Studio options dialog.
     /// </summary>
     [Guid("1D9ECCF3-5D2F-4112-9B25-264596873DC9")]
-    internal class ConnectionSettings : UIElementDialogPage
+    internal class ConnectionSettings : UIElementDialogPage, INotifyPropertyChanged
     {
 
         private string url = string.Empty;
@@ -38,6 +42,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private string password = string.Empty;
         private bool credentialLogin = true;
         private bool ssologin = false;
+        private string infoLabel = string.Empty; 
 
         protected override void OnApply(PageApplyEventArgs e)
         {
@@ -61,18 +66,48 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 EntityTypeRegistry.Init();
             }
         }
-        
-        //public bool TestConnection()
-        //{
-        //    if (credentialLogin)
-        //    {
 
-        //    }
-        //    else if(ssologin)
-        //    {
+        public async void TestConnection()
+        {
+            AuthenticationStrategy authenticationStrategy = null;
+            if (credentialLogin) 
+            {
+                authenticationStrategy = new LwssoAuthenticationStrategy(new UserPassConnectionInfo(OctaneConfiguration.Username, 
+                                                                                                    OctaneConfiguration.Password));
+            }
+            else if (ssologin)
+            {
+                authenticationStrategy = new SsoAuthenticationStrategy();
+                
+            }
+            try
+            {
+                bool connected = await authenticationStrategy.TestConnection(url);
 
-        //    }
-        //}
+                if (connected)
+                {
+                    InfoLabel = "Connection successful.";
+                }
+                else
+                {
+                    InfoLabel = "Your Octane version is incompatible with the login type you selected!";
+                }
+            }
+            catch (Exception ex)
+            {
+                InfoLabel = ex.Message;
+            }
+            NotifyPropertyChanged("InfoLabel");
+        }
+
+        public string InfoLabel
+        {
+            get { return infoLabel; }
+            set
+            {
+                infoLabel = value;
+            }
+        }
 
         public string Url
         {
@@ -156,6 +191,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             // We then decrypt the password to allow the extension to use it.
             base.LoadSettingsFromStorage();
             DecryptPassword();
+            InfoLabel = "";
         }
 
         public override void SaveSettingsToStorage()
@@ -192,6 +228,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 page.optionsPage = this;
                 page.Initialize();
                 return page;
+            }
+        }
+
+        
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        protected void NotifyPropertyChanged(string propName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
             }
         }
 

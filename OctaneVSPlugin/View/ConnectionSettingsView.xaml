@@ -16,11 +16,10 @@
 <UserControl x:Class="MicroFocus.Adm.Octane.VisualStudio.View.ConnectionSettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:MicroFocus.Adm.Octane.VisualStudio.View"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+             mc:Ignorable="d">
     <ScrollViewer VerticalScrollBarVisibility="Visible">
         <Grid>
             <Grid.RowDefinitions>
@@ -28,6 +27,7 @@
                 <RowDefinition Height="100"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="130"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
                 <RowDefinition Height="10"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
@@ -124,11 +124,11 @@
                            Margin="25 0 0 0"
                            Content="Password:" />
                     <PasswordBox Grid.Row="1"
-                             Grid.Column="1"
-                             Name="passwordTextBox"
-                             Margin="5"
-                             IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton}"
-                             PasswordChanged="PasswordBox_PasswordChanged" />
+                                 Grid.Column="1"
+                                 Name="passwordTextBox"
+                                 Margin="5"
+                                 IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton}"
+                                 PasswordChanged="PasswordBox_PasswordChanged" />
                 </Grid>
 
                 <RadioButton Grid.Row="2"
@@ -150,11 +150,16 @@
                      Width="150"
                      Click="TestConnection"
                      HorizontalAlignment="Left" />
-            <Label Grid.Row="4"
-                   Name="infoLabel"
-                   Margin="170 5 5 5" />
-            <Separator Grid.Row="5" />
-            <Button  Grid.Row="6"
+            <Label Grid.Row="5">
+                <TextBlock  Text="{Binding InfoLabel, Mode=TwoWay}"
+                            TextWrapping="Wrap"
+                            Foreground="Red"
+                            Height="30"
+                            MinWidth="200">
+                </TextBlock>
+            </Label>
+            <Separator Grid.Row="6" />
+            <Button  Grid.Row="7"
                      Content="Clear settings"
                      Click="ClearSettings"
                      Width="150"

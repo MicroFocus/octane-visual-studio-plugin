@@ -29,8 +29,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
 		public SsoConnectionListener()
 		{
-			browserDialog = new BrowserDialog();
-		}
+            browserDialog = new BrowserDialog();
+        }
 
 		public void OpenBrowser(string url)
 		{
@@ -38,8 +38,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			EmbeddedBrowserUtil.SetBrowserEmulationVersionToLatestIE();
 
 			Application.Current.Dispatcher.Invoke(new Action(() =>
-			{
-				browserDialog.Show(url);
+			{              
+                browserDialog.Show(url);
 			}));
 
 		}

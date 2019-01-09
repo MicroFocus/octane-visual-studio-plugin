@@ -41,7 +41,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         private void TestConnection(object sender, RoutedEventArgs e)
         {
-            // do something
+            optionsPage.TestConnection();
         }
 
         private void ClearSettings(object sender, RoutedEventArgs e)

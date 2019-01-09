@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.PlatformUI;
 using System;
 using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -45,6 +46,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             this.Url = Url;
             browser.Navigate(new Uri(Url));
             Show();
+        }
+
+        public void Close()
+        {
+            base.Close();
         }
 	}
 }
