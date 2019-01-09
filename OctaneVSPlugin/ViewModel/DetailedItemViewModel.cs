@@ -469,78 +469,85 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private async void SaveEntity(object param)
         {
-            try
-            {
+			try
+			{
+				Mode = WindowMode.Loading;
+				NotifyPropertyChanged("Mode");
 
-                var entityToUpdate = new BaseEntity(Entity.Id);
-                entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
+				var entityToUpdate = new BaseEntity(Entity.Id);
+				entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
 
-                // add the client lock stamp if it exists
-                if(Entity.GetLongValue(lockStamp) != null)
-                {
-                    entityToUpdate.SetLongValue(lockStamp, (long)Entity.GetLongValue(lockStamp));
-                }
+				// add the client lock stamp if it exists
+				if (Entity.GetLongValue(lockStamp) != null)
+				{
+					entityToUpdate.SetLongValue(lockStamp, (long)Entity.GetLongValue(lockStamp));
+				}
 
-                foreach (var field in _allEntityFields.Where(f => f.IsChanged))
-                {
-                    if (!field.Metadata.FieldType.Equals("reference"))
-                    {
-                        if("".Equals(field.Content))
-                        {
-                            entityToUpdate.SetValue(field.Name, null);
-                        }
-                        else
-                        {
-                            entityToUpdate.SetValue(field.Name, field.Content);
-                        }
-                    }
-                    else if (!field.IsMultiple)
-                    {
-                        if (field.Content == null || field.Content.Equals(""))
-                        {
-                            entityToUpdate.SetValue(field.Name, null);
-                        }
-                        else
-                        {
-                            foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
-                            {
-                                // todo: you need to look into this tibi
-                                if (field.Content.Equals(new BaseEntityWrapper(be)))
-                                {
-                                    entityToUpdate.SetValue(field.Name, be);
-                                }
-                            }
+				foreach (var field in _allEntityFields.Where(f => f.IsChanged))
+				{
+					if (!field.Metadata.FieldType.Equals("reference"))
+					{
+						if ("".Equals(field.Content))
+						{
+							entityToUpdate.SetValue(field.Name, null);
+						}
+						else
+						{
+							entityToUpdate.SetValue(field.Name, field.Content);
+						}
+					}
+					else if (!field.IsMultiple)
+					{
+						if (field.Content == null || field.Content.Equals(""))
+						{
+							entityToUpdate.SetValue(field.Name, null);
+						}
+						else
+						{
+							foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
+							{
+								// todo: you need to look into this tibi
+								if (field.Content.Equals(new BaseEntityWrapper(be)))
+								{
+									entityToUpdate.SetValue(field.Name, be);
+								}
+							}
 
-                        }
+						}
 
-                    }
-                    else if(field.IsMultiple)
-                    {
-                        entityToUpdate.SetValue(field.Name, field.GetSelectedEntities());
-                    }
-                }
+					}
+					else if (field.IsMultiple)
+					{
+						entityToUpdate.SetValue(field.Name, field.GetSelectedEntities());
+					}
+				}
 
-                entityToUpdate.Name = Entity.Name;
+				entityToUpdate.Name = Entity.Name;
 
-                if (SelectedNextPhase != null)
-                {
-                    var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);
-                    if (nextPhase != null)
-                        entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
-                }
+				if (SelectedNextPhase != null)
+				{
+					var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);
+					if (nextPhase != null)
+						entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
+				}
 
-                await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
-                await InitializeAsync();
+				await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
+				await InitializeAsync();
 
-                //trigger a refresh after save so the user is aware of the changes
-                RefreshCommand.Execute(param);
-                NotifyPropertyChanged();
-            }
-            catch (Exception ex)
-            {
-                BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
-                bed.ShowDialog();
-            }
+				//trigger a refresh after save so the user is aware of the changes
+				RefreshCommand.Execute(param);
+				NotifyPropertyChanged();
+			}
+			catch (Exception ex)
+			{
+				BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
+				bed.ShowDialog();
+			}
+			finally
+			{
+				Mode = WindowMode.Loaded;
+				NotifyPropertyChanged("Mode");
+			}
            
         }
 
