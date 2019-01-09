@@ -107,13 +107,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         [ExcludeFromCodeCoverage]
         public async static void AddToMyWork(BaseEntity entity)
         {
-            try
-            {
-                if (entity == null)
-                    return;
-
-                MyWorkUtils.AddToMyWork(entity);
-                OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+			if (entity == null)
+				return;
+			try
+			{
+				await MyWorkUtils.AddToMyWork(entity);
+				MessageBox.Show("Added backlog item: " + entity.GetStringValue("name") + " to \"My Work\" ", ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				await OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
             }
             catch (Exception ex)
             {
@@ -127,13 +127,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         [ExcludeFromCodeCoverage]
         public static async void RemoveFromMyWork(BaseEntity entity)
         {
-            try
-            {
-                if (entity == null)
-                    return;
+			if (entity == null)
+				return;
 
-                MyWorkUtils.RemoveFromMyWork(entity);
-                OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+			try
+			{
+				await MyWorkUtils.RemoveFromMyWork(entity);
+				MessageBox.Show("Dismissed backlog item: " + entity.GetStringValue("name") + " to \"My Work\" ", ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				await OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
             }
             catch (Exception ex)
             {
@@ -401,7 +402,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
 
                 // remove from my work
-                if (removeFromMyWorkDelegate != null)
+                if (removeFromMyWorkDelegate != null && entityType != "comment")
                 {
                     cm.Items.Add(new MenuItem
                     {

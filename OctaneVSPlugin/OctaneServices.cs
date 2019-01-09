@@ -179,19 +179,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return result;
         }
 
-        public async Task<UserItem> FindUserItemForEntity(BaseEntity baseEntity)
+        public async Task<List<UserItem>> FindUserItemForEntity(BaseEntity baseEntity)
         {
             var owner = await GetCurrentUser();
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext, 
                 BuildFindUserItemCriteria(owner, baseEntity), BuildUserItemFields());
 
-            if(userItems.data.Count == 1)
+            if(userItems.data.Count > 0)
             {
-                return userItems.data[0];
+				return userItems.data;
             }
             else
             {
-                return null;
+                return new List<UserItem>();
             }
         }
         
@@ -292,19 +292,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         ///<summary>
         ///Adds an entity to my work
         /// </summary>
-        public async void AddToMyWork(UserItem entity)
+        public UserItem AddToMyWork(UserItem entity)
         {
             RestConnector.AwaitContinueOnCapturedContext = false;
-            var createdEntity = await es.CreateAsync(workspaceContext, entity, null);
+            return es.Create(workspaceContext, entity, null);
         }
 
         ///<summary>
         ///Removes an entity from my work
         /// </summary>
-        public async void RemoveFromMyWork(UserItem entity)
+        public void RemoveFromMyWork(UserItem entity)
         {
             RestConnector.AwaitContinueOnCapturedContext = false;
-            await es.DeleteByIdAsync<UserItem>(workspaceContext, entity.Id);
+            es.DeleteById<UserItem>(workspaceContext, entity.Id);
         }
 
 
