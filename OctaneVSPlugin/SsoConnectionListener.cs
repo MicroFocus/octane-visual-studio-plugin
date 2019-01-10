@@ -51,5 +51,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				browserDialog.Close();
 			}));
 		}
+
+        public bool IsOpen()
+        {
+            return browserDialog.IsOpen;
+        }
 	}
 }

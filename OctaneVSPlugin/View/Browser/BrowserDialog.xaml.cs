@@ -28,7 +28,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 	/// </summary>
 	public partial class BrowserDialog : DialogWindow
 	{
-		public string Url { get; set; }
+
+        public bool IsOpen { get; set; }
+
+        public string Url { get; set; }
 
 		public BrowserDialog()
 		{
@@ -44,13 +47,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         public void Show(string Url)
         {
             this.Url = Url;
+            this.IsOpen = true;
             browser.Navigate(new Uri(Url));
             Show();
         }
 
-        public void Close()
+        private void Window_Closed(object sender, EventArgs e)
         {
-            base.Close();
+            this.IsOpen = false;
         }
-	}
+
+
+    }
 }
