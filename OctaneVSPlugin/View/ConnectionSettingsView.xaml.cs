@@ -14,6 +14,7 @@
 * limitations under the License.
 */
 
+using System;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -36,7 +37,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             //textBox1.Text = optionsPage.OptionString;
             //populate the details from persistance url shid wid user and pass
             this.DataContext = optionsPage;
-            passwordTextBox.Password = optionsPage.Password;
+            try
+            {
+                passwordTextBox.Password = optionsPage.Password;
+            }
+            catch(Exception)
+            {
+                passwordTextBox.Password = "";
+            }
+            
         }
 
         private void TestConnection(object sender, RoutedEventArgs e)
