@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
@@ -23,7 +24,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
     class MyWorkUtils
     {
         
-        private static void verifyUserItem(BaseEntity baseEntity)
+        private static void VerifyUserItem(BaseEntity baseEntity)
         {
             if ("user_item".Equals(baseEntity.TypeName))
             {
@@ -36,7 +37,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             UserItem newUserItem = new UserItem();
             newUserItem.SetLongValue("origin", 1L);
             // dummy value in order to be able to serialise the useritem object
-            newUserItem.Id = 0;
+            newUserItem.Id = "0";
             newUserItem.SetValue("is_new", true);
             newUserItem.SetValue("reason", null);
             newUserItem.SetValue("entity_type", wrappedBaseEntity.TypeName);
@@ -50,25 +51,35 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             return newUserItem;
         }
 
-        public async static void AddToMyWork(BaseEntity baseEntity)
-        {
-            UserItem newUserItem = await CreateNewUserItem(baseEntity);
+        public async static System.Threading.Tasks.Task AddToMyWork(BaseEntity baseEntity)
+		{
+			OctaneServices octaneService = OctaneServices.GetInstance();
+			List<UserItem> userItems = await octaneService.FindUserItemForEntity(baseEntity);
+			if (userItems.Count > 0)
+			{
+				throw new Exception("Cannot add item, already in \"My Work\"");
+			}
 
-            OctaneServices octaneService = OctaneServices.GetInstance();
-            octaneService.AddToMyWork(newUserItem);
+			UserItem newUserItem = await CreateNewUserItem(baseEntity);
+			octaneService.AddToMyWork(newUserItem);
         }
 
-        public static async void RemoveFromMyWork(BaseEntity baseEntity)
+        public static async System.Threading.Tasks.Task RemoveFromMyWork(BaseEntity baseEntity)
         {
             OctaneServices octaneService = OctaneServices.GetInstance();
-            UserItem userItem = await octaneService.FindUserItemForEntity(baseEntity);
-            if (userItem == null)
-            {
-                return;
-            }
+            List<UserItem> userItems = await octaneService.FindUserItemForEntity(baseEntity);
 
-            octaneService.RemoveFromMyWork(userItem);
-           
+			if (userItems.Count == 0)
+			{
+				throw new Exception("Cannot dismiss item, not found in \"My Work\"");
+			}
+			else
+			{
+				foreach (UserItem userItem in userItems)
+				{
+					octaneService.RemoveFromMyWork(userItem);
+				}
+			}
         }
     }
 }
