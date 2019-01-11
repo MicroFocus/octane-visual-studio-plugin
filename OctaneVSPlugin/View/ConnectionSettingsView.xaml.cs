@@ -48,10 +48,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             
         }
 
-        private void TestConnection(object sender, RoutedEventArgs e)
+        private async void TestConnection(object sender, RoutedEventArgs e)
         {
             optionsPage.InfoLabel = "";
-            optionsPage.TestConnection();
+            InfoLabel.Text = await optionsPage.TestConnection();
         }
 
         private void ClearSettings(object sender, RoutedEventArgs e)

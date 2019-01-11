@@ -151,7 +151,8 @@
                      Click="TestConnection"
                      HorizontalAlignment="Left" />
             <Label Grid.Row="5">
-                <TextBlock  Text="{Binding InfoLabel, Mode=TwoWay}"
+                <TextBlock Name="InfoLabel"  
+                            Text="{Binding InfoLabel, Mode=OneWay}"
                             TextWrapping="Wrap"
                             Foreground="Red"
                             Height="30"

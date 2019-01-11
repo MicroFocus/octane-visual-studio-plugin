@@ -22,6 +22,7 @@ using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using Microsoft.VisualStudio.Shell;
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -110,7 +111,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 InfoLabel = ex.Message;
             }
             
-            NotifyPropertyChanged("InfoLabel");
             return InfoLabel;
         }
 
@@ -120,6 +120,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             set
             {
                 infoLabel = value;
+                //OnPropertyChanged("InfoLabel");
             }
         }
 
@@ -208,6 +209,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             InfoLabel = "";
         }
 
+        [MethodImpl(MethodImplOptions.Synchronized)]
         public override void SaveSettingsToStorage()
         {
             // Before saving the settings we encrypt the password using Windows Data Protection API.
@@ -246,14 +248,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         
-        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+        public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void NotifyPropertyChanged(string propName = "")
+        protected void OnPropertyChanged(string propName = "")
         {
-            if (PropertyChanged != null)
-            {
-                PropertyChanged(this, new PropertyChangedEventArgs(propName));
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propName));
         }
 
     }
