@@ -103,13 +103,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             instance = new OctaneServices(url, sharedspaceId, workspaceId);
         }
 
-        public static void Reset()
+        public static async Task<bool> Reset()
         {
+            bool result = false;
+
             if(instance != null)
             {
-                instance.rest.DisconnectAsync();
+                result = await instance.rest.DisconnectAsync();
                 instance = null;
             }
+
+            return result;
         }
 
         public async Task Connect()

@@ -17,37 +17,55 @@
 using Microsoft.VisualStudio.PlatformUI;
 using System;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
+using System.Web;
 using System.Windows;
 using System.Windows.Controls;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
 
-	/// <summary>
-	/// Interaction logic for BrowserDialog.xaml
-	/// </summary>
-	public partial class BrowserDialog : DialogWindow
-	{
-
+    /// <summary>
+    /// Interaction logic for BrowserDialog.xaml
+    /// </summary>
+    public partial class BrowserDialog : DialogWindow
+    {
         public bool IsOpen { get; set; }
 
         public string Url { get; set; }
 
-		public BrowserDialog()
-		{
-			InitializeComponent();
-		}
+        public BrowserDialog()
+        {
+            InitializeComponent();            
+        }
 
-		private void hyperlink_Click(object sender, RoutedEventArgs e)
-		{
-			// Open the URL in the user's default browser.
-			Process.Start(Url);
-		}
+        [DllImport("wininet.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool InternetSetOption(IntPtr hInternet, int dwOption, IntPtr lpBuffer, int dwBufferLength);
 
+        private const int INTERNET_OPTION_SUPPRESS_BEHAVIOR = 81;
+        private const int INTERNET_SUPPRESS_COOKIE_PERSIST = 3;
+
+        public static void SuppressCookiePersistence()
+        {
+            var lpBuffer = Marshal.AllocCoTaskMem(Marshal.SizeOf(typeof(int)));
+            Marshal.StructureToPtr(INTERNET_SUPPRESS_COOKIE_PERSIST, lpBuffer, true);
+
+            InternetSetOption(IntPtr.Zero, INTERNET_OPTION_SUPPRESS_BEHAVIOR, lpBuffer, sizeof(int));
+
+            Marshal.FreeCoTaskMem(lpBuffer);
+        }
+
+        private void hyperlink_Click(object sender, RoutedEventArgs e)
+        {
+            // Open the URL in the user's default browser.
+            Process.Start(Url);
+        }
+        
         public void Show(string Url)
         {
             this.Url = Url;
             this.IsOpen = true;
+            SuppressCookiePersistence();
             browser.Navigate(new Uri(Url));
             Show();
         }

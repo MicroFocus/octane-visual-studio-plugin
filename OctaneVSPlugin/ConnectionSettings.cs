@@ -44,13 +44,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private bool ssologin = false;
         private string infoLabel = string.Empty; 
 
-        protected override void OnApply(PageApplyEventArgs e)
+        protected async override void OnApply(PageApplyEventArgs e)
         {
             base.OnApply(e);
 
             // test connection
             InfoLabel = "";
-            TestConnection();
+            await TestConnection();
             if (!InfoLabel.Equals("Connection successful."))
             {
                 e.ApplyBehavior = ApplyKind.CancelNoNavigate;
@@ -58,8 +58,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             else
             {
                 // reset and thus require a new octane service obj
-                OctaneServices.Reset();
-            
+                await OctaneServices.Reset();
+
+                // create a new service object
+                OctaneServices.Create(OctaneConfiguration.Url,
+                          OctaneConfiguration.SharedSpaceId,
+                          OctaneConfiguration.WorkSpaceId);
+
+                await OctaneServices.GetInstance().Connect();
+
                 // close all opened details windows so that we don't have details windows
                 // for entities from different workspaces
                 PluginWindowManager.CloseAllDetailsWindows();
@@ -78,7 +85,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             
         }
 
-        public async void TestConnection()
+        public async Task<string> TestConnection()
         {
             AuthenticationStrategy authenticationStrategy = null;
             if (credentialLogin) 
@@ -91,6 +98,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 authenticationStrategy = new SsoAuthenticationStrategy();
                 
             }
+
             try
             {
                 await authenticationStrategy.TestConnection(url);
@@ -103,6 +111,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             
             NotifyPropertyChanged("InfoLabel");
+            return InfoLabel;
         }
 
         public string InfoLabel
