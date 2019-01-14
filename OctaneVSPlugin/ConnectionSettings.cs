@@ -25,6 +25,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -43,7 +44,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private string password = string.Empty;
         private bool credentialLogin = true;
         private bool ssologin = false;
-        private string infoLabel = string.Empty; 
+        private string infoLabel = string.Empty;
+      
+        
 
         protected async override void OnApply(PageApplyEventArgs e)
         {
@@ -105,13 +108,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 await authenticationStrategy.TestConnection(url);
 
                 InfoLabel = "Connection successful.";
+
+                InfoLabelColor = new SolidColorBrush(Colors.Green);
             }
             catch (Exception ex)
             {
+                InfoLabelColor = new SolidColorBrush(Colors.Red);
                 InfoLabel = ex.Message;
             }
-            
+
+
+            OnPropertyChanged("InfoLabelColor");
+            OnPropertyChanged("InfoLabel");
             return InfoLabel;
+        }
+
+        private Brush _infoLabelColor;
+
+        public Brush InfoLabelColor
+        {
+            get { return _infoLabelColor; }
+            set { _infoLabelColor = value; }
         }
 
         public string InfoLabel
@@ -120,7 +137,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             set
             {
                 infoLabel = value;
-                //OnPropertyChanged("InfoLabel");
             }
         }
 

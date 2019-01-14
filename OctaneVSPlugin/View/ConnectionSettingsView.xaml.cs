@@ -17,6 +17,7 @@
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
@@ -34,18 +35,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
         public void Initialize()
         {
-            //textBox1.Text = optionsPage.OptionString;
-            //populate the details from persistance url shid wid user and pass
             this.DataContext = optionsPage;
             try
             {
                 passwordTextBox.Password = optionsPage.Password;
             }
-            catch(Exception)
+            catch (Exception)
             {
                 passwordTextBox.Password = "";
-            }
-            
+            }            
         }
 
         private async void TestConnection(object sender, RoutedEventArgs e)
@@ -70,5 +68,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 optionsPage.Password = ((PasswordBox)sender).Password;
             }
         }
+
     }
 }

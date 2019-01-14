@@ -154,7 +154,7 @@
                 <TextBlock Name="InfoLabel"  
                             Text="{Binding InfoLabel, Mode=OneWay}"
                             TextWrapping="Wrap"
-                            Foreground="Red"
+                           Foreground="{Binding InfoLabelColor, Mode=OneWay}"
                             Height="30"
                             MinWidth="200">
                 </TextBlock>
