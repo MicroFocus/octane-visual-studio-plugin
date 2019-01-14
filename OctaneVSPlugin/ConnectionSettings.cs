@@ -71,11 +71,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 						  OctaneConfiguration.SharedSpaceId,
 						  OctaneConfiguration.WorkSpaceId);
 
-				Run(async () => { await OctaneServices.GetInstance().Connect(); }).Wait();
-
-				// close all opened details windows so that we don't have details windows
-				// for entities from different workspaces
-				PluginWindowManager.CloseAllDetailsWindows();
+                
+                // close all opened details windows so that we don't have details windows
+                // for entities from different workspaces
+                PluginWindowManager.CloseAllDetailsWindows();
 
 				// disable the active item toolbar because we don't know yet
 				// whether we can connect with the new Octane credentials
@@ -84,8 +83,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				// After settings are applied we notify the main ViewModel to allow it to refresh.
 				if (OctaneMyItemsViewModel.Instance != null)
 				{
-					OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
-					EntityTypeRegistry.Init();
+                    InitialisePluginComponents();
 				}
 
 			}
@@ -93,6 +91,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			page.SetInfoLabelText(result);
 			base.OnApply(e);
 		}
+
+        public async void InitialisePluginComponents()
+        {
+            await OctaneServices.GetInstance().Connect();
+            await OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
+            await EntityTypeRegistry.Init();
+        } 
 
 		public async Task<string> TestConnection()
 		{
@@ -143,8 +148,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			get { return wsid; }
 			set
 			{
-				wsid = value;
-				OctaneConfiguration.WorkSpaceId = wsid;
+                wsid = value;
+                OctaneConfiguration.WorkSpaceId = wsid;
 			}
 		}
 

@@ -49,15 +49,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 		private async void TestConnection(object sender, RoutedEventArgs e)
 		{
 			InfoLabel.Text = "";
-			optionsPage.InfoLabel = "";
 			SetInfoLabelText(await optionsPage.TestConnection());
 		}
 
 		private void ClearSettings(object sender, RoutedEventArgs e)
 		{
 			serverUrlTextBox.Text = "";
-			sharedSpaceTextBox.Text = "";
-			workspaceTextBox.Text = "";
+			sharedSpaceTextBox.Text = "0";
+			workspaceTextBox.Text = "0";
 			usernameTextBox.Text = "";
 			passwordTextBox.Password = "";
 		}
