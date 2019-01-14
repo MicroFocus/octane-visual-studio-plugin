@@ -162,27 +162,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                                 if (_referenceFieldContent != null)
                                 {
-                                    foreach (BaseEntity be in _referenceFieldContent)
-                                    {
-                                        BaseEntityWrapper bew = new BaseEntityWrapper(be);
-                                        _referenceFieldContentName.Add(bew);
-                                        try
-                                        {
-                                            EntityList<BaseEntity> selectedEntities = (EntityList<BaseEntity>)_parentEntity.GetValue(Name);
+									foreach (BaseEntity be in _referenceFieldContent)
+									{
+										BaseEntityWrapper bew = new BaseEntityWrapper(be);
+										_referenceFieldContentName.Add(bew);
 
-                                            foreach (BaseEntity sbe in selectedEntities.data)
-                                            {
-                                                if (bew.Equals(new BaseEntityWrapper(sbe)))
-                                                {
-                                                    bew.IsSelected = true;
-                                                }
-                                            }
-                                        }
-                                        catch (Exception)
-                                        {
-                                        }
-                                        
-                                    }
+										var selectedEntities = _parentEntity.GetValue(Name);
+
+										if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
+										{
+											EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>) selectedEntities;
+
+											foreach (BaseEntity sbe in selectedEntitiesList.data)
+											{
+												if (bew.Equals(new BaseEntityWrapper(sbe)))
+												{
+													bew.IsSelected = true;
+												}
+											}
+										}
+									}
                                 }
                             }
                             catch (Exception)
