@@ -55,7 +55,7 @@
                          Grid.Column="1"
                          Name="serverUrlTextBox"
                          Margin="5"
-                         Text="{Binding Url, Mode=TwoWay}" />
+                         Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -64,7 +64,7 @@
                          Grid.Column="1"
                          Name="sharedSpaceTextBox"
                          Margin="5"
-                         Text="{Binding SsId, Mode=TwoWay}" />
+                         Text="{Binding SsId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
@@ -73,7 +73,7 @@
                          Grid.Column="1"
                          Name="workspaceTextBox"
                          Margin="5"
-                         Text="{Binding WsId, Mode=TwoWay}" />
+                         Text="{Binding WsId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Separator Grid.ColumnSpan="2"
                            Grid.Row="3" />
@@ -91,7 +91,7 @@
                 </Grid.RowDefinitions>
                 <RadioButton Grid.Row="0"
                              Name="userPassRadioButton"
-                             IsChecked="{Binding CredentialLogin, Mode=TwoWay}"
+                             IsChecked="{Binding CredentialLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              VerticalAlignment="Center"
                              Margin="5" />
                 <Label Grid.Row="0"
@@ -115,9 +115,9 @@
                     <TextBox Grid.Row="0"
                              Grid.Column="1"
                              Name="usernameTextBox"
-                             IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton}"
+                             IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5"
-                             Text="{Binding User, Mode=TwoWay}" />
+                             Text="{Binding User, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                     <Label Grid.Row="1"
                            Grid.Column="0"
@@ -127,14 +127,14 @@
                                  Grid.Column="1"
                                  Name="passwordTextBox"
                                  Margin="5"
-                                 IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton}"
+                                 IsEnabled="{Binding IsChecked, ElementName=userPassRadioButton, UpdateSourceTrigger=PropertyChanged}"
                                  PasswordChanged="PasswordBox_PasswordChanged" />
                 </Grid>
 
                 <RadioButton Grid.Row="2"
                              Name="browserRadioButton"
                              VerticalAlignment="Center"
-                             IsChecked="{Binding SsoLogin, Mode=TwoWay}"
+                             IsChecked="{Binding SsoLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                              Margin="5" />
                 <Label Grid.Row="2"
                        Margin="20 0 0 0"

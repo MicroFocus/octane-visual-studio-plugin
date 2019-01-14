@@ -21,62 +21,73 @@ using System.Windows.Media;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
-    /// <summary>
-    /// Interaction logic for ConnectionSettingsView.xaml
-    /// </summary>
-    public partial class ConnectionSettingsView : UserControl
-    {
-        public ConnectionSettingsView()
-        {
-            InitializeComponent();
-        }
+	/// <summary>
+	/// Interaction logic for ConnectionSettingsView.xaml
+	/// </summary>
+	public partial class ConnectionSettingsView : UserControl
+	{
+		public ConnectionSettingsView()
+		{
+			InitializeComponent();
+		}
 
-        internal ConnectionSettings optionsPage;
+		internal ConnectionSettings optionsPage;
 
-        public void Initialize()
-        {
-            this.DataContext = optionsPage;
-            try
-            {
-                passwordTextBox.Password = optionsPage.Password;
-            }
-            catch (Exception)
-            {
-                passwordTextBox.Password = "";
-            }            
-        }
+		public void Initialize()
+		{
+			this.DataContext = optionsPage;
+			try
+			{
+				passwordTextBox.Password = optionsPage.Password;
+			}
+			catch (Exception)
+			{
+				passwordTextBox.Password = "";
+			}
+		}
 
-        private async void TestConnection(object sender, RoutedEventArgs e)
-        {
-            optionsPage.InfoLabel = "";
-            InfoLabel.Text = await optionsPage.TestConnection();
-        }
+		private async void TestConnection(object sender, RoutedEventArgs e)
+		{
+			InfoLabel.Text = "";
+			optionsPage.InfoLabel = "";
+			SetInfoLabelText(await optionsPage.TestConnection());
+		}
 
-        private void ClearSettings(object sender, RoutedEventArgs e)
-        {
-            serverUrlTextBox.Text = "";
-            sharedSpaceTextBox.Text = "";
-            workspaceTextBox.Text = "";
-            usernameTextBox.Text = "";
-            passwordTextBox.Password = "";
-        }
+		private void ClearSettings(object sender, RoutedEventArgs e)
+		{
+			serverUrlTextBox.Text = "";
+			sharedSpaceTextBox.Text = "";
+			workspaceTextBox.Text = "";
+			usernameTextBox.Text = "";
+			passwordTextBox.Password = "";
+		}
 
-        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            if (optionsPage != null)
-            {
-                optionsPage.Password = ((PasswordBox)sender).Password;
-            }
-        }
+		private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+		{
+			if (optionsPage != null)
+			{
+				optionsPage.Password = ((PasswordBox)sender).Password;
+			}
+		}
 
-        public void SetInfoLabelColor(Brush colorBrush)
-        {
-            InfoLabel.Foreground = colorBrush;
-        }
+		public void SetInfoLabelText(string text)
+		{
+			InfoLabel.Text = text;
+			if (text.Equals(ConnectionSettings.ConnectionSuccessful))
+			{
+				InfoLabel.Foreground = Brushes.Green;
+			}
+			else
+			{
+				InfoLabel.Foreground = Brushes.Red;
+			}
+		}
 
-        public void SetInfoLabelText(string text)
-        {
-            InfoLabel.Text = text;
-        }
-    }
+		public void UpdateProperties()
+		{
+			var dataContext = DataContext;
+			DataContext = null;
+			DataContext = dataContext;
+		}
+	}
 }
