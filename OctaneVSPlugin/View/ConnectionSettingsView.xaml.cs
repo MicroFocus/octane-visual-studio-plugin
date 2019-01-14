@@ -81,12 +81,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				InfoLabel.Foreground = Brushes.Red;
 			}
 		}
-
-		public void UpdateProperties()
-		{
-			var dataContext = DataContext;
-			DataContext = null;
-			DataContext = dataContext;
-		}
 	}
 }
