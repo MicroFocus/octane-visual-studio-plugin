@@ -80,7 +80,6 @@
     <Compile Include="ViewModel\OctaneItemViewModelTests.cs" />
     <Compile Include="ViewModel\OctaneMyItemsViewModelTests.cs" />
     <Compile Include="ViewModel\SearchItemsViewModelTests.cs" />
-    <Compile Include="View\OptionsPageTests.cs" />
     <Compile Include="View\SearchToolWindowTests.cs" />
     <Compile Include="View\ToolWindowHelperTests.cs" />
   </ItemGroup>
