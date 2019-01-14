@@ -45,8 +45,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private bool credentialLogin = true;
         private bool ssologin = false;
         private string infoLabel = string.Empty;
-      
-        
+
+
+        private ConnectionSettingsView page;
+
+
 
         protected async override void OnApply(PageApplyEventArgs e)
         {
@@ -108,18 +111,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 await authenticationStrategy.TestConnection(url);
 
                 InfoLabel = "Connection successful.";
-
                 InfoLabelColor = new SolidColorBrush(Colors.Green);
+
+                if (page != null)
+                {
+                    page.SetInfoLabelText(InfoLabel);
+                    page.SetInfoLabelColor(InfoLabelColor);
+                }
+                
             }
             catch (Exception ex)
             {
                 InfoLabelColor = new SolidColorBrush(Colors.Red);
                 InfoLabel = ex.Message;
+
+                if (page != null)
+                {
+                    page.SetInfoLabelText(InfoLabel);
+                    page.SetInfoLabelColor(InfoLabelColor);
+                }
             }
-
-
-            OnPropertyChanged("InfoLabelColor");
-            OnPropertyChanged("InfoLabel");
+            
             return InfoLabel;
         }
 
@@ -256,7 +268,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             get
             {
-                ConnectionSettingsView page = new ConnectionSettingsView();
+                page = new ConnectionSettingsView();
                 page.optionsPage = this;
                 page.Initialize();
                 return page;

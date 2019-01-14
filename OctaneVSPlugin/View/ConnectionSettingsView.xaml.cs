@@ -69,5 +69,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+        public void SetInfoLabelColor(Brush colorBrush)
+        {
+            InfoLabel.Foreground = colorBrush;
+        }
+
+        public void SetInfoLabelText(string text)
+        {
+            InfoLabel.Text = text;
+        }
     }
 }
