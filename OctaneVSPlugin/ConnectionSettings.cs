@@ -107,6 +107,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
 
             try
+
             {
                 await authenticationStrategy.TestConnection(url);
 
