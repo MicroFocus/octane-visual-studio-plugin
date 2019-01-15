@@ -35,8 +35,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private MainWindowMode _mode;
         private readonly ObservableCollection<OctaneItemViewModel> _myItems;
 
-        private List<MyWorkItemsSublist> myWorkItemSublislts;
-        
+        private List<MyWorkItemsSublist> myWorkItemSublists;
+        private Dictionary<string, MyWorkItemsSublist> sublistsMap;
+
         /// <summary>
         /// Store the exception message from the loading items operation
         /// </summary>
@@ -126,7 +127,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public IEnumerable<MyWorkItemsSublist> MyWorkSublists
         {
-            get { return myWorkItemSublislts; }
+            get { return myWorkItemSublists; }
         }
 
         /// <summary>
@@ -208,8 +209,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 bool foundActiveItem = false;
                 IList<BaseEntity> items = await octaneService.GetMyItems();
 
-                Dictionary<string, MyWorkItemsSublist> sublistsMap = createMyWorkItemsSublistsMap();
-
+                if (sublistsMap == null)
+                {
+                    sublistsMap = createMyWorkItemsSublistsMap();
+                }
+                else
+                {
+                    cleanSubListsMap(sublistsMap);
+                }
+                
                 foreach (BaseEntity entity in items)
                 {
                     var octaneItem = new OctaneItemViewModel(entity);
@@ -226,7 +234,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     }
                 }
 
-                myWorkItemSublislts = sublistsMap.Values.ToList();
+                myWorkItemSublists = sublistsMap.Values.ToList();
 
                 if (!foundActiveItem)
                 {
@@ -244,9 +252,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     }
                 }
 
-                myWorkItemSublislts.ForEach(ms =>
+                myWorkItemSublists.ForEach(ms =>
                 {
-                    foreach (var myWorkItem in ms.Items) _myItems.Add(myWorkItem);
+                    if(ms.IsSelected) {
+                        foreach (var myWorkItem in ms.Items)
+                        {
+                            _myItems.Add(myWorkItem);
+                        }
+                    }
                 });
                 _totalItems = _myItems.Count;
 
@@ -267,13 +280,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public void ApplyFilter()
         {
             _myItems.Clear();
-            myWorkItemSublislts.ForEach(ms =>
+            myWorkItemSublists.ForEach(ms =>
             {
                 if (ms.IsSelected)
                 {
                     foreach (var myWorkItem in ms.Items) _myItems.Add(myWorkItem);
                 }
             });
+        }
+
+        private void cleanSubListsMap(Dictionary<string, MyWorkItemsSublist> sublistMap)
+        {
+            foreach (KeyValuePair<string, MyWorkItemsSublist> entry in sublistMap)
+            {
+                entry.Value.Items.Clear();
+            }
         }
 
         private Dictionary<string, MyWorkItemsSublist> createMyWorkItemsSublistsMap()
