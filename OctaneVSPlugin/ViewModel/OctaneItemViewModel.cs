@@ -20,6 +20,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using Task = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
@@ -211,7 +212,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             foreach (FieldViewModel field in fields.Take(fields.Count - 1))
             {
+                
                 yield return field;
+                if (field.Name.Equals("story_points") && field.Content.Equals(""))
+                {
+                    Separator sep = new Separator();
+                    sep.Width = 5;
+                    // align the separator to be in the middle of the row
+                    sep.Margin = new Thickness(0,8,0,10);
+                    sep.VerticalAlignment = VerticalAlignment.Top;
+                    yield return sep;
+                }
                 yield return SeparatorViewModel.Make();
             }
 
