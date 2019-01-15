@@ -33,8 +33,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             _octaneService = OctaneServices.GetInstance();
 
-            await _octaneService.Connect();
-
             List<EntityLabelMetadata> entityLabelMetadatas = await _octaneService.GetEntityLabelMedata();
             Dictionary<string,EntityLabelMetadata> result = new Dictionary<string, EntityLabelMetadata>();
             foreach (EntityLabelMetadata elm in entityLabelMetadatas)
