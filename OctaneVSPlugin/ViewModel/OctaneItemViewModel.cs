@@ -218,9 +218,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     Separator sep = new Separator();
                     sep.Width = 5;
-                    // align the separator to be in the middle of the row
-                    sep.Margin = new Thickness(0,8,0,10);
-                    sep.VerticalAlignment = VerticalAlignment.Top;
+                    sep.Margin = new Thickness(5, 0, 5, 0);
+                    sep.VerticalAlignment = VerticalAlignment.Center;
                     yield return sep;
                 }
                 yield return SeparatorViewModel.Make();
