@@ -55,7 +55,10 @@
                          Grid.Column="1"
                          Name="serverUrlTextBox"
                          Margin="5"
-                         Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                         TextWrapping="NoWrap"
+                         TextChanged="textBox1_TextChanged"
+                         Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=Paste server url from
+                         browser..}" />
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -64,6 +67,7 @@
                          Grid.Column="1"
                          Name="sharedSpaceTextBox"
                          Margin="5"
+                         TextWrapping="NoWrap"
                          Text="{Binding SsId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Label Grid.Row="2"
@@ -73,6 +77,7 @@
                          Grid.Column="1"
                          Name="workspaceTextBox"
                          Margin="5"
+                         TextWrapping="NoWrap"
                          Text="{Binding WsId, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
 
                 <Separator Grid.ColumnSpan="2"
