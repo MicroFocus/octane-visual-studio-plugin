@@ -368,8 +368,15 @@
         </ResourceDictionary>
     </UserControl.Resources>
 
+    <UserControl.InputBindings>
+        <KeyBinding Modifiers="Ctrl"
+                    Key="s"
+                    Command="{Binding SaveEntityCommand}" />
+    </UserControl.InputBindings>
+
     <Border Padding="10">
         <Grid>
+           
             <DockPanel x:Name="LoadingItemPanel">
                 <DockPanel.Style>
                     <Style TargetType="DockPanel">
