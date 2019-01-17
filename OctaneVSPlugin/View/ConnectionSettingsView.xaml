@@ -56,7 +56,7 @@
                          Name="serverUrlTextBox"
                          Margin="5"
                          TextWrapping="NoWrap"
-                         TextChanged="textBox1_TextChanged"
+                         TextChanged="serverUrlTextBox_TextChanged"
                          Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=Paste server url from
                          browser..}" />
 

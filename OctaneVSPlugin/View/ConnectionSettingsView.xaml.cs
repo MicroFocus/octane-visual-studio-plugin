@@ -91,7 +91,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             workspaceTextBox.Text = workspace.ToString();
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
+        private void serverUrlTextBox_TextChanged(object sender, EventArgs e)
         {
 
             if (_typingTimer == null)
