@@ -74,8 +74,8 @@
             
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition />
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" MinWidth="100" />
@@ -95,11 +95,11 @@
                 <ContentPresenter Content="{Binding SubTitleField, FallbackValue=Unable to obtain information}"
                                   Grid.Row="1" Grid.Column="0" />
 
-                <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding TopFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
+                <ItemsControl Grid.Row="0" Grid.Column="1" ItemsSource="{Binding TopFields}" Margin="5 5 0 5" HorizontalAlignment="Right"
                               ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
                 </ItemsControl>
 
-                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding BottomFields}" Margin="5 0 0 0" HorizontalAlignment="Right"
+                <ItemsControl Grid.Row="1" Grid.Column="1" ItemsSource="{Binding BottomFields}" Margin="5 5 0 5" HorizontalAlignment="Right"
                               ItemsPanel="{StaticResource FieldsItemPanelTemplate}">
                 </ItemsControl>
             </Grid>
