@@ -24,6 +24,7 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+using System.Web;
 using static System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
@@ -38,8 +39,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
 		public const string ConnectionSuccessful = "Connection successful!";
 		private string url = string.Empty;
-		private int ssid = 1001;
-		private int wsid = 1002;
+		private long ssid = 1001;
+		private long wsid = 1002;
 		private string user = string.Empty;
 		private string password = string.Empty;
 		private bool credentialLogin = true;
@@ -125,12 +126,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			get { return url; }
 			set
 			{
-				url = value;
+                url = value;			
 				OctaneConfiguration.Url = url;
 			}
 		}
 
-		public int SsId
+		public long SsId
 		{
 			get { return ssid; }
 			set
@@ -140,7 +141,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			}
 		}
 
-		public int WsId
+		public long WsId
 		{
 			get { return wsid; }
 			set
@@ -242,5 +243,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				return page;
 			}
 		}
+
+       
 	}
 }
