@@ -304,8 +304,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 				// view comment parent details
 				var commentParentEntity = GetCommentParentEntity(selectedItem);
-				if (viewCommentParentDetailsDelegate != null
-					&& commentParentEntity != null)
+                if (viewCommentParentDetailsDelegate != null
+					&& commentParentEntity != null
+                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
 				{
 					cm.Items.Add(new MenuItem
 					{
@@ -385,14 +386,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 				// add to my work
 				if (addToMyWorkDelegate != null
-					&& (entityType == WorkItem.SUBTYPE_STORY
-						|| entityType == WorkItem.SUBTYPE_QUALITY_STORY
-						|| entityType == WorkItem.SUBTYPE_DEFECT
-						|| entityType == Task.TYPE_TASK
-						|| entityType == Test.SUBTYPE_MANUAL_TEST
-						|| entityType == TestGherkin.SUBTYPE_GHERKIN_TEST
-						|| entityType == RunManual.SUBTYPE_RUN_MANUAL
-						|| entityType == TestSuite.SUBTYPE_TEST_SUITE))
+					&& DetailsToolWindow.IsEntityTypeSupported(entityType))
 				{
 					cm.Items.Add(new MenuItem
 					{
