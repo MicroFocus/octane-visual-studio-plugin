@@ -133,6 +133,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 baseUrl = builder.Uri.ToString();
 
+                // trim the "/" from the end of the url
+                baseUrl = baseUrl.TrimEnd('/');
+
                 serverUrlTextBox.Text = baseUrl;
 
                 if (!"http".Equals(siteUrl.Scheme) && !"https".Equals(siteUrl.Scheme))
