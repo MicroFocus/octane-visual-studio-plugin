@@ -133,7 +133,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 			try
 			{
 				await MyWorkUtils.RemoveFromMyWork(entity);
-				MessageBox.Show("Dismissed backlog item: " + entity.GetStringValue("name") + " to \"My Work\" ", ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				MessageBox.Show("Dismissed: " + entity.GetStringValue("name"), ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
 				await OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
 			}
 			catch (Exception ex)
