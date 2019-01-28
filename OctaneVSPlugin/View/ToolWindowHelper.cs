@@ -306,7 +306,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				var commentParentEntity = GetCommentParentEntity(selectedItem);
                 if (viewCommentParentDetailsDelegate != null
 					&& commentParentEntity != null
-                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(selectedEntity)))
+                    && DetailsToolWindow.IsEntityTypeSupported(Utility.GetConcreteEntityType(commentParentEntity)))
 				{
 					cm.Items.Add(new MenuItem
 					{
