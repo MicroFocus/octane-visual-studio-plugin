@@ -44,6 +44,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
 		}
 
+        public void UpdateTimeout(int timeout)
+        {
+            Application.Current.Dispatcher.Invoke(new Action(() =>
+            {
+                browserDialog.UpdateTimeoutMessage(timeout);
+            }));
+        }
+
 		public void CloseBrowser()
 		{
 			Application.Current.Dispatcher.Invoke(new Action(() =>

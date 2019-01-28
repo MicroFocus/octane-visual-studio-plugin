@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -26,24 +27,33 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
     internal static class EntityLabelService
     {
 
-        private static OctaneServices _octaneService;             
+        
 
         public static async Task<Dictionary<string, EntityLabelMetadata>> GetEntityLabelMetadataAsync()
         {
-
-            _octaneService = OctaneServices.GetInstance();
-
-            List<EntityLabelMetadata> entityLabelMetadatas = await _octaneService.GetEntityLabelMedata();
-            Dictionary<string,EntityLabelMetadata> result = new Dictionary<string, EntityLabelMetadata>();
-            foreach (EntityLabelMetadata elm in entityLabelMetadatas)
+            try
             {
-                if(elm.GetStringValue(EntityLabelMetadata.LANGUAGE).Equals("lang.en"))
-                {
-                    result.Add(elm.GetStringValue(EntityLabelMetadata.ENTITY_TYPE_FIELD), elm);
-                }
-            }
+                OctaneServices _octaneService = OctaneServices.GetInstance();
 
-            return result;
+                List<EntityLabelMetadata> entityLabelMetadatas = await _octaneService.GetEntityLabelMedata();
+                Dictionary<string, EntityLabelMetadata> result = new Dictionary<string, EntityLabelMetadata>();
+                foreach (EntityLabelMetadata elm in entityLabelMetadatas)
+                {
+                    if (elm.GetStringValue(EntityLabelMetadata.LANGUAGE).Equals("lang.en"))
+                    {
+                        result.Add(elm.GetStringValue(EntityLabelMetadata.ENTITY_TYPE_FIELD), elm);
+                    }
+                }
+
+                return result;
+            }
+            catch (Exception)
+            {
+                // failed to obtain entity label metadata 
+                // calling function knows how to handle null result
+                return null;
+            }
+            
         }
         
     }

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using MicroFocus.Adm.Octane.Api.Core.Connector.Exceptions;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -271,7 +272,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
-                LastExceptionMessage = ex.Message;
+                if(ex is NotConnectedException)
+                {
+                    LastExceptionMessage = "Failed to load \"My Work\"";
+                }
+                else
+                {
+                    LastExceptionMessage = ex.Message;
+                }
+               
             }
         }
 
