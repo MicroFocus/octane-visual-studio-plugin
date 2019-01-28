@@ -177,6 +177,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 ErrorMessage = ex.Message;
             }
             NotifyPropertyChanged();
+            NotifyPropertyChanged("Phase");
         }
 
         private async Task HandleImagesInDescription()
@@ -400,16 +401,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                if (Mode == WindowMode.Loaded)
-                {
-                    var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
-                    if (phaseEntity == null)
-                        return string.Empty;
+                var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
+                if (phaseEntity == null)
+                    return string.Empty;
 
-                    return phaseEntity.Name;
-                }
-
-                return string.Empty;
+                return phaseEntity.Name;                
             }
         }
 
