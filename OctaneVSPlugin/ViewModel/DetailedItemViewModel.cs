@@ -177,7 +177,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 ErrorMessage = ex.Message;
             }
             NotifyPropertyChanged();
-            NotifyPropertyChanged("Phase");
         }
 
         private async Task HandleImagesInDescription()
