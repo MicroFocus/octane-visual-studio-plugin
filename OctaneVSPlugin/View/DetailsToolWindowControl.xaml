@@ -578,7 +578,7 @@
                                         <TextBlock Text="Current phase:"
                                                    VerticalAlignment="Center"
                                                    FontWeight="Bold" />
-                                        <TextBlock Text="{Binding Phase}"
+                                        <TextBlock Text="{Binding Phase, Mode=OneWay}"
                                                    VerticalAlignment="Center"
                                                    Margin="5 0 0 0" />
                                         <TextBlock Text="|"

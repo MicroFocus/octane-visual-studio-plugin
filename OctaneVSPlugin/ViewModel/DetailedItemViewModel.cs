@@ -400,16 +400,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                if (Mode == WindowMode.Loaded)
-                {
-                    var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
-                    if (phaseEntity == null)
-                        return string.Empty;
+                var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
+                if (phaseEntity == null)
+                    return string.Empty;
 
-                    return phaseEntity.Name;
-                }
-
-                return string.Empty;
+                return phaseEntity.Name;                
             }
         }
 
