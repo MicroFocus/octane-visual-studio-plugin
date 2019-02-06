@@ -30,6 +30,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// </summary>
     public partial class BrowserDialog : DialogWindow
     {
+        private static string _browserTitle = "Login to ALM Octane";
+
         public bool IsOpen { get; set; }
 
         public string Url { get; set; }
@@ -75,6 +77,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             this.IsOpen = false;
         }
 
+        public void UpdateTimeoutMessage(int timeout)
+        {
+            Title = _browserTitle + " (waiting for session, timeout in " + timeout + " )";
+        }
 
     }
 }

@@ -24,6 +24,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using MicroFocus.Adm.Octane.Api.Core.Connector.Exceptions;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -219,7 +220,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 foreach (BaseEntity entity in items)
                 {
                     var octaneItem = new OctaneItemViewModel(entity);
-
+                    _totalItems++;
                     if (WorkspaceSessionPersistanceManager.IsActiveEntity(entity))
                     {
                         foundActiveItem = true;
@@ -243,6 +244,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 IList<BaseEntity> comments = await octaneService.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
+                    _totalItems++;
                     MyWorkItemsSublist itemSublist;
                     if (sublistsMap.TryGetValue("comment", out itemSublist))
                     {
@@ -259,7 +261,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         }
                     }
                 });
-                _totalItems = _myItems.Count;
 
                 Mode = MainWindowMode.ItemsLoaded;
 
@@ -271,7 +272,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
-                LastExceptionMessage = ex.Message;
+                if(ex is NotConnectedException)
+                {
+                    LastExceptionMessage = "Failed to load \"My Work\"";
+                }
+                else
+                {
+                    LastExceptionMessage = ex.Message;
+                }
+               
             }
         }
 

@@ -114,7 +114,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
-                em.TryGetValue("requirement_root", out entityLabelMetadata);
+                em.TryGetValue("requirement_document", out entityLabelMetadata);
                 Registry.TryGetValue(Requirement.SUBTYPE_DOCUMENT, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
