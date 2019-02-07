@@ -89,7 +89,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     }
 
                     // Set the focus back to the list view item, if the combo box was clicked directly the popup would no longer close, because the focus would go crazy
-                    FocusManager.SetFocusedElement(this, (sender as ListViewItem))
+                    FocusManager.SetFocusedElement(this, (sender as ListViewItem));
                 } else
                 {
                     ComboBoxPopup.IsOpen = false;
