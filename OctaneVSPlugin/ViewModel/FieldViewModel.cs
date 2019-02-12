@@ -45,6 +45,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private string logicalName;
         private string _filter = string.Empty;
 
+        public event EventHandler ChangeHandler;
+        private void OnValueChanged(EventArgs e)
+        {
+            ChangeHandler?.Invoke(this, e);
+        }
 
         public List<BaseEntity> ReferenceFieldContentBaseEntity
         {
@@ -91,7 +96,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             _emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             _customContentFunc = fieldInfo.ContentFunc;
         }
-
+        
         public FieldMetadata Metadata { get; }
 
         public string Label { get; }
@@ -365,6 +370,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         break;
 
                 }
+                // notify save button 
+                OnValueChanged(EventArgs.Empty);
                 NotifyPropertyChanged("Content");
             }
         }

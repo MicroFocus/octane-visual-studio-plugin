@@ -605,6 +605,7 @@
                                             Background="{DynamicResource VsBrush.Window}"
                                             HorizontalAlignment="Left"
                                             VerticalAlignment="Center"
+                                            IsHitTestVisible="{Binding SaveIsEnabled}"
                                             Command="{Binding SaveEntityCommand}"
                                             ToolTip="Save">
                                         <Image Source="/octane-visual-studio-plugin;component/Resources/save.png" />

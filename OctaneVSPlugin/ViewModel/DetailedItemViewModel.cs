@@ -37,11 +37,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// </summary>
     public class DetailedItemViewModel : BaseItemViewModel, IFieldsObserver
     {
-
-
         private OctaneVersion octaneVersion;
-
-
+        
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private readonly List<FieldViewModel> _allEntityFields;
 
@@ -50,6 +47,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private string _filter = string.Empty;
 
         private bool _selectIsEnabled;
+
+        private bool _saveIsEnabled;
 
         private string _commentText;
 
@@ -71,6 +70,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     this._selectIsEnabled = value;
                     NotifyPropertyChanged("SelectIsEnabled");
+                }
+            }
+        }
+        /// <summary>
+        /// Lets you enable or disable the save Button
+        /// </summary>
+        public bool SaveIsEnabled
+        {
+            get
+            {
+                return this._saveIsEnabled;
+            }
+            set
+            {
+                if (this._saveIsEnabled != value)
+                {
+                    this._saveIsEnabled = value;
+                    NotifyPropertyChanged("SaveIsEnabled");
                 }
             }
         }
@@ -141,6 +158,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
                 {
                     var fieldViewModel = new FieldViewModel(Entity, field, visibleFieldsHashSet.Contains(field.Name));
+                    // add change handler to field view model
+                    fieldViewModel.ChangeHandler += (sender, e) =>
+                    {
+                        SaveIsEnabled = true;
+                    };
                     if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase))
                     {
                         _allEntityFields.Add(fieldViewModel);
@@ -532,6 +554,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 				//trigger a refresh after save so the user is aware of the changes
 				RefreshCommand.Execute(param);
 				NotifyPropertyChanged();
+                // disable save button until field values update
+                _saveIsEnabled = false;
 			}
 			catch (Exception ex)
 			{
