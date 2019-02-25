@@ -62,7 +62,7 @@
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
-                       Content="Shared Space:" />
+                       Content="Space:" />
                 <TextBox Grid.Row="1"
                          Grid.Column="1"
                          Name="sharedSpaceTextBox"
