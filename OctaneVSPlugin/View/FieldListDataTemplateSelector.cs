@@ -43,6 +43,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         templateName = "EditableBooleanFieldTemplate";
                         break;
                     case "integer":
+                    case "float":
                     case "string":
                         templateName = "EditableFieldTemplate";
                         break;

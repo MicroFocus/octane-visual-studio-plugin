@@ -19,10 +19,12 @@ using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using Microsoft.VisualStudio.PlatformUI;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows.Input;
+using MicroFocus.Adm.Octane.Api.Core.Connector.Exceptions;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -33,6 +35,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     {
         private MainWindowMode _mode;
         private readonly ObservableCollection<OctaneItemViewModel> _myItems;
+
+        private List<MyWorkItemsSublist> myWorkItemSublists;
+        private Dictionary<string, MyWorkItemsSublist> sublistsMap;
 
         /// <summary>
         /// Store the exception message from the loading items operation
@@ -106,12 +111,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #endregion
 
+        private int _totalItems;
+
+        public int TotalItems
+        {
+            get { return _totalItems; }
+        }
+
         /// <summary>
         /// Enumeration containing entities related to the current user
         /// </summary>
         public IEnumerable<OctaneItemViewModel> MyItems
         {
             get { return _myItems; }
+        }
+
+        public IEnumerable<MyWorkItemsSublist> MyWorkSublists
+        {
+            get { return myWorkItemSublists; }
         }
 
         /// <summary>
@@ -144,7 +161,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void OpenOctaneOptionsDialog(object parameter)
         {
-            MainWindow.PluginPackage.ShowOptionPage(typeof(OptionsPage));
+            MainWindow.PluginPackage.ShowOptionPage(typeof(ConnectionSettings));
         }
 
         /// <summary>
@@ -175,15 +192,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     octaneService = OctaneServices.GetInstance();
                 } catch (Exception e)
                 {
-                    if(e.GetBaseException().Message.Equals("Object not created"))
+                    if (e.GetBaseException().Message.Equals("Object not created"))
                     {
                         OctaneServices.Create(OctaneConfiguration.Url,
                            OctaneConfiguration.SharedSpaceId,
-                           OctaneConfiguration.WorkSpaceId,
-                           OctaneConfiguration.Username,
-                           OctaneConfiguration.Password);
+                           OctaneConfiguration.WorkSpaceId);
                     }
-                    
                     octaneService = OctaneServices.GetInstance();
                     await octaneService.Connect();
 
@@ -193,17 +207,33 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 bool foundActiveItem = false;
                 IList<BaseEntity> items = await octaneService.GetMyItems();
+
+                if (sublistsMap == null)
+                {
+                    sublistsMap = createMyWorkItemsSublistsMap();
+                }
+                else
+                {
+                    cleanSubListsMap(sublistsMap);
+                }
+                
                 foreach (BaseEntity entity in items)
                 {
                     var octaneItem = new OctaneItemViewModel(entity);
-
+                    _totalItems++;
                     if (WorkspaceSessionPersistanceManager.IsActiveEntity(entity))
                     {
                         foundActiveItem = true;
                         OctaneItemViewModel.SetActiveItem(octaneItem);
                     }
-                    _myItems.Add(octaneItem);
+                    MyWorkItemsSublist itemSublist;
+                    if(sublistsMap.TryGetValue(Utility.GetConcreteEntityType(entity),out itemSublist))
+                    {
+                        itemSublist.Items.Add(octaneItem);
+                    }
                 }
+
+                myWorkItemSublists = sublistsMap.Values.ToList();
 
                 if (!foundActiveItem)
                 {
@@ -214,8 +244,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 IList<BaseEntity> comments = await octaneService.GetMyCommentItems();
                 foreach (BaseEntity comment in comments)
                 {
-                    _myItems.Add(new CommentViewModel(comment));
+                    _totalItems++;
+                    MyWorkItemsSublist itemSublist;
+                    if (sublistsMap.TryGetValue("comment", out itemSublist))
+                    {
+                        itemSublist.Items.Add(new CommentViewModel(comment));
+                    }
                 }
+
+                myWorkItemSublists.ForEach(ms =>
+                {
+                    if(ms.IsSelected) {
+                        foreach (var myWorkItem in ms.Items)
+                        {
+                            _myItems.Add(myWorkItem);
+                        }
+                    }
+                });
 
                 Mode = MainWindowMode.ItemsLoaded;
 
@@ -227,8 +272,53 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
-                LastExceptionMessage = ex.Message;
+                if(ex is NotConnectedException)
+                {
+                    LastExceptionMessage = "Failed to load \"My Work\"";
+                }
+                else
+                {
+                    LastExceptionMessage = ex.Message;
+                }
+               
             }
+        }
+
+        public void ApplyFilter()
+        {
+            _myItems.Clear();
+            myWorkItemSublists.ForEach(ms =>
+            {
+                if (ms.IsSelected)
+                {
+                    foreach (var myWorkItem in ms.Items) _myItems.Add(myWorkItem);
+                }
+            });
+        }
+
+        private void cleanSubListsMap(Dictionary<string, MyWorkItemsSublist> sublistMap)
+        {
+            foreach (KeyValuePair<string, MyWorkItemsSublist> entry in sublistMap)
+            {
+                entry.Value.Items.Clear();
+            }
+        }
+
+        private Dictionary<string, MyWorkItemsSublist> createMyWorkItemsSublistsMap()
+        {
+            return new Dictionary<string, MyWorkItemsSublist>
+                {
+                    { WorkItem.SUBTYPE_STORY, new MyWorkItemsSublist(WorkItem.SUBTYPE_STORY) },
+                    { WorkItem.SUBTYPE_QUALITY_STORY, new MyWorkItemsSublist(WorkItem.SUBTYPE_QUALITY_STORY) },
+                    { WorkItem.SUBTYPE_DEFECT, new MyWorkItemsSublist(WorkItem.SUBTYPE_DEFECT)},
+                    { Task.TYPE_TASK, new MyWorkItemsSublist(Task.TYPE_TASK) },
+                    { Requirement.SUBTYPE_DOCUMENT, new MyWorkItemsSublist(Requirement.SUBTYPE_DOCUMENT) },
+                    { Test.SUBTYPE_MANUAL_TEST, new MyWorkItemsSublist(Test.SUBTYPE_MANUAL_TEST) },
+                    { TestGherkin.SUBTYPE_GHERKIN_TEST, new MyWorkItemsSublist(TestGherkin.SUBTYPE_GHERKIN_TEST) },
+                    { RunSuite.SUBTYPE_RUN_SUITE, new MyWorkItemsSublist(RunSuite.SUBTYPE_RUN_SUITE) },
+                    { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
+                    { "comment", new MyWorkItemsSublist( "comment" )}
+                };
         }
 
         #region INotifyPropertyChanged
@@ -245,4 +335,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         #endregion
     }
+
+    public class MyWorkItemsSublist
+    {
+        private string entityType { get; set; }
+        public bool IsSelected { get; set; } = true;
+        public EntityTypeInformation TypeInformation { get; }
+        public ObservableCollection<OctaneItemViewModel> Items { get; set; }
+
+        public MyWorkItemsSublist(string entityType)
+        {
+            TypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entityType);
+            Items = new ObservableCollection<OctaneItemViewModel>();
+        }
+
+    }
+
 }

@@ -114,7 +114,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
-                em.TryGetValue("requirement_root", out entityLabelMetadata);
+                em.TryGetValue("requirement_document", out entityLabelMetadata);
                 Registry.TryGetValue(Requirement.SUBTYPE_DOCUMENT, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
@@ -170,5 +170,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             Registry.TryGetValue(entityType, out info);
             return info;
         }
-    }
+
+        /// <summary>
+        /// Return the associated entity type information based on the given entity type
+        /// </summary>
+        public static EntityTypeInformation GetEntityTypeInformation(string entityType)
+        {
+            EntityTypeInformation info;
+            Registry.TryGetValue(entityType, out info);
+            return info;
+        }
+}
 }

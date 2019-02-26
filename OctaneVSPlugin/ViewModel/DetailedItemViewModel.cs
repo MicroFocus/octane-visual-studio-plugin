@@ -37,11 +37,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
     /// </summary>
     public class DetailedItemViewModel : BaseItemViewModel, IFieldsObserver
     {
-
-
         private OctaneVersion octaneVersion;
-
-
+        
         private ObservableCollection<CommentViewModel> _commentViewModels;
         private readonly List<FieldViewModel> _allEntityFields;
 
@@ -50,6 +47,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private string _filter = string.Empty;
 
         private bool _selectIsEnabled;
+
+        private bool _saveIsEnabled;
 
         private string _commentText;
 
@@ -71,6 +70,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     this._selectIsEnabled = value;
                     NotifyPropertyChanged("SelectIsEnabled");
+                }
+            }
+        }
+        /// <summary>
+        /// Lets you enable or disable the save Button
+        /// </summary>
+        public bool SaveIsEnabled
+        {
+            get
+            {
+                return this._saveIsEnabled;
+            }
+            set
+            {
+                if (this._saveIsEnabled != value)
+                {
+                    this._saveIsEnabled = value;
+                    NotifyPropertyChanged("SaveIsEnabled");
                 }
             }
         }
@@ -141,6 +158,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 foreach (var field in fields.Where(f => !fieldsToHideHashSet.Contains(f.Name)))
                 {
                     var fieldViewModel = new FieldViewModel(Entity, field, visibleFieldsHashSet.Contains(field.Name));
+                    // add change handler to field view model
+                    fieldViewModel.ChangeHandler += (sender, e) =>
+                    {
+                        SaveIsEnabled = true;
+                    };
                     if (!string.Equals(fieldViewModel.Metadata.FieldType, "memo", StringComparison.OrdinalIgnoreCase))
                     {
                         _allEntityFields.Add(fieldViewModel);
@@ -400,16 +422,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         {
             get
             {
-                if (Mode == WindowMode.Loaded)
-                {
-                    var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
-                    if (phaseEntity == null)
-                        return string.Empty;
+                var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
+                if (phaseEntity == null)
+                    return string.Empty;
 
-                    return phaseEntity.Name;
-                }
-
-                return string.Empty;
+                return phaseEntity.Name;                
             }
         }
 
@@ -469,78 +486,87 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private async void SaveEntity(object param)
         {
-            try
-            {
+			try
+			{
+				Mode = WindowMode.Loading;
+				NotifyPropertyChanged("Mode");
 
-                var entityToUpdate = new BaseEntity(Entity.Id);
-                entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
+				var entityToUpdate = new BaseEntity(Entity.Id);
+				entityToUpdate.SetValue(BaseEntity.TYPE_FIELD, Entity.TypeName);
 
-                // add the client lock stamp if it exists
-                if(Entity.GetLongValue(lockStamp) != null)
-                {
-                    entityToUpdate.SetLongValue(lockStamp, (long)Entity.GetLongValue(lockStamp));
-                }
+				// add the client lock stamp if it exists
+				if (Entity.GetLongValue(lockStamp) != null)
+				{
+					entityToUpdate.SetLongValue(lockStamp, (long)Entity.GetLongValue(lockStamp));
+				}
 
-                foreach (var field in _allEntityFields.Where(f => f.IsChanged))
-                {
-                    if (!field.Metadata.FieldType.Equals("reference"))
-                    {
-                        if("".Equals(field.Content))
-                        {
-                            entityToUpdate.SetValue(field.Name, null);
-                        }
-                        else
-                        {
-                            entityToUpdate.SetValue(field.Name, field.Content);
-                        }
-                    }
-                    else if (!field.IsMultiple)
-                    {
-                        if (field.Content == null || field.Content.Equals(""))
-                        {
-                            entityToUpdate.SetValue(field.Name, null);
-                        }
-                        else
-                        {
-                            foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
-                            {
-                                // todo: you need to look into this tibi
-                                if (field.Content.Equals(new BaseEntityWrapper(be)))
-                                {
-                                    entityToUpdate.SetValue(field.Name, be);
-                                }
-                            }
+				foreach (var field in _allEntityFields.Where(f => f.IsChanged))
+				{
+					if (!field.Metadata.FieldType.Equals("reference"))
+					{
+						if ("".Equals(field.Content))
+						{
+							entityToUpdate.SetValue(field.Name, null);
+						}
+						else
+						{
+							entityToUpdate.SetValue(field.Name, field.Content);
+						}
+					}
+					else if (!field.IsMultiple)
+					{
+						if (field.Content == null || field.Content.Equals(""))
+						{
+							entityToUpdate.SetValue(field.Name, null);
+						}
+						else
+						{
+							foreach (BaseEntity be in field.ReferenceFieldContentBaseEntity)
+							{
+								// todo: you need to look into this tibi
+								if (field.Content.Equals(new BaseEntityWrapper(be)))
+								{
+									entityToUpdate.SetValue(field.Name, be);
+								}
+							}
 
-                        }
+						}
 
-                    }
-                    else if(field.IsMultiple)
-                    {
-                        entityToUpdate.SetValue(field.Name, field.GetSelectedEntities());
-                    }
-                }
+					}
+					else if (field.IsMultiple)
+					{
+						entityToUpdate.SetValue(field.Name, field.GetSelectedEntities());
+					}
+				}
 
-                entityToUpdate.Name = Entity.Name;
+				entityToUpdate.Name = Entity.Name;
 
-                if (SelectedNextPhase != null)
-                {
-                    var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);
-                    if (nextPhase != null)
-                        entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
-                }
+				if (SelectedNextPhase != null)
+				{
+					var nextPhase = _phaseTransitions.FirstOrDefault(t => t.Name == SelectedNextPhase);
+					if (nextPhase != null)
+						entityToUpdate.SetValue(CommonFields.Phase, nextPhase);
+				}
 
-                await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
-                await InitializeAsync();
+				await OctaneServices.GetInstance().UpdateEntityAsync(entityToUpdate);
+				await InitializeAsync();
 
-                //trigger a refresh after save so the user is aware of the changes
-                RefreshCommand.Execute(param);
-                NotifyPropertyChanged();
-            }
-            catch (Exception ex)
-            {
-                BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
-                bed.ShowDialog();
-            }
+				//trigger a refresh after save so the user is aware of the changes
+				RefreshCommand.Execute(param);
+				NotifyPropertyChanged();
+                // disable save button until field values update
+                _saveIsEnabled = false;
+			}
+			catch (Exception ex)
+			{
+				BusinessErrorDialog bed = new BusinessErrorDialog(this, (MqmRestException)ex);
+				bed.ShowDialog();
+			}
+			finally
+			{
+				Mode = WindowMode.Loaded;
+				NotifyPropertyChanged("Mode");
+			}
            
         }
 

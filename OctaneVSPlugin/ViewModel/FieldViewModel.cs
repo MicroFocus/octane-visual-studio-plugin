@@ -45,6 +45,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         private string logicalName;
         private string _filter = string.Empty;
 
+        public event EventHandler ChangeHandler;
+        private void OnValueChanged(EventArgs e)
+        {
+            ChangeHandler?.Invoke(this, e);
+        }
 
         public List<BaseEntity> ReferenceFieldContentBaseEntity
         {
@@ -91,7 +96,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             _emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             _customContentFunc = fieldInfo.ContentFunc;
         }
-
+        
         public FieldMetadata Metadata { get; }
 
         public string Label { get; }
@@ -162,27 +167,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                                 if (_referenceFieldContent != null)
                                 {
-                                    foreach (BaseEntity be in _referenceFieldContent)
-                                    {
-                                        BaseEntityWrapper bew = new BaseEntityWrapper(be);
-                                        _referenceFieldContentName.Add(bew);
-                                        try
-                                        {
-                                            EntityList<BaseEntity> selectedEntities = (EntityList<BaseEntity>)_parentEntity.GetValue(Name);
+									foreach (BaseEntity be in _referenceFieldContent)
+									{
+										BaseEntityWrapper bew = new BaseEntityWrapper(be);
+										_referenceFieldContentName.Add(bew);
 
-                                            foreach (BaseEntity sbe in selectedEntities.data)
-                                            {
-                                                if (bew.Equals(new BaseEntityWrapper(sbe)))
-                                                {
-                                                    bew.IsSelected = true;
-                                                }
-                                            }
-                                        }
-                                        catch (Exception)
-                                        {
-                                        }
-                                        
-                                    }
+										var selectedEntities = _parentEntity.GetValue(Name);
+
+										if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
+										{
+											EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>) selectedEntities;
+
+											foreach (BaseEntity sbe in selectedEntitiesList.data)
+											{
+												if (bew.Equals(new BaseEntityWrapper(sbe)))
+												{
+													bew.IsSelected = true;
+												}
+											}
+										}
+									}
                                 }
                             }
                             catch (Exception)
@@ -321,6 +325,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                             }
                         }
                         break;
+                    case "float":
+                        try
+                        {
+                            _parentEntity.SetValue(Name, float.Parse(value.ToString()));
+                            IsChanged = true;
+                        }
+                        catch (Exception ex)
+                        {
+                            if (ex is FormatException || ex is OverflowException)
+                            {
+                                _parentEntity.SetValue(Name, "");
+                                IsChanged = true;
+                            }
+                        }
+                        break;
                     case "string":
                         _parentEntity.SetValue(Name, value.ToString());
                         IsChanged = true;
@@ -351,6 +370,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         break;
 
                 }
+                // notify save button 
+                OnValueChanged(EventArgs.Empty);
                 NotifyPropertyChanged("Content");
             }
         }

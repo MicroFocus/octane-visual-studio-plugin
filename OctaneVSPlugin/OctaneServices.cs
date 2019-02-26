@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Connector;
+using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
 using MicroFocus.Adm.Octane.Api.Core.Services;
@@ -42,6 +43,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private EntityService es;
 
+        private AuthenticationStrategy authenticationStrategy;
+
         public EntityService GetEntityService
         {
             get { return es; }
@@ -53,17 +56,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private WorkspaceContext workspaceContext;
         private SharedSpaceContext sharedSpaceContext;
 
+        WorkspaceUser currentUser;
+        
         private static readonly EntityComparerByLastModified EntityComparer = new EntityComparerByLastModified();
 
         private static OctaneServices instance = null;
 
-        private OctaneServices(string url, long sharedspaceId, long workspaceId, string user, string password)
+        private OctaneServices(string url, long sharedspaceId, long workspaceId)
         {
             this.url = url;
 
-            this.user = user;
-            this.password = password;
-
+            // create the authentication strategy based on saved configurations
+            if (OctaneConfiguration.CredentialLogin)
+            {
+                authenticationStrategy = new LwssoAuthenticationStrategy(new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password));
+            }
+            else if (OctaneConfiguration.SsoLogin)
+            {
+                SsoAuthenticationStrategy ssoAuthenticationStrategy = new SsoAuthenticationStrategy();
+                ssoAuthenticationStrategy.SetConnectionListener(new SsoConnectionListener());
+                authenticationStrategy = ssoAuthenticationStrategy;
+            }
+            
             rest = new RestConnector();
             es = new EntityService(rest);
 
@@ -80,29 +94,47 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return instance;
         }
 
-        public static void Create(string url, long sharedspaceId, long workspaceId, string user, string password)
+        public static void Create(string url, long sharedspaceId, long workspaceId)
         {
             if(instance != null)
             {
                 throw new Exception("Object already created");
             }
-            instance = new OctaneServices(url, sharedspaceId, workspaceId, user, password);
+            instance = new OctaneServices(url, sharedspaceId, workspaceId);
         }
 
-        public static void Reset()
+        public static async Task<bool> Reset()
         {
-            instance.rest.DisconnectAsync();
-            instance = null;
+            bool result = false;
+
+            if(instance != null)
+            {
+                result = await instance.rest.DisconnectAsync();
+                instance = null;
+            }
+
+            return result;
         }
 
         public async Task Connect()
         {
             if (!rest.IsConnected())
             {
-                await rest.ConnectAsync(url, new UserPassConnectionInfo(user, password));
+                await rest.ConnectAsync(url, authenticationStrategy);
+                user = await authenticationStrategy.GetWorkspaceUser();
             }
-
         }
+
+
+        public async Task<WorkspaceUser> GetCurrentUser()
+        {
+            if (currentUser == null)
+            {
+                currentUser = await GetWorkspaceUser();
+            }
+            return currentUser;
+        }
+
 
         private IList<QueryPhrase> ToQueryList(QueryPhrase query)
         {
@@ -118,6 +150,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             List<QueryPhrase> queries = new List<QueryPhrase>
             {
                 new CrossQueryPhrase("user", new LogicalQueryPhrase("id", user.Id)),
+            };
+
+            return queries;
+        }
+
+        private IList<QueryPhrase> BuildFindUserItemCriteria(BaseEntity user,BaseEntity baseEntity)
+        {
+            List<QueryPhrase> queries = new List<QueryPhrase>
+            {
+                new CrossQueryPhrase("my_follow_items_" + baseEntity.TypeName, new LogicalQueryPhrase("id", baseEntity.Id)),
+                new CrossQueryPhrase("user", new LogicalQueryPhrase("id", user.Id))             
             };
 
             return queries;
@@ -151,6 +194,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             return result;
         }
+
+        public async Task<List<UserItem>> FindUserItemForEntity(BaseEntity baseEntity)
+        {
+            var owner = await GetCurrentUser();
+            EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext, 
+                BuildFindUserItemCriteria(owner, baseEntity), BuildUserItemFields());
+
+            if(userItems.data.Count > 0)
+            {
+				return userItems.data;
+            }
+            else
+            {
+                return new List<UserItem>();
+            }
+        }
+        
 
         public async Task<IList<BaseEntity>> SearchEntities(string searchString, int limitPerType)
         {
@@ -234,7 +294,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             var updatedEntity = await es.UpdateAsync(workspaceContext, entity, Utility.GetConcreteEntityType(entity));
             return updatedEntity;
         }
-
+        
         ///<summary>
         ///Adds a comment with specified parameters
         /// </summary>
@@ -243,6 +303,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             RestConnector.AwaitContinueOnCapturedContext = false;
             var createdEntity = await es.CreateAsync(workspaceContext, entity, commentFields);
             return createdEntity;
+        }
+
+        ///<summary>
+        ///Adds an entity to my work
+        /// </summary>
+        public UserItem AddToMyWork(UserItem entity)
+        {
+            RestConnector.AwaitContinueOnCapturedContext = false;
+            return es.Create(workspaceContext, entity, null);
+        }
+
+        ///<summary>
+        ///Removes an entity from my work
+        /// </summary>
+        public void RemoveFromMyWork(UserItem entity)
+        {
+            RestConnector.AwaitContinueOnCapturedContext = false;
+            es.DeleteById<UserItem>(workspaceContext, entity.Id);
         }
 
 
@@ -296,6 +374,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 UserItem.ENTITY_TYPE_FIELD,
                 UserItem.REASON_FIELD,
+                UserItem.ORIGIN,
                 UserItem.USER_FIELD,
                 UserItem.WORK_ITEM_REFERENCE,
                 UserItem.TEST_REFERENCE,

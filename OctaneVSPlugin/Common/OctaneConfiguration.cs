@@ -14,6 +14,8 @@
 * limitations under the License.
 */
 
+using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
+
 namespace MicroFocus.Adm.Octane.VisualStudio.Common
 {
     /// <summary>
@@ -30,5 +32,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         internal static long WorkSpaceId { get; set; }
 
         internal static long SharedSpaceId { get; set; }
+
+        internal static bool CredentialLogin { get; set; }
+
+        internal static bool SsoLogin { get; set; }
     }
 }
