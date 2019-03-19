@@ -39,7 +39,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 throw new ArgumentNullException(nameof(entity));
 
             Entity = entity;
-            EntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entity);
+            if (!entity.AggregateType.Equals("work_item"))
+            {
+                EntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entity);
+            }
         }
 
         /// <summary>
