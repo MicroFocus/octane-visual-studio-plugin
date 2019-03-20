@@ -215,12 +215,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 
                 yield return field;
                 if (field.Name.Equals("story_points") && field.Content.Equals(""))
-                {
-                    Separator sep = new Separator();
-                    sep.Width = 5;
-                    sep.Margin = new Thickness(5, 0, 5, 0);
-                    sep.VerticalAlignment = VerticalAlignment.Center;
-                    yield return sep;
+                {              
+                     yield return HorizontalSeparatorViewModel.Make();
                 }
                 yield return SeparatorViewModel.Make();
             }

@@ -70,7 +70,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 			OctaneConfiguration.Url = context.Properties["webAppUrl"].ToString();
             OctaneConfiguration.Username = context.Properties["userName"].ToString();
             OctaneConfiguration.Password = context.Properties["password"].ToString();
-			var connectionInfo = new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password);
+            
+            var connectionInfo = new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password);
 
             RestConnector.Connect(OctaneConfiguration.Url, connectionInfo);
 
@@ -82,6 +83,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
 
             var sharedSpaceContext = new SharedSpaceContext(sharedSpaceId);
             OctaneConfiguration.SharedSpaceId = sharedSpaceContext.SharedSpaceId;
+
+            OctaneConfiguration.SsoLogin = bool.Parse(context.Properties["ssoLogin"].ToString());
+            OctaneConfiguration.CredentialLogin = bool.Parse(context.Properties["credentialLogin"].ToString());
 
             User = GetWorkspaceUser();
 

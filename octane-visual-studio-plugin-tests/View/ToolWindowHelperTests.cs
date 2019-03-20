@@ -23,6 +23,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Controls;
+using static System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
 {
@@ -30,6 +31,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
     /// Test class for <see cref="ToolWindowHelper"/>
     /// </summary>
     [TestClass]
+    [assembly: RequiresSTA]
     public class ToolWindowHelperTests : BaseOctanePluginTest
     {
         private static int _value;
@@ -82,6 +84,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage,
                     MenuItemEnum.StartWork
                 });
         }
@@ -111,6 +114,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                         MenuItemEnum.ViewDetails,
                         MenuItemEnum.TaskViewParentDetails,
                         MenuItemEnum.OpenInBrowser,
+                        MenuItemEnum.CopyCommitMessage,
                         MenuItemEnum.StartWork
                     });
             }
@@ -150,6 +154,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage,
                     MenuItemEnum.StartWork
                 });
         }
@@ -175,6 +180,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
+                    MenuItemEnum.CopyCommitMessage,
                     MenuItemEnum.StartWork
                 });
         }
