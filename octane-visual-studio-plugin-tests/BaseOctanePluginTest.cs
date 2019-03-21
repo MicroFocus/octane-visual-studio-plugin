@@ -90,6 +90,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests
             User = GetWorkspaceUser();
 
             CurrentRelease = ReleaseUtilities.CreateRelease();
+
+            // create the octaneservices object to be used by the tests
+            OctaneServices.Create(OctaneConfiguration.Url,
+                           OctaneConfiguration.SharedSpaceId,
+                           OctaneConfiguration.WorkSpaceId);
+
+            OctaneServices.GetInstance().Connect();
         }
 
 		private static void EnsurePropertiesSet(IDictionary dictionary, params string[] properties)

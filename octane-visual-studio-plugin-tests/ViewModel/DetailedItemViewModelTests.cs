@@ -48,8 +48,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
             EntityService.DeleteById<Task>(WorkspaceContext, _task.Id);
+            EntityService.DeleteById<Story>(WorkspaceContext, _story.Id);
         }
 
         #region EntitySupportsComments
@@ -119,9 +119,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
                 viewModel.SelectedNextPhase = nextPhaseName;
 
                 viewModel.SaveEntityCommand.Execute(null);
-
                 Utilities.Utility.WaitUntil(() => viewModel.Mode == WindowMode.Loaded,
-                    "Timeout while refreshing the entity for next phase " + nextPhaseName, new TimeSpan(0, 0, 30));
+                   "Timeout while refreshing the entity for next phase " + nextPhaseName, new TimeSpan(0, 0, 30));
+                Thread.Sleep(4096); // wait for update to be propagated 
 
                 Assert.AreEqual(nextPhaseName, viewModel.Phase, "Mismatched entity phase after save");
                 Assert.IsNull(viewModel.SelectedNextPhase, "SelectedNextPhase should be null after save");
@@ -464,7 +464,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             Assert.AreNotEqual("", viewModel.CommentText);
 
             viewModel.AddCommentCommand.Execute(null);
-            Thread.Sleep(2048);
+            Thread.Sleep(8196);
             int detectedCommentsWithText = 0;
             foreach(var comment in viewModel.Comments)
             {
