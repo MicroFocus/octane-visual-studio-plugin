@@ -24,7 +24,6 @@ using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using System.Web;
 using static System.Threading.Tasks.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio

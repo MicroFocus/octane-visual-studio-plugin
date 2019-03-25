@@ -41,7 +41,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
         /// <summary>
         /// Create a new user story entity
         /// </summary>
-        public static Story CreateStory(string customName = null)
+        public static Story CreateStory(string customName = null, bool setOwner = true)
         {
             var name = customName ?? "Story_" + Guid.NewGuid();
             var story = new Story
@@ -50,8 +50,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Entity
                 Phase = GetPhaseNew(),
                 Parent = Utility.GetWorkItemRoot()
             };
-            story.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
-
+            if(setOwner)
+            {
+                story.SetValue(CommonFields.Owner, BaseOctanePluginTest.User);
+            }
+            
             var createdStory = BaseOctanePluginTest.EntityService.Create(BaseOctanePluginTest.WorkspaceContext, story, new[] { "name", "subtype" });
             Assert.AreEqual(name, createdStory.Name, "Newly created story doesn't have the expected name");
             Assert.IsFalse(string.IsNullOrEmpty(createdStory.Id), "Newly created story should have a valid ID");

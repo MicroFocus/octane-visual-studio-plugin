@@ -23,6 +23,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Utility = MicroFocus.Adm.Octane.VisualStudio.Tests.Utilities.Utility;
+using static System.Threading.Tasks.Task;
+using System.Threading;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 {
@@ -34,7 +36,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
     {
 
         private static Story _addedStory; 
-        private static Story _dismissedStory; 
+        private static Story _dismissedStory;
+
+        [ClassInitialize]
+        public static void ClassInit(TestContext context)
+        {
+            _addedStory = StoryUtilities.CreateStory(null, false);
+            _dismissedStory = StoryUtilities.CreateStory(null, false);
+        }
 
         [ClassCleanup]
         public static void ClassCleanup()
@@ -168,36 +177,54 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [TestMethod]
         public void AddToMyWork()
         {
-            _addedStory = StoryUtilities.CreateStory();
-            var viewModel = new OctaneMyItemsViewModel();
+            // wait for elastic search to update created entities
+            Thread.Sleep(30000);
+            Run(async () => {
+                var viewModel = new OctaneMyItemsViewModel();
+                await viewModel.LoadMyItemsAsync();
 
-            viewModel.LoadMyItemsAsync();
-            var searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_addedStory.Id));
-            Assert.IsTrue(searchedMyWorkItem == null);
+                var searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_addedStory.Id));
+                Assert.IsTrue(searchedMyWorkItem == null);
+                
+                List<BaseEntity> searchedEntities = (List<BaseEntity>) await OctaneServices.GetInstance().SearchEntities(_addedStory.Id, 1);
+                if(searchedEntities.Count != 1)
+                {
+                    Assert.Fail("Failed to search created story by id");
+                }
 
-            MyWorkUtils.AddToMyWork(_addedStory);
-
-            viewModel.LoadMyItemsAsync();
-            searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_addedStory.Id));
-            Assert.IsTrue(searchedMyWorkItem.ID.Equals(_addedStory.Id));
+                await MyWorkUtils.AddToMyWork(searchedEntities[0]); 
+                await viewModel.LoadMyItemsAsync(); 
+                searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_addedStory.Id));
+                Assert.IsTrue(searchedMyWorkItem.ID.Equals(_addedStory.Id));
+            }).Wait();
         }
 
         [TestMethod]
         public void DismissFromMyWork()
         {
-            _dismissedStory = StoryUtilities.CreateStory();
-            var viewModel = new OctaneMyItemsViewModel();
+            // wait for elastic search to update created entities
+            Thread.Sleep(30000);
+            Run(async () => {
+                var viewModel = new OctaneMyItemsViewModel();
 
-            MyWorkUtils.AddToMyWork(_dismissedStory);
+                List<BaseEntity> searchedEntities = (List<BaseEntity>)await OctaneServices.GetInstance().SearchEntities(_dismissedStory.Id, 1);
+                if (searchedEntities.Count != 1)
+                {
+                    Assert.Fail("Failed to search created story by id");
+                }
+                await MyWorkUtils.AddToMyWork(searchedEntities[0]);
 
-            viewModel.LoadMyItemsAsync();
-            var searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_dismissedStory.Id));
-            Assert.IsTrue(searchedMyWorkItem.ID.Equals(_dismissedStory.Id));
+                await viewModel.LoadMyItemsAsync();
 
-            MyWorkUtils.RemoveFromMyWork(_dismissedStory);
-            viewModel.LoadMyItemsAsync();
-            searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_dismissedStory.Id));
-            Assert.IsTrue(searchedMyWorkItem == null);
+                var searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_dismissedStory.Id));
+                Assert.IsTrue(searchedMyWorkItem.ID.Equals(_dismissedStory.Id));
+
+                await MyWorkUtils.RemoveFromMyWork(searchedMyWorkItem.Entity);
+                await viewModel.LoadMyItemsAsync();
+
+                searchedMyWorkItem = viewModel.MyItems.ToList().Find(ui => ui.ID.Equals(_dismissedStory.Id));
+                Assert.IsTrue(searchedMyWorkItem == null);
+            }).Wait();
         }
 
         #region Refresh
@@ -290,41 +317,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             CollectionAssert.AreEqual(expectedHistory.Take(WorkspaceSessionPersistanceManager.MaxSearchHistorySize).ToList(), viewModel.SearchHistory.ToList(), "Invalid search history");
         }
 
-        [TestMethod]
-        public void OctaneMyItemsViewModelTests_SearchHistory_SwitchBackToValidWorkspaceAfterTryingInvalidWorkspace_Success()
-        {
-            var originalWorkspaceId = OctaneConfiguration.WorkSpaceId;
-            try
-            {
-                var viewModel = new OctaneMyItemsViewModel();
-                viewModel.LoadMyItemsAsync().Wait();
-
-                var expectedHistory = ExecuteSearches(viewModel, WorkspaceSessionPersistanceManager.MaxSearchHistorySize + 1);
-                expectedHistory.Reverse();
-                expectedHistory = expectedHistory.Take(WorkspaceSessionPersistanceManager.MaxSearchHistorySize).ToList();
-
-                OctaneConfiguration.WorkSpaceId = 1000000;
-
-                viewModel.LoadMyItemsAsync().Wait();
-
-                Assert.AreEqual(MainWindowMode.FailToLoad, viewModel.Mode, "Mismatched window mode after switching to invalid workspace");
-                CollectionAssert.AreEqual(new List<string>(), viewModel.SearchHistory.ToList(),
-                    "Invalid search history after switching to invalid workspace");
-
-                OctaneConfiguration.WorkSpaceId = originalWorkspaceId;
-
-                viewModel.LoadMyItemsAsync().Wait();
-
-                Assert.AreEqual(MainWindowMode.ItemsLoaded, viewModel.Mode, "Mismatched window mode after reverting to working workspace");
-                Assert.AreEqual(string.Empty, viewModel.SearchFilter, "Mismatched search filter after reverting to working workspace");
-                CollectionAssert.AreEqual(expectedHistory, viewModel.SearchHistory.ToList(), "Invalid search history after reverting to working workspace");
-            }
-            finally
-            {
-                OctaneConfiguration.WorkSpaceId = originalWorkspaceId;
-            }
-        }
-
+        
         #endregion
 
         private List<string> ExecuteSearches(OctaneMyItemsViewModel viewModel, int count)
