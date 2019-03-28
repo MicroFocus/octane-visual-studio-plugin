@@ -155,7 +155,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         /// <summary>
-        /// Command for opening the ALM Octane options dialogSaveIsEnabled
+        /// Command for opening the ALM Octane options dialog
         /// </summary>
         public ICommand OpenOctaneOptionsDialogCommand { get; }
 

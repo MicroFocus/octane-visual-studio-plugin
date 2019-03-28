@@ -50,13 +50,13 @@ Test > Test Settings > Select Test Settings File
 
   <!-- Parameters used by tests at runtime -->
   <TestRunParameters>
-    <Parameter name="webAppUrl" value="http://myd-vm18066.hpeswlab.net" />
+    <Parameter name="webAppUrl" value="octane_url" />
 
-    <Parameter name="userName" value="sa@nga" />
-    <Parameter name="password" value="Welcome1" />
+    <Parameter name="userName" value="username" />
+    <Parameter name="password" value="password" />
 
     <Parameter name="sharedSpaceId" value="1001" />
-    <Parameter name="workspaceId" value="1005" />
+    <Parameter name="workspaceId" value="1002" />
 
     <Parameter name ="ssoLogin" value="false"/>
     <Parameter name ="credentialLogin" value="true"/>
