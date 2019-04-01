@@ -53,7 +53,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			SaveSettingsToStorage();
 
             // show welcome view if user clears the URL
-            if(OctaneConfiguration.Url.Equals(""))
+            if("".Equals(OctaneConfiguration.Url))
             {
                 OctaneMyItemsViewModel.Instance.Mode = MainWindowMode.FirstTime;
                 return;

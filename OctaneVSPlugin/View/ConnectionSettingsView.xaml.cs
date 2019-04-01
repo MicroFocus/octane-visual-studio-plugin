@@ -125,7 +125,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             SetInfoLabelText("");
 
             // if no url given no reason to perform analisys
-            if(authenticationUrl.Equals(""))
+            if("".Equals(authenticationUrl))
             {
                 return;
             }
