@@ -67,7 +67,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public MainWindowMode Mode
         {
             get { return _mode; }
-            private set
+            set
             {
                 _mode = value;
                 NotifyPropertyChanged("Mode");
