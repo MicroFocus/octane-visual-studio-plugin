@@ -51,6 +51,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
 			page.SetInfoLabelText("");
 			SaveSettingsToStorage();
+
+            // show welcome view if user clears the URL
+            if("".Equals(OctaneConfiguration.Url))
+            {
+                OctaneMyItemsViewModel.Instance.Mode = MainWindowMode.FirstTime;
+                return;
+            }
+
 			var result = Run(async () => { return await TestConnection(); }).Result;
 
 			if (!result.Equals(ConnectionSuccessful))
@@ -130,28 +138,58 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			}
 		}
 
-		public long SsId
+		public String SsId
 		{
-			get { return ssid; }
+			get
+            {    
+                return ssid == 0 ? "": ssid + "";
+            }
 			set
 			{
-				ssid = value;
+                try
+                {
+                    ssid = long.Parse(value);
+
+                    if(ssid < 0)
+                    {
+                        ssid = 0;
+                    }
+                }
+                catch (Exception) {
+                    ssid = 0;
+                }
+				
 				OctaneConfiguration.SharedSpaceId = ssid;
 			}
 		}
 
-		public long WsId
-		{
-			get { return wsid; }
-			set
-			{
-                wsid = value;
+        public String WsId
+        {
+            get
+            {
+                return wsid == 0 ? "" : wsid + "";
+            }
+            set
+            {
+                try
+                {
+                    wsid = long.Parse(value);
+
+                    if (wsid < 0)
+                    {
+                        wsid = 0;
+                    }
+                }
+                catch (Exception)
+                {
+                    wsid = 0;
+                }
+
                 OctaneConfiguration.WorkSpaceId = wsid;
-			}
-		}
+            }
+        }
 
-
-		public string User
+        public string User
 		{
 			get { return user; }
 			set
