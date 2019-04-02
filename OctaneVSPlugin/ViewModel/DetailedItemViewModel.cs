@@ -73,6 +73,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
             }
         }
+
+
+        public override string Title
+        {
+            get
+            {
+                return base.Title;
+            }
+            set
+            {
+                base.Title = value;
+                SaveIsEnabled = true;
+            }
+        }
+        
         /// <summary>
         /// Lets you enable or disable the save Button
         /// </summary>
@@ -438,10 +453,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             get { return _phaseTransitions.Select(pt => pt.Name).ToList(); }
         }
 
+
+        private string _selectedNextPhase;
         /// <summary>
         /// Name of the currently selected next phase
         /// </summary>
-        public string SelectedNextPhase { get; set; }
+        public string SelectedNextPhase {
+            get
+            {
+                return _selectedNextPhase;
+            }
+            set
+            {
+                if(value != null)
+                {
+                    SaveIsEnabled = true;
+                }
+                _selectedNextPhase = value;
+                NotifyPropertyChanged("SelectedNextPhase");
+            }
+        }
 
         #endregion
 
@@ -682,6 +713,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 NotifyPropertyChanged("Mode");
 
                 InitializeAsync();
+                //disable the save button once the entity has been refreshed
+                _saveIsEnabled = false;
             }
             catch (Exception ex)
             {
