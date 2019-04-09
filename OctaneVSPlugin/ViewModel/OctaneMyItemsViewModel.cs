@@ -219,6 +219,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 
                 foreach (BaseEntity entity in items)
                 {
+                    if("feature".Equals(entity.GetStringValue("subtype")))
+                    {
+                        continue;
+                    }
+
                     var octaneItem = new OctaneItemViewModel(entity);
                     _totalItems++;
                     if (WorkspaceSessionPersistanceManager.IsActiveEntity(entity))
