@@ -124,7 +124,7 @@
                                  Foreground="{DynamicResource VsBrush.WindowText}"
                                  VerticalContentAlignment="Center"
                                  ToolTip="{Binding Content, Mode=OneWay}"
-                                 Text="{Binding Content, Mode=TwoWay}" />
+                                 Text="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     </Grid>
 
                 </Grid>
@@ -167,7 +167,7 @@
                                              TextAlignment="Justify"
                                              Background="{DynamicResource VsBrush.Window}"
                                              Foreground="{DynamicResource VsBrush.WindowText}"
-                                             Value="{Binding Content, Mode=TwoWay}">
+                                             Value="{Binding Content, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                         </wpfx:DateTimePicker>
                     </Grid>
                 </Grid>
@@ -543,7 +543,7 @@
                                         <TextBox  Grid.Row="0"
                                                   Grid.Column="1"
                                                   FontSize="20"
-                                                  Text="{Binding Title, Mode=TwoWay}"
+                                                  Text="{Binding Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                                                   Background="{DynamicResource VsBrush.Window}"
                                                   Foreground="{DynamicResource VsBrush.WindowText}"
                                                   BorderThickness="1">
