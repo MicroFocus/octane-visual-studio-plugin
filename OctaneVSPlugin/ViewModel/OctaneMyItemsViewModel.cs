@@ -206,8 +206,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 _myItems.Clear();
 
                 bool foundActiveItem = false;
-                IList<BaseEntity> items = await octaneService.GetMyItems();
-
+                IEnumerable<BaseEntity> items = await octaneService.GetMyItems();
+                // when a user story is converted to feature it might still be in the list of my work items, 
+                // the plugins do not support features in my work, so we just remove those entities
+                items = items.Where(entity => !WorkItem.SUBTYPE_FEATURE.Equals(entity.GetStringValue(CommonFields.SubType)));
+                
                 if (sublistsMap == null)
                 {
                     sublistsMap = createMyWorkItemsSublistsMap();
