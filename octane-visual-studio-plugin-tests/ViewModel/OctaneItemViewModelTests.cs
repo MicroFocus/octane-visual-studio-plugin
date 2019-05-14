@@ -64,8 +64,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         [ClassCleanup]
         public static void ClassCleanup()
         {
-            EntityService.DeleteById<Story>(WorkspaceContext, _storyEntity.Id);
             EntityService.DeleteById<Task>(WorkspaceContext, _taskEntity.Id);
+            EntityService.DeleteById<Story>(WorkspaceContext, _storyEntity.Id);
             EntityService.DeleteById<TestGherkin>(WorkspaceContext, _gherkinTestEntity.Id);
         }
 
@@ -100,15 +100,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
 
         private void ValidateFields(List<object> actualFields, List<string> expectedValues)
         {
+            int actualFieldsCounter = 0;
+            int expectedFieldsCounter = 0;
             for (int i = 0; i < expectedValues.Count; i++)
             {
-                var fieldViewModel = actualFields[i * 2] as FieldViewModel;
+                var fieldViewModel = actualFields[actualFieldsCounter++] as FieldViewModel;
                 Assert.IsNotNull(fieldViewModel, $"Element for {expectedValues} should be a FieldViewModel");
-                Assert.AreEqual(expectedValues[i], fieldViewModel.Name, "Mismatched field name");
+                Assert.AreEqual(expectedValues[expectedFieldsCounter++], fieldViewModel.Name, "Mismatched field name");
+
+                if(fieldViewModel.Name.Equals("story_points") && fieldViewModel.Content.Equals(""))
+                {
+                    var horizontalSeparatorViewModel = actualFields[actualFieldsCounter++] as HorizontalSeparatorViewModel;
+                    Assert.IsNotNull(horizontalSeparatorViewModel, $"Element after {expectedValues} should be a HorizontalSeparatorViewModel");
+                }
 
                 if (i != expectedValues.Count - 1)
                 {
-                    var separatorViewModel = actualFields[i * 2 + 1] as SeparatorViewModel;
+                    var separatorViewModel = actualFields[actualFieldsCounter++] as SeparatorViewModel;
                     Assert.IsNotNull(separatorViewModel, $"Element after {expectedValues} should be a SeparatorViewModel");
                 }
             }

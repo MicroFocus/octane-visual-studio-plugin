@@ -58,8 +58,11 @@ Test > Test Settings > Select Test Settings File
     <Parameter name="sharedSpaceId" value="1001" />
     <Parameter name="workspaceId" value="1002" />
 
+    <Parameter name ="ssoLogin" value="false"/>
+    <Parameter name ="credentialLogin" value="true"/>
+
     <!-- If you use secured connection(https) but sertificates are not installed correctly, set value to true to ignore validation -->
-    <Parameter name="ignoreServerCertificateValidation" value="false" />
+    <Parameter name="ignoreServerCertificateValidation" value="true" />
   </TestRunParameters>
 
   <!-- Adapter Specific sections -->

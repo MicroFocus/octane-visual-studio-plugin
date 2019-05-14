@@ -58,8 +58,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         private void ClearSettings(object sender, RoutedEventArgs e)
         {
             serverUrlTextBox.Text = "";
-            sharedSpaceTextBox.Text = "0";
-            workspaceTextBox.Text = "0";
+            sharedSpaceTextBox.Text = "";
+            workspaceTextBox.Text = "";
             usernameTextBox.Text = "";
             passwordTextBox.Password = "";
         }
@@ -123,6 +123,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
             // reset the error message if any
             SetInfoLabelText("");
+
+            // if no url given no reason to perform analisys
+            if("".Equals(authenticationUrl))
+            {
+                return;
+            }
             
             try
             {

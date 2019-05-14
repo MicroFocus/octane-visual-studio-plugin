@@ -51,7 +51,11 @@
         <DataTemplate DataType="{x:Type viewModel:SeparatorViewModel}">
             <TextBlock Text=" | " />
         </DataTemplate>
-        
+
+        <DataTemplate DataType="{x:Type viewModel:HorizontalSeparatorViewModel}">
+            <TextBlock Text=" - " />
+        </DataTemplate>
+
         <ItemsPanelTemplate x:Key="FieldsItemPanelTemplate">
             <StackPanel Orientation="Horizontal" />
         </ItemsPanelTemplate>

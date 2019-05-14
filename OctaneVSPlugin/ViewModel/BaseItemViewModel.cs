@@ -39,7 +39,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 throw new ArgumentNullException(nameof(entity));
 
             Entity = entity;
-            EntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entity);
+            if(entity.TypeName != null)
+                EntityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(entity);
         }
 
         /// <summary>

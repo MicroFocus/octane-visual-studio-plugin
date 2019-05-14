@@ -112,6 +112,7 @@
     <Compile Include="ViewModel\FieldViewModel.cs" />
     <Compile Include="FieldInfo.cs" />
     <Compile Include="FieldPosition.cs" />
+    <Compile Include="ViewModel\HorizontalSeparatorViewModel.cs" />
     <Compile Include="View\BoolToIndexConverter.cs" />
     <Compile Include="View\Browser\BrowserDialog.xaml.cs">
       <DependentUpon>BrowserDialog.xaml</DependentUpon>

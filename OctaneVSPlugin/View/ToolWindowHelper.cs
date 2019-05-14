@@ -325,8 +325,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 					});
 				}
 
-				// download gherkin script
-				if (downloadGherkinScriptDelegate != null
+                var octaneItem = selectedItem as OctaneItemViewModel;
+
+                // copy commit message
+                if (octaneItem != null
+                   && octaneItem.IsSupportCopyCommitMessage
+                   && (entityType == WorkItem.SUBTYPE_STORY
+                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
+                        || entityType == WorkItem.SUBTYPE_DEFECT
+                        || entityType == Task.TYPE_TASK))
+                {
+                    cm.Items.Add(new MenuItem
+                    {
+                        Header = CopyCommitMessageHeader,
+                        Command = new DelegatedCommand(copyCommitMessageDelegate)
+                    });
+                }
+
+                // download gherkin script
+                if (downloadGherkinScriptDelegate != null
 					&& entityType == TestGherkin.SUBTYPE_GHERKIN_TEST)
 				{
 					cm.Items.Add(new MenuItem
@@ -337,7 +354,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				}
 
 				// start work
-				var octaneItem = selectedItem as OctaneItemViewModel;
 				if (startWorkDelegate != null
 					&& octaneItem != null
 					&& !octaneItem.IsActiveWorkItem
@@ -369,21 +385,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 					});
 				}
 
-				// copy commit message
-				if (octaneItem != null
-				   && octaneItem.IsSupportCopyCommitMessage
-				   && (entityType == WorkItem.SUBTYPE_STORY
-						|| entityType == WorkItem.SUBTYPE_QUALITY_STORY
-						|| entityType == WorkItem.SUBTYPE_DEFECT
-						|| entityType == Task.TYPE_TASK))
-				{
-					cm.Items.Add(new MenuItem
-					{
-						Header = CopyCommitMessageHeader,
-						Command = new DelegatedCommand(copyCommitMessageDelegate)
-					});
-				}
-
+				
 				// add to my work
 				if (addToMyWorkDelegate != null
 					&& DetailsToolWindow.IsEntityTypeSupported(entityType))
