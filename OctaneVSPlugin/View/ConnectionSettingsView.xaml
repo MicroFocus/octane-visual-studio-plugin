@@ -57,8 +57,7 @@
                          Margin="5"
                          TextWrapping="NoWrap"
                          TextChanged="serverUrlTextBox_TextChanged"
-                         Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=Paste server url from
-                         browser..}" />
+                         Text="{Binding Url, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, FallbackValue=Paste server url from browser..}" />
 
                 <Label Grid.Row="1"
                        Grid.Column="0"
@@ -94,17 +93,37 @@
                     <RowDefinition Height="30" />
                     <RowDefinition Height="10" />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="220"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
                 <RadioButton Grid.Row="0"
-                             Name="userPassRadioButton"
-                             IsChecked="{Binding CredentialLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
-                             VerticalAlignment="Center"
-                             Margin="5" />
+                        Name="userPassRadioButton"
+                        IsChecked="{Binding CredentialLogin, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                        VerticalAlignment="Center"
+                        Margin="5" />
                 <Label Grid.Row="0"
                        Grid.Column="0"
                        Margin="20 0 0 0"
                        VerticalAlignment="Center"
                        Content="Login with username and password" />
-                <Grid Grid.Row="1">
+                <Label Grid.Row="0"
+                       Grid.Column="1"
+                       Margin="0"
+                       FontWeight="Bold"
+                       Foreground="CadetBlue"
+                       VerticalAlignment="Center"
+                       Content="?">
+                    <Label.ToolTip>
+                        <TextBlock>
+                                Log into ALM Octane directly with your user name and password, in non-SSO environments.
+                                <LineBreak/>
+                                This method saves your login credentials between sessions, so you do not have to re-enter them.
+                        </TextBlock>
+                    </Label.ToolTip>
+                </Label>
+                <Grid Grid.Row="1" Grid.ColumnSpan="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="2*"></ColumnDefinition>
                         <ColumnDefinition Width="7*"></ColumnDefinition>
@@ -145,7 +164,23 @@
                        Margin="20 0 0 0"
                        VerticalAlignment="Center"
                        Content="Login using a browser" />
-
+                <Label Grid.Row="2"
+                       Grid.Column="1"
+                       Margin="-70"
+                       FontWeight="Bold"
+                       Foreground="CadetBlue"
+                       VerticalAlignment="Center"
+                       Content="?">
+                       <Label.ToolTip>
+                            <TextBlock>
+                                Log into ALM Octane using a browser.
+                                <LineBreak/>
+                                You can use this method for non-SSO, SSO, and federated environments.
+                                <LineBreak/>
+                                Your login credentials are not saved between sessions, so you will have to re-enter them each time.
+                            </TextBlock>         
+                       </Label.ToolTip>
+                </Label>            
                 <Separator Grid.ColumnSpan="2"
                            Grid.Row="4" />
             </Grid>
