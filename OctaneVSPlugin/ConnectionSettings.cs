@@ -38,8 +38,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
 		public const string ConnectionSuccessful = "Connection successful!";
 		private string url = string.Empty;
-		private long ssid = 1001;
-		private long wsid = 1002;
+		private long ssid = 0;
+		private long wsid = 0;
 		private string user = string.Empty;
 		private string password = string.Empty;
 		private bool credentialLogin = true;
