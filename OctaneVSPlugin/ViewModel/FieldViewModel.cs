@@ -16,6 +16,7 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections;
@@ -96,7 +97,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             _emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             _customContentFunc = fieldInfo.ContentFunc;
         }
-        
+
         public FieldMetadata Metadata { get; }
 
         public string Label { get; }
@@ -119,7 +120,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public List<BaseEntityWrapper> ReferenceFieldContent
         {
             get
-            {   
+            {
                 if (_referenceFieldContentName.Count() == 0)
                 {
 
@@ -127,7 +128,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     {
                         BaseEntity falseBaseEntity = new BaseEntity();
                         falseBaseEntity.Name = "False";
-                       
+
 
                         BaseEntity trueBaseEntity = new BaseEntity();
                         trueBaseEntity.Name = "True";
@@ -151,7 +152,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                                 }
                                 else
                                 {
-                                    entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                    if (_fieldEntity.Equals("workspace_users"))
+                                    {
+                                        List<QueryPhrase> activeUsersQuery = new List<QueryPhrase> { new LogicalQueryPhrase("activity_level", 0) };
+                                        entities = _octaneService.GetEntitesReferenceFields(_fieldEntity, activeUsersQuery, null);
+                                    }
+                                    else
+                                    {
+                                        entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                    }
+
                                 }
 
 
@@ -167,26 +177,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                                 if (_referenceFieldContent != null)
                                 {
-									foreach (BaseEntity be in _referenceFieldContent)
-									{
-										BaseEntityWrapper bew = new BaseEntityWrapper(be);
-										_referenceFieldContentName.Add(bew);
+                                    foreach (BaseEntity be in _referenceFieldContent)
+                                    {
+                                        BaseEntityWrapper bew = new BaseEntityWrapper(be);
+                                        _referenceFieldContentName.Add(bew);
 
-										var selectedEntities = _parentEntity.GetValue(Name);
+                                        var selectedEntities = _parentEntity.GetValue(Name);
 
-										if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
-										{
-											EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>) selectedEntities;
+                                        if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
+                                        {
+                                            EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>)selectedEntities;
 
-											foreach (BaseEntity sbe in selectedEntitiesList.data)
-											{
-												if (bew.Equals(new BaseEntityWrapper(sbe)))
-												{
-													bew.IsSelected = true;
-												}
-											}
-										}
-									}
+                                            foreach (BaseEntity sbe in selectedEntitiesList.data)
+                                            {
+                                                if (bew.Equals(new BaseEntityWrapper(sbe)))
+                                                {
+                                                    bew.IsSelected = true;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             catch (Exception)
@@ -200,7 +210,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (_filter.Equals(""))
                 {
                     return _referenceFieldContentName;
-                } else
+                }
+                else
                 {
                     return _referenceFieldContentName.Where(f => f.BaseEntity.Name.ToLowerInvariant().Contains(_filter)).ToList();
                 }
@@ -385,12 +396,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             else
             {
-                return (EntityList<BaseEntity>) value;
+                return (EntityList<BaseEntity>)value;
             }
         }
 
         public ICommand MakeValueNull { get; }
-        
+
         private void SetMakeValueNull(object param)
         {
             if (Metadata.FieldType.Equals("reference"))
@@ -398,7 +409,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (!IsMultiple)
                 {
                     Content = null;
-                } else
+                }
+                else
                 {
                     //clear the parent entity's selected values
                     EntityList<BaseEntity> entities = _parentEntity.GetValue(Name) as EntityList<BaseEntity>;
@@ -431,20 +443,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
 
         /// <summary>
-    /// Search filter applied on the entity fields
-    /// </summary>
-    public string Filter
-    {
-        get { return _filter; }
-        set
+        /// Search filter applied on the entity fields
+        /// </summary>
+        public string Filter
         {
-            _filter = value?.ToLowerInvariant() ?? string.Empty;
-            NotifyPropertyChanged("ReferenceFieldContent");
+            get { return _filter; }
+            set
+            {
+                _filter = value?.ToLowerInvariant() ?? string.Empty;
+                NotifyPropertyChanged("ReferenceFieldContent");
+            }
         }
     }
-    }
 
-    
+
 
     public class BaseEntityWrapper
     {
