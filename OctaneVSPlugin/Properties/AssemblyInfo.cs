@@ -45,7 +45,7 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("12.55.32.1")]
-[assembly: AssemblyFileVersion("12.55.32.1")]
+[assembly: AssemblyVersion("15.0.8.1")]
+[assembly: AssemblyFileVersion("15.0.8.1")]
 
 [assembly: InternalsVisibleTo("octane-visual-studio-plugin-tests")]
