@@ -23,6 +23,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -282,10 +283,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public bool IsMoreThanOneTarget { get; set; }
 
+        private String _tempDecimalStrValue { get; set; }
+
+        private object _prevContent { get; set; }
+
         public object Content
         {
             get
             {
+                if(_tempDecimalStrValue != null)
+                {
+                    return _tempDecimalStrValue;
+                }
+
                 if (_customContentFunc != null)
                     return _customContentFunc(_parentEntity);
 
@@ -294,6 +304,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     return formattedValue;
 
                 object value = _parentEntity.GetValue(Name);
+                _prevContent = value;
+
                 switch (value)
                 {
                     case null:
@@ -337,19 +349,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         }
                         break;
                     case "float":
-                        try
+                        _tempDecimalStrValue = null;
+                        String srtValue = value.ToString();
+
+                        if (srtValue != null && srtValue.Trim().Length == 0)
                         {
-                            _parentEntity.SetValue(Name, float.Parse(value.ToString()));
-                            IsChanged = true;
+                            _parentEntity.SetValue(Name, null);
                         }
-                        catch (Exception ex)
+                        else if (isIntermediaryDecimalValue(srtValue))
                         {
-                            if (ex is FormatException || ex is OverflowException)
-                            {
-                                _parentEntity.SetValue(Name, "");
-                                IsChanged = true;
-                            }
+                            _tempDecimalStrValue = srtValue;
                         }
+                        else if (decimal.TryParse(srtValue, out decimal decimalValue))
+                        {
+                            _parentEntity.SetValue(Name, decimalValue);
+                        }
+                        else
+                        {
+                            _parentEntity.SetValue(Name, _prevContent);
+                        }
+                        IsChanged = true;
                         break;
                     case "string":
                         _parentEntity.SetValue(Name, value.ToString());
@@ -385,6 +404,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 OnValueChanged(EventArgs.Empty);
                 NotifyPropertyChanged("Content");
             }
+        }
+
+        private static bool isIntermediaryDecimalValue(String value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            var match = Regex.Match(value, "^-{0,1}\\d*\\.0*$");
+            if (match.Success && match.Value.Length == value.Length)
+            {
+                return true;
+            }
+            if (value.Trim().Equals("-"))
+            {
+                return true;
+            }
+
+            if (value.EndsWith("."))
+            {
+                String partialNumber = value.TrimEnd(new char[] { '.' });
+                return int.TryParse(partialNumber, out _);
+            }
+
+            return false;
         }
 
         public EntityList<BaseEntity> GetSelectedEntities()
