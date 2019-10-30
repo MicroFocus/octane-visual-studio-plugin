@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
     <Metadata>
-        <Identity Id="Hpe.Nga.Octane.VisualStudio" Version="15.0.8.1" Language="en-US" Publisher="MicroFocus" />
+        <Identity Id="Hpe.Nga.Octane.VisualStudio" Version="15.0.8.2" Language="en-US" Publisher="MicroFocus" />
         <DisplayName>ALM Octane Visual Studio Plugin</DisplayName>
         <Description xml:space="preserve">Enables integration with ALM Octane. 
 Compatible with ALM Octane version 12.55.7 and above.</Description>
