@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2027
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.28803.452
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "octane-visual-studio-plugin", "OctaneVSPlugin\octane-visual-studio-plugin.csproj", "{95ADAD0B-A1FF-4BE8-AE43-300204E3E667}"
 EndProject

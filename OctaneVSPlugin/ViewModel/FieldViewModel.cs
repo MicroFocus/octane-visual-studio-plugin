@@ -16,12 +16,14 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -96,7 +98,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             _emptyPlaceholder = fieldInfo.EmptyPlaceholder;
             _customContentFunc = fieldInfo.ContentFunc;
         }
-        
+
         public FieldMetadata Metadata { get; }
 
         public string Label { get; }
@@ -119,7 +121,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         public List<BaseEntityWrapper> ReferenceFieldContent
         {
             get
-            {   
+            {
                 if (_referenceFieldContentName.Count() == 0)
                 {
 
@@ -127,7 +129,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     {
                         BaseEntity falseBaseEntity = new BaseEntity();
                         falseBaseEntity.Name = "False";
-                       
+
 
                         BaseEntity trueBaseEntity = new BaseEntity();
                         trueBaseEntity.Name = "True";
@@ -151,7 +153,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                                 }
                                 else
                                 {
-                                    entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                    if (_fieldEntity.Equals("workspace_users"))
+                                    {
+                                        List<QueryPhrase> activeUsersQuery = new List<QueryPhrase> { new LogicalQueryPhrase("activity_level", 0) };
+                                        entities = _octaneService.GetEntitesReferenceFields(_fieldEntity, activeUsersQuery, null);
+                                    }
+                                    else
+                                    {
+                                        entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                    }
+
                                 }
 
 
@@ -167,26 +178,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                                 if (_referenceFieldContent != null)
                                 {
-									foreach (BaseEntity be in _referenceFieldContent)
-									{
-										BaseEntityWrapper bew = new BaseEntityWrapper(be);
-										_referenceFieldContentName.Add(bew);
+                                    foreach (BaseEntity be in _referenceFieldContent)
+                                    {
+                                        BaseEntityWrapper bew = new BaseEntityWrapper(be);
+                                        _referenceFieldContentName.Add(bew);
 
-										var selectedEntities = _parentEntity.GetValue(Name);
+                                        var selectedEntities = _parentEntity.GetValue(Name);
 
-										if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
-										{
-											EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>) selectedEntities;
+                                        if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
+                                        {
+                                            EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>)selectedEntities;
 
-											foreach (BaseEntity sbe in selectedEntitiesList.data)
-											{
-												if (bew.Equals(new BaseEntityWrapper(sbe)))
-												{
-													bew.IsSelected = true;
-												}
-											}
-										}
-									}
+                                            foreach (BaseEntity sbe in selectedEntitiesList.data)
+                                            {
+                                                if (bew.Equals(new BaseEntityWrapper(sbe)))
+                                                {
+                                                    bew.IsSelected = true;
+                                                }
+                                            }
+                                        }
+                                    }
                                 }
                             }
                             catch (Exception)
@@ -200,7 +211,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (_filter.Equals(""))
                 {
                     return _referenceFieldContentName;
-                } else
+                }
+                else
                 {
                     return _referenceFieldContentName.Where(f => f.BaseEntity.Name.ToLowerInvariant().Contains(_filter)).ToList();
                 }
@@ -271,10 +283,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public bool IsMoreThanOneTarget { get; set; }
 
+        private String _tempDecimalStrValue { get; set; }
+
+        private object _prevContent { get; set; }
+
         public object Content
         {
             get
             {
+                if(_tempDecimalStrValue != null)
+                {
+                    return _tempDecimalStrValue;
+                }
+
                 if (_customContentFunc != null)
                     return _customContentFunc(_parentEntity);
 
@@ -283,6 +304,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     return formattedValue;
 
                 object value = _parentEntity.GetValue(Name);
+                _prevContent = value;
+
                 switch (value)
                 {
                     case null:
@@ -326,19 +349,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         }
                         break;
                     case "float":
-                        try
+                        _tempDecimalStrValue = null;
+                        String srtValue = value.ToString();
+
+                        if (srtValue != null && srtValue.Trim().Length == 0)
                         {
-                            _parentEntity.SetValue(Name, float.Parse(value.ToString()));
-                            IsChanged = true;
+                            _parentEntity.SetValue(Name, null);
                         }
-                        catch (Exception ex)
+                        else if (isIntermediaryDecimalValue(srtValue))
                         {
-                            if (ex is FormatException || ex is OverflowException)
-                            {
-                                _parentEntity.SetValue(Name, "");
-                                IsChanged = true;
-                            }
+                            _tempDecimalStrValue = srtValue;
                         }
+                        else if (decimal.TryParse(srtValue, out decimal decimalValue))
+                        {
+                            _parentEntity.SetValue(Name, decimalValue);
+                        }
+                        else
+                        {
+                            _parentEntity.SetValue(Name, _prevContent);
+                        }
+                        IsChanged = true;
                         break;
                     case "string":
                         _parentEntity.SetValue(Name, value.ToString());
@@ -376,6 +406,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        private static bool isIntermediaryDecimalValue(String value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            var match = Regex.Match(value, "^-{0,1}\\d*\\.0*$");
+            if (match.Success && match.Value.Length == value.Length)
+            {
+                return true;
+            }
+            if (value.Trim().Equals("-"))
+            {
+                return true;
+            }
+
+            if (value.EndsWith("."))
+            {
+                String partialNumber = value.TrimEnd(new char[] { '.' });
+                return int.TryParse(partialNumber, out _);
+            }
+
+            return false;
+        }
+
         public EntityList<BaseEntity> GetSelectedEntities()
         {
             object value = _parentEntity.GetValue(Name);
@@ -385,12 +441,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
             else
             {
-                return (EntityList<BaseEntity>) value;
+                return (EntityList<BaseEntity>)value;
             }
         }
 
         public ICommand MakeValueNull { get; }
-        
+
         private void SetMakeValueNull(object param)
         {
             if (Metadata.FieldType.Equals("reference"))
@@ -398,7 +454,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (!IsMultiple)
                 {
                     Content = null;
-                } else
+                }
+                else
                 {
                     //clear the parent entity's selected values
                     EntityList<BaseEntity> entities = _parentEntity.GetValue(Name) as EntityList<BaseEntity>;
@@ -431,20 +488,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
 
         /// <summary>
-    /// Search filter applied on the entity fields
-    /// </summary>
-    public string Filter
-    {
-        get { return _filter; }
-        set
+        /// Search filter applied on the entity fields
+        /// </summary>
+        public string Filter
         {
-            _filter = value?.ToLowerInvariant() ?? string.Empty;
-            NotifyPropertyChanged("ReferenceFieldContent");
+            get { return _filter; }
+            set
+            {
+                _filter = value?.ToLowerInvariant() ?? string.Empty;
+                NotifyPropertyChanged("ReferenceFieldContent");
+            }
         }
     }
-    }
 
-    
+
 
     public class BaseEntityWrapper
     {
