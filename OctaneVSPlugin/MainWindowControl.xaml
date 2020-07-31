@@ -222,20 +222,22 @@
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
-           
-            <Grid DockPanel.Dock="Top"  Margin="5 5 5 5">
+
+            <Grid DockPanel.Dock="Top"  Margin="15 5 5 5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="65*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <!--<Create the list of filtering items>-->
-                <ListBox ItemsSource="{Binding MyWorkSublists}"
+                <ListBox Grid.Column="0"
+                         ItemsSource="{Binding MyWorkSublists}"
                          Name="FilterListBoxName"
                          Background="Transparent"
                          BorderThickness="0">
-                    
+
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel IsItemsHost="True"
@@ -244,7 +246,7 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="70"
+                            <Grid Width="75"
                                   Height="40"
                                   Margin="0 0 10 0">
                                 <CheckBox VerticalAlignment="Center"
@@ -255,10 +257,11 @@
                                 <view:EntityIcon MaxHeight="30"
                                                  MaxWidth="30"
                                                  FontSize="12"
+                                                 Margin="0 0 5 0"
                                                  IconColor="{Binding TypeInformation.Color}"
                                                  Text="{Binding TypeInformation.ShortLabel}"/>
                                 <TextBlock DockPanel.Dock="Left"
-                                           MaxWidth="15"
+                                           MaxWidth="40"
                                            Text="{Binding Items.Count, FallbackValue=0}"
                                            Foreground="{DynamicResource VsBrush.WindowText}"
                                            FontWeight="Bold"
@@ -283,15 +286,9 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
 
-                <Grid Grid.Column="0"
-                      HorizontalAlignment="Right"
-                      Margin="1 0 5 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid>
-                        <ComboBox x:Name="SearchHistoryComboBox"
+                <Grid Grid.Column="1"
+                      Margin="5 0 0 0">
+                    <ComboBox x:Name="SearchHistoryComboBox"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Center"
                                   Width="180"
@@ -300,48 +297,49 @@
                                   Background="{DynamicResource VsBrush.Window}"
                                   Foreground="Black"
                                   ItemsSource="{Binding SearchHistory}">
-                            <ComboBox.InputBindings>
-                                <KeyBinding Command="{Binding SearchCommand}"
+                        <ComboBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}"
                                             Key="Return" />
-                            </ComboBox.InputBindings>
-                        </ComboBox>
-                        <TextBlock IsHitTestVisible="False"
+                        </ComboBox.InputBindings>
+                    </ComboBox>
+                    <TextBlock IsHitTestVisible="False"
                                    Text="Search backlog items"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    Margin="7 0 0 0"
                                    Foreground="Black">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Visibility"
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility"
                                             Value="Collapsed" />
-                                    <Style.Triggers>
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
                                                            Value="" />
-                                                <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
                                                            Value="False" />
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter Property="Visibility"
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility"
                                                     Value="Visible" />
-                                        </MultiDataTrigger>
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
                                                            Value="{x:Null}" />
-                                                <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
                                                            Value="False" />
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter Property="Visibility"
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility"
                                                     Value="Visible" />
-                                        </MultiDataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Grid>
-                    <Button Grid.Column="1"
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <Button Grid.Column="2"
                             x:Name="SearchButton"
                             ToolTip="Search"
                             Command="{Binding SearchCommand}"
@@ -352,10 +350,12 @@
                             Width="25"
                             Height="25"
                             Margin="5 0 0 0">
-                        <Image Source="/octane-visual-studio-plugin;component/Resources/search.png" />
-                    </Button>
-                </Grid>
-                <Button Grid.Column="1" Width="25" Height="25"  HorizontalAlignment="Right"
+                    <Image Source="/octane-visual-studio-plugin;component/Resources/search.png" />
+                </Button>
+
+                <Button Grid.Column="3" 
+                        Width="25" 
+                        Height="25"  
                         BorderThickness="0"
                         Background="{DynamicResource VsBrush.Window}"
                         Command="{Binding RefreshCommand}"
@@ -366,9 +366,9 @@
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
-                <Separator Grid.ColumnSpan="2" Margin="0 50 0 0" />
+                <Separator Grid.ColumnSpan="4" Margin="0 50 0 0" />
             </Grid>
-           
+
             <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
                     Background="{DynamicResource VsBrush.Window}"
                     Foreground="{DynamicResource VsBrush.WindowText}"
