@@ -356,13 +356,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         {
                             _parentEntity.SetValue(Name, null);
                         }
+                        else if (decimal.TryParse(srtValue, out decimal decimalValue))
+                        {
+                            if (srtValue.EndsWith("."))
+                            {
+                                _parentEntity.SetValue(Name, decimalValue + ".0");
+                            } 
+                            else
+                            {
+                                _parentEntity.SetValue(Name, decimalValue);
+                            }
+                        }
                         else if (isIntermediaryDecimalValue(srtValue))
                         {
                             _tempDecimalStrValue = srtValue;
-                        }
-                        else if (decimal.TryParse(srtValue, out decimal decimalValue))
-                        {
-                            _parentEntity.SetValue(Name, decimalValue);
                         }
                         else
                         {
