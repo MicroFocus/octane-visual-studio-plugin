@@ -323,6 +323,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             es.DeleteById<UserItem>(workspaceContext, entity.Id);
         }
 
+        ///<summary>
+        ///Removes a comment from my work
+        /// </summary>
+        public async Task RemoveCommentFromMyWork(BaseEntity entity)
+        {
+            RestConnector.AwaitContinueOnCapturedContext = false;
+            await es.DismissCommentByIdAsync(workspaceContext, entity.Id);
+        }
 
         /// <summary>
         /// Retrieves a list of all the comments attached to the given entity

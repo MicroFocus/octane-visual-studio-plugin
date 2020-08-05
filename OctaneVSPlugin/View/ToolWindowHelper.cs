@@ -132,8 +132,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 			try
 			{
-				await MyWorkUtils.RemoveFromMyWork(entity);
-				MessageBox.Show("Dismissed: " + entity.GetStringValue("name"), ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				if (entity.TypeName.Equals("comment"))
+                {
+					OctaneServices octaneService = OctaneServices.GetInstance();
+					await octaneService.RemoveCommentFromMyWork(entity);
+					MessageBox.Show("Dismissed: " + entity.TypeName + " #" + entity.Id, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				}
+				else
+				{
+					await MyWorkUtils.RemoveFromMyWork(entity);
+					MessageBox.Show("Dismissed: " + entity.GetStringValue("name"), ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				}
 				await OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
 			}
 			catch (Exception ex)
@@ -398,7 +407,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				}
 
 				// remove from my work
-				if (removeFromMyWorkDelegate != null && entityType != "comment")
+				if (removeFromMyWorkDelegate != null)
 				{
 					cm.Items.Add(new MenuItem
 					{
