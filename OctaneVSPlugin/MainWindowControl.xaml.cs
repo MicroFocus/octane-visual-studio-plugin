@@ -126,13 +126,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             OctaneItemViewModel.ClearActiveItem();
 
             MainWindowCommand.Instance.UpdateActiveItemInToolbar();  
+        }   
+
+        private BaseEntity ToRemoveEntity()
+        {
+            return SelectedItem?.Entity;
         }
 
         private void RemoveFromMyWork(object sender)
         {
             if (SelectedItem?.Entity == null)
                 return;
-            ToolWindowHelper.RemoveFromMyWork(GetSelectedEntity());   
+            ToolWindowHelper.RemoveFromMyWork(ToRemoveEntity());   
         }
 
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
@@ -146,11 +151,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private BaseEntity GetSelectedEntity()
         {
             var selectedEntity = SelectedItem?.Entity;
-            /*if (SelectedItem is CommentViewModel commentViewModel)
+            if (SelectedItem is CommentViewModel commentViewModel)
             {
                 selectedEntity = commentViewModel.ParentEntity;
-            }*/
-
+            }
             return selectedEntity;
         }
 
