@@ -146,10 +146,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private BaseEntity GetSelectedEntity()
         {
             var selectedEntity = SelectedItem?.Entity;
-            if (SelectedItem is CommentViewModel commentViewModel)
+            /*if (SelectedItem is CommentViewModel commentViewModel)
             {
                 selectedEntity = commentViewModel.ParentEntity;
-            }
+            }*/
 
             return selectedEntity;
         }
