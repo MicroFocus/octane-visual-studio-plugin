@@ -329,7 +329,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public async Task RemoveCommentFromMyWork(BaseEntity entity)
         {
             RestConnector.AwaitContinueOnCapturedContext = false;
-            await es.DismissCommentByIdAsync(workspaceContext, entity.Id);
+            string putUrl = workspaceContext.GetPath() + "/comments/" + entity.Id + "/dismiss";
+            putUrl = putUrl.Replace("api", "internal-api");
+            ResponseWrapper response = await rest.ExecutePutAsync(putUrl, null, null).ConfigureAwait(RestConnector.AwaitContinueOnCapturedContext);
         }
 
         /// <summary>
