@@ -24,7 +24,6 @@ using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
 using MicroFocus.Adm.Octane.Api.Core.Services.Version;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.Common.Collector;
-using NSoup.Helper;
 using System;
 using System.Collections.Generic;
 using System.Linq;
