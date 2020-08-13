@@ -336,14 +336,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     case "integer":
                         try
                         {
+                            _tempDecimalStrValue = null;
                             String strValue = value.ToString();
-                            if (isIntermediaryIntegerValue(strValue))
+                            if (int.TryParse(strValue, out int intValue))
+                            {
+                                _parentEntity.SetValue(Name, intValue);
+                            }
+                            else if (isIntermediaryIntegerValue(strValue))
                             {
                                 _tempDecimalStrValue = strValue;
                             }
                             else
                             {
-                                _parentEntity.SetValue(Name, int.Parse(strValue));
+                                _parentEntity.SetValue(Name, _prevContent);
                             }
                             IsChanged = true;
                         }
