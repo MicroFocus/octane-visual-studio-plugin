@@ -336,7 +336,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     case "integer":
                         try
                         {
-                            _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
+                            _tempDecimalStrValue = null;
+                            String strValue = value.ToString();
+                            if (int.TryParse(strValue, out int intValue))
+                            {
+                                _parentEntity.SetValue(Name, intValue);
+                            }
+                            else if (isIntermediaryIntegerValue(strValue))
+                            {
+                                _tempDecimalStrValue = strValue;
+                            }
+                            else
+                            {
+                                _parentEntity.SetValue(Name, _prevContent);
+                            }
                             IsChanged = true;
                         }
                         catch (Exception ex)
@@ -411,6 +424,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 OnValueChanged(EventArgs.Empty);
                 NotifyPropertyChanged("Content");
             }
+        }
+
+        private static bool isIntermediaryIntegerValue(String value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            var match = Regex.Match(value, "^[-+]?\\d*$");
+            if (match.Success && match.Value.Length == value.Length)
+            {
+                return true;
+            }
+
+            if (value.Trim().Equals("-"))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private static bool isIntermediaryDecimalValue(String value)
