@@ -170,7 +170,7 @@
                         Command="{Binding RefreshCommand}"
                         ToolTip="Refresh view">
                     <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                    <TextBlock Text="&#x71;" FontFamily="Webdings"
                                FontWeight="Bold" FontSize="24"
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
@@ -361,7 +361,7 @@
                         Command="{Binding RefreshCommand}"
                         ToolTip="Refresh view">
                     <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                    <TextBlock Text="&#x71;" FontFamily="Webdings"
                                FontWeight="Bold" FontSize="24"
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
