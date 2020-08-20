@@ -204,6 +204,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 _myItems.Clear();
+                _totalItems = 0;
 
                 bool foundActiveItem = false;
                 IEnumerable<BaseEntity> items = await octaneService.GetMyItems();
