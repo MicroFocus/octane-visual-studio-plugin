@@ -145,67 +145,10 @@
 
         </DockPanel>
 
-        <DockPanel x:Name="NoItemsPanel">
-            <DockPanel.Style>
-                <Style TargetType="DockPanel">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
-                                <Condition Binding="{Binding TotalItems}" Value="0" />
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter Property="Visibility" Value="Visible" />
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DockPanel.Style>
-
-            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="25" Height="25"
-                        BorderThickness="0"
-                        Background="{DynamicResource VsBrush.Window}"
-                        Command="{Binding RefreshCommand}"
-                        ToolTip="Refresh view">
-                    <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x71;" FontFamily="Webdings"
-                               FontWeight="Bold" FontSize="24"
-                               Foreground="LightSkyBlue"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Button>
-            </StackPanel>
-            
-            
-            
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Viewbox Grid.Row="0" MaxHeight="200">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/s-rocket.png" />
-                    </StackPanel>
-
-                </Viewbox>
-
-                <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
-                        You're Awesome! You finished all your work!
-                        <LineBreak />
-                        You may want to talk with your team leader... or have some fun!
-                </TextBlock>
-            </Grid>
-        </DockPanel>
 
         
 
         <DockPanel>
-            <DockPanel.Resources>
-                <common:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
-            </DockPanel.Resources>
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -213,7 +156,6 @@
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
-                                <Condition Binding="{Binding TotalItems, Converter={StaticResource GreaterThanZeroConverter}}" Value="True" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.Setters>
                                 <Setter Property="Visibility" Value="Visible" />
@@ -369,30 +311,89 @@
                 <Separator Grid.ColumnSpan="4" Margin="0 50 0 0" />
             </Grid>
 
-            <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
-                    Background="{DynamicResource VsBrush.Window}"
-                    Foreground="{DynamicResource VsBrush.WindowText}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     BorderThickness="0">
-                <ListBox.ContextMenu>
-                    <ContextMenu Name="ListMenu" Opened="ListMenu_Opened" />
-                </ListBox.ContextMenu>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <local:MyItemControl />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
+            <Grid>
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                <!--
-                    Set the horizontal content alignment to stretch so the item will have the full width of the list box.
-                    This allows the MyItemControl to align the top and bottom fields to the right.
-                -->
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
+                                        <Condition Binding="{Binding TotalItems}" Value="0" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+
+                    <Viewbox Grid.Row="0" MaxHeight="200">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/s-rocket.png" />
+                        </StackPanel>
+                    </Viewbox>
+
+                    <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
+                            You're Awesome! You finished all your work!
+                            <LineBreak />
+                            You may want to talk with your team leader... or have some fun!
+                    </TextBlock>
+                </Grid>
+
+                <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
+                        Background="{DynamicResource VsBrush.Window}"
+                        Foreground="{DynamicResource VsBrush.WindowText}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        BorderThickness="0" >
+
+                    <ListBox.Resources>
+                        <common:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+                    </ListBox.Resources>
+                    <ListBox.Style>
+                        <Style TargetType="ListBox">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
+                                        <Condition Binding="{Binding TotalItems, Converter={StaticResource GreaterThanZeroConverter}}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.Style>
+
+                    <ListBox.ContextMenu>
+                        <ContextMenu Name="ListMenu" Opened="ListMenu_Opened" />
+                    </ListBox.ContextMenu>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <local:MyItemControl />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <!--
+                        Set the horizontal content alignment to stretch so the item will have the full width of the list box.
+                        This allows the MyItemControl to align the top and bottom fields to the right.
+                    -->
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
         </DockPanel>
 
     </Grid>
