@@ -230,6 +230,7 @@
 
                 <Grid Grid.Column="1"
                       Margin="5 0 0 0">
+
                     <ComboBox x:Name="SearchHistoryComboBox"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Center"
@@ -239,11 +240,69 @@
                                   Background="{DynamicResource VsBrush.Window}"
                                   Foreground="Black"
                                   ItemsSource="{Binding SearchHistory}">
+
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="Visibility" Value="Visible" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding SearchHistory.Count}" Value="0" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Hidden" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+
                         <ComboBox.InputBindings>
                             <KeyBinding Command="{Binding SearchCommand}"
                                             Key="Return" />
                         </ComboBox.InputBindings>
                     </ComboBox>
+
+                    <ComboBox x:Name="EmptySearchHistoryComboBox"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"
+                                  Width="180"
+                                  IsEditable="True"
+                                  Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
+                                  Background="{DynamicResource VsBrush.Window}"
+                                  Foreground="Black"
+                                  ItemsSource="{Binding EmptySearchHistory}">
+
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="Visibility" Value="Hidden" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding SearchHistory.Count}" Value="0" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter
+                                    Property="IsEnabled"
+                                    Value="False" />
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+
+                        <ComboBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}"
+                                            Key="Return" />
+                        </ComboBox.InputBindings>
+                    </ComboBox>
+
                     <TextBlock IsHitTestVisible="False"
                                    Text="Search backlog items"
                                    VerticalAlignment="Center"
@@ -261,6 +320,10 @@
                                                            Value="" />
                                             <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
                                                            Value="False" />
+                                            <Condition Binding="{Binding Text, ElementName=EmptySearchHistoryComboBox}"
+                                                           Value="" />
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=EmptySearchHistoryComboBox}"
+                                                           Value="False" />
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="Visibility"
                                                     Value="Visible" />
@@ -270,6 +333,10 @@
                                             <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
                                                            Value="{x:Null}" />
                                             <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
+                                                           Value="False" />
+                                            <Condition Binding="{Binding Text, ElementName=EmptySearchHistoryComboBox}"
+                                                           Value="{x:Null}" />
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=EmptySearchHistoryComboBox}"
                                                            Value="False" />
                                         </MultiDataTrigger.Conditions>
                                         <Setter Property="Visibility"

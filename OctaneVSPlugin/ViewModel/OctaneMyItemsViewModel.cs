@@ -109,6 +109,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        public List<string> EmptySearchHistory
+        {
+            get
+            {
+                return new List<string> { "No recent searches" };
+            }
+        }
+
         #endregion
 
         private int _totalItems;
