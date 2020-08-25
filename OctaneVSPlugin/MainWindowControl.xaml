@@ -241,22 +241,6 @@
                                   Foreground="Black"
                                   ItemsSource="{Binding SearchHistory}">
 
-                        <ComboBox.Style>
-                            <Style TargetType="ComboBox">
-                                <Setter Property="Visibility" Value="Visible" />
-                                <Style.Triggers>
-                                    <MultiDataTrigger>
-                                        <MultiDataTrigger.Conditions>
-                                            <Condition Binding="{Binding SearchHistory.Count}" Value="0" />
-                                        </MultiDataTrigger.Conditions>
-                                        <MultiDataTrigger.Setters>
-                                            <Setter Property="Visibility" Value="Hidden" />
-                                        </MultiDataTrigger.Setters>
-                                    </MultiDataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </ComboBox.Style>
-
                         <ComboBox.InputBindings>
                             <KeyBinding Command="{Binding SearchCommand}"
                                             Key="Return" />
