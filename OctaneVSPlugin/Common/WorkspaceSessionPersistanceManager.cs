@@ -69,7 +69,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             get
             {
                 LoadMetadataIfNeeded();
-                return _metadata.queries.ToList();
+                if (_metadata.queries.Count != 0)
+                {
+                    return _metadata.queries.ToList();
+                }
+                else
+                {
+                    return new List<string> { "" };
+                }
             }
         }
 
