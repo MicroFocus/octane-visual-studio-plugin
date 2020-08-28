@@ -182,6 +182,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return idPhrase;
         }
 
+        /// <summary>
+        /// Get the WorkItemRoot entity
+        /// </summary>
+        public async Task<WorkItemRoot> GetAsyncWorkItemRoot()
+        {
+            var fields = new List<string> { BaseEntity.NAME_FIELD };
+            var result = await es.GetAsync<WorkItemRoot>(workspaceContext, null, fields);
+            return result.data[0];
+        }
+
+
         public async Task<IList<BaseEntity>> GetMyItems()
         {
             var owner = await GetWorkspaceUser();
