@@ -66,6 +66,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             {"sprint", "sprints" },
 
+            {"milestone", "milestones" },
+
             {"product_area", "product_areas" },
 
             {"taxonomy_node", "taxonomy_nodes" },

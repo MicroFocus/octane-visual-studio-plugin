@@ -166,9 +166,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                                 }
 
 
-                                if (_fieldEntity.Equals("sprints"))
+                                if (_fieldEntity.Equals("sprints") || _fieldEntity.Equals("milestones"))
                                 {
-                                    _referenceFieldContent = getSprintFields(entities.data);
+                                    _referenceFieldContent = getFieldsBasedOnCurrentRelease(entities.data);
                                 }
                                 else
                                 {
@@ -234,7 +234,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             return referenceFieldContent;
         }
 
-        private List<BaseEntity> getSprintFields(List<BaseEntity> data)
+        private List<BaseEntity> getFieldsBasedOnCurrentRelease(List<BaseEntity> data)
         {
             List<BaseEntity> referenceFieldContent = new List<BaseEntity>();
             BaseEntity parentsRelease = (BaseEntity)_parentEntity.GetValue("release");
