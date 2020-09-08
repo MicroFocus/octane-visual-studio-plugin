@@ -60,9 +60,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             ToolWindowHelper.OpenInBrowser(SelectedItem?.Entity);
         }
 
-        private void DownloadGherkinScript(object sender)
+        private void DownloadScript(object sender)
         {
-            ToolWindowHelper.DownloadGherkinScript(SelectedItem);
+            ToolWindowHelper.DownloadScript(SelectedItem);
         }
 
         private void AddToMyWork(object sender)
@@ -74,7 +74,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         {
             ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
                 ViewDetails, ViewTaskParentDetails, null,
-                OpenInBrowser, null, DownloadGherkinScript, null, null, AddToMyWork, null);
+                OpenInBrowser, null, DownloadScript, null, null, AddToMyWork, null);
         }
     }
 }
