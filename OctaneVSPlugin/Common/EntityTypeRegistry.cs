@@ -68,11 +68,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { Task.TYPE_TASK, new EntityTypeInformation(
                 Task.TYPE_TASK, "Task",  Task.TYPE_TASK, "T", Color.FromRgb(22, 104, 193)) },
 
-            { "comment", new EntityTypeInformation(
-                "comment", "Comment", EntityTypeInformation.CommitMessageNotApplicable, "C", Color.FromRgb(253, 225, 89)) }, 
+            { CommonEntities.Comment, new EntityTypeInformation(
+                CommonEntities.Comment, "Comment", EntityTypeInformation.CommitMessageNotApplicable, "C", Color.FromRgb(253, 225, 89)) }, 
 
-            { "scenario_test", new EntityTypeInformation(
-                "scenario_test", "BDD Scenario", EntityTypeInformation.CommitMessageNotApplicable, "BSC", Color.FromRgb(117, 218, 77)) }
+            { CommonEntities.BDDScenario, new EntityTypeInformation(
+                CommonEntities.BDDScenario, "BDD Scenario", EntityTypeInformation.CommitMessageNotApplicable, "BSC", Color.FromRgb(117, 218, 77)) }
         };
 
         private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;
