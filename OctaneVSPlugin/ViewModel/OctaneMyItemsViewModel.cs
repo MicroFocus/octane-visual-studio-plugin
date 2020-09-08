@@ -239,7 +239,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         OctaneItemViewModel.SetActiveItem(octaneItem);
                     }
                     MyWorkItemsSublist itemSublist;
-                    if(sublistsMap.TryGetValue(Utility.GetConcreteEntityType(entity),out itemSublist))
+
+                    string concreteEntityType = Utility.GetConcreteEntityType(entity);
+                    if(sublistsMap.TryGetValue(concreteEntityType, out itemSublist))
                     {
                         itemSublist.Items.Add(octaneItem);
                     }
@@ -329,7 +331,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     { TestGherkin.SUBTYPE_GHERKIN_TEST, new MyWorkItemsSublist(TestGherkin.SUBTYPE_GHERKIN_TEST) },
                     { RunSuite.SUBTYPE_RUN_SUITE, new MyWorkItemsSublist(RunSuite.SUBTYPE_RUN_SUITE) },
                     { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
-                    { "comment", new MyWorkItemsSublist( "comment" )}
+                    { "comment", new MyWorkItemsSublist( "comment" )},
+                    { "scenario_test", new MyWorkItemsSublist( "scenario_test" )}
                 };
         }
 

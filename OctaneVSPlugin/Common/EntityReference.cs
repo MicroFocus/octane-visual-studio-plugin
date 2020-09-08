@@ -41,6 +41,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             {"gherkin_test", "tests" },
             {"test_automated", "tests" },
             {"test_suite", "tests" },
+            {"scenario_test", "tests" },
 
             {"task", "tasks" },
             {"phase", "phases" },

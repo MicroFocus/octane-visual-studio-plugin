@@ -179,6 +179,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 }),
                 FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
+
+            AddSubType<Test>("scenario_test",
+                FieldAtSubTitle("test_type", "Test Type"),
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
+                );
         }
 
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)

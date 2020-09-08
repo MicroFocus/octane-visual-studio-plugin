@@ -96,9 +96,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             ToolWindowHelper.HandleDoubleClickOnItem(GetSelectedEntity(), CopyCommitMessage);
         }
 
-        private void DownloadGherkinScript(object sender)
+        private void DownloadScript(object sender)
         {
-            ToolWindowHelper.DownloadGherkinScript(SelectedItem);
+            ToolWindowHelper.DownloadScript(SelectedItem);
         }
 
         private void StartWork(object sender)
@@ -144,7 +144,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
                 ViewDetails, ViewTaskParentDetails, ViewCommentParentDetails,
-                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript,
+                OpenInBrowser, CopyCommitMessage, DownloadScript,
                 StartWork, StopWork, null, RemoveFromMyWork);
         }
 

@@ -36,7 +36,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 		internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
 		internal const string OpenInBrowserHeader = "Open in Browser (Alt + DblClick)";
 		internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)";
-		internal const string DownloadGherkinScriptHeader = "Download Script";
+		internal const string DownloadScriptHeader = "Download Script";
 		internal const string StartWorkHeader = "Start Work";
 		internal const string StopWorkHeader = "Stop Work";
 		internal const string AddToMyWorkHeader = "Add to \"My Work\"";
@@ -232,9 +232,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 
 		/// <summary>
-		/// Download the gherkin script for the selected item if possible
+		/// Download the script for the selected item if possible
 		/// </summary>
-		internal static async void DownloadGherkinScript(BaseItemViewModel selectedItem)
+		internal static async void DownloadScript(BaseItemViewModel selectedItem)
 		{
 			try
 			{
@@ -253,7 +253,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show("Unable to obtain script.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -266,7 +266,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 			Action<object> viewCommentParentDetailsDelegate,
 			Action<object> openInBrowserDelegate,
 			Action<object> copyCommitMessageDelegate,
-			Action<object> downloadGherkinScriptDelegate,
+			Action<object> downloadScriptDelegate,
 			Action<object> startWorkDelegate,
 			Action<object> stopWorkDelegate,
 			Action<object> addToMyWorkDelegate,
@@ -352,13 +352,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
 
                 // download gherkin script
-                if (downloadGherkinScriptDelegate != null
-					&& entityType == TestGherkin.SUBTYPE_GHERKIN_TEST)
+                if (downloadScriptDelegate != null
+					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == "scenario_test"))
 				{
 					cm.Items.Add(new MenuItem
 					{
-						Header = DownloadGherkinScriptHeader,
-						Command = new DelegatedCommand(downloadGherkinScriptDelegate)
+						Header = DownloadScriptHeader,
+						Command = new DelegatedCommand(downloadScriptDelegate)
 					});
 				}
 
