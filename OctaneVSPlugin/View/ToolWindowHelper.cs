@@ -353,7 +353,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 // download gherkin script
                 if (downloadScriptDelegate != null
-					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == "scenario_test"))
+					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == EntityType.BDDScenario))
 				{
 					cm.Items.Add(new MenuItem
 					{
