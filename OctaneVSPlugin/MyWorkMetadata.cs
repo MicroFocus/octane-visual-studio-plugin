@@ -180,7 +180,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtTop(Comment.AUTHOR_FIELD, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
-            AddSubType<Test>(CommonEntities.BDDScenario,
+            AddSubType<Test>(EntityType.BDDScenario,
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
