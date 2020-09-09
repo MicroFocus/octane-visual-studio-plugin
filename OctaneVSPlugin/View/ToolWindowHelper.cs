@@ -397,7 +397,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				
 				// add to my work
 				if (addToMyWorkDelegate != null
-					&& DetailsToolWindow.IsEntityTypeSupported(entityType))
+					&& DetailsToolWindow.IsEntityTypeSupported(entityType)
+					|| entityType == EntityType.BDDScenario)
 				{
 					cm.Items.Add(new MenuItem
 					{
