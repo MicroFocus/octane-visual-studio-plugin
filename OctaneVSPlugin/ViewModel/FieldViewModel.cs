@@ -160,7 +160,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                                     }
                                     else
                                     {
-                                        entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                        if (_fieldEntity.Equals("milestones"))
+                                        {
+                                            string sortingFields = "-release,date,name";
+                                            entities = _octaneService.GetEntitesReferenceFields(_fieldEntity, sortingFields);
+                                        }
+                                        else
+                                        {
+                                            entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
+                                        }
                                     }
 
                                 }
