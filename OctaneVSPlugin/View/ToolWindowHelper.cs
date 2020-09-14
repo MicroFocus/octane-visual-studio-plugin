@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
@@ -247,6 +248,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 				OctaneServices octaneService;
 				octaneService = OctaneServices.GetInstance();
+
+				string testName;
+
+				if (test.SubType == TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST)
+				{
+					var bddScenario = await octaneService.FindEntityAsync(test, new List<string>() { CommonFields.BDDSpec });
+					string bddSpecName = Utility.GetPropertyOfChildEntity(bddScenario, CommonFields.BDDSpec, "name").ToString();
+					string bddSpecId = Utility.GetPropertyOfChildEntity(bddScenario, CommonFields.BDDSpec, "id").ToString();
+					testName = bddSpecName + "_" + bddSpecId;
+				}
+				else
+				{
+					testName = test.Name;
+				}
 
 				var testScript = await octaneService.GetTestScript(test.Id);
 				MainWindow.PluginPackage.CreateFile(test.Name, testScript.Script);
