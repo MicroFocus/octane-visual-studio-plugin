@@ -182,7 +182,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             AddSubType<Test>(EntityType.BDDScenario,
                 FieldAtSubTitle("test_type", "Test Type"),
-                FieldAtTop(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
                 FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
                 );
