@@ -13,5 +13,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
     {
         public const string Comment = "comment";
         public const string BDDScenario = "scenario_test";
+        public const string BDDSpec = "bdd_spec";
     }
 }
