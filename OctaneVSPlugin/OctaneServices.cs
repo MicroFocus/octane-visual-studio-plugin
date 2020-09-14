@@ -259,6 +259,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Comment.OWNER_TEST_FIELD,
             Comment.OWNER_RUN_FIELD,
             Comment.OWNER_REQUIREMENT_FIELD,
+            Comment.OWNER_BDD_SPEC_FIELD,
             Comment.CREATION_TIME_FIELD,
             Comment.TEXT_FIELD
         };
