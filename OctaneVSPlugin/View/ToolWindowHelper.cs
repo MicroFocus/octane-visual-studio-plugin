@@ -264,7 +264,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				}
 
 				var testScript = await octaneService.GetTestScript(test.Id);
-				MainWindow.PluginPackage.CreateFile(test.Name, testScript.Script);
+				MainWindow.PluginPackage.CreateFile(testName, testScript.Script);
 			}
 			catch (Exception ex)
 			{
