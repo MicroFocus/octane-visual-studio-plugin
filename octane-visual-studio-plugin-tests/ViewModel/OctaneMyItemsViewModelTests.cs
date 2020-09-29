@@ -112,9 +112,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void OctaneMyItemsViewModelTests_MyItems_Supported_ManualRun_Success()
         {
             var manualTest = TestManualUtilities.CreateManualTest();
+            var manualRun = RunManualUtilities.CreateManualRun(manualTest);
+            Thread.Sleep(1500);
             try
             {
-                ValidateType(RunManualUtilities.CreateManualRun(manualTest), 1);
+                ValidateType(manualRun, 1);
             }
             finally
             {
@@ -126,9 +128,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
         public void OctaneMyItemsViewModelTests_MyItems_Supported_SuiteRun_Success()
         {
             var testSuite = TestSuiteUtilities.CreateTestSuite();
+            var suiteRun = RunSuiteUtilities.CreateSuiteRun(testSuite);
+            Thread.Sleep(1500);
             try
             {
-                ValidateType(RunSuiteUtilities.CreateSuiteRun(testSuite), 1);
+                ValidateType(suiteRun, 1);
             }
             finally
             {
