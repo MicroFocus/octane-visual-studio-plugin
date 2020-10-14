@@ -488,7 +488,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public async Task<EntityListResult<BaseEntity>> GetAsyncEntitesReferenceListNodes(string entityType, string listName)
         {
-            return await es.GetAsyncReferenceFields(workspaceContext, entityType, BuildListNodeCriteria(listName), null, 100);
+            return await es.GetAsyncReferenceFields(workspaceContext, entityType, BuildListNodeCriteria(listName), null, 500);
         }
 
         /// <summary>

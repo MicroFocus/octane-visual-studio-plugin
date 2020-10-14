@@ -142,9 +142,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                     if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
                     {
-                        //pikachugb: todo list_node filter
-                        entities = await _octaneService.GetAsyncEntitesReferenceListNodes(_fieldEntity, logicalName);
-                        
+                        entities = await _octaneService.GetAsyncEntitesReferenceListNodes(_fieldEntity, logicalName);                        
                     }
                     else
                     {
