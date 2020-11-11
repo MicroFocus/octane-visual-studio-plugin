@@ -109,6 +109,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             }
         }
 
+        public List<string> EmptySearchHistory
+        {
+            get
+            {
+                return new List<string> { "No recent searches" };
+            }
+        }
+
         #endregion
 
         private int _totalItems;
@@ -204,6 +212,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 }
 
                 _myItems.Clear();
+                _totalItems = 0;
 
                 bool foundActiveItem = false;
                 IEnumerable<BaseEntity> items = await octaneService.GetMyItems();
@@ -230,7 +239,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         OctaneItemViewModel.SetActiveItem(octaneItem);
                     }
                     MyWorkItemsSublist itemSublist;
-                    if(sublistsMap.TryGetValue(Utility.GetConcreteEntityType(entity),out itemSublist))
+
+                    string concreteEntityType = Utility.GetConcreteEntityType(entity);
+                    if(sublistsMap.TryGetValue(concreteEntityType, out itemSublist))
                     {
                         itemSublist.Items.Add(octaneItem);
                     }
@@ -320,7 +331,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     { TestGherkin.SUBTYPE_GHERKIN_TEST, new MyWorkItemsSublist(TestGherkin.SUBTYPE_GHERKIN_TEST) },
                     { RunSuite.SUBTYPE_RUN_SUITE, new MyWorkItemsSublist(RunSuite.SUBTYPE_RUN_SUITE) },
                     { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
-                    { "comment", new MyWorkItemsSublist( "comment" )}
+                    { EntityType.BDDScenario, new MyWorkItemsSublist( EntityType.BDDScenario )},
+                    { EntityType.Comment, new MyWorkItemsSublist( EntityType.Comment )}
                 };
         }
 

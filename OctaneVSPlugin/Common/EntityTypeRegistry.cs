@@ -68,8 +68,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { Task.TYPE_TASK, new EntityTypeInformation(
                 Task.TYPE_TASK, "Task",  Task.TYPE_TASK, "T", Color.FromRgb(22, 104, 193)) },
 
-            { "comment", new EntityTypeInformation(
-                "comment", "Comment", EntityTypeInformation.CommitMessageNotApplicable, "C", Color.FromRgb(253, 225, 89)) }
+            { EntityType.Comment, new EntityTypeInformation(
+                EntityType.Comment, "Comment", EntityTypeInformation.CommitMessageNotApplicable, "C", Color.FromRgb(253, 225, 89)) }, 
+
+            { EntityType.BDDScenario, new EntityTypeInformation(
+                EntityType.BDDScenario, "BDD Scenario", EntityTypeInformation.CommitMessageNotApplicable, "BSC", Color.FromRgb(117, 218, 77)) },
+
+            //BDD Specification cannot yet be added to My Work, but this is for the comments on a BDD Specification
+            { EntityType.BDDSpec, new EntityTypeInformation(
+                EntityType.BDDSpec, "BDD Specification", EntityTypeInformation.CommitMessageNotApplicable, "BSP", Color.FromRgb(17, 140, 79)) }
         };
 
         private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;

@@ -41,11 +41,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private OctaneServices _octaneService;
         private List<BaseEntity> _referenceFieldContent;
-        private List<BaseEntityWrapper> _referenceFieldContentName = new List<BaseEntityWrapper>();
         private Dispatcher uiDispatcher;
         private string _fieldEntity;
         private string logicalName;
-        private string _filter = string.Empty;
 
         public event EventHandler ChangeHandler;
         private void OnValueChanged(EventArgs e)
@@ -63,14 +61,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         public FieldViewModel(BaseEntity entity, string fieldName, string fieldValue, bool isSelected) : base(entity)
         {
-
             _parentEntity = entity;
             Name = fieldName;
             Label = fieldValue;
             IsSelected = isSelected;
             uiDispatcher = Dispatcher.CurrentDispatcher;
             MakeValueNull = new DelegatedCommand(SetMakeValueNull);
-
         }
 
         public FieldViewModel(BaseEntity entity, FieldMetadata metadata, bool isSelected) : this(entity, metadata.Name, metadata.Label, isSelected)
@@ -118,123 +114,103 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             return myList;
         }
 
-        public List<BaseEntityWrapper> ReferenceFieldContent
+        public async Task<List<BaseEntityWrapper>> getRelatedEntities(string filterString)
         {
-            get
+            List<BaseEntityWrapper> results = new List<BaseEntityWrapper>();
+            if (Metadata.FieldType.Equals("boolean"))
             {
-                if (_referenceFieldContentName.Count() == 0)
+                BaseEntity falseBaseEntity = new BaseEntity();
+                falseBaseEntity.Name = "False";
+
+
+                BaseEntity trueBaseEntity = new BaseEntity();
+                trueBaseEntity.Name = "True";
+
+                results.Add(new BaseEntityWrapper(falseBaseEntity));
+                results.Add(new BaseEntityWrapper(trueBaseEntity));
+            }
+            else
+            {
+                try
                 {
+                    _octaneService = OctaneServices.GetInstance();
+                    await _octaneService.Connect();
 
-                    if (Metadata.FieldType.Equals("boolean"))
+                    EntityListResult<BaseEntity> entities;
+
+                    List<QueryPhrase> filterQuery = new List<QueryPhrase> { new LogicalQueryPhrase("name", "*" + filterString + "*") };
+
+                    if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
                     {
-                        BaseEntity falseBaseEntity = new BaseEntity();
-                        falseBaseEntity.Name = "False";
-
-
-                        BaseEntity trueBaseEntity = new BaseEntity();
-                        trueBaseEntity.Name = "True";
-
-                        _referenceFieldContentName.Add(new BaseEntityWrapper(falseBaseEntity));
-                        _referenceFieldContentName.Add(new BaseEntityWrapper(trueBaseEntity));
+                        entities = await _octaneService.GetAsyncEntitesReferenceListNodes(_fieldEntity, logicalName);                        
                     }
                     else
                     {
-                        _octaneService = OctaneServices.GetInstance();
-
-                        System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
+                        if (_fieldEntity.Equals("workspace_users"))
                         {
-                            try
+                            filterQuery.Add(new LogicalQueryPhrase("activity_level", 0));
+                            entities = await _octaneService.GetAsyncEntitesReferenceFields(_fieldEntity, filterQuery, null, null);
+                        }
+                        else
+                        {
+                            if (_fieldEntity.Equals("sprints") || _fieldEntity.Equals("milestones"))
                             {
-                                await _octaneService.Connect();
-                                EntityListResult<BaseEntity> entities;
-                                if (_fieldEntity.Contains("list_node") && !string.IsNullOrEmpty(logicalName))
+                                string sortingFields = _fieldEntity.Equals("sprints") ? "-release,start_date,name" : "-release,date,name";
+                                string parentsReleaseId = _parentEntity.GetValue("release") != null ? parentsReleaseId = ((BaseEntity)_parentEntity.GetValue("release")).Id.ToString() : "-1";
+                                
+                                filterQuery.Add(new CrossQueryPhrase("release", new LogicalQueryPhrase("id", parentsReleaseId)));
+
+                                entities = await _octaneService.GetAsyncEntitesReferenceFields(_fieldEntity, filterQuery, null, sortingFields);
+                            }
+                            else
+                            {
+                                entities = await _octaneService.GetAsyncEntitesReferenceFields(_fieldEntity, filterQuery, null, null);
+                            }
+                        }
+                    }
+
+                    _referenceFieldContent = entities.data;
+
+                    if (_referenceFieldContent != null)
+                    {
+                        foreach (BaseEntity be in _referenceFieldContent)
+                        {
+                            BaseEntityWrapper bew = new BaseEntityWrapper(be);
+                            results.Add(bew);
+
+                            var selectedEntities = _parentEntity.GetValue(Name);
+
+                            if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
+                            {
+                                EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>)selectedEntities;
+
+                                foreach (BaseEntity sbe in selectedEntitiesList.data)
                                 {
-                                    entities = _octaneService.GetEntitesReferenceListNodes(_fieldEntity, logicalName);
-                                }
-                                else
-                                {
-                                    if (_fieldEntity.Equals("workspace_users"))
+                                    if (bew.Equals(new BaseEntityWrapper(sbe)))
                                     {
-                                        List<QueryPhrase> activeUsersQuery = new List<QueryPhrase> { new LogicalQueryPhrase("activity_level", 0) };
-                                        entities = _octaneService.GetEntitesReferenceFields(_fieldEntity, activeUsersQuery, null);
-                                    }
-                                    else
-                                    {
-                                        entities = _octaneService.GetEntitesReferenceFields(_fieldEntity);
-                                    }
-
-                                }
-
-
-                                if (_fieldEntity.Equals("sprints"))
-                                {
-                                    _referenceFieldContent = getSprintFields(entities.data);
-                                }
-                                else
-                                {
-                                    _referenceFieldContent = entities.data;
-                                }
-
-
-                                if (_referenceFieldContent != null)
-                                {
-                                    foreach (BaseEntity be in _referenceFieldContent)
-                                    {
-                                        BaseEntityWrapper bew = new BaseEntityWrapper(be);
-                                        _referenceFieldContentName.Add(bew);
-
-                                        var selectedEntities = _parentEntity.GetValue(Name);
-
-                                        if (selectedEntities != null && selectedEntities is EntityList<BaseEntity>)
-                                        {
-                                            EntityList<BaseEntity> selectedEntitiesList = (EntityList<BaseEntity>)selectedEntities;
-
-                                            foreach (BaseEntity sbe in selectedEntitiesList.data)
-                                            {
-                                                if (bew.Equals(new BaseEntityWrapper(sbe)))
-                                                {
-                                                    bew.IsSelected = true;
-                                                }
-                                            }
-                                        }
+                                        bew.IsSelected = true;
                                     }
                                 }
                             }
-                            catch (Exception)
-                            {
-                            }
-
-                        });
-                        taskRetrieveData.Start();
+                        }
                     }
                 }
-                if (_filter.Equals(""))
+                catch (Exception e)
                 {
-                    return _referenceFieldContentName;
-                }
-                else
-                {
-                    return _referenceFieldContentName.Where(f => f.BaseEntity.Name.ToLowerInvariant().Contains(_filter)).ToList();
+                    return null;
                 }
             }
-        }
 
-        private List<BaseEntity> getListNodes(List<BaseEntity> data, string logicalName)
-        {
-            List<BaseEntity> referenceFieldContent = new List<BaseEntity>();
-
-            foreach (BaseEntity be in data)
+            // List nodes are not server side filterable, so we have to do it client side
+            if (_fieldEntity != null && _fieldEntity.Contains("list_node") && !filterString.Equals(""))
             {
-                string currentItemsLogicalName = be.GetStringValue("logical_name");
-                if (!string.IsNullOrEmpty(currentItemsLogicalName) && currentItemsLogicalName.Contains(logicalName))
-                {
-                    referenceFieldContent.Add(be);
-                }
+                return results.Where(e => e.BaseEntity.Name.ToLowerInvariant().Contains(filterString)).ToList();
             }
-            return referenceFieldContent;
+
+            return results;
         }
 
-        private List<BaseEntity> getSprintFields(List<BaseEntity> data)
+        private List<BaseEntity> getFieldsBasedOnCurrentRelease(List<BaseEntity> data)
         {
             List<BaseEntity> referenceFieldContent = new List<BaseEntity>();
             BaseEntity parentsRelease = (BaseEntity)_parentEntity.GetValue("release");
@@ -336,7 +312,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     case "integer":
                         try
                         {
-                            _parentEntity.SetIntValue(Name, int.Parse(value.ToString()));
+                            _tempDecimalStrValue = null;
+                            String strValue = value.ToString();
+                            if (int.TryParse(strValue, out int intValue))
+                            {
+                                _parentEntity.SetValue(Name, intValue);
+                            }
+                            else if (isIntermediaryIntegerValue(strValue))
+                            {
+                                _tempDecimalStrValue = strValue;
+                            }
+                            else
+                            {
+                                _parentEntity.SetValue(Name, _prevContent);
+                            }
                             IsChanged = true;
                         }
                         catch (Exception ex)
@@ -356,13 +345,20 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                         {
                             _parentEntity.SetValue(Name, null);
                         }
+                        else if (decimal.TryParse(srtValue, out decimal decimalValue))
+                        {
+                            if (srtValue.EndsWith("."))
+                            {
+                                _parentEntity.SetValue(Name, decimalValue + ".0");
+                            } 
+                            else
+                            {
+                                _parentEntity.SetValue(Name, decimalValue);
+                            }
+                        }
                         else if (isIntermediaryDecimalValue(srtValue))
                         {
                             _tempDecimalStrValue = srtValue;
-                        }
-                        else if (decimal.TryParse(srtValue, out decimal decimalValue))
-                        {
-                            _parentEntity.SetValue(Name, decimalValue);
                         }
                         else
                         {
@@ -404,6 +400,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 OnValueChanged(EventArgs.Empty);
                 NotifyPropertyChanged("Content");
             }
+        }
+
+        private static bool isIntermediaryIntegerValue(String value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            var match = Regex.Match(value, "^[-+]?\\d*$");
+            if (match.Success && match.Value.Length == value.Length)
+            {
+                return true;
+            }
+
+            if (value.Trim().Equals("-"))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         private static bool isIntermediaryDecimalValue(String value)
@@ -449,6 +466,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
         private void SetMakeValueNull(object param)
         {
+            // This is used to clear the reference field items ( 'x' button on the right side of the EntityComboBox )
             if (Metadata.FieldType.Equals("reference"))
             {
                 if (!IsMultiple)
@@ -463,12 +481,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     //clear the selected fields also
                     GetSelectedEntities().data.Clear();
                     Content = entities;
-                    //make sure to deselect the items in the reference list
-                    foreach (BaseEntityWrapper bew in _referenceFieldContentName)
-                    {
-                        bew.IsSelected = false;
-                    }
-                    NotifyPropertyChanged("ReferenceFieldContent");
                 }
             }
         }
@@ -484,20 +496,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             string[] entityNames = value.data.Select(x => x.Name).ToArray();
             return string.Join(",", entityNames);
-        }
-
-
-        /// <summary>
-        /// Search filter applied on the entity fields
-        /// </summary>
-        public string Filter
-        {
-            get { return _filter; }
-            set
-            {
-                _filter = value?.ToLowerInvariant() ?? string.Empty;
-                NotifyPropertyChanged("ReferenceFieldContent");
-            }
         }
     }
 

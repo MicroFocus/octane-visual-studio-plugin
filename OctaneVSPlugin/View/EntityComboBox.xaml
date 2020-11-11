@@ -77,11 +77,12 @@
                Height="150"
                Placement="Bottom"
                PlacementTarget="{Binding ElementName=EditorLabelName}"
-               StaysOpen="False">
+               StaysOpen="False"
+               AllowsTransparency="True">
 
             <Border BorderThickness="1"
-                    Background="Transparent"
-                    BorderBrush="Silver">
+                        Background="Transparent"
+                        BorderBrush="Silver">
                 <Grid Background="{DynamicResource VsBrush.Window}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -90,30 +91,30 @@
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0"
-                          Name="SearchBox">
+                            Name="SearchBox">
                         <TextBox x:Name="SearchFieldsTextBox"
-                                 VerticalAlignment="Center"
-                                 HorizontalAlignment="Stretch"
-                                 Background="{DynamicResource VsBrush.Window}"
-                                 Foreground="{DynamicResource VsBrush.WindowText}"
-                                 Text="{Binding Filter, UpdateSourceTrigger=PropertyChanged}"
-                                 view:FocusBehavior.IsFocus="True"
-                                 Height="20"
-                                 Margin="3 3 3 0" />
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Stretch"
+                                    Background="{DynamicResource VsBrush.Window}"
+                                    Foreground="{DynamicResource VsBrush.WindowText}"
+                                    Text="{Binding Filter, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}, UpdateSourceTrigger=PropertyChanged}"
+                                    view:FocusBehavior.IsFocus="True"
+                                    Height="20"
+                                    Margin="3 3 3 0" />
                         <TextBlock IsHitTestVisible="False"
-                                   Text="Search"
-                                   VerticalAlignment="Center"
-                                   HorizontalAlignment="Left"
-                                   Margin="9 0 0 0"
-                                   Background="{DynamicResource VsBrush.Window}"
-                                   Foreground="DarkGray">
+                                    Text="Search"
+                                    VerticalAlignment="Center"
+                                    HorizontalAlignment="Left"
+                                    Margin="9 0 0 0"
+                                    Background="{DynamicResource VsBrush.Window}"
+                                    Foreground="DarkGray">
                             <TextBlock.Style>
                                 <Style TargetType="{x:Type TextBlock}">
                                     <Setter Property="Visibility"
                                             Value="Collapsed" />
                                     <Style.Triggers>
                                         <DataTrigger Binding="{Binding Text, ElementName=SearchFieldsTextBox}"
-                                                     Value="">
+                                                        Value="">
                                             <Setter Property="Visibility"
                                                     Value="Visible" />
                                         </DataTrigger>
@@ -123,59 +124,101 @@
                         </TextBlock>
                     </Grid>
 
-                    <ListView Grid.Row="1"
-                              Name="listView"
-                              ItemsSource="{Binding ReferenceFieldContent}"
-                              HorizontalAlignment="Stretch"
-                              VerticalAlignment="Stretch"
-                              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                              ScrollViewer.VerticalScrollBarVisibility="Auto"
-                              Background="{DynamicResource VsBrush.Window}"
-                              Foreground="{DynamicResource VsBrush.WindowText}"
-                              Margin="3 3 3 3">
-                        <ListView.ItemContainerStyle>
-                            <Style TargetType="{x:Type ListViewItem}">
+                    <DockPanel x:Name="LoadingItemPanel"
+                                    Background="Transparent"
+                                    Grid.Row="1">
+                        <DockPanel.Style>
+                            <Style TargetType="DockPanel">
+                                <Setter Property="Visibility" Value="Collapsed" />
                                 <Style.Triggers>
-                                    <Trigger Property="IsMouseOver"
-                                             Value="True">
-                                        <Setter Property="Background"
-                                                Value="DodgerBlue" />
-                                    </Trigger>
+                                    <DataTrigger Binding="{Binding Path=ComboBoxMode, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}}" Value="Loading">
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </DataTrigger>
                                 </Style.Triggers>
-                                <EventSetter Event="PreviewMouseLeftButtonUp"
-                                             Handler="SelectionHandler" />
                             </Style>
-                        </ListView.ItemContainerStyle>
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal"
+                        </DockPanel.Style>
+
+                        <Border BorderThickness="1"
+                                    Background="Transparent"
+                                    BorderBrush="Silver">
+                            <Grid Background="{DynamicResource VsBrush.Window}">
+                                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+                            </Grid>
+                        </Border>
+                    </DockPanel>
+
+                    <DockPanel x:Name="LoadedItemPanel"
+                                    Grid.Row="1">
+                        <DockPanel.Style>
+                            <Style TargetType="DockPanel">
+                                <Setter Property="Visibility"
+                                Value="Collapsed" />
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding Path=ComboBoxMode, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}}" Value="Loaded">
+                                        <Setter Property="Visibility"
+                                        Value="Visible" />
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </DockPanel.Style>
+
+
+                        <ListView
+                                Name="listView"
+                                HorizontalAlignment="Stretch"
+                                VerticalAlignment="Stretch"
+                                ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                Background="{DynamicResource VsBrush.Window}"
+                                Foreground="{DynamicResource VsBrush.WindowText}"
+                                Margin="3 3 3 3">
+                            <ListView.ItemContainerStyle>
+                                <Style TargetType="{x:Type ListViewItem}">
+                                    <Style.Triggers>
+                                        <Trigger Property="IsMouseOver"
+                                                Value="True">
+                                            <Setter Property="Background"
+                                                Value="DodgerBlue" />
+                                        </Trigger>
+                                    </Style.Triggers>
+                                    <EventSetter Event="PreviewMouseLeftButtonUp"
+                                                Handler="SelectionHandler" />
+                                </Style>
+                            </ListView.ItemContainerStyle>
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal"
                                             Margin="0 2 0 2">
-                                    <CheckBox IsChecked="{Binding IsSelected}"
-                                              Margin="2 0 2 0"
-                                              Visibility="{Binding Path=MultiSelectVisibility, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}}"
-                                              VerticalAlignment="Center">
-                                    </CheckBox>
-                                    <TextBlock Text="{Binding BaseEntity.Name}"
-                                               VerticalAlignment="Center"
-                                               TextTrimming="CharacterEllipsis">
-                                        <TextBlock.Style>
-                                            <Style TargetType="{x:Type TextBlock}">
-                                                <Style.Triggers>
-                                                    <Trigger Property="view:TextBlockService.IsTextTrimmed"
-                                                             Value="True">
-                                                        <Setter Property="ToolTip"
+                                        <CheckBox IsChecked="{Binding IsSelected}"
+                                                Margin="2 0 2 0"
+                                                Visibility="{Binding Path=MultiSelectVisibility, RelativeSource={RelativeSource AncestorType=local:EntityComboBox}}"
+                                                VerticalAlignment="Center">
+                                        </CheckBox>
+                                        <TextBlock Text="{Binding BaseEntity.Name}"
+                                                VerticalAlignment="Center"
+                                                TextTrimming="CharacterEllipsis">
+                                            <TextBlock.Style>
+                                                <Style TargetType="{x:Type TextBlock}">
+                                                    <Style.Triggers>
+                                                        <Trigger Property="view:TextBlockService.IsTextTrimmed"
+                                                                Value="True">
+                                                            <Setter Property="ToolTip"
                                                                 Value="{Binding BaseEntity.Name}" />
-                                                    </Trigger>
-                                                </Style.Triggers>
-                                            </Style>
-                                        </TextBlock.Style>
-                                    </TextBlock>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+                                                        </Trigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </DockPanel>
+
                 </Grid>
             </Border>
+
+
         </Popup>
     </Grid>
 </UserControl>

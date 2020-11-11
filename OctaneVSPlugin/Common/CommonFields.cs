@@ -45,5 +45,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         public const string CreationTime = "creation_time";
         public const string HasAttachments = "has_attachments";
         public const string NewTasks = "new_tasks";
+        public const string BDDSpec = "bdd_spec";
     }
 }

@@ -182,6 +182,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             return idPhrase;
         }
 
+        /// <summary>
+        /// Get the WorkItemRoot entity
+        /// </summary>
+        public async Task<WorkItemRoot> GetAsyncWorkItemRoot()
+        {
+            var fields = new List<string> { BaseEntity.NAME_FIELD };
+            var result = await es.GetAsync<WorkItemRoot>(workspaceContext, null, fields);
+            return result.data[0];
+        }
+
+
         public async Task<IList<BaseEntity>> GetMyItems()
         {
             var owner = await GetWorkspaceUser();
@@ -248,6 +259,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Comment.OWNER_TEST_FIELD,
             Comment.OWNER_RUN_FIELD,
             Comment.OWNER_REQUIREMENT_FIELD,
+            Comment.OWNER_BDD_SPEC_FIELD,
             Comment.CREATION_TIME_FIELD,
             Comment.TEXT_FIELD
         };
@@ -323,6 +335,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             es.DeleteById<UserItem>(workspaceContext, entity.Id);
         }
 
+        ///<summary>
+        ///Removes a comment from my work
+        /// </summary>
+        public async Task RemoveCommentFromMyWork(BaseEntity entity)
+        {
+            RestConnector.AwaitContinueOnCapturedContext = false;
+            string putUrl = workspaceContext.GetPath() + "/comments/" + entity.Id + "/dismiss";
+            putUrl = putUrl.Replace("api", "internal-api");
+            ResponseWrapper response = await rest.ExecutePutAsync(putUrl, null, null).ConfigureAwait(RestConnector.AwaitContinueOnCapturedContext);
+        }
 
         /// <summary>
         /// Retrieves a list of all the comments attached to the given entity
@@ -430,11 +452,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         /// <summary>
-        /// Returns all reference fields values for a given entity tpye
+        /// Returns all reference fields values for a given entity type (async)
+        /// </summary>
+        public async Task<EntityListResult<BaseEntity>> GetAsyncEntitesReferenceFields(string entityType, IList<QueryPhrase> queryPhrases, List<string> fields, string orderBy)
+        {
+            return await es.GetAsyncReferenceFields(workspaceContext, entityType, queryPhrases, fields, orderBy, 200);
+        }
+
+        /// <summary>
+        /// Returns all reference fields values for a given entity type
         /// </summary>
         public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType)
         {
             return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, 100).Result;
+        }
+
+        /// <summary>
+        /// Returns all reference fields values for a given entity type, ordered by a custom parameter
+        /// </summary>
+        public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType, string orderBy)
+        {
+            return es.GetAsyncReferenceFields(workspaceContext, entityType, null, null, orderBy, 100).Result;
         }
 
         /// <summary>
@@ -443,6 +481,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType, IList<QueryPhrase> queryPhrases, List<string> fields)
         {
             return es.GetAsyncReferenceFields(workspaceContext, entityType, queryPhrases, fields, 100).Result;
+        }
+
+        /// <summary>
+        /// Returns all reference fields list node values for a given entity tpye
+        /// </summary>
+        public async Task<EntityListResult<BaseEntity>> GetAsyncEntitesReferenceListNodes(string entityType, string listName)
+        {
+            return await es.GetAsyncReferenceFields(workspaceContext, entityType, BuildListNodeCriteria(listName), null, 500);
         }
 
         /// <summary>

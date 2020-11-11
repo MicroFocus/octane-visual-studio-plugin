@@ -145,67 +145,10 @@
 
         </DockPanel>
 
-        <DockPanel x:Name="NoItemsPanel">
-            <DockPanel.Style>
-                <Style TargetType="DockPanel">
-                    <Setter Property="Visibility" Value="Collapsed" />
-                    <Style.Triggers>
-                        <MultiDataTrigger>
-                            <MultiDataTrigger.Conditions>
-                                <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
-                                <Condition Binding="{Binding TotalItems}" Value="0" />
-                            </MultiDataTrigger.Conditions>
-                            <MultiDataTrigger.Setters>
-                                <Setter Property="Visibility" Value="Visible" />
-                            </MultiDataTrigger.Setters>
-                        </MultiDataTrigger>
-                    </Style.Triggers>
-                </Style>
-            </DockPanel.Style>
-
-            <StackPanel DockPanel.Dock="Top" HorizontalAlignment="Left">
-                <Button Width="25" Height="25"
-                        BorderThickness="0"
-                        Background="{DynamicResource VsBrush.Window}"
-                        Command="{Binding RefreshCommand}"
-                        ToolTip="Refresh view">
-                    <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
-                               FontWeight="Bold" FontSize="24"
-                               Foreground="LightSkyBlue"
-                               HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                </Button>
-            </StackPanel>
-            
-            
-            
-            <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                <Grid.RowDefinitions>
-                    <RowDefinition />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <Viewbox Grid.Row="0" MaxHeight="200">
-                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/s-rocket.png" />
-                    </StackPanel>
-
-                </Viewbox>
-
-                <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
-                        You're Awesome! You finished all your work!
-                        <LineBreak />
-                        You may want to talk with your team leader... or have some fun!
-                </TextBlock>
-            </Grid>
-        </DockPanel>
 
         
 
         <DockPanel>
-            <DockPanel.Resources>
-                <common:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
-            </DockPanel.Resources>
             <DockPanel.Style>
                 <Style TargetType="DockPanel">
                     <Setter Property="Visibility" Value="Collapsed" />
@@ -213,7 +156,6 @@
                         <MultiDataTrigger>
                             <MultiDataTrigger.Conditions>
                                 <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
-                                <Condition Binding="{Binding TotalItems, Converter={StaticResource GreaterThanZeroConverter}}" Value="True" />
                             </MultiDataTrigger.Conditions>
                             <MultiDataTrigger.Setters>
                                 <Setter Property="Visibility" Value="Visible" />
@@ -222,20 +164,22 @@
                     </Style.Triggers>
                 </Style>
             </DockPanel.Style>
-           
-            <Grid DockPanel.Dock="Top"  Margin="5 5 5 5">
+
+            <Grid DockPanel.Dock="Top"  Margin="15 5 5 5">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="65*"/>
-                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <!--<Create the list of filtering items>-->
-                <ListBox ItemsSource="{Binding MyWorkSublists}"
+                <ListBox Grid.Column="0"
+                         ItemsSource="{Binding MyWorkSublists}"
                          Name="FilterListBoxName"
                          Background="Transparent"
                          BorderThickness="0">
-                    
+
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <VirtualizingStackPanel IsItemsHost="True"
@@ -244,7 +188,7 @@
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Grid Width="70"
+                            <Grid Width="75"
                                   Height="40"
                                   Margin="0 0 10 0">
                                 <CheckBox VerticalAlignment="Center"
@@ -255,10 +199,11 @@
                                 <view:EntityIcon MaxHeight="30"
                                                  MaxWidth="30"
                                                  FontSize="12"
+                                                 Margin="0 0 5 0"
                                                  IconColor="{Binding TypeInformation.Color}"
                                                  Text="{Binding TypeInformation.ShortLabel}"/>
                                 <TextBlock DockPanel.Dock="Left"
-                                           MaxWidth="15"
+                                           MaxWidth="40"
                                            Text="{Binding Items.Count, FallbackValue=0}"
                                            Foreground="{DynamicResource VsBrush.WindowText}"
                                            FontWeight="Bold"
@@ -283,15 +228,10 @@
                     </ListBox.ItemContainerStyle>
                 </ListBox>
 
-                <Grid Grid.Column="0"
-                      HorizontalAlignment="Right"
-                      Margin="1 0 5 0">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition />
-                        <ColumnDefinition Width="Auto" />
-                    </Grid.ColumnDefinitions>
-                    <Grid>
-                        <ComboBox x:Name="SearchHistoryComboBox"
+                <Grid Grid.Column="1"
+                      Margin="5 0 0 0">
+
+                    <ComboBox x:Name="SearchHistoryComboBox"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Center"
                                   Width="180"
@@ -300,48 +240,99 @@
                                   Background="{DynamicResource VsBrush.Window}"
                                   Foreground="Black"
                                   ItemsSource="{Binding SearchHistory}">
-                            <ComboBox.InputBindings>
-                                <KeyBinding Command="{Binding SearchCommand}"
+
+                        <ComboBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}"
                                             Key="Return" />
-                            </ComboBox.InputBindings>
-                        </ComboBox>
-                        <TextBlock IsHitTestVisible="False"
+                        </ComboBox.InputBindings>
+                    </ComboBox>
+
+                    <ComboBox x:Name="EmptySearchHistoryComboBox"
+                                  HorizontalAlignment="Left"
+                                  VerticalAlignment="Center"
+                                  Width="180"
+                                  IsEditable="True"
+                                  Text="{Binding SearchFilter, UpdateSourceTrigger=PropertyChanged}"
+                                  Background="{DynamicResource VsBrush.Window}"
+                                  Foreground="Black"
+                                  ItemsSource="{Binding EmptySearchHistory}">
+
+                        <ComboBox.Style>
+                            <Style TargetType="ComboBox">
+                                <Setter Property="Visibility" Value="Hidden" />
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding SearchHistory.Count}" Value="0" />
+                                        </MultiDataTrigger.Conditions>
+                                        <MultiDataTrigger.Setters>
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </MultiDataTrigger.Setters>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ComboBox.Style>
+
+                        <ComboBox.ItemContainerStyle>
+                            <Style TargetType="ComboBoxItem">
+                                <Setter
+                                    Property="IsEnabled"
+                                    Value="False" />
+                            </Style>
+                        </ComboBox.ItemContainerStyle>
+
+                        <ComboBox.InputBindings>
+                            <KeyBinding Command="{Binding SearchCommand}"
+                                            Key="Return" />
+                        </ComboBox.InputBindings>
+                    </ComboBox>
+
+                    <TextBlock IsHitTestVisible="False"
                                    Text="Search backlog items"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    Margin="7 0 0 0"
                                    Foreground="Black">
-                            <TextBlock.Style>
-                                <Style TargetType="{x:Type TextBlock}">
-                                    <Setter Property="Visibility"
+                        <TextBlock.Style>
+                            <Style TargetType="{x:Type TextBlock}">
+                                <Setter Property="Visibility"
                                             Value="Collapsed" />
-                                    <Style.Triggers>
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
                                                            Value="" />
-                                                <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
                                                            Value="False" />
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter Property="Visibility"
+                                            <Condition Binding="{Binding Text, ElementName=EmptySearchHistoryComboBox}"
+                                                           Value="" />
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=EmptySearchHistoryComboBox}"
+                                                           Value="False" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility"
                                                     Value="Visible" />
-                                        </MultiDataTrigger>
-                                        <MultiDataTrigger>
-                                            <MultiDataTrigger.Conditions>
-                                                <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
+                                    </MultiDataTrigger>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding Text, ElementName=SearchHistoryComboBox}"
                                                            Value="{x:Null}" />
-                                                <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=SearchHistoryComboBox}"
                                                            Value="False" />
-                                            </MultiDataTrigger.Conditions>
-                                            <Setter Property="Visibility"
+                                            <Condition Binding="{Binding Text, ElementName=EmptySearchHistoryComboBox}"
+                                                           Value="{x:Null}" />
+                                            <Condition Binding="{Binding IsKeyboardFocusWithin, ElementName=EmptySearchHistoryComboBox}"
+                                                           Value="False" />
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility"
                                                     Value="Visible" />
-                                        </MultiDataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </TextBlock.Style>
-                        </TextBlock>
-                    </Grid>
-                    <Button Grid.Column="1"
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </TextBlock.Style>
+                    </TextBlock>
+                </Grid>
+
+                <Button Grid.Column="2"
                             x:Name="SearchButton"
                             ToolTip="Search"
                             Command="{Binding SearchCommand}"
@@ -352,47 +343,108 @@
                             Width="25"
                             Height="25"
                             Margin="5 0 0 0">
-                        <Image Source="/octane-visual-studio-plugin;component/Resources/search.png" />
-                    </Button>
-                </Grid>
-                <Button Grid.Column="1" Width="25" Height="25"  HorizontalAlignment="Right"
+                    <Image Source="/octane-visual-studio-plugin;component/Resources/search.png" />
+                </Button>
+
+                <Button Grid.Column="3" 
+                        Width="25" 
+                        Height="25"  
                         BorderThickness="0"
                         Background="{DynamicResource VsBrush.Window}"
                         Command="{Binding RefreshCommand}"
                         ToolTip="Refresh view">
                     <!--This text-block show the reload sign as unicode character-->
-                    <TextBlock Text="&#x50;" FontFamily="Wingdings 3"
+                    <TextBlock Text="&#x71;" FontFamily="Webdings"
                                FontWeight="Bold" FontSize="24"
                                Foreground="LightSkyBlue"
                                HorizontalAlignment="Center" VerticalAlignment="Center"/>
                 </Button>
-                <Separator Grid.ColumnSpan="2" Margin="0 50 0 0" />
+                <Separator Grid.ColumnSpan="4" Margin="0 50 0 0" />
             </Grid>
-           
-            <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
-                    Background="{DynamicResource VsBrush.Window}"
-                    Foreground="{DynamicResource VsBrush.WindowText}"
-                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     BorderThickness="0">
-                <ListBox.ContextMenu>
-                    <ContextMenu Name="ListMenu" Opened="ListMenu_Opened" />
-                </ListBox.ContextMenu>
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <local:MyItemControl />
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
 
-                <!--
-                    Set the horizontal content alignment to stretch so the item will have the full width of the list box.
-                    This allows the MyItemControl to align the top and bottom fields to the right.
-                -->
-                <ListBox.ItemContainerStyle>
-                    <Style TargetType="ListBoxItem">
-                        <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                    </Style>
-                </ListBox.ItemContainerStyle>
-            </ListBox>
+            <Grid>
+                <Grid HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Grid.RowDefinitions>
+                        <RowDefinition />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.Style>
+                        <Style TargetType="Grid">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
+                                        <Condition Binding="{Binding TotalItems}" Value="0" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Grid.Style>
+
+                    <Viewbox Grid.Row="0" MaxHeight="200">
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/octane-visual-studio-plugin;component/Resources/s-rocket.png" />
+                        </StackPanel>
+                    </Viewbox>
+
+                    <TextBlock Grid.Row="1" FontSize="20" TextAlignment="Center">
+                            You're Awesome! You finished all your work!
+                            <LineBreak />
+                            You may want to talk with your team leader... or have some fun!
+                    </TextBlock>
+                </Grid>
+
+                <ListBox x:Name="results" ItemsSource="{Binding MyItems}" MouseDoubleClick="results_MouseDoubleClick"
+                        Background="{DynamicResource VsBrush.Window}"
+                        Foreground="{DynamicResource VsBrush.WindowText}"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        BorderThickness="0" >
+
+                    <ListBox.Resources>
+                        <common:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter" />
+                    </ListBox.Resources>
+                    <ListBox.Style>
+                        <Style TargetType="ListBox">
+                            <Setter Property="Visibility" Value="Collapsed" />
+                            <Style.Triggers>
+                                <MultiDataTrigger>
+                                    <MultiDataTrigger.Conditions>
+                                        <Condition Binding="{Binding Mode}" Value="ItemsLoaded" />
+                                        <Condition Binding="{Binding TotalItems, Converter={StaticResource GreaterThanZeroConverter}}" Value="True" />
+                                    </MultiDataTrigger.Conditions>
+                                    <MultiDataTrigger.Setters>
+                                        <Setter Property="Visibility" Value="Visible" />
+                                    </MultiDataTrigger.Setters>
+                                </MultiDataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ListBox.Style>
+
+                    <ListBox.ContextMenu>
+                        <ContextMenu Name="ListMenu" Opened="ListMenu_Opened" />
+                    </ListBox.ContextMenu>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <local:MyItemControl />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+
+                    <!--
+                        Set the horizontal content alignment to stretch so the item will have the full width of the list box.
+                        This allows the MyItemControl to align the top and bottom fields to the right.
+                    -->
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                </ListBox>
+            </Grid>
         </DockPanel>
 
     </Grid>

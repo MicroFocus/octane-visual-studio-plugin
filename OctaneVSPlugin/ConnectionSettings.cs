@@ -117,9 +117,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				else if (ssologin)
 				{
 					authenticationStrategy = new SsoAuthenticationStrategy();
-				}
-
+				}	
+				
 				await authenticationStrategy.TestConnection(url);
+
+				// reset and thus require a new octane service obj
+				Run(async () => { return await OctaneServices.Reset(); }).Wait();
+
+				// create a new service object
+				OctaneServices.Create(OctaneConfiguration.Url,
+						  OctaneConfiguration.SharedSpaceId,
+						  OctaneConfiguration.WorkSpaceId);
+
+				await OctaneServices.GetInstance().Connect();
+
+				// try to get the work item root
+				await OctaneServices.GetInstance().GetAsyncWorkItemRoot();			
+
 				return ConnectionSuccessful;
 			}
 			catch (Exception ex)

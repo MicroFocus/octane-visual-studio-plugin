@@ -96,9 +96,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             ToolWindowHelper.HandleDoubleClickOnItem(GetSelectedEntity(), CopyCommitMessage);
         }
 
-        private void DownloadGherkinScript(object sender)
+        private void DownloadScript(object sender)
         {
-            ToolWindowHelper.DownloadGherkinScript(SelectedItem);
+            ToolWindowHelper.DownloadScript(SelectedItem);
         }
 
         private void StartWork(object sender)
@@ -126,20 +126,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             OctaneItemViewModel.ClearActiveItem();
 
             MainWindowCommand.Instance.UpdateActiveItemInToolbar();  
+        }   
+
+        private BaseEntity ToRemoveEntity()
+        {
+            return SelectedItem?.Entity;
         }
 
         private void RemoveFromMyWork(object sender)
         {
             if (SelectedItem?.Entity == null)
                 return;
-            ToolWindowHelper.RemoveFromMyWork(GetSelectedEntity());   
+            ToolWindowHelper.RemoveFromMyWork(ToRemoveEntity());   
         }
 
         private void ListMenu_Opened(object sender, RoutedEventArgs e)
         {
             ToolWindowHelper.ConstructContextMenu(sender as ContextMenu, SelectedItem,
                 ViewDetails, ViewTaskParentDetails, ViewCommentParentDetails,
-                OpenInBrowser, CopyCommitMessage, DownloadGherkinScript,
+                OpenInBrowser, CopyCommitMessage, DownloadScript,
                 StartWork, StopWork, null, RemoveFromMyWork);
         }
 
@@ -150,7 +155,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             {
                 selectedEntity = commentViewModel.ParentEntity;
             }
-
             return selectedEntity;
         }
 

@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using static System.Threading.Tasks.Task;
 
@@ -46,8 +47,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         private readonly Action<object> _openInBrowserDelegate = x => _value = OpenInBrowserValue;
         private const int CopyCommitMessageValue = 5;
         private readonly Action<object> _copyCommitMessageDelegate = x => _value = CopyCommitMessageValue;
-        private const int DownloadGherkinScriptValue = 6;
-        private readonly Action<object> _downloadGherkinScriptDelegate = x => _value = DownloadGherkinScriptValue;
+        private const int DownloadScriptValue = 6;
+        private readonly Action<object> _downloadScriptDelegate = x => _value = DownloadScriptValue;
         private const int StartWorkValue = 7;
         private readonly Action<object> _startWorkDelegate = x => _value = StartWorkValue;
         private const int StopWorkValue = 8;
@@ -225,9 +226,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         public void ToolWindowHelperTests_ConstructContextMenu_ManualRun_Success()
         {
             var manualTest = TestManualUtilities.CreateManualTest();
+            var manualRun = RunManualUtilities.CreateManualRun(manualTest);
+            Thread.Sleep(1500);
             try
             {
-                ValidateContextMenuItems(RunManualUtilities.CreateManualRun(manualTest),
+                ValidateContextMenuItems(manualRun,
                     new List<MenuItemEnum>
                     {
                         MenuItemEnum.ViewDetails,
@@ -244,9 +247,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         public void ToolWindowHelperTests_ConstructContextMenu_SuiteRun_Success()
         {
             var testSuite = TestSuiteUtilities.CreateTestSuite();
+            var suiteRun = RunSuiteUtilities.CreateSuiteRun(testSuite);
+            Thread.Sleep(1500);
             try
             {
-                ValidateContextMenuItems(RunSuiteUtilities.CreateSuiteRun(testSuite),
+                ValidateContextMenuItems(suiteRun,
                     new List<MenuItemEnum>
                     {
                         MenuItemEnum.ViewDetails,
@@ -318,7 +323,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                     _viewCommentParentDetailsDelegate,
                     _openInBrowserDelegate,
                     _copyCommitMessageDelegate,
-                    _downloadGherkinScriptDelegate,
+                    _downloadScriptDelegate,
                     _startWorkDelegate,
                     _stopWorkDelegate,
                     null,
@@ -351,7 +356,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                             ValidateMenuItem(items, index, ToolWindowHelper.CopyCommitMessageHeader, CopyCommitMessageValue);
                             break;
                         case MenuItemEnum.DownloadScript:
-                            ValidateMenuItem(items, index, ToolWindowHelper.DownloadGherkinScriptHeader, DownloadGherkinScriptValue);
+                            ValidateMenuItem(items, index, ToolWindowHelper.DownloadScriptHeader, DownloadScriptValue);
                             break;
                         case MenuItemEnum.StartWork:
                             ValidateMenuItem(items, index, ToolWindowHelper.StartWorkHeader, StartWorkValue);

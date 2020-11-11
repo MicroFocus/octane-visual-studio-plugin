@@ -18,6 +18,7 @@ using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
@@ -36,7 +37,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 		internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
 		internal const string OpenInBrowserHeader = "Open in Browser (Alt + DblClick)";
 		internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)";
-		internal const string DownloadGherkinScriptHeader = "Download Script";
+		internal const string DownloadScriptHeader = "Download Script";
 		internal const string StartWorkHeader = "Start Work";
 		internal const string StopWorkHeader = "Stop Work";
 		internal const string AddToMyWorkHeader = "Add to \"My Work\"";
@@ -132,8 +133,17 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 			try
 			{
-				await MyWorkUtils.RemoveFromMyWork(entity);
-				MessageBox.Show("Dismissed: " + entity.GetStringValue("name"), ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				if (entity.TypeName.Equals("comment"))
+                {
+					OctaneServices octaneService = OctaneServices.GetInstance();
+					await octaneService.RemoveCommentFromMyWork(entity);
+					MessageBox.Show("Dismissed: " + entity.TypeName + " #" + entity.Id, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				}
+				else
+				{
+					await MyWorkUtils.RemoveFromMyWork(entity);
+					MessageBox.Show("Dismissed: " + entity.GetStringValue("name"), ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Information);
+				}
 				await OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
 			}
 			catch (Exception ex)
@@ -223,9 +233,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 
 		/// <summary>
-		/// Download the gherkin script for the selected item if possible
+		/// Download the script for the selected item if possible
 		/// </summary>
-		internal static async void DownloadGherkinScript(BaseItemViewModel selectedItem)
+		internal static async void DownloadScript(BaseItemViewModel selectedItem)
 		{
 			try
 			{
@@ -239,12 +249,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				OctaneServices octaneService;
 				octaneService = OctaneServices.GetInstance();
 
+				string testName;
+
+				if (test.SubType == TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST)
+				{
+					var bddScenario = await octaneService.FindEntityAsync(test, new List<string>() { CommonFields.BDDSpec });
+					string bddSpecName = Utility.GetPropertyOfChildEntity(bddScenario, CommonFields.BDDSpec, "name").ToString();
+					string bddSpecId = Utility.GetPropertyOfChildEntity(bddScenario, CommonFields.BDDSpec, "id").ToString();
+					testName = bddSpecName + "_" + bddSpecId;
+				}
+				else
+				{
+					testName = test.Name;
+				}
+
 				var testScript = await octaneService.GetTestScript(test.Id);
-				MainWindow.PluginPackage.CreateFile(test.Name, testScript.Script);
+				MainWindow.PluginPackage.CreateFile(testName, testScript.Script);
 			}
 			catch (Exception ex)
 			{
-				MessageBox.Show("Unable to obtain gherkin script.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
+				MessageBox.Show("Unable to obtain script.\n\n" + "Failed with message: " + ex.Message, ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
 			}
 		}
 
@@ -257,7 +281,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 			Action<object> viewCommentParentDetailsDelegate,
 			Action<object> openInBrowserDelegate,
 			Action<object> copyCommitMessageDelegate,
-			Action<object> downloadGherkinScriptDelegate,
+			Action<object> downloadScriptDelegate,
 			Action<object> startWorkDelegate,
 			Action<object> stopWorkDelegate,
 			Action<object> addToMyWorkDelegate,
@@ -343,13 +367,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
 
                 // download gherkin script
-                if (downloadGherkinScriptDelegate != null
-					&& entityType == TestGherkin.SUBTYPE_GHERKIN_TEST)
+                if (downloadScriptDelegate != null
+					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == EntityType.BDDScenario))
 				{
 					cm.Items.Add(new MenuItem
 					{
-						Header = DownloadGherkinScriptHeader,
-						Command = new DelegatedCommand(downloadGherkinScriptDelegate)
+						Header = DownloadScriptHeader,
+						Command = new DelegatedCommand(downloadScriptDelegate)
 					});
 				}
 
@@ -388,7 +412,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				
 				// add to my work
 				if (addToMyWorkDelegate != null
-					&& DetailsToolWindow.IsEntityTypeSupported(entityType))
+					&& (DetailsToolWindow.IsEntityTypeSupported(entityType)
+					|| entityType == EntityType.BDDScenario))
 				{
 					cm.Items.Add(new MenuItem
 					{
@@ -398,7 +423,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				}
 
 				// remove from my work
-				if (removeFromMyWorkDelegate != null && entityType != "comment")
+				if (removeFromMyWorkDelegate != null)
 				{
 					cm.Items.Add(new MenuItem
 					{
