@@ -22,6 +22,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows.Controls;
 using static System.Threading.Tasks.Task;
 
@@ -225,9 +226,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         public void ToolWindowHelperTests_ConstructContextMenu_ManualRun_Success()
         {
             var manualTest = TestManualUtilities.CreateManualTest();
+            var manualRun = RunManualUtilities.CreateManualRun(manualTest);
+            Thread.Sleep(1500);
             try
             {
-                ValidateContextMenuItems(RunManualUtilities.CreateManualRun(manualTest),
+                ValidateContextMenuItems(manualRun,
                     new List<MenuItemEnum>
                     {
                         MenuItemEnum.ViewDetails,
@@ -244,9 +247,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         public void ToolWindowHelperTests_ConstructContextMenu_SuiteRun_Success()
         {
             var testSuite = TestSuiteUtilities.CreateTestSuite();
+            var suiteRun = RunSuiteUtilities.CreateSuiteRun(testSuite);
+            Thread.Sleep(1500);
             try
             {
-                ValidateContextMenuItems(RunSuiteUtilities.CreateSuiteRun(testSuite),
+                ValidateContextMenuItems(suiteRun,
                     new List<MenuItemEnum>
                     {
                         MenuItemEnum.ViewDetails,

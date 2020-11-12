@@ -455,6 +455,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         }
 
         /// <summary>
+        /// Returns all reference fields values for a given entity type (async)
+        /// </summary>
+        public async Task<EntityListResult<BaseEntity>> GetAsyncEntitesReferenceFields(string entityType, IList<QueryPhrase> queryPhrases, List<string> fields, string orderBy)
+        {
+            return await es.GetAsyncReferenceFields(workspaceContext, entityType, queryPhrases, fields, orderBy, 200);
+        }
+
+        /// <summary>
         /// Returns all reference fields values for a given entity type
         /// </summary>
         public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType)
@@ -476,6 +484,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         public EntityListResult<BaseEntity> GetEntitesReferenceFields(string entityType, IList<QueryPhrase> queryPhrases, List<string> fields)
         {
             return es.GetAsyncReferenceFields(workspaceContext, entityType, queryPhrases, fields, 100).Result;
+        }
+
+        /// <summary>
+        /// Returns all reference fields list node values for a given entity tpye
+        /// </summary>
+        public async Task<EntityListResult<BaseEntity>> GetAsyncEntitesReferenceListNodes(string entityType, string listName)
+        {
+            return await es.GetAsyncReferenceFields(workspaceContext, entityType, BuildListNodeCriteria(listName), null, 500);
         }
 
         /// <summary>

@@ -15,6 +15,7 @@
 */
 
 
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -22,13 +23,16 @@ using System.Windows.Input;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using System.ComponentModel;
+using System.Timers;
+using System;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.View
 {
     /// <summary>
     /// Interaction logic for EntityComboBox.xaml
     /// </summary>
-    public partial class EntityComboBox : UserControl
+    public partial class EntityComboBox : UserControl, INotifyPropertyChanged
     {
         public Visibility HasSearchBox
         {
@@ -43,12 +47,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             set { _MultiSelectVisibility = value; }
         }
 
+        public WindowMode ComboBoxMode { get; set; }
+        private string _filter = string.Empty;
+        Timer delayTimer;
+
         public EntityComboBox()
         {
             InitializeComponent();
+            InitializeTimer();
         }
 
         public ObservableCollection<BaseEntity> SelectedValues;
+
+        private void InitializeTimer()
+        {
+            delayTimer = new Timer();
+            delayTimer.Elapsed += new ElapsedEventHandler(delayTimer_Tick);
+            delayTimer.Interval = 500;
+        }
 
         private void SelectionHandler(object sender, MouseButtonEventArgs e)
         {
@@ -97,13 +113,79 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 }
                 listView.Items.Refresh();
             }
-            
+
         }
-        
+
+        /// <summary>
+        /// Search filter applied on the entity fields
+        /// </summary>
+        public string Filter
+        {
+            get { return _filter; }
+            set
+            {
+                delayTimer.Stop();
+                _filter = value?.ToLowerInvariant() ?? string.Empty;
+                delayTimer.Start();
+            }
+        }
+
+        private void delayTimer_Tick(object sender, ElapsedEventArgs e)
+        {
+            delayTimer.Stop();
+            this.Dispatcher.Invoke(() => { LoadItems(); });
+        }
+
+        /// <summary>
+        /// Load the list of the popup
+        /// </summary>
+        private void LoadItems()
+        {
+            ComboBoxMode = WindowMode.Loading;
+            NotifyPropertyChanged("ComboBoxMode");
+
+            var possibleItems = ((FieldViewModel)EditorLabelName.DataContext).getRelatedEntities(_filter);
+            System.Threading.Tasks.Task taskRetrieveData = new System.Threading.Tasks.Task(async () =>
+            {
+                List<BaseEntityWrapper> results = await possibleItems;
+                this.Dispatcher.Invoke(() =>
+                {
+                    listView.Items.Clear();
+                    if (results != null)
+                    {
+                        results.ForEach(item => listView.Items.Add(item));
+                    }
+                    listView.Items.Refresh();
+
+                    ComboBoxMode = WindowMode.Loaded;
+                    NotifyPropertyChanged("ComboBoxMode");
+                });
+            });
+            taskRetrieveData.Start();
+        }
+
+        /// <summary>
+        /// Current status of the detailed view
+        /// </summary>
         private void ShowPopup(object sender, RoutedEventArgs e)
         {
-            listView.Items.Refresh();
+            LoadItems();
+            
             ComboBoxPopup.IsOpen = true;
         }
+
+        #region INotifyPropertyChanged
+
+        public event PropertyChangedEventHandler PropertyChanged = delegate { };
+
+        private void NotifyPropertyChanged(string propName = "")
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+
+        #endregion
     }
 }
