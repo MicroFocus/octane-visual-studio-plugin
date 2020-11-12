@@ -50,7 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 		{
 
 			page.SetInfoLabelText("");
-			SaveSettingsToStorage();
+			//SaveSettingsToStorage();
 
             // show welcome view if user clears the URL
             if("".Equals(OctaneConfiguration.Url))
@@ -213,6 +213,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			}
 		}
 
+		private static string _encryptedPassword = null;
+
 		[PasswordPropertyText(true)]
 		public string Password
 		{
@@ -260,8 +262,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 		{
 			// Before saving the settings we encrypt the password using Windows Data Protection API.
 			// Then we save the settings and then we decrypt the password to allow the extension to use it.
-			EncryptPassword();
+			if (!Equals(Password, _encryptedPassword))
+			{
+				EncryptPassword();
+				_encryptedPassword = Password;
+			}
 			base.SaveSettingsToStorage();
+
 			DecryptPassword();
 		}
 
