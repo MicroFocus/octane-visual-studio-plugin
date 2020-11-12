@@ -109,7 +109,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             if(instance != null)
             {
-                result = await instance.rest.DisconnectAsync();
+                if (instance.rest.IsConnected())
+                {
+                    result = await instance.rest.DisconnectAsync();
+                }
                 instance = null;
             }
 
