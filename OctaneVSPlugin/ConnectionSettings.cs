@@ -50,7 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 		{
 
 			page.SetInfoLabelText("");
-			//SaveSettingsToStorage();
+			SaveSettingsToStorage();
 
             // show welcome view if user clears the URL
             if("".Equals(OctaneConfiguration.Url))
