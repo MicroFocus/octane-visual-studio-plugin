@@ -19,6 +19,7 @@ using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using System;
 using System.Windows;
+using System.Windows.Threading;
 
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
@@ -36,7 +37,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 		{
             // Something keeps settings this back to IE9, force reset it to latest every time the window opens
             EmbeddedBrowserUtil.SetBrowserEmulationVersionToLatestIE();
-            Application.Current.Dispatcher.Invoke(new Action(() =>
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
 			{
                 browserDialog = new BrowserDialog();
                 browserDialog.Show(url);
@@ -46,7 +47,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public void UpdateTimeout(int timeout)
         {
-            Application.Current.Dispatcher.Invoke(new Action(() =>
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
             {
                 browserDialog.UpdateTimeoutMessage(timeout);
             }));
@@ -54,7 +55,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
 		public void CloseBrowser()
 		{
-			Application.Current.Dispatcher.Invoke(new Action(() =>
+			Application.Current.Dispatcher.BeginInvoke(new Action(() =>
 			{
 				browserDialog.Close();
 			}));
@@ -62,7 +63,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         public bool IsOpen()
         {
-            return browserDialog.IsOpen;
+            if (browserDialog == null)
+            {
+                return true;
+            }
+            else
+            {
+                return browserDialog.IsOpen;
+            }
         }
 	}
 }

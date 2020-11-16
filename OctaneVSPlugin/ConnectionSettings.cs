@@ -19,7 +19,9 @@ using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using MicroFocus.Adm.Octane.VisualStudio.ViewModel;
+using Microsoft.VisualStudio;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using System;
 using System.ComponentModel;
 using System.Runtime.InteropServices;
@@ -60,7 +62,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
 
 			var result = Run(async () => { return await TestConnection(); }).Result;
-
 			if (!result.Equals(ConnectionSuccessful))
 			{
 				e.ApplyBehavior = ApplyKind.CancelNoNavigate;
@@ -85,16 +86,32 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				// whether we can connect with the new Octane credentials
 				MainWindowCommand.Instance.DisableActiveItemToolbar();
 
+				openToolWindow();
+
 				// After settings are applied we notify the main ViewModel to allow it to refresh.
 				if (OctaneMyItemsViewModel.Instance != null)
 				{
-                    InitialisePluginComponents();
+					InitialisePluginComponents();
 				}
-
+				
 			}
 
 			page.SetInfoLabelText(result);
 			base.OnApply(e);
+		}
+
+		private void openToolWindow()
+        {
+			IVsUIShell vsUIShell = (IVsUIShell)Package.GetGlobalService(typeof(SVsUIShell));
+			Guid guid = typeof(MainWindow).GUID;
+			IVsWindowFrame windowFrame;
+			int result = vsUIShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fFindFirst, ref guid, out windowFrame);   // Find MyToolWindow
+
+			if (result != VSConstants.S_OK)
+				result = vsUIShell.FindToolWindow((uint)__VSFINDTOOLWIN.FTW_fForceCreate, ref guid, out windowFrame); // Crate MyToolWindow if not found
+
+			if (result == VSConstants.S_OK)                                                                           // Show MyToolWindow
+				ErrorHandler.ThrowOnFailure(windowFrame.Show());
 		}
 
         public async void InitialisePluginComponents()
@@ -121,18 +138,22 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				
 				await authenticationStrategy.TestConnection(url);
 
-				// reset and thus require a new octane service obj
-				Run(async () => { return await OctaneServices.Reset(); }).Wait();
+				// Don't do advanced test connection with sso login, will cause deadlock
+				if (credentialLogin)
+				{
+					// reset and thus require a new octane service obj
+					Run(async () => { return await OctaneServices.Reset(); }).Wait();
 
-				// create a new service object
-				OctaneServices.Create(OctaneConfiguration.Url,
-						  OctaneConfiguration.SharedSpaceId,
-						  OctaneConfiguration.WorkSpaceId);
+					// create a new service object
+					OctaneServices.Create(OctaneConfiguration.Url,
+							  OctaneConfiguration.SharedSpaceId,
+							  OctaneConfiguration.WorkSpaceId);
 
-				await OctaneServices.GetInstance().Connect();
+					await OctaneServices.GetInstance().Connect();
 
-				// try to get the work item root
-				await OctaneServices.GetInstance().GetAsyncWorkItemRoot();			
+					// try to get the work item root
+					await OctaneServices.GetInstance().GetAsyncWorkItemRoot();
+				}
 
 				return ConnectionSuccessful;
 			}
