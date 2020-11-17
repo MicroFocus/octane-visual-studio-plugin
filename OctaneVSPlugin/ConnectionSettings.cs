@@ -57,7 +57,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             // show welcome view if user clears the URL
             if("".Equals(OctaneConfiguration.Url))
             {
-                OctaneMyItemsViewModel.Instance.Mode = MainWindowMode.FirstTime;
+				if (OctaneMyItemsViewModel.Instance != null)
+				{
+					OctaneMyItemsViewModel.Instance.Mode = MainWindowMode.FirstTime;
+				}
                 return;
             }
 
