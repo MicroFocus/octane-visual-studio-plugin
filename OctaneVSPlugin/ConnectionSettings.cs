@@ -134,7 +134,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				else if (ssologin)
 				{
 					authenticationStrategy = new SsoAuthenticationStrategy();
-				}	
+				}
 				
 				await authenticationStrategy.TestConnection(url);
 
@@ -143,6 +143,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				{
 					// reset and thus require a new octane service obj
 					Run(async () => { return await OctaneServices.Reset(); }).Wait();
+
+					// hotfix for first time installing the plugin and clicking test connection
+					if(OctaneConfiguration.CredentialLogin == false)
+                    {
+						OctaneConfiguration.CredentialLogin = true;
+					}
 
 					// create a new service object
 					OctaneServices.Create(OctaneConfiguration.Url,
@@ -246,7 +252,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				OctaneConfiguration.Password = password;
 			}
 		}
-		public bool CredentialLogin
+
+		public Boolean CredentialLogin
 		{
 			get
 			{
@@ -258,7 +265,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				OctaneConfiguration.CredentialLogin = credentialLogin;
 			}
 		}
-		public bool SsoLogin
+		public Boolean SsoLogin
 		{
 			get
 			{
