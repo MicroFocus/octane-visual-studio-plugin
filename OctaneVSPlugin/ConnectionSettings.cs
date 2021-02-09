@@ -76,7 +76,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			}
 			else
 			{
-				// save last succesful connection 
 				setOldCredentials();
 
 				// reset and thus require a new octane service obj
@@ -124,7 +123,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				}
 				else
 				{
-					//get rid of the tested connection (that was not applied)
 					Run(async () => { return await OctaneServices.Reset(); }).Wait();
 
 					OctaneConfiguration.Username = oldUserPassConnectionInfo.user;
@@ -133,7 +131,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 					wsid = oldWsid;
 					OctaneServices.Create(oldUrl, oldSsid, oldWsid);
 
-					//connect to the old one 
 					Run(async () => { await OctaneServices.GetInstance().Connect(); }).Wait();
 
 					page.SetInfoLabelText("");

@@ -88,7 +88,6 @@ namespace octane_visual_studio_plugin
             var optionsPage = (ConnectionSettings)GetDialogPage(typeof(ConnectionSettings));
             optionsPage.LoadSettingsFromStorage();
 
-            // Make sure that after restart/upgrade, we'll have old credentials setted
             optionsPage.setOldCredentials();
         }
 
