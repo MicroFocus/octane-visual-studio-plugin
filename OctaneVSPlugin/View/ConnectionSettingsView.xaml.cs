@@ -72,6 +72,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
         }
 
+        public string GetInfoLabelText()
+        {
+            return InfoLabel.Text;
+        }
+
         public void SetInfoLabelText(string text)
         {
             InfoLabel.Text = text;

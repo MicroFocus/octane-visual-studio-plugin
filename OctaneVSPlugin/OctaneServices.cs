@@ -509,6 +509,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             return await es.GetOctaneVersion();
         }
+
+        public SharedSpaceContext GetSharedSpaceContext()
+        {
+            return sharedSpaceContext;
+        }
+
+        public WorkspaceContext GetWorkspaceContext()
+        {
+            return workspaceContext;
+        }
     }
 
 }
