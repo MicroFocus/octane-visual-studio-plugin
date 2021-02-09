@@ -48,14 +48,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 		private bool ssologin = false;
 		private ConnectionSettingsView page;
 
+		private UserPassConnectionInfo oldUserPassConnectionInfo;
+		private long oldSsid = 1001;
+		private long oldWsid = 1002;
+		private string oldUrl = "";
+
+
 		protected override void OnApply(PageApplyEventArgs e)
 		{
 
 			page.SetInfoLabelText("");
-			SaveSettingsToStorage();
 
-            // show welcome view if user clears the URL
-            if("".Equals(OctaneConfiguration.Url))
+			// show welcome view if user clears the URL
+			if ("".Equals(OctaneConfiguration.Url))
             {
 				if (OctaneMyItemsViewModel.Instance != null)
 				{
@@ -69,9 +74,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			{
 				e.ApplyBehavior = ApplyKind.CancelNoNavigate;
 			}
-
 			else
 			{
+				setOldCredentials();
+
 				// reset and thus require a new octane service obj
 				Run(async () => { return await OctaneServices.Reset(); }).Wait();
 
@@ -96,14 +102,44 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				{
 					InitialisePluginComponents();
 				}
-				
+
+				base.OnApply(e);
 			}
 
 			page.SetInfoLabelText(result);
-			base.OnApply(e);
 		}
 
-		private void openToolWindow()
+        protected override void OnClosed(EventArgs e)
+        {
+			
+			if (credentialLogin)
+            {
+				if ("".Equals(OctaneConfiguration.Url))
+				{
+					if (OctaneMyItemsViewModel.Instance != null)
+					{
+						OctaneMyItemsViewModel.Instance.Mode = MainWindowMode.FirstTime;
+					}
+				}
+				else
+				{
+					Run(async () => { return await OctaneServices.Reset(); }).Wait();
+
+					OctaneConfiguration.Username = oldUserPassConnectionInfo.user;
+					OctaneConfiguration.Password = oldUserPassConnectionInfo.password;
+					ssid = oldSsid;
+					wsid = oldWsid;
+					OctaneServices.Create(oldUrl, oldSsid, oldWsid);
+
+					Run(async () => { await OctaneServices.GetInstance().Connect(); }).Wait();
+
+					page.SetInfoLabelText("");
+					base.OnClosed(e);
+				}
+			}
+		}
+
+        private void openToolWindow()
         {
 			IVsUIShell vsUIShell = (IVsUIShell)Package.GetGlobalService(typeof(SVsUIShell));
 			Guid guid = typeof(MainWindow).GUID;
@@ -141,27 +177,27 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 				
 				await authenticationStrategy.TestConnection(url);
 
-				// Don't do advanced test connection with sso login, will cause deadlock
-				if (credentialLogin)
-				{
-					// reset and thus require a new octane service obj
-					Run(async () => { return await OctaneServices.Reset(); }).Wait();
+                // Don't do advanced test connection with sso login, will cause deadlock
+                if (credentialLogin)
+                {
+                    // reset and thus require a new octane service obj
+                    Run(async () => { return await OctaneServices.Reset(); }).Wait();
 
-					// hotfix for first time installing the plugin and clicking test connection
-					if(OctaneConfiguration.CredentialLogin == false)
+                    // hotfix for first time installing the plugin and clicking test connection
+                    if (OctaneConfiguration.CredentialLogin == false)
                     {
-						OctaneConfiguration.CredentialLogin = true;
-					}
+                        OctaneConfiguration.CredentialLogin = true;
+                    }
 
-					// create a new service object
-					OctaneServices.Create(OctaneConfiguration.Url,
-							  OctaneConfiguration.SharedSpaceId,
-							  OctaneConfiguration.WorkSpaceId);
+                    // create a new service object
+                    OctaneServices.Create(OctaneConfiguration.Url,
+                              OctaneConfiguration.SharedSpaceId,
+                              OctaneConfiguration.WorkSpaceId);
 
-					await OctaneServices.GetInstance().Connect();
+                    await OctaneServices.GetInstance().Connect();
 
-					// try to get the work item root
-					await OctaneServices.GetInstance().GetAsyncWorkItemRoot();
+                    // try to get the work item root
+                    await OctaneServices.GetInstance().GetAsyncWorkItemRoot();
 				}
 
 				return ConnectionSuccessful;
@@ -333,6 +369,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			}
 		}
 
-       
+		public void setOldCredentials()
+        {
+			oldUserPassConnectionInfo = new UserPassConnectionInfo(OctaneConfiguration.Username, OctaneConfiguration.Password);
+			oldSsid = OctaneConfiguration.SharedSpaceId;
+			oldWsid = OctaneConfiguration.WorkSpaceId;
+			oldUrl = OctaneConfiguration.Url;
+		}
 	}
 }
