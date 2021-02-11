@@ -139,6 +139,16 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 baseUrl = builder.Uri.ToString();
 
+                string siteUrlLocalPath = siteUrl.LocalPath;
+                if (siteUrlLocalPath.EndsWith("/ui/")) 
+                {
+                    baseUrl += siteUrlLocalPath.Substring(1, siteUrlLocalPath.Length - 4); // remove the `/ui/` so we don't include it into baseUrl
+                }
+                else
+                {
+                    baseUrl += siteUrlLocalPath.Substring(1, siteUrlLocalPath.Length - 1); // remove the last `/`
+                }
+                
                 // trim the "/" from the end of the url
                 baseUrl = baseUrl.TrimEnd('/');
 

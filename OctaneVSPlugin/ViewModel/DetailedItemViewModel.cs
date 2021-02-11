@@ -238,8 +238,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     var relativeUrl = image.Attr("src");
 
-                    if (relativeUrl == null || !relativeUrl.StartsWith("/api/shared_spaces"))
+                    if (relativeUrl == null || !relativeUrl.Contains("/api/shared_spaces"))
                         continue;
+
+                    relativeUrl = relativeUrl.Substring(relativeUrl.IndexOf("/api/shared_spaces"));
 
                     var imageName = relativeUrl.Split('/').LastOrDefault();
                     if (string.IsNullOrEmpty(imageName))
