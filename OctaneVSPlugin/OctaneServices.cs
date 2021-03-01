@@ -126,6 +126,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 await rest.ConnectAsync(url, authenticationStrategy);
                 user = await authenticationStrategy.GetWorkspaceUser();
             }
+
+            AddBddToCommentFieldsIfSupported();
+        }
+
+        private async void AddBddToCommentFieldsIfSupported()
+        {
+            // add bdd_spec field if the Octane version is greater than 15.1.4 (Coldplay P1)
+            OctaneVersion octaneVersion = await GetOctaneVersion();
+            if (octaneVersion.CompareTo(OctaneVersion.COLDPLAY_P1) > 0)
+            {
+                commentFields.Add(Comment.OWNER_BDD_SPEC_FIELD);
+            }
         }
 
 
@@ -262,7 +274,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Comment.OWNER_TEST_FIELD,
             Comment.OWNER_RUN_FIELD,
             Comment.OWNER_REQUIREMENT_FIELD,
-            Comment.OWNER_BDD_SPEC_FIELD,
             Comment.CREATION_TIME_FIELD,
             Comment.TEXT_FIELD
         };
