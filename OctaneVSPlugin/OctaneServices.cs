@@ -133,11 +133,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private async void AddBddToCommentFieldsIfSupported()
         {
             // add bdd_spec field if the Octane version is greater than 15.1.4 (Coldplay P1)
-            OctaneVersion octaneVersion = await GetOctaneVersion();
-            if (octaneVersion.CompareTo(OctaneVersion.COLDPLAY_P1) > 0)
+            if (rest.IsConnected())
             {
-                commentFields.Add(Comment.OWNER_BDD_SPEC_FIELD);
-            }
+                OctaneVersion octaneVersion = await GetOctaneVersion();
+                if (octaneVersion.CompareTo(OctaneVersion.COLDPLAY_P1) > 0)
+                {
+                    commentFields.Add(Comment.OWNER_BDD_SPEC_FIELD);
+                }
+            } 
         }
 
 
