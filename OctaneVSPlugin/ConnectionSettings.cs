@@ -103,6 +103,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 					InitialisePluginComponents();
 				}
 
+				if (ssologin)
+				{
+					clearUserPassTextBoxes();
+				}
+
 				base.OnApply(e);
 			}
 
@@ -131,9 +136,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 					wsid = oldWsid;
 					OctaneServices.Create(oldUrl, oldSsid, oldWsid);
 
-					Run(async () => { await OctaneServices.GetInstance().Connect(); }).Wait();
-
-					page.SetInfoLabelText("");
+					try
+					{
+						Run(async () => { await OctaneServices.GetInstance().Connect(); }).Wait();
+					}
+					catch
+					{
+						clearUserPassTextBoxes();
+					}
+					finally
+					{
+						page.SetInfoLabelText("");
+					}
+					
 					base.OnClosed(e);
 				}
 			}
@@ -375,6 +390,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 			oldSsid = OctaneConfiguration.SharedSpaceId;
 			oldWsid = OctaneConfiguration.WorkSpaceId;
 			oldUrl = OctaneConfiguration.Url;
+		}
+
+		private void clearUserPassTextBoxes()
+		{ 
+			page.usernameTextBox.Text = "";
+			page.passwordTextBox.Password = "";
 		}
 	}
 }
