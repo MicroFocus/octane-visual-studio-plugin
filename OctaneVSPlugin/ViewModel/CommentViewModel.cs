@@ -88,6 +88,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             if (_commentEntity.OwnerRequirement != null)
                 return _commentEntity.OwnerRequirement;
 
+            if (_commentEntity.OwnerTask != null)
+                return _commentEntity.OwnerTask;
+
             return _commentEntity.OwnerBDDSpec;
         }
 

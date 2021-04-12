@@ -275,6 +275,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Comment.AUTHOR_FIELD,
             Comment.OWNER_WORK_FIELD,
             Comment.OWNER_TEST_FIELD,
+            Comment.OWNER_TASK,
             Comment.OWNER_RUN_FIELD,
             Comment.OWNER_REQUIREMENT_FIELD,
             Comment.CREATION_TIME_FIELD,
@@ -310,6 +311,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private readonly Dictionary<string, string> commentSupport = new Dictionary<string, string>
         {
             { "work_item", "owner_work_item" },
+            { "task", "owner_task" },
             { "test", "owner_test" },
             { "run", "owner_run" },
             { "requirement", "owner_requirement" }
@@ -368,15 +370,23 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// </summary>
         public async Task<List<Comment>> GetAttachedCommentsToEntity(BaseEntity entity)
         {
-            if (string.IsNullOrEmpty(entity.AggregateType))
-                return new List<Comment>();
+            var ownerType = "";
+            if (entity.TypeName.Equals("task"))
+            {
+                ownerType = "owner_task";
+            }
+            else
+            {
+                if (string.IsNullOrEmpty(entity.AggregateType))
+                    return new List<Comment>();
 
-            if (!commentSupport.TryGetValue(entity.AggregateType, out var type))
-                return new List<Comment>();
+                if (!commentSupport.TryGetValue(entity.AggregateType, out ownerType))
+                    return new List<Comment>();
+            }
 
             var query = new List<QueryPhrase>
             {
-                new CrossQueryPhrase(type, new LogicalQueryPhrase("id", entity.Id))
+                new CrossQueryPhrase(ownerType, new LogicalQueryPhrase("id", entity.Id))
             };
             var comments = await es.GetAsync<Comment>(workspaceContext, query, commentFields);
             return comments?.data;
