@@ -87,6 +87,8 @@ namespace octane_visual_studio_plugin
 
             var optionsPage = (ConnectionSettings)GetDialogPage(typeof(ConnectionSettings));
             optionsPage.LoadSettingsFromStorage();
+
+            optionsPage.setOldCredentials();
         }
 
         #endregion

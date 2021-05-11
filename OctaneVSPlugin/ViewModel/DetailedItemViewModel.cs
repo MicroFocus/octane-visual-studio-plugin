@@ -29,6 +29,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Task = System.Threading.Tasks.Task;
+using TaskEntity = MicroFocus.Adm.Octane.Api.Core.Entities.Task;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 {
@@ -238,8 +239,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     var relativeUrl = image.Attr("src");
 
-                    if (relativeUrl == null || !relativeUrl.StartsWith("/api/shared_spaces"))
+                    if (relativeUrl == null || !relativeUrl.Contains("/api/shared_spaces"))
                         continue;
+
+                    relativeUrl = relativeUrl.Substring(relativeUrl.IndexOf("/api/shared_spaces"));
 
                     var imageName = relativeUrl.Split('/').LastOrDefault();
                     if (string.IsNullOrEmpty(imageName))
@@ -505,7 +508,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             RunSuite.SUBTYPE_RUN_SUITE,
 
             // requirement
-            Requirement.SUBTYPE_DOCUMENT
+            Requirement.SUBTYPE_DOCUMENT,
+
+            // task
+            TaskEntity.TYPE_TASK
         };
 
         #region SaveEntity
@@ -659,36 +665,46 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             string encodedCommment = "<html><body>" + CommentText + "</body></html>";
             commentToAdd.Text = encodedCommment;
 
-            string entityAggregateType = Entity.AggregateType;
-
-            switch (entityAggregateType)
+            if (Entity.TypeName == "task") // task does not have aggregate type
+            {              
+                TaskEntity commentOwnerTask = new TaskEntity();
+                commentOwnerTask.Id = Entity.Id;
+                commentOwnerTask.TypeName = Entity.TypeName;
+                commentToAdd.OwnerTask = commentOwnerTask;
+            }
+            else
             {
-                case "work_item":
-                    BaseEntity commentOwnerWorkItem = new BaseEntity();
-                    commentOwnerWorkItem.Id = Entity.Id;
-                    commentOwnerWorkItem.TypeName = Entity.TypeName;
-                    commentToAdd.OwnerWorkItem = commentOwnerWorkItem;
-                    break;
-                case "test":
-                    Test commentOwnerTest = new Test();
-                    commentOwnerTest.Id = Entity.Id;
-                    commentOwnerTest.TypeName = Entity.TypeName;
-                    commentToAdd.OwnerTest = commentOwnerTest;
-                    break;
-                case "requirement":
-                    Requirement commentOwnerRequirement = new Requirement();
-                    commentOwnerRequirement.Id = Entity.Id;
-                    commentOwnerRequirement.TypeName = Entity.TypeName;
-                    commentToAdd.OwnerRequirement = commentOwnerRequirement;
-                    break;
-                case "run":
-                    Run commentOwnerRun = new Run();
-                    commentOwnerRun.Id = Entity.Id;
-                    commentOwnerRun.TypeName = Entity.TypeName;
-                    commentToAdd.OwnerRun = commentOwnerRun;
-                    break;
-                default:
-                    break;
+                string entityAggregateType = Entity.AggregateType;
+
+                switch (entityAggregateType)
+                {
+                    case "work_item":
+                        BaseEntity commentOwnerWorkItem = new BaseEntity();
+                        commentOwnerWorkItem.Id = Entity.Id;
+                        commentOwnerWorkItem.TypeName = Entity.TypeName;
+                        commentToAdd.OwnerWorkItem = commentOwnerWorkItem;
+                        break;
+                    case "test":
+                        Test commentOwnerTest = new Test();
+                        commentOwnerTest.Id = Entity.Id;
+                        commentOwnerTest.TypeName = Entity.TypeName;
+                        commentToAdd.OwnerTest = commentOwnerTest;
+                        break;
+                    case "requirement":
+                        Requirement commentOwnerRequirement = new Requirement();
+                        commentOwnerRequirement.Id = Entity.Id;
+                        commentOwnerRequirement.TypeName = Entity.TypeName;
+                        commentToAdd.OwnerRequirement = commentOwnerRequirement;
+                        break;
+                    case "run":
+                        Run commentOwnerRun = new Run();
+                        commentOwnerRun.Id = Entity.Id;
+                        commentOwnerRun.TypeName = Entity.TypeName;
+                        commentToAdd.OwnerRun = commentOwnerRun;
+                        break;
+                    default:
+                        break;
+                }
             }
             CommentText = "";
 

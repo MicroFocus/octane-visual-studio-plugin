@@ -725,8 +725,9 @@ namespace HTMLConverter
                 return;
             }
 
-            if (src.StartsWith("/api/shared_spaces"))
+            if (src.Contains("/api/shared_spaces"))
             {
+                src = src.Substring(src.IndexOf("/api/shared_spaces"));
                 // something went wrong with downloading the image from octane
                 // so show a hyperlink instead
                 XmlElement xamlElement = xamlParentElement.OwnerDocument.CreateElement(/*prefix:*/null, /*localName:*/HtmlToXamlConverter.Xaml_Hyperlink, _xamlNamespace);
