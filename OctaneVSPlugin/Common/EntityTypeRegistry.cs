@@ -74,9 +74,15 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { EntityType.BDDScenario, new EntityTypeInformation(
                 EntityType.BDDScenario, "BDD Scenario", EntityTypeInformation.CommitMessageNotApplicable, "BSC", Color.FromRgb(117, 218, 77)) },
 
-            //BDD Specification cannot yet be added to My Work, but this is for the comments on a BDD Specification
+            //BDD Specification, Requirement Folder and Automated Run cannot yet be added to My Work, but this is for the comments section
             { EntityType.BDDSpec, new EntityTypeInformation(
-                EntityType.BDDSpec, "BDD Specification", EntityTypeInformation.CommitMessageNotApplicable, "BSP", Color.FromRgb(17, 140, 79)) }
+                EntityType.BDDSpec, "BDD Specification", EntityTypeInformation.CommitMessageNotApplicable, "BSP", Color.FromRgb(17, 140, 79)) },
+
+            { EntityType.RequirementFolder, new EntityTypeInformation(
+                EntityType.RequirementFolder, "Requirement Folder", EntityTypeInformation.CommitMessageNotApplicable, "RF", Color.FromRgb(187, 187, 187)) },
+
+            { EntityType.AutomatedRun, new EntityTypeInformation(
+                EntityType.AutomatedRun, "Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "AR", Color.FromRgb(186, 71, 226)) }
         };
 
         private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;
