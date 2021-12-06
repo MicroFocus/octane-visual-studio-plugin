@@ -331,8 +331,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     { TestGherkin.SUBTYPE_GHERKIN_TEST, new MyWorkItemsSublist(TestGherkin.SUBTYPE_GHERKIN_TEST) },
                     { RunSuite.SUBTYPE_RUN_SUITE, new MyWorkItemsSublist(RunSuite.SUBTYPE_RUN_SUITE) },
                     { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
-                    { EntityType.BDDScenario, new MyWorkItemsSublist( EntityType.BDDScenario )},
-                    { EntityType.Comment, new MyWorkItemsSublist( EntityType.Comment )}
+                    { TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, new MyWorkItemsSublist( TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST )},
+                    { Comment.TYPE_COMMENT, new MyWorkItemsSublist( Comment.TYPE_COMMENT )}
                 };
         }
 

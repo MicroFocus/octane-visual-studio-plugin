@@ -74,7 +74,6 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common\EntityType.cs" />
     <Compile Include="Common\EntityLabelService.cs" />
     <Compile Include="Common\Collector\EntitiesCollector.cs" />
     <Compile Include="Common\Collector\MyWorkEntitiesCollector.cs" />
