@@ -368,7 +368,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 // download gherkin script
                 if (downloadScriptDelegate != null
-					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == EntityType.BDDScenario))
+					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST))
 				{
 					cm.Items.Add(new MenuItem
 					{
@@ -413,7 +413,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 				// add to my work
 				if (addToMyWorkDelegate != null
 					&& (DetailsToolWindow.IsEntityTypeSupported(entityType)
-					|| entityType == EntityType.BDDScenario))
+					|| entityType == TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST))
 				{
 					cm.Items.Add(new MenuItem
 					{
