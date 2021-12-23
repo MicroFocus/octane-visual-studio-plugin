@@ -83,7 +83,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 Requirement.SUBTYPE_FOLDER, "Requirement Folder", EntityTypeInformation.CommitMessageNotApplicable, "RF", Color.FromRgb(187, 187, 187)) },
 
             { RunAutomated.SUBTYPE_RUN_AUTOMATED, new EntityTypeInformation(
-                RunAutomated.SUBTYPE_RUN_AUTOMATED, "Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "AR", Color.FromRgb(186, 71, 226)) }
+                RunAutomated.SUBTYPE_RUN_AUTOMATED, "Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "AR", Color.FromRgb(186, 71, 226)) },
+
+            { GherkinAutomatedRun.SUBTYPE_GHERKIN_AUTOMATED_RUN, new EntityTypeInformation(
+                GherkinAutomatedRun.SUBTYPE_GHERKIN_AUTOMATED_RUN, "Gherkin Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "GAR", Color.FromRgb(186, 71, 226)) }
         };
 
         private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;
