@@ -50,6 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             {"run_manual", "runs" },
             {"run_suite", "runs" },
             {"run_automated", "runs" },
+            {"gherkin_automated_run", "runs" },
 
             {"comment", "comments" },
 

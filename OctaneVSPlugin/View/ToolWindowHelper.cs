@@ -351,23 +351,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
                 var octaneItem = selectedItem as OctaneItemViewModel;
 
-                // copy commit message
-                if (octaneItem != null
-                   && octaneItem.IsSupportCopyCommitMessage
-                   && (entityType == WorkItem.SUBTYPE_STORY
-                        || entityType == WorkItem.SUBTYPE_QUALITY_STORY
-                        || entityType == WorkItem.SUBTYPE_DEFECT
-                        || entityType == Task.TYPE_TASK))
-                {
-                    cm.Items.Add(new MenuItem
-                    {
-                        Header = CopyCommitMessageHeader,
-                        Command = new DelegatedCommand(copyCommitMessageDelegate)
-                    });
-                }
-
-                // download gherkin script
-                if (downloadScriptDelegate != null
+				// download gherkin script
+				if (downloadScriptDelegate != null
 					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST))
 				{
 					cm.Items.Add(new MenuItem
@@ -409,7 +394,21 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 					});
 				}
 
-				
+				// copy commit message
+				if (octaneItem != null
+				   && octaneItem.IsSupportCopyCommitMessage
+				   && (entityType == WorkItem.SUBTYPE_STORY
+						|| entityType == WorkItem.SUBTYPE_QUALITY_STORY
+						|| entityType == WorkItem.SUBTYPE_DEFECT
+						|| entityType == Task.TYPE_TASK))
+				{
+					cm.Items.Add(new MenuItem
+					{
+						Header = CopyCommitMessageHeader,
+						Command = new DelegatedCommand(copyCommitMessageDelegate)
+					});
+				}
+
 				// add to my work
 				if (addToMyWorkDelegate != null
 					&& (DetailsToolWindow.IsEntityTypeSupported(entityType)

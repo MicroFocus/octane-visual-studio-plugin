@@ -75,7 +75,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, new EntityTypeInformation(
                 TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, "BDD Scenario", EntityTypeInformation.CommitMessageNotApplicable, "BSC", Color.FromRgb(117, 218, 77)) },
 
-            //BDD Specification, Requirement Folder and Automated Run cannot yet be added to My Work, but this is for the comments section
+            //BDD Specification, Requirement Folder, Automated Run and Gherkin Automated Run cannot yet be added to My Work, but this is for the comments section
             { BDDSpecification.TYPE_BDDSPEC, new EntityTypeInformation(
                 BDDSpecification.TYPE_BDDSPEC, "BDD Specification", EntityTypeInformation.CommitMessageNotApplicable, "BSP", Color.FromRgb(17, 140, 79)) },
 
@@ -83,7 +83,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 Requirement.SUBTYPE_FOLDER, "Requirement Folder", EntityTypeInformation.CommitMessageNotApplicable, "RF", Color.FromRgb(187, 187, 187)) },
 
             { RunAutomated.SUBTYPE_RUN_AUTOMATED, new EntityTypeInformation(
-                RunAutomated.SUBTYPE_RUN_AUTOMATED, "Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "AR", Color.FromRgb(186, 71, 226)) }
+                RunAutomated.SUBTYPE_RUN_AUTOMATED, "Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "AR", Color.FromRgb(186, 71, 226)) },
+
+            { GherkinAutomatedRun.SUBTYPE_GHERKIN_AUTOMATED_RUN, new EntityTypeInformation(
+                GherkinAutomatedRun.SUBTYPE_GHERKIN_AUTOMATED_RUN, "Gherkin Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "GAR", Color.FromRgb(186, 71, 226)) }
         };
 
         private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;
