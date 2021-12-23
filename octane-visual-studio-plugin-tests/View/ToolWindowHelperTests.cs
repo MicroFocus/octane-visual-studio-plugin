@@ -45,14 +45,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
         private readonly Action<object> _viewCommentParentDetailsDelegate = x => _value = ViewCommentParentDetailsValue;
         private const int OpenInBrowserValue = 4;
         private readonly Action<object> _openInBrowserDelegate = x => _value = OpenInBrowserValue;
-        private const int CopyCommitMessageValue = 5;
-        private readonly Action<object> _copyCommitMessageDelegate = x => _value = CopyCommitMessageValue;
-        private const int DownloadScriptValue = 6;
+        private const int DownloadScriptValue = 5;
         private readonly Action<object> _downloadScriptDelegate = x => _value = DownloadScriptValue;
-        private const int StartWorkValue = 7;
+        private const int StartWorkValue = 6;
         private readonly Action<object> _startWorkDelegate = x => _value = StartWorkValue;
-        private const int StopWorkValue = 8;
+        private const int StopWorkValue = 7;
         private readonly Action<object> _stopWorkDelegate = x => _value = StopWorkValue;
+        private const int CopyCommitMessageValue = 8;
+        private readonly Action<object> _copyCommitMessageDelegate = x => _value = CopyCommitMessageValue;
 
         /// <inheritdoc/>>
         protected override void TestInitializeInternal()
