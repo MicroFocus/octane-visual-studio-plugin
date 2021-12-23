@@ -322,10 +322,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                     _viewTaskParentDetailsDelegate,
                     _viewCommentParentDetailsDelegate,
                     _openInBrowserDelegate,
+                    _copyCommitMessageDelegate,
                     _downloadScriptDelegate,
                     _startWorkDelegate,
                     _stopWorkDelegate,
-                    _copyCommitMessageDelegate,
                     null,
                     null);
 
