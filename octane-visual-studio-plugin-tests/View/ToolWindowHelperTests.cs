@@ -85,8 +85,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage,
-                    MenuItemEnum.StartWork
+                    MenuItemEnum.StartWork,
+                    MenuItemEnum.CopyCommitMessage
                 });
         }
 
@@ -98,8 +98,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage,
-                    MenuItemEnum.StopWork
+                    MenuItemEnum.StopWork,
+                    MenuItemEnum.CopyCommitMessage
                 }, true, true);
         }
 
@@ -115,8 +115,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                         MenuItemEnum.ViewDetails,
                         MenuItemEnum.TaskViewParentDetails,
                         MenuItemEnum.OpenInBrowser,
-                        MenuItemEnum.CopyCommitMessage,
-                        MenuItemEnum.StartWork
+                        MenuItemEnum.StartWork,
+                        MenuItemEnum.CopyCommitMessage
                     });
             }
             finally
@@ -137,8 +137,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                         MenuItemEnum.ViewDetails,
                         MenuItemEnum.TaskViewParentDetails,
                         MenuItemEnum.OpenInBrowser,
-                        MenuItemEnum.CopyCommitMessage,
-                        MenuItemEnum.StopWork
+                        MenuItemEnum.StopWork,
+                        MenuItemEnum.CopyCommitMessage
                     }, true, true);
             }
             finally
@@ -155,8 +155,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage,
-                    MenuItemEnum.StartWork
+                    MenuItemEnum.StartWork,
+                    MenuItemEnum.CopyCommitMessage
                 });
         }
 
@@ -168,8 +168,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage,
-                    MenuItemEnum.StopWork
+                    MenuItemEnum.StopWork,
+                    MenuItemEnum.CopyCommitMessage
                 }, true, true);
         }
 
@@ -181,8 +181,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage,
-                    MenuItemEnum.StartWork
+                    MenuItemEnum.StartWork,
+                    MenuItemEnum.CopyCommitMessage
                 });
         }
 
@@ -194,8 +194,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.View
                 {
                     MenuItemEnum.ViewDetails,
                     MenuItemEnum.OpenInBrowser,
-                    MenuItemEnum.CopyCommitMessage,
-                    MenuItemEnum.StopWork
+                    MenuItemEnum.StopWork,
+                    MenuItemEnum.CopyCommitMessage
                 }, true, true);
         }
 
