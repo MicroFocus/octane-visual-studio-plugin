@@ -349,10 +349,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 					});
 				}
 
-                var octaneItem = selectedItem as OctaneItemViewModel;
+				var octaneItem = selectedItem as OctaneItemViewModel;
 
-                // download gherkin script
-                if (downloadScriptDelegate != null
+				// download gherkin script
+				if (downloadScriptDelegate != null
 					&& (entityType == TestGherkin.SUBTYPE_GHERKIN_TEST || entityType == TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST))
 				{
 					cm.Items.Add(new MenuItem
