@@ -49,6 +49,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             {"run", "runs" },
             {"run_manual", "runs" },
             {"run_suite", "runs" },
+            {"run_automated", "runs" },
+            {"gherkin_automated_run", "runs" },
 
             {"comment", "comments" },
 
@@ -57,6 +59,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             {"requirement", "requirements" },
             {"requirement_document", "requirements" },
+            {"requirement_folder", "requirements" },
 
             {"user_item", "user_items" },
             {"user_tag", "user_tags" },

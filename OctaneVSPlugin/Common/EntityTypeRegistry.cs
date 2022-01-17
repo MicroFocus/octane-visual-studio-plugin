@@ -15,6 +15,7 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.General;
 using System.Collections.Generic;
 using System.Windows.Media;
 
@@ -68,15 +69,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { Task.TYPE_TASK, new EntityTypeInformation(
                 Task.TYPE_TASK, "Task",  Task.TYPE_TASK, "T", Color.FromRgb(22, 104, 193)) },
 
-            { EntityType.Comment, new EntityTypeInformation(
-                EntityType.Comment, "Comment", EntityTypeInformation.CommitMessageNotApplicable, "C", Color.FromRgb(253, 225, 89)) }, 
+            { Comment.TYPE_COMMENT, new EntityTypeInformation(
+                Comment.TYPE_COMMENT, "Comment", EntityTypeInformation.CommitMessageNotApplicable, "C", Color.FromRgb(253, 225, 89)) }, 
 
-            { EntityType.BDDScenario, new EntityTypeInformation(
-                EntityType.BDDScenario, "BDD Scenario", EntityTypeInformation.CommitMessageNotApplicable, "BSC", Color.FromRgb(117, 218, 77)) },
+            { TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, new EntityTypeInformation(
+                TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, "BDD Scenario", EntityTypeInformation.CommitMessageNotApplicable, "BSC", Color.FromRgb(117, 218, 77)) },
 
-            //BDD Specification cannot yet be added to My Work, but this is for the comments on a BDD Specification
-            { EntityType.BDDSpec, new EntityTypeInformation(
-                EntityType.BDDSpec, "BDD Specification", EntityTypeInformation.CommitMessageNotApplicable, "BSP", Color.FromRgb(17, 140, 79)) }
+            //BDD Specification, Requirement Folder and Automated Run cannot yet be added to My Work, but this is for the comments section
+            { BDDSpecification.TYPE_BDDSPEC, new EntityTypeInformation(
+                BDDSpecification.TYPE_BDDSPEC, "BDD Specification", EntityTypeInformation.CommitMessageNotApplicable, "BSP", Color.FromRgb(17, 140, 79)) },
+
+            { Requirement.SUBTYPE_FOLDER, new EntityTypeInformation(
+                Requirement.SUBTYPE_FOLDER, "Requirement Folder", EntityTypeInformation.CommitMessageNotApplicable, "RF", Color.FromRgb(187, 187, 187)) },
+
+            { RunAutomated.SUBTYPE_RUN_AUTOMATED, new EntityTypeInformation(
+                RunAutomated.SUBTYPE_RUN_AUTOMATED, "Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "AR", Color.FromRgb(186, 71, 226)) },
+
+            { GherkinAutomatedRun.SUBTYPE_GHERKIN_AUTOMATED_RUN, new EntityTypeInformation(
+                GherkinAutomatedRun.SUBTYPE_GHERKIN_AUTOMATED_RUN, "Gherkin Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "GAR", Color.FromRgb(186, 71, 226)) }
         };
 
         private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;

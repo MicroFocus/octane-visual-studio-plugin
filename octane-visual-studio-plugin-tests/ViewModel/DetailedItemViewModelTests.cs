@@ -246,7 +246,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Tests.ViewModel
             var viewModel = new DetailedItemViewModel(_story);
             viewModel.InitializeAsync().Wait();
 
-            var expectedFilteredFields = new List<string> { "Blocked reason", "Creation time", "Feature", "Release", "Team" };
+            var expectedFilteredFields = new List<string> { "Blocked reason", "Creation time", "Feature", "Release", "Team", "Team Phase" };
             viewModel.Filter = "ea";
             var actualFilteredFields = viewModel.FilteredEntityFields.Select(f => f.Label).ToList();
             CollectionAssert.AreEqual(expectedFilteredFields, actualFilteredFields,

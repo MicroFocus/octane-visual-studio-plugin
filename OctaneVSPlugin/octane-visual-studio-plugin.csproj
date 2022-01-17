@@ -74,7 +74,6 @@
     <DeployExtension>False</DeployExtension>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Common\EntityType.cs" />
     <Compile Include="Common\EntityLabelService.cs" />
     <Compile Include="Common\Collector\EntitiesCollector.cs" />
     <Compile Include="Common\Collector\MyWorkEntitiesCollector.cs" />
@@ -277,8 +276,8 @@
     <Reference Include="EnvDTE90, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
-    <Reference Include="MicroFocus.Adm.Octane.Api.Core, Version=15.1.60.1, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MicroFocus.Adm.Octane.Api.Core.15.1.60.1\lib\net45\MicroFocus.Adm.Octane.Api.Core.dll</HintPath>
+    <Reference Include="MicroFocus.Adm.Octane.Api.Core, Version=16.0.200.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MicroFocus.Adm.Octane.Api.Core.16.0.200.1\lib\net45\MicroFocus.Adm.Octane.Api.Core.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Build.Framework" />
     <Reference Include="Microsoft.CSharp" />
