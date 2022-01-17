@@ -38,6 +38,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MicroFocus.Adm.Octane.Api.Core, Version=16.0.200.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MicroFocus.Adm.Octane.Api.Core.16.0.200.1\lib\net45\MicroFocus.Adm.Octane.Api.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
     <Reference Include="Microsoft.VisualStudio.Shell.14.0, Version=14.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
@@ -88,10 +91,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\alm-octane-csharp-rest-sdk\OctaneSdk\OctaneSdk.csproj">
-      <Project>{344d2ea6-c3e6-4a67-95c1-51b5e7647e89}</Project>
-      <Name>OctaneSdk</Name>
-    </ProjectReference>
     <ProjectReference Include="..\OctaneVSPlugin\octane-visual-studio-plugin.csproj">
       <Project>{95adad0b-a1ff-4be8-ae43-300204e3e667}</Project>
       <Name>octane-visual-studio-plugin</Name>
