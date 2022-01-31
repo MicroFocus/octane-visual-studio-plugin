@@ -65,7 +65,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                         OpenInBrowser(entity);
                     }
                 }
-                else if (entity.TypeName.Equals(Task.TYPE_TASK) && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+                else if (entity.TypeName.Equals(Task.TYPE_TASK) && (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
                 {
                     ViewDetails(((Task) entity).Story);
                 }
