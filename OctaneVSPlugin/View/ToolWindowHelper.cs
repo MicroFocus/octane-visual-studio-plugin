@@ -1,5 +1,5 @@
 ﻿/*!
-* (c) 2016-2018 EntIT Software LLC, a Micro Focus company
+* © Copyright 2017-2022 Micro Focus or one of its affiliates.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -33,10 +33,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     {
         internal const string AppName = "ALM Octane";
         internal const string ViewDetailsHeader = "View details (DblClick)";
-        internal const string ViewTaskParentDetailsHeader = "View parent details (DblClick)";
+        internal const string ViewTaskParentDetailsHeader = "View parent details (Shift + DblClick)";
         internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
         internal const string OpenInBrowserHeader = "Open in Browser (Alt + DblClick)";
-        internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift+Alt+DblClick)";
+        internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift + Alt + DblClick)";
         internal const string DownloadScriptHeader = "Download Script";
         internal const string StartWorkHeader = "Start Work";
         internal const string StopWorkHeader = "Stop Work";
@@ -64,6 +64,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     {
                         OpenInBrowser(entity);
                     }
+                }
+                else if (entity.TypeName.Equals(Task.TYPE_TASK) && (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift)))
+                {
+                    ViewDetails(((Task) entity).Story);
                 }
                 else
                 {
