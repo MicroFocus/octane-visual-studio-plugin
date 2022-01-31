@@ -33,7 +33,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     {
         internal const string AppName = "ALM Octane";
         internal const string ViewDetailsHeader = "View details (DblClick)";
-        internal const string ViewTaskParentDetailsHeader = "View parent details (Ctrl + DblClick)";
+        internal const string ViewTaskParentDetailsHeader = "View parent details (Shift + DblClick)";
         internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
         internal const string OpenInBrowserHeader = "Open in Browser (Alt + DblClick)";
         internal const string CopyCommitMessageHeader = "Copy Commit Message to Clipboard (Shift + Alt + DblClick)";
