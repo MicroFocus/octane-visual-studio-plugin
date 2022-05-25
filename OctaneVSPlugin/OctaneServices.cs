@@ -136,6 +136,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             if (rest.IsConnected())
             {
                 OctaneVersion octaneVersion = await GetOctaneVersion();
+                Console.Write("bine ai venit rau ai nimerit");
                 if (octaneVersion.CompareTo(OctaneVersion.COLDPLAY_P1) > 0)
                 {
                     commentFields.Add(Comment.OWNER_BDD_SPEC_FIELD);
