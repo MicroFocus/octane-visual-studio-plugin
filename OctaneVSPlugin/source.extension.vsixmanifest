@@ -13,7 +13,19 @@ Compatible with ALM Octane version 12.55.7 and above.</Description>
    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[15.0,17.0)">
       <ProductArchitecture>x86</ProductArchitecture>
    </InstallationTarget>
+   <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[15.0,17.0)">
+      <ProductArchitecture>x86</ProductArchitecture>
+   </InstallationTarget>
+   <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[15.0,17.0)">
+      <ProductArchitecture>x86</ProductArchitecture>
+   </InstallationTarget>
    <InstallationTarget Id="Microsoft.VisualStudio.Pro" Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+   </InstallationTarget>
+   <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[17.0,18.0)">
+      <ProductArchitecture>amd64</ProductArchitecture>
+   </InstallationTarget>
+   <InstallationTarget Id="Microsoft.VisualStudio.Enterprise" Version="[17.0,18.0)">
       <ProductArchitecture>amd64</ProductArchitecture>
    </InstallationTarget>
 </Installation>
