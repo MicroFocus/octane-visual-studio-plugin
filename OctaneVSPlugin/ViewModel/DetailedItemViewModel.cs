@@ -721,14 +721,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public ICommand RefreshCommand { get; }
 
-        private void Refresh(object param)
+        private async void Refresh(object param)
         {
             try
             {
                 Mode = WindowMode.Loading;
                 NotifyPropertyChanged("Mode");
 
-                InitializeAsync();
+                await InitializeAsync();
                 //disable the save button once the entity has been refreshed
                 _saveIsEnabled = false;
             }

@@ -15,6 +15,7 @@
 */
 
 using EnvDTE;
+using EnvDTE80;
 using MicroFocus.Adm.Octane.VisualStudio;
 using MicroFocus.Adm.Octane.VisualStudio.View;
 using Microsoft.VisualStudio.Shell;
@@ -95,7 +96,7 @@ namespace octane_visual_studio_plugin
 
         internal void CreateFile(string fileName, string content)
         {
-            DTE dte = (DTE)GetService(typeof(DTE));
+            DTE2 dte = (DTE2) GetService(typeof(DTE));
             dte.ItemOperations.NewFile("General\\Text File", fileName);
 
             TextSelection textSel = (TextSelection)dte.ActiveDocument.Selection;

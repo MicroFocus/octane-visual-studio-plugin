@@ -46,9 +46,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// <summary>
         /// Initialize the data for the control
         /// </summary>
-        internal void Initialize()
+        internal async void Initialize()
         {
-            _viewModel.LoadMyItemsAsync();
+            await _viewModel.LoadMyItemsAsync();
         }
 
         private OctaneItemViewModel SelectedItem
@@ -79,11 +79,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             ToolWindowHelper.ViewCommentParentDetails(SelectedItem);
         }
 
-        private void CopyCommitMessage(object sender)
+        private async void CopyCommitMessage(object sender)
         {
             try
             {
-                SelectedItem.ValidateCommitMessage();
+                await SelectedItem.ValidateCommitMessage();
             }
             catch (Exception ex)
             {
