@@ -34,7 +34,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
         static FieldsMetadataService()
         {
-            Converter.Add("date_time", value => DateTime.Parse(value.ToString()).ToString("MM/dd/yyyy HH:mm:ss"));
+            Converter.Add("date_time", value => DateTime.Parse(value != null ? value.ToString() : "").ToString("MM/dd/yyyy HH:mm:ss"));
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             var entityType = Utility.GetConcreteEntityType(entity);
             var fieldsMetadata = await octaneService.GetFieldsMetadata(entityType);
             List<FieldMetadata> fields = fieldsMetadata.Where(fm => fm.VisibleInUI).ToList();
-            
+
             return fields;
         }
 

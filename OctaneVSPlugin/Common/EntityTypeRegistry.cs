@@ -89,14 +89,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 GherkinAutomatedRun.SUBTYPE_GHERKIN_AUTOMATED_RUN, "Gherkin Automated Run", EntityTypeInformation.CommitMessageNotApplicable, "GAR", Color.FromRgb(186, 71, 226)) }
         };
 
-        private static Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;
+        private static readonly Dictionary<string, EntityTypeInformation> Registry = DefaultRegistry;
 
         static EntityTypeRegistry()
         {
-            Init();
         }
 
-        public static async System.Threading.Tasks.Task Init()
+        public static async System.Threading.Tasks.Task InitAsync()
         {
             Dictionary<string, EntityLabelMetadata> em = await EntityLabelService.GetEntityLabelMetadataAsync();
             if(em != null && em.Count > 0)

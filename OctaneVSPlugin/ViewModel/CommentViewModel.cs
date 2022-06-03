@@ -59,8 +59,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (parentEntityTypeInformation == null)
                     return string.Empty;
 
+                var displayName = parentEntityTypeInformation.DisplayName != null
+                    ? parentEntityTypeInformation.DisplayName : parentEntityTypeInformation.EntityTypeName;
+
                 var sb = new StringBuilder("Comment on ")
-                    .Append(parentEntityTypeInformation.DisplayName.ToLower())
+                    .Append(displayName.ToLower())
                     .Append(": ")
                     .Append(ParentEntity.Id.ToString())
                     .Append(" ")

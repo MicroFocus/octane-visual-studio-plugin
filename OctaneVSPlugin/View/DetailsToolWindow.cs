@@ -68,7 +68,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// </summary>
         public DetailsToolWindow() : base(null)
         {
-            Caption = "Loading backlog item...";
+            Caption = "Loading entity...";
 
             // This is the user control hosted by the tool window; Note that, even if this class implements IDisposable,
             // we are not calling Dispose on this object. This is because ToolWindowPane calls Dispose on
@@ -101,10 +101,10 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// Load the necessary information for the given entity
         /// </summary>
-        internal void LoadEntity(BaseEntity entity)
+        internal async void LoadEntity(BaseEntity entity)
         {
             var viewModel = new DetailedItemViewModel(entity);
-            viewModel.InitializeAsync();
+            await viewModel.InitializeAsync();
 
             var entityTypeInformation = EntityTypeRegistry.GetEntityTypeInformation(viewModel.Entity);
             Caption = $"{entityTypeInformation?.ShortLabel} {viewModel.ID}";

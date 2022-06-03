@@ -118,12 +118,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public ICommand RefreshCommand { get; }
 
-        private void Refresh(object param)
+        private async void Refresh(object param)
         {
             Mode = WindowMode.Loading;
             NotifyPropertyChanged("Mode");
 
-            SearchAsync();
+            await SearchAsync();
         }
 
         #endregion

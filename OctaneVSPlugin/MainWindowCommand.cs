@@ -118,7 +118,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-        private static void CopyCommitMessageCallback(object caller, EventArgs args)
+        private static async void CopyCommitMessageCallback(object caller, EventArgs args)
         {
             try
             {
@@ -132,7 +132,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 if (!OctaneItemViewModel.CurrentActiveItem.IsSupportCopyCommitMessage)
                     return;
 
-                OctaneItemViewModel.CurrentActiveItem.ValidateCommitMessage();
+                await OctaneItemViewModel.CurrentActiveItem.ValidateCommitMessage();
             }
             catch (Exception ex)
             {

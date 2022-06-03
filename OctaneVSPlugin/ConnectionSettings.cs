@@ -172,7 +172,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             await OctaneServices.GetInstance().Connect();
             await OctaneMyItemsViewModel.Instance.LoadMyItemsAsync();
-            await EntityTypeRegistry.Init();
+            await EntityTypeRegistry.InitAsync();
         } 
 
 		public async Task<string> TestConnection()

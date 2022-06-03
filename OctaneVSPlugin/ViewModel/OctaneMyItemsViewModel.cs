@@ -157,9 +157,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         /// </summary>
         public ICommand RefreshCommand { get; }
 
-        private void Refresh(object parameter)
+        private async void Refresh(object parameter)
         {
-            LoadMyItemsAsync();
+            await LoadMyItemsAsync();
         }
 
         /// <summary>

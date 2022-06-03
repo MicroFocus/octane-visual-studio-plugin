@@ -53,7 +53,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         /// <summary>
         /// Search for the given filter
         /// </summary>
-        internal void Search(string searchFilter)
+        internal async void Search(string searchFilter)
         {
             if (string.IsNullOrEmpty(searchFilter) || string.IsNullOrEmpty(searchFilter.Trim()))
             {
@@ -68,7 +68,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                 Caption = $"\"{searchFilter.Substring(0, 20)}...\"";
 
             var viewModel = new SearchItemsViewModel(searchFilter);
-            viewModel.SearchAsync();
+            await viewModel.SearchAsync();
             _searchControl.DataContext = viewModel;
         }
     }

@@ -155,8 +155,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                     if (parentEntityInformation == null)
                         return string.Empty;
 
+                    var parentDisplayName = parentEntityInformation.DisplayName != null ?
+                                         parentEntityInformation.DisplayName : parentEntityInformation.EntityTypeName;
+
                     var sb = new StringBuilder("Task of ")
-                        .Append(parentEntityInformation.DisplayName.ToLower())
+                        .Append(parentDisplayName.ToLower())
                         .Append(" ")
                         .Append(parentEntity.Id.ToString())
                         .Append(": ")
