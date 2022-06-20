@@ -15,7 +15,7 @@ Test > Test Settings > Select Test Settings File
     <TargetPlatform>x64</TargetPlatform>
 
     <!-- Framework35 | [Framework40] | Framework45 -->
-    <TargetFrameworkVersion>Framework45</TargetFrameworkVersion>
+    <TargetFrameworkVersion>.NETFramework,Version=v4.7.2</TargetFrameworkVersion>
     
   </RunConfiguration>
 
