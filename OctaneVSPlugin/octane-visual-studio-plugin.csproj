@@ -200,7 +200,7 @@
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Resource Include="Resources\octane-logo.png" />
-    <Resource Include="Resources\microfocus-blue-logo.png" />
+    <Resource Include="Resources\opentext-logo_light-theme.png" />
     <Resource Include="Resources\no-items-to-display.png" />
     <Content Include="Resources\octane-logo-32x32.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
