@@ -474,7 +474,7 @@
                                VerticalAlignment="Bottom"
                                Margin="0, 0, 10, 10"
                                RenderOptions.BitmapScalingMode="Fant"
-                               Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png" />
+                               Source="/octane-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png" />
                     </Grid>
                 </Grid>
             </DockPanel>
