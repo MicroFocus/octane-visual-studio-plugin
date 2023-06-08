@@ -763,18 +763,21 @@
                                                         HorizontalAlignment="Right"
                                                         VerticalAlignment="Center"
                                                         Background="{DynamicResource VsBrush.Window}"
-                                                        Foreground="{DynamicResource VsBrush.WindowText}"
                                                         Content="Reset"
                                                         Command="{Binding ResetFieldsCustomizationCommand}">
                                                     <Button.Style>
                                                         <Style TargetType="{x:Type Button}">
                                                             <Setter Property="IsEnabled"
                                                                     Value="True" />
+                                                            <Setter Property="Foreground"
+                                                                    Value="{DynamicResource VsBrush.WindowText}" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}"
                                                                              Value="True">
                                                                     <Setter Property="IsEnabled"
                                                                             Value="False" />
+                                                                    <Setter Property="Foreground"
+                                                                            Value="DarkGray" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
