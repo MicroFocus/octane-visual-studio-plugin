@@ -1,5 +1,13 @@
 /*!
-* © Copyright 2017-2022 Micro Focus or one of its affiliates.
+* Copyright 2017 – 2023 Open Text.
+*
+* The only warranties for products and services of Open Text and
+* its affiliates and licensors (“Open Text”) are as may be set
+* forth in the express warranty statements accompanying such products
+* and services. Nothing herein should be construed as constituting an
+* additional warranty. Open Text shall not be liable for technical or
+* editorial errors or omissions contained herein. The information
+* contained herein is subject to change without notice.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,9 +28,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("MicroFocus.Adm.Octane.VisualStudio.Tests")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("MicroFocus")]
+[assembly: AssemblyCompany("OpenText")]
 [assembly: AssemblyProduct("MicroFocus.Adm.Octane.VisualStudio.Tests")]
-[assembly: AssemblyCopyright("Copyright © MicroFocus 2018")]
+[assembly: AssemblyCopyright("Copyright 2017-2023 Open Text")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -31,5 +39,5 @@ using System.Runtime.InteropServices;
 [assembly: Guid("03a92195-e4c0-4e3b-bcbc-c49d9e1170f9")]
 
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("2022.0.0")]
-[assembly: AssemblyFileVersion("2022.0.0")]
+[assembly: AssemblyVersion("2023.1.0")]
+[assembly: AssemblyFileVersion("2023.1.0")]

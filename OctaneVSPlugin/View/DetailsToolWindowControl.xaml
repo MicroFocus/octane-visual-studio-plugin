@@ -1,5 +1,13 @@
 ﻿<!--
-* © Copyright 2017-2022 Micro Focus or one of its affiliates.
+* Copyright 2017 – 2023 Open Text.
+*
+* The only warranties for products and services of Open Text and
+* its affiliates and licensors (“Open Text”) are as may be set
+* forth in the express warranty statements accompanying such products
+* and services. Nothing herein should be construed as constituting an
+* additional warranty. Open Text shall not be liable for technical or
+* editorial errors or omissions contained herein. The information
+* contained herein is subject to change without notice.
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -474,7 +482,7 @@
                                VerticalAlignment="Bottom"
                                Margin="0, 0, 10, 10"
                                RenderOptions.BitmapScalingMode="Fant"
-                               Source="/octane-visual-studio-plugin;component/Resources/microfocus-blue-logo.png" />
+                               Source="/octane-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png" />
                     </Grid>
                 </Grid>
             </DockPanel>
@@ -755,18 +763,21 @@
                                                         HorizontalAlignment="Right"
                                                         VerticalAlignment="Center"
                                                         Background="{DynamicResource VsBrush.Window}"
-                                                        Foreground="{DynamicResource VsBrush.WindowText}"
                                                         Content="Reset"
                                                         Command="{Binding ResetFieldsCustomizationCommand}">
                                                     <Button.Style>
                                                         <Style TargetType="{x:Type Button}">
                                                             <Setter Property="IsEnabled"
                                                                     Value="True" />
+                                                            <Setter Property="Foreground"
+                                                                    Value="{DynamicResource VsBrush.WindowText}" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}"
                                                                              Value="True">
                                                                     <Setter Property="IsEnabled"
                                                                             Value="False" />
+                                                                    <Setter Property="Foreground"
+                                                                            Value="DarkGray" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
