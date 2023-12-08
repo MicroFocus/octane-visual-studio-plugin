@@ -1,20 +1,20 @@
-﻿# octane-visual-studio-plugin
-## Visual Studio IDE Integration for ALM Octane
+﻿# valueedge-visual-studio-plugin
+## Visual Studio IDE Integration for ValueEdge
 
 This plugin adds tool windows to Visual Studio to allow users to see the My Work items inside Visual Studio.
 
-After installing the plugin, open ALM Octane tool window by selecting `View -> Other Windows -> ALM Octane`.
+After installing the plugin, open ValueEdge tool window by selecting `View -> Other Windows -> ValueEdge`.
 
 ### Supported Visual Studio Version
 
 The plugin is supported on Visual Studio 2015 (14) and 2017 (15).
 
-Connection to the server is done using the [C# REST SDK for ALM Octane](https://github.com/MicroFocus/alm-octane-csharp-rest-sdk)
+Connection to the server is done using the [C# REST SDK for ValueEdge](https://github.com/MicroFocus/alm-octane-csharp-rest-sdk)
 
 ### How to build:
 
 Building this project requires MSBuild 15 and to run `msbuild /p:Configuration=Release /t:rebuild`.  
-The output file is `OctaneVSPlugin\bin\Release\octane-visual-studio-plugin.vsix`
+The output file is `OctaneVSPlugin\bin\Release\valueedge-visual-studio-plugin.vsix`
 
 VSIX project template was using external `vssdk\Microsoft.VsSDK.targets` file.  
 We've changed it to use Nuget package from `..\packages\Microsoft.VSSDK.BuildTools.15.1.192\tools\vssdk\Microsoft.VsSDK.targets`.  

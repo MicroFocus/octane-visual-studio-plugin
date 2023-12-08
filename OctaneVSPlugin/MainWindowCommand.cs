@@ -195,7 +195,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to update active item in Octane toolbar.\n\n" + "Failed with message: " + ex.Message,
+                MessageBox.Show("Unable to update active item in ValueEdge toolbar.\n\n" + "Failed with message: " + ex.Message,
                     ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
@@ -214,7 +214,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to disable active item in Octane toolbar.\n\n" + "Failed with message: " + ex.Message,
+                MessageBox.Show("Unable to disable active item in ValueEdge toolbar.\n\n" + "Failed with message: " + ex.Message,
                     ToolWindowHelper.AppName, MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

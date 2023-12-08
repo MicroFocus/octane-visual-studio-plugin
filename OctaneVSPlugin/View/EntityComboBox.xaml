@@ -150,7 +150,7 @@
                                     Background="Transparent"
                                     BorderBrush="Silver">
                             <Grid Background="{DynamicResource VsBrush.Window}">
-                                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/octane-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+                                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/valueedge-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
                             </Grid>
                         </Border>
                     </DockPanel>

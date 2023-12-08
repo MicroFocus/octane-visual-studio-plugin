@@ -42,7 +42,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0"
-                   Content="ALM Octane Settings"
+                   Content="ValueEdge Settings"
                    FontWeight="Bold" />
 
             <Grid Grid.Row="1">
@@ -125,7 +125,7 @@
                        Content="?">
                     <Label.ToolTip>
                         <TextBlock>
-                                Log into ALM Octane directly with your user name and password, in non-SSO environments.
+                                Log into ValueEdge directly with your user name and password, in non-SSO environments.
                                 <LineBreak/>
                                 This method saves your login credentials between sessions, so you do not have to re-enter them.
                         </TextBlock>
@@ -181,7 +181,7 @@
                        Content="?">
                        <Label.ToolTip>
                             <TextBlock>
-                                Log into ALM Octane using a browser.
+                                Log into ValueEdge using a browser.
                                 <LineBreak/>
                                 You can use this method for non-SSO, SSO, and federated environments.
                                 <LineBreak/>
