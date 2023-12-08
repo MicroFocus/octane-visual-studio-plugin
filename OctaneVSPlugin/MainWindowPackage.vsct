@@ -35,8 +35,8 @@
         <Parent guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" />
         <CommandFlag>DefaultDocked</CommandFlag>
         <Strings>
-          <CommandName>ALM Octane Active Item</CommandName>
-          <ButtonText>ALM Octane Active Item</ButtonText>
+          <CommandName>ValueEdge Active Item</CommandName>
+          <ButtonText>ValueEdge Active Item</ButtonText>
         </Strings>
       </Menu>
     </Menus>
@@ -56,7 +56,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
         <Icon guid="guidImages" id="logo" />
         <Strings>
-          <ButtonText>ALM Octane</ButtonText>
+          <ButtonText>ValueEdge</ButtonText>
         </Strings>
       </Button>
 

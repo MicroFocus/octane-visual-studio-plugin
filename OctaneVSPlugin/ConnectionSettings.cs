@@ -39,7 +39,7 @@ using static System.Threading.Tasks.Task;
 namespace MicroFocus.Adm.Octane.VisualStudio
 {
 	/// <summary>
-	/// Options page represent the settings the user can set for ALM Octane plugin.
+	/// Options page represent the settings the user can set for ValueEdge plugin.
 	/// This class is presented to the user as a page in Visual Studio options dialog.
 	/// </summary>
 	[Guid("1D9ECCF3-5D2F-4112-9B25-264596873DC9")]

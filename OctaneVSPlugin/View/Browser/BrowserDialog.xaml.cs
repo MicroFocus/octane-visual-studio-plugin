@@ -38,7 +38,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// </summary>
     public partial class BrowserDialog : DialogWindow
     {
-        private static string _browserTitle = "Login to ALM Octane";
+        private static string _browserTitle = "Login to ValueEdge";
 
         public bool IsOpen { get; set; }
 

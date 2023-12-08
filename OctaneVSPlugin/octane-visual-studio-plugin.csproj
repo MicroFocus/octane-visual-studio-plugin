@@ -44,7 +44,7 @@
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MicroFocus.Adm.Octane.VisualStudio</RootNamespace>
-    <AssemblyName>octane-visual-studio-plugin</AssemblyName>
+    <AssemblyName>valueedge-visual-studio-plugin</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
@@ -199,15 +199,14 @@
     <Content Include="Resources\MainWindowPackage.ico">
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
-    <Resource Include="Resources\octane-logo.png" />
+    <Resource Include="Resources\valueedge-logo.png" />
     <Resource Include="Resources\opentext-logo_light-theme.png" />
     <Resource Include="Resources\no-items-to-display.png" />
-    <Content Include="Resources\octane-logo-32x32.png">
+    <Content Include="Resources\valueedge-logo-32x32.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <IncludeInVSIX>true</IncludeInVSIX>
     </Content>
     <Content Include="Resources\OctaneCommand.png" />
-    <Content Include="Resources\OctaneLogo16x16.png" />
     <Content Include="Resources\OctaneToolWindowCommand.png" />
     <Resource Include="Resources\octane_preloader.gif" />
     <Resource Include="Resources\s-rocket.png" />

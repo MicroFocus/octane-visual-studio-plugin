@@ -39,7 +39,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
     /// </summary>
     internal static class ToolWindowHelper
     {
-        internal const string AppName = "ALM Octane";
+        internal const string AppName = "ValueEdge";
         internal const string ViewDetailsHeader = "View details (DblClick)";
         internal const string ViewTaskParentDetailsHeader = "View parent details (Shift + DblClick)";
         internal const string ViewCommentParentDetailsHeader = "View parent details (DblClick)";
