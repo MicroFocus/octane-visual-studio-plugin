@@ -128,16 +128,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 if (!IsSupportCopyCommitMessage)
                     return string.Empty;
 
+                string commitMessage = "my commit message";
+
                 if (Entity.TypeName == Task.TYPE_TASK)
                 {
                     var parentEntity = Utility.GetTaskParentEntity(Entity);
                     var parentEntityTypeInfo = EntityTypeRegistry.GetEntityTypeInformation(parentEntity);
 
-                    return $"{parentEntityTypeInfo.CommitMessage} #{parentEntity.Id}: {EntityTypeInformation.CommitMessage} #{ID}: ";
+                    return $"{parentEntityTypeInfo.CommitMessage} #{parentEntity.Id}: {EntityTypeInformation.CommitMessage} #{ID}: {commitMessage}";
                 }
                 else
                 {
-                    return $"{EntityTypeInformation.CommitMessage} #{ID}: ";
+                    return $"{EntityTypeInformation.CommitMessage} #{ID}: {commitMessage}";
                 }
             }
         }
