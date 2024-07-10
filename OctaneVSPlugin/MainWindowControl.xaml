@@ -66,12 +66,12 @@
 
                 <Image Grid.Row="1" Stretch="None"
                        RenderOptions.BitmapScalingMode="Fant"
-                       Source="/valueedge-visual-studio-plugin;component/Resources/valueedge-logo.png"/>
+                       Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/core-software-delivery-platform-logo.png"/>
 
                 <TextBlock Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center" TextAlignment="Center">
-                    Welcome to the ValueEdge Visual Studio plugin.
+                    Welcome to the Core Software Delivery Platform Visual Studio plugin.
                     <LineBreak />
-                    To start, go to Tools -> Options -> ValueEdge and connect.
+                    To start, go to Tools -> Options -> Core Software Delivery Platform and connect.
                 </TextBlock>
 
                 <Button Grid.Row="3"
@@ -84,7 +84,7 @@
                 <Image Grid.Row="4" Stretch="None"
                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
                        RenderOptions.BitmapScalingMode="Fant"
-                       Source="/valueedge-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png"/>
+                       Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png"/>
             </Grid>
         </DockPanel>
 
@@ -111,11 +111,11 @@
 
                 <Image Grid.Row="1" Stretch="None"
                        RenderOptions.BitmapScalingMode="Fant"
-                       Source="/valueedge-visual-studio-plugin;component/Resources/valueedge-logo.png"/>
+                       Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/core-software-delivery-platform-logo.png"/>
 
                 <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                     <TextBlock>
-                    Connection to ValueEdge failed. Review your settings and check your network connection.
+                    Connection to Core Software Delivery Platform failed. Review your settings and check your network connection.
                     </TextBlock>
 
                     <TextBlock Text="{Binding LastExceptionMessage, FallbackValue=this will show the error message}"
@@ -133,7 +133,7 @@
                 <Image Grid.Row="4" Stretch="None"
                        HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
                        RenderOptions.BitmapScalingMode="Fant"
-                       Source="/valueedge-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png"/>
+                       Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png"/>
             </Grid>
         </DockPanel>
 
@@ -149,7 +149,7 @@
                 </Style>
             </DockPanel.Style>
 
-            <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/valueedge-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+            <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/core-software-delivery-platform-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
 
         </DockPanel>
 
@@ -351,7 +351,7 @@
                             Width="25"
                             Height="25"
                             Margin="5 0 0 0">
-                    <Image Source="/valueedge-visual-studio-plugin;component/Resources/search.png" />
+                    <Image Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/search.png" />
                 </Button>
 
                 <Button Grid.Column="3" 
@@ -396,7 +396,7 @@
 
                     <Viewbox Grid.Row="0" MaxHeight="200">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/valueedge-visual-studio-plugin;component/Resources/s-rocket.png" />
+                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/s-rocket.png" />
                         </StackPanel>
                     </Viewbox>
 

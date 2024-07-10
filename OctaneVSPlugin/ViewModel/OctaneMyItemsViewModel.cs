@@ -171,7 +171,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
         }
 
         /// <summary>
-        /// Command for opening the ValueEdge options dialog
+        /// Command for opening the Core Software Delivery Platform options dialog
         /// </summary>
         public ICommand OpenOctaneOptionsDialogCommand { get; }
 

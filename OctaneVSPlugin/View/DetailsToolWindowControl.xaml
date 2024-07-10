@@ -317,7 +317,7 @@
                                 Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                                 Command="{Binding MakeValueNull}">
                             <Image Stretch="None"
-                                   Source="/valueedge-visual-studio-plugin;component/Resources/octane_remove.png" />
+                                   Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/octane_remove.png" />
                         </Button>
                     </Grid>
 
@@ -366,7 +366,7 @@
                                 Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
                                 Command="{Binding MakeValueNull}">
                             <Image Stretch="None"
-                                   Source="/valueedge-visual-studio-plugin;component/Resources/octane_remove.png" />
+                                   Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/octane_remove.png" />
                         </Button>
                     </Grid>
                 </Grid>
@@ -402,7 +402,7 @@
 
                 <view:GifImage x:Name="gifImage"
                                Stretch="None"
-                               GifSource="/valueedge-visual-studio-plugin;component/Resources/octane_preloader.gif"
+                               GifSource="/core-software-delivery-platform-visual-studio-plugin;component/Resources/octane_preloader.gif"
                                AutoStart="True" />
 
             </DockPanel>
@@ -463,7 +463,7 @@
                         <Image Grid.Row="1"
                                Stretch="None"
                                RenderOptions.BitmapScalingMode="Fant"
-                               Source="/valueedge-visual-studio-plugin;component/Resources/valueedge-logo.png" />
+                               Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/core-software-delivery-platform-logo.png" />
 
                         <StackPanel Grid.Row="2"
                                     HorizontalAlignment="Center"
@@ -482,7 +482,7 @@
                                VerticalAlignment="Bottom"
                                Margin="0, 0, 10, 10"
                                RenderOptions.BitmapScalingMode="Fant"
-                               Source="/valueedge-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png" />
+                               Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png" />
                     </Grid>
                 </Grid>
             </DockPanel>
@@ -616,7 +616,7 @@
                                             IsHitTestVisible="{Binding SaveIsEnabled}"
                                             Command="{Binding SaveEntityCommand}"
                                             ToolTip="Save">
-                                        <Image Source="/valueedge-visual-studio-plugin;component/Resources/save.png" />
+                                        <Image Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/save.png" />
                                     </Button>
                                     <ToggleButton x:Name="CustomizeFieldsButton"
                                                   Width="25"
@@ -631,12 +631,12 @@
                                                     <Image.Style>
                                                         <Style TargetType="{x:Type Image}">
                                                             <Setter Property="Source"
-                                                                    Value="/valueedge-visual-studio-plugin;component/Resources/customize-fields-off.png" />
+                                                                    Value="/core-software-delivery-platform-visual-studio-plugin;component/Resources/customize-fields-off.png" />
                                                             <Style.Triggers>
                                                                 <DataTrigger Binding="{Binding OnlyDefaultFieldsAreShown}"
                                                                              Value="False">
                                                                     <Setter Property="Source"
-                                                                            Value="/valueedge-visual-studio-plugin;component/Resources/customize-fields-on.png" />
+                                                                            Value="/core-software-delivery-platform-visual-studio-plugin;component/Resources/customize-fields-on.png" />
                                                                 </DataTrigger>
                                                             </Style.Triggers>
                                                         </Style>
@@ -797,7 +797,7 @@
                                             Command="{Binding ToggleCommentSectionCommand}"
                                             Visibility="{Binding Path=EntitySupportsComments, Converter={StaticResource BoolToVisConverter}}"
                                             ToolTip="{Binding ShowCommentTooltip}">
-                                        <Image Source="/valueedge-visual-studio-plugin;component/Resources/comments.png" />
+                                        <Image Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/comments.png" />
                                     </Button>
                                     <Button Width="25"
                                             Height="25"
@@ -823,7 +823,7 @@
                                             Background="{DynamicResource VsBrush.Window}"
                                             Command="{Binding OpenInBrowserCommand}"
                                             ToolTip="Open in browser">
-                                        <Image Source="/valueedge-visual-studio-plugin;component/Resources/browser.png" />
+                                        <Image Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/browser.png" />
                                     </Button>
                                 </StackPanel>
                             </Grid>
@@ -929,7 +929,7 @@
 
                                     <view:GifImage x:Name="gifImageComments"
                                                    Stretch="None"
-                                                   GifSource="/valueedge-visual-studio-plugin;component/Resources/octane_preloader.gif"
+                                                   GifSource="/core-software-delivery-platform-visual-studio-plugin;component/Resources/octane_preloader.gif"
                                                    AutoStart="True" />
                                 </DockPanel>
 

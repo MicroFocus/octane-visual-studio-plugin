@@ -53,7 +53,7 @@
                     </Style>
                 </DockPanel.Style>
 
-                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/valueedge-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
+                <view:GifImage x:Name="gifImage" Stretch="None" GifSource="/core-software-delivery-platform-visual-studio-plugin;component/Resources/octane_preloader.gif" AutoStart="True" />
             </DockPanel>
 
             <DockPanel x:Name="FailedToLoadPanel">
@@ -100,7 +100,7 @@
 
                         <Image Grid.Row="1" Stretch="None"
                            RenderOptions.BitmapScalingMode="Fant"
-                           Source="/valueedge-visual-studio-plugin;component/Resources/valueedge-logo.png"/>
+                           Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/core-software-delivery-platform-logo.png"/>
 
                         <StackPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Center">
                             <TextBlock>Unable to search for backlog items</TextBlock>
@@ -113,7 +113,7 @@
                         <Image Grid.Row="4" Stretch="None"
                            HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0, 0, 10, 10"
                            RenderOptions.BitmapScalingMode="Fant"
-                           Source="/valueedge-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png"/>
+                           Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/opentext-logo_light-theme.png"/>
                     </Grid>
                 </Grid>
             </DockPanel>
@@ -144,7 +144,7 @@
 
                     <Viewbox Grid.Row="0" MaxHeight="200">
                         <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/valueedge-visual-studio-plugin;component/Resources/no-items-to-display.png" />
+                            <Image Stretch="None" RenderOptions.BitmapScalingMode="Fant" Source="/core-software-delivery-platform-visual-studio-plugin;component/Resources/no-items-to-display.png" />
                         </StackPanel>
 
                     </Viewbox>

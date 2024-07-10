@@ -53,7 +53,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
 
 		private const string BrowserEmulationKey = InternetExplorerRootKey + @"\Main\FeatureControl\FEATURE_BROWSER_EMULATION";
 
-		private const string ExtensionName = "ValueEdge Visual Studio Plugin";
+		private const string ExtensionName = "Core Software Delivery Platform Visual Studio Plugin";
 
 		public static BrowserEmulationVersion GetBrowserEmulationVersion()
 		{
