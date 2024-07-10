@@ -35,8 +35,8 @@
         <Parent guid="guidMainWindowPackageCmdSet" id="ALMOctaneActiveItemToolbar" />
         <CommandFlag>DefaultDocked</CommandFlag>
         <Strings>
-          <CommandName>ValueEdge Active Item</CommandName>
-          <ButtonText>ValueEdge Active Item</ButtonText>
+          <CommandName>Core Software Delivery Platform Active Item</CommandName>
+          <ButtonText>Core Software Delivery Platform Active Item</ButtonText>
         </Strings>
       </Menu>
     </Menus>
@@ -56,7 +56,7 @@
         <Parent guid="guidSHLMainMenu" id="IDG_VS_WNDO_OTRWNDWS1" />
         <Icon guid="guidImages" id="logo" />
         <Strings>
-          <ButtonText>ValueEdge</ButtonText>
+          <ButtonText>Core Software Delivery Platform</ButtonText>
         </Strings>
       </Button>
 

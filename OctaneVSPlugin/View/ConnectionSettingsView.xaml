@@ -42,7 +42,7 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0"
-                   Content="ValueEdge Settings"
+                   Content="Core Software Delivery Platform Settings"
                    FontWeight="Bold" />
 
             <Grid Grid.Row="1">
@@ -125,7 +125,7 @@
                        Content="?">
                     <Label.ToolTip>
                         <TextBlock>
-                                Log into ValueEdge directly with your user name and password, in non-SSO environments.
+                                Log into Core Software Delivery Platform directly with your user name and password, in non-SSO environments.
                                 <LineBreak/>
                                 This method saves your login credentials between sessions, so you do not have to re-enter them.
                         </TextBlock>
@@ -181,7 +181,7 @@
                        Content="?">
                        <Label.ToolTip>
                             <TextBlock>
-                                Log into ValueEdge using a browser.
+                                Log into Core Software Delivery Platform using a browser.
                                 <LineBreak/>
                                 You can use this method for non-SSO, SSO, and federated environments.
                                 <LineBreak/>
