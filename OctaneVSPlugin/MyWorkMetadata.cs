@@ -23,6 +23,8 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.ProcessItems;
+using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
@@ -82,6 +84,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private MyWorkMetadata()
         {
+
             _entitiesFieldsFetchInfo = new Dictionary<Type, Dictionary<string, FieldInfo[]>>();
             fieldsByEntityType = new Dictionary<Type, List<string>>();
 
@@ -118,6 +121,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(CommonFields.EstimatedHours, "Estimated Hours")
                 );
 
+            AddSubType<WorkItem>(WorkItem.SUBTYPE_FEATURE,
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName)
+                );
+
+
             AddSubType<Test>(Test.SUBTYPE_MANUAL_TEST,
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.Phase, "Phase"),
@@ -127,12 +137,84 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
                 );
 
+            AddSubType<Test>(ModelBasedTest.SUBTYPE_MODEL_BASED_TEST,
+                FieldAtSubTitle("test_type", "Test Type"),
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.StepsNum, "Steps"),
+                FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
+                );
+
+            AddSubType<Test>(TestSuite.SUBTYPE_TEST_SUITE,
+               FieldAtSubTitle("test_type", "Test Type"),
+               FieldAtTop(CommonFields.Phase, "Phase"),
+               FieldAtTop(CommonFields.Owner, "Owner"),
+               FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+               FieldAtBottom(CommonFields.StepsNum, "Steps"),
+               FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
+               );
+
             AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
                 FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
+                );
+
+            AddSubType<ModelItem>(ModelItem.SUBTYPE_MODEL,
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtBottom(CommonFields.Name, "Model Name"),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
+                );
+            AddSubType<ModelItem>(ModelItem.SUBTYPE_UNIT,
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtBottom(CommonFields.Name, "Model Name"),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
+                );
+
+            AddSubType<Schedule>("suite_run_scheduler",
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtBottom("release", "Release"),
+                FieldAtBottom("milestone", "Milestone")
+            );
+
+            AddSubType<ScheduleRun>("suite_run_scheduler_run",
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtBottom("start_time", "Start Time"),
+                FieldAtBottom("duration", "Duration"),
+                FieldAtBottom("general_run_status", "General Run Status")
+            );
+
+
+
+
+            AddSubType<ProcessItem>(ProcessItem.SUBTYPE_AUTO_ACTION,
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
+                );
+
+            AddSubType<ProcessItem>(ProcessItem.SUBTYPE_MANUAL_ACTION,
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
+                );
+
+            AddSubType<ProcessItem>(ProcessItem.SUBTYPE_QUALITY_GATE,
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
                 );
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
@@ -196,8 +278,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtTop(CommonFields.Owner, "Owner"),
                 FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
                 );
-        }
+            _entitiesFieldsFetchInfo[typeof(AutoAction)] = _entitiesFieldsFetchInfo[typeof(ProcessItem)];
+            _entitiesFieldsFetchInfo[typeof(ManualAction)] = _entitiesFieldsFetchInfo[typeof(ProcessItem)];
+            _entitiesFieldsFetchInfo[typeof(QualityGate)] = _entitiesFieldsFetchInfo[typeof(ProcessItem)];
 
+        }
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)
         {
             string subType = GetEntitySubType(entity);
@@ -213,17 +298,37 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         internal FieldInfo GetSubTitleFieldInfo(BaseEntity entity)
         {
             string subType = GetEntitySubType(entity);
-            return GetFieldInfoByType(entity.GetType(), subType, FieldPosition.SubTitle).First();
+
+            // Prefer the defined subtitle field if present
+            var subtitleField = GetFieldInfoByType(entity.GetType(), subType, FieldPosition.SubTitle).FirstOrDefault();
+            if (subtitleField != null)
+                return subtitleField;
+
+            // Try simple-entity placeholder subtype (some entity types store fields there)
+            subtitleField = GetFieldInfoByType(entity.GetType(), SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER, FieldPosition.SubTitle).FirstOrDefault();
+            if (subtitleField != null)
+                return subtitleField;
+
+            // Last resort: return a fallback FieldInfo using the entity name so the UI has something to render.
+            return FieldAtSubTitle(CommonFields.Name, string.Empty, string.Empty, null);
         }
 
         private IEnumerable<FieldInfo> GetFieldInfoByType(Type entityType, string subType, FieldPosition position)
         {
-            var fieldByTypeQuery =
-                from field in _entitiesFieldsFetchInfo[entityType][subType]
-                where field.Position == position
-                select field;
+            // Be defensive: return empty sequence when no metadata exists for the requested type/subtype.
+            Dictionary<string, FieldInfo[]> subTypeFields;
+            if (!_entitiesFieldsFetchInfo.TryGetValue(entityType, out subTypeFields))
+            {
+                return Enumerable.Empty<FieldInfo>();
+            }
 
-            return fieldByTypeQuery;
+            FieldInfo[] fieldsForSubtype;
+            if (!subTypeFields.TryGetValue(subType, out fieldsForSubtype))
+            {
+                return Enumerable.Empty<FieldInfo>();
+            }
+
+            return fieldsForSubtype.Where(field => field.Position == position);
         }
 
         private string GetEntitySubType(BaseEntity entity)

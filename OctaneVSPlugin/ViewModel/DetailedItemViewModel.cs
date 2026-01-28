@@ -506,14 +506,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             WorkItem.SUBTYPE_DEFECT,
             WorkItem.SUBTYPE_STORY,
             WorkItem.SUBTYPE_QUALITY_STORY,
+            WorkItem.SUBTYPE_FEATURE,
 
             // test
             TestGherkin.SUBTYPE_GHERKIN_TEST,
             Test.SUBTYPE_MANUAL_TEST,
+            TestSuite.SUBTYPE_TEST_SUITE,
+            ModelBasedTest.SUBTYPE_MODEL_BASED_TEST,
 
             // run
             RunManual.SUBTYPE_RUN_MANUAL,
             RunSuite.SUBTYPE_RUN_SUITE,
+
+            // model item
+            ModelItem.SUBTYPE_MODEL,
+            ModelItem.SUBTYPE_UNIT,
+
+            // process item
+            ProcessItem.SUBTYPE_AUTO_ACTION,
+            ProcessItem.SUBTYPE_MANUAL_ACTION,
+            ProcessItem.SUBTYPE_QUALITY_GATE,
+
+            "suite_run_scheduler",
+            "suite_run_scheduler_run",
 
             // requirement
             Requirement.SUBTYPE_DOCUMENT,

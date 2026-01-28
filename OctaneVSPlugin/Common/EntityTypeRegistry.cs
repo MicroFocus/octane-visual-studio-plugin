@@ -44,6 +44,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { WorkItem.SUBTYPE_STORY, new EntityTypeInformation(
                 WorkItem.SUBTYPE_STORY, "User Story", "user story", "US", Color.FromRgb(255, 176, 0)) },
 
+
             { WorkItem.SUBTYPE_QUALITY_STORY, new EntityTypeInformation(
                 WorkItem.SUBTYPE_QUALITY_STORY, "Quality Story", "quality story", "QS", Color.FromRgb(51, 193, 128)) },
 
@@ -64,6 +65,28 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             { TestSuite.SUBTYPE_TEST_SUITE, new EntityTypeInformation(
                 TestSuite.SUBTYPE_TEST_SUITE, "Test Suite", EntityTypeInformation.CommitMessageNotApplicable, "TS", Color.FromRgb(39, 23, 130)) },
+
+           { ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, new EntityTypeInformation(
+                ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, "Model Based Test", EntityTypeInformation.CommitMessageNotApplicable, "MBT", Color.FromRgb(168, 230, 240))  },
+            { ModelItem.SUBTYPE_MODEL, new EntityTypeInformation(
+                ModelItem.SUBTYPE_MODEL, "Model", EntityTypeInformation.CommitMessageNotApplicable, "M", Color.FromRgb(168, 251, 223)) },
+
+            { ModelItem.SUBTYPE_UNIT, new EntityTypeInformation(
+                ModelItem.SUBTYPE_UNIT, "Unit", EntityTypeInformation.CommitMessageNotApplicable, "U", Color.FromRgb(58,55,255)) },
+            { ProcessItem.SUBTYPE_AUTO_ACTION, new EntityTypeInformation(
+                ProcessItem.SUBTYPE_AUTO_ACTION, "Auto Action", EntityTypeInformation.CommitMessageNotApplicable, "AA", Color.FromRgb(85, 195, 186))  },
+
+            { ProcessItem.SUBTYPE_MANUAL_ACTION, new EntityTypeInformation(
+                ProcessItem.SUBTYPE_MANUAL_ACTION, "Manual Action", EntityTypeInformation.CommitMessageNotApplicable, "MA", Color.FromRgb(189, 79, 216))  },
+
+            { ProcessItem.SUBTYPE_QUALITY_GATE, new EntityTypeInformation(
+                ProcessItem.SUBTYPE_QUALITY_GATE, "Quality Gate", EntityTypeInformation.CommitMessageNotApplicable, "QA", Color.FromRgb(68, 52, 193))  },
+            { "suite_run_scheduler", new EntityTypeInformation(
+                "suite_run_scheduler", "Suite Run Schedulers", EntityTypeInformation.CommitMessageNotApplicable, "SCH", Color.FromRgb(255, 45, 191)) }, 
+
+            { "suite_run_scheduler_run", new EntityTypeInformation(
+                "suite_run_scheduler_run", "Suite Run Scheduler Runs", EntityTypeInformation.CommitMessageNotApplicable, "SCR", Color.FromRgb(22, 150, 181)) },   
+
 
             { RunSuite.SUBTYPE_RUN_SUITE, new EntityTypeInformation(
                 RunSuite.SUBTYPE_RUN_SUITE, "Test Suite Run", EntityTypeInformation.CommitMessageNotApplicable, "SR", Color.FromRgb(0, 171, 243)) },
@@ -132,9 +155,55 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
-                
+
                 em.TryGetValue(WorkItem.SUBTYPE_FEATURE, out entityLabelMetadata);
                 Registry.TryGetValue(WorkItem.SUBTYPE_FEATURE, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue(TestSuite.SUBTYPE_TEST_SUITE, out entityLabelMetadata);
+                Registry.TryGetValue(TestSuite.SUBTYPE_TEST_SUITE, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue(ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, out entityLabelMetadata);
+                Registry.TryGetValue(ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue(ModelItem.SUBTYPE_MODEL, out entityLabelMetadata);
+                Registry.TryGetValue(ModelItem.SUBTYPE_MODEL, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue(ModelItem.SUBTYPE_UNIT, out entityLabelMetadata);
+                Registry.TryGetValue(ModelItem.SUBTYPE_UNIT, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue("suite_run_scheduler", out entityLabelMetadata);
+                Registry.TryGetValue("suite_run_scheduler", out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue("suite_run_scheduler_run", out entityLabelMetadata);
+                Registry.TryGetValue("suite_run_scheduler_run", out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+
+                em.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out entityLabelMetadata);
+                Registry.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out entityLabelMetadata);
+                Registry.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out info);
+                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
+                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
+
+                em.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out entityLabelMetadata);
+                Registry.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
@@ -172,7 +241,55 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 Registry.TryGetValue(WorkItem.SUBTYPE_FEATURE, out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
-                
+
+                DefaultRegistry.TryGetValue(TestSuite.SUBTYPE_TEST_SUITE, out newInfo);
+                Registry.TryGetValue(TestSuite.SUBTYPE_TEST_SUITE, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+                DefaultRegistry.TryGetValue(ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, out newInfo);
+                Registry.TryGetValue(ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+                DefaultRegistry.TryGetValue(ModelItem.SUBTYPE_MODEL, out newInfo);
+                Registry.TryGetValue(ModelItem.SUBTYPE_MODEL, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+                DefaultRegistry.TryGetValue(ModelItem.SUBTYPE_UNIT, out newInfo);
+                Registry.TryGetValue(ModelItem.SUBTYPE_UNIT, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+                // Suite Run Scheduler
+                DefaultRegistry.TryGetValue("suite_run_scheduler", out newInfo);
+                Registry.TryGetValue("suite_run_scheduler", out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+                // Suite Run Scheduler Run
+                DefaultRegistry.TryGetValue("suite_run_scheduler_run", out newInfo);
+                Registry.TryGetValue("suite_run_scheduler_run", out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+
+                DefaultRegistry.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out newInfo);
+                Registry.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+                DefaultRegistry.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out newInfo);
+                Registry.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
+                DefaultRegistry.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out newInfo);
+                Registry.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out oldInfo);
+                oldInfo.DisplayName = newInfo.DisplayName;
+                oldInfo.ShortLabel = newInfo.ShortLabel;
+
                 DefaultRegistry.TryGetValue(Requirement.SUBTYPE_DOCUMENT, out newInfo);
                 Registry.TryGetValue(Requirement.SUBTYPE_DOCUMENT, out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;

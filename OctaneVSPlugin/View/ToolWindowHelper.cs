@@ -215,7 +215,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
         [ExcludeFromCodeCoverage]
         private static void ViewEntityDetailsInternal(BaseEntity entity)
         {
-            if (entity.TypeName == WorkItem.SUBTYPE_FEATURE || entity.TypeName == WorkItem.SUBTYPE_EPIC)
+            if (entity.TypeName == WorkItem.SUBTYPE_EPIC)
             {
                 Utility.OpenInBrowser(entity);
                 return;
@@ -381,7 +381,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     && (entityType == WorkItem.SUBTYPE_STORY
                         || entityType == WorkItem.SUBTYPE_QUALITY_STORY
                         || entityType == WorkItem.SUBTYPE_DEFECT
-                        || entityType == Task.TYPE_TASK))
+                        || entityType == Task.TYPE_TASK
+                        || entityType == WorkItem.SUBTYPE_FEATURE))
                 {
                     cm.Items.Add(new MenuItem
                     {
@@ -397,7 +398,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
                     && (entityType == WorkItem.SUBTYPE_STORY
                         || entityType == WorkItem.SUBTYPE_QUALITY_STORY
                         || entityType == WorkItem.SUBTYPE_DEFECT
-                        || entityType == Task.TYPE_TASK))
+                        || entityType == Task.TYPE_TASK
+                        || entityType == WorkItem.SUBTYPE_FEATURE))
                 {
                     cm.Items.Add(new MenuItem
                     {

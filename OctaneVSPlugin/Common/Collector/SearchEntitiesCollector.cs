@@ -23,6 +23,8 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.ProcessItems;
+using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
 {
@@ -54,11 +56,26 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestAutomated.SUBTYPE_TEST_AUTOMATED));
             RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestGherkin.SUBTYPE_GHERKIN_TEST));
             RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST));
+            RegisterCollectorTask(Service.SearchEntitiesByType<Test>(_searchString, _limitPerType, ModelBasedTest.SUBTYPE_MODEL_BASED_TEST));
 
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_STORY));
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_QUALITY_STORY));
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_EPIC));
             RegisterCollectorTask(Service.SearchEntitiesByType<WorkItem>(_searchString, _limitPerType, WorkItem.SUBTYPE_FEATURE));
+
+            RegisterCollectorTask(Service.SearchEntitiesByType<ModelItem>(_searchString, _limitPerType, ModelItem.SUBTYPE_MODEL));
+            RegisterCollectorTask(Service.SearchEntitiesByType<ModelItem>(_searchString, _limitPerType, ModelItem.SUBTYPE_UNIT));
+
+            RegisterCollectorTask(Service.SearchEntitiesByType<ProcessItem>(_searchString, _limitPerType, ProcessItem.SUBTYPE_AUTO_ACTION));
+            RegisterCollectorTask(Service.SearchEntitiesByType<ProcessItem>(_searchString, _limitPerType, ProcessItem.SUBTYPE_MANUAL_ACTION));
+            RegisterCollectorTask(Service.SearchEntitiesByType<ProcessItem>(_searchString, _limitPerType, ProcessItem.SUBTYPE_QUALITY_GATE));
+
+
+
+            RegisterCollectorTask(Service.SearchEntitiesByType<Schedule>(_searchString, _limitPerType, null));
+            RegisterCollectorTask(Service.SearchEntitiesByType<ScheduleRun>(_searchString, _limitPerType, null));
+
+
 
             RegisterCollectorTask(Service.SearchEntitiesByType<Task>(_searchString, _limitPerType, Task.TYPE_TASK));
 

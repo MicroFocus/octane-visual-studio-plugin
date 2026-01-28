@@ -23,6 +23,8 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
+using MicroFocus.Adm.Octane.Api.Core.Entities.ProcessItems;
+using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using System;
 using System.Threading.Tasks;
@@ -56,9 +58,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             Add<Run>(userItem => userItem.Run);
             Add<Requirement>(userItem => userItem.Requirement);
             Add<OctaneTask>(userItem => userItem.Task);
+            Add<ModelItem>(userItem => userItem.ModelItem);
+            Add<ProcessItem>(userItem => userItem.ProcessItem);
+            Add<Schedule>(userItem => userItem.SuiteRunScheduler);
+            Add<ScheduleRun>(userItem => userItem.SuiteRunSchedulerRun);
         }
 
-        private void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc) where TEntityType : BaseEntity
+        private void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc)
+            where TEntityType : BaseEntity, new()
         {
             Task<EntityListResult<TEntityType>> fetchTask = Service.FetchEntities<TEntityType>(
                 _userItems.data,
@@ -67,5 +74,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
 
             RegisterCollectorTask(fetchTask);
         }
+
     }
 }

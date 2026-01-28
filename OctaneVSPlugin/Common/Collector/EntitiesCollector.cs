@@ -24,7 +24,9 @@
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Services;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Task = System.Threading.Tasks.Task;
@@ -57,9 +59,62 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
         {
             PrepareCollectorTasks();
 
-            await Task.WhenAll(_fetchTasks.ToArray());
-            // Flat the result list and materialize it with ToList.
-            return _fetchTasks.SelectMany(t => t.Result.BaseEntities).ToList();
+            //await Task.WhenAll(_fetchTasks.ToArray());
+            //// Flat the result list and materialize it with ToList.
+            //return _fetchTasks.SelectMany(t => t.Result.BaseEntities).ToList();
+            var tasks = _fetchTasks.ToArray();
+            await Task.WhenAll(tasks);
+
+            for (int i = 0; i < tasks.Length; i++)
+            {
+                var t = tasks[i];
+
+                Debug.WriteLine($"Task[{i}] Status={t.Status}");
+
+                if (t.IsCanceled)
+                {
+                    Debug.WriteLine($"Task[{i}] CANCELED");
+                    continue;
+                }
+
+                if (t.IsFaulted)
+                {
+                    Debug.WriteLine($"Task[{i}] FAULTED: {t.Exception}");
+                    continue;
+                }
+
+                var r = t.Result;
+                if (r == null)
+                {
+                    Debug.WriteLine($"Task[{i}] Result is NULL");
+                    continue;
+                }
+
+                Debug.WriteLine($"Task[{i}] ResultType={r.GetType().FullName}");
+
+                // If it’s the typed Octane result, check Data/data
+                // (Adjust property name to what IntelliSense shows: Data vs data)
+                if (r is EntityListResult<MicroFocus.Adm.Octane.Api.Core.Entities.ProcessItem> pi)
+                {
+                   Debug.WriteLine($"Task[{i}] data null? {pi.data == null}, count={(pi.data?.Count ?? -1)}");
+                   Debug.WriteLine($"Task[{i}] total_count={pi.total_count}");
+                }
+                else
+                {
+                    // Show available properties so you can see where the list actually is
+                    var props = r.GetType().GetProperties();
+                    foreach (var p in props)
+                    {
+                        object val = null;
+                        try { val = p.GetValue(r); } catch { val = "<getter threw>"; }
+
+                        Debug.WriteLine($"Task[{i}]  {p.Name} ({p.PropertyType.Name}) = {(val ?? "null")}");
+                    }
+                }
+            }
+
+
+            return tasks.SelectMany(t => t.Result.BaseEntities).ToList();
         }
 
         protected void RegisterCollectorTask<TEntityType>(Task<EntityListResult<TEntityType>> collectorTask) where TEntityType : BaseEntity

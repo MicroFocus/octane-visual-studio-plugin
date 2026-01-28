@@ -54,5 +54,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         public const string HasAttachments = "has_attachments";
         public const string NewTasks = "new_tasks";
         public const string BDDSpec = "bdd_spec";
+        public const string Priority = "priority";
+        public const string Milestone = "milestone";
+        public const string FeatureType = "feature_type";
+        public const string BacklogCoverage = "backlog_coverage";
+        public const string StartTime = "start_time";
+        public const string EndTime = "end_time";
+        public const string ActionType = "action_type";
+        public const string TransitionNote = "transition_note";
+
     }
 }
