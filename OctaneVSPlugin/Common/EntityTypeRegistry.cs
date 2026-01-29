@@ -73,14 +73,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             { ModelItem.SUBTYPE_UNIT, new EntityTypeInformation(
                 ModelItem.SUBTYPE_UNIT, "Unit", EntityTypeInformation.CommitMessageNotApplicable, "U", Color.FromRgb(58,55,255)) },
-            { ProcessItem.SUBTYPE_AUTO_ACTION, new EntityTypeInformation(
-                ProcessItem.SUBTYPE_AUTO_ACTION, "Auto Action", EntityTypeInformation.CommitMessageNotApplicable, "AA", Color.FromRgb(85, 195, 186))  },
+            { Process.SUBTYPE_AUTO_ACTION, new EntityTypeInformation(
+                Process.SUBTYPE_AUTO_ACTION, " Process Auto Action", EntityTypeInformation.CommitMessageNotApplicable, "AA", Color.FromRgb(85, 195, 186))  },
 
-            { ProcessItem.SUBTYPE_MANUAL_ACTION, new EntityTypeInformation(
-                ProcessItem.SUBTYPE_MANUAL_ACTION, "Manual Action", EntityTypeInformation.CommitMessageNotApplicable, "MA", Color.FromRgb(189, 79, 216))  },
+            { Process.SUBTYPE_MANUAL_ACTION, new EntityTypeInformation(
+                Process.SUBTYPE_MANUAL_ACTION, "Process Action", EntityTypeInformation.CommitMessageNotApplicable, "MA", Color.FromRgb(189, 79, 216))  },
 
-            { ProcessItem.SUBTYPE_QUALITY_GATE, new EntityTypeInformation(
-                ProcessItem.SUBTYPE_QUALITY_GATE, "Quality Gate", EntityTypeInformation.CommitMessageNotApplicable, "QA", Color.FromRgb(68, 52, 193))  },
+            { Process.SUBTYPE_QUALITY_GATE, new EntityTypeInformation(
+                Process.SUBTYPE_QUALITY_GATE, "Process Quality Gate", EntityTypeInformation.CommitMessageNotApplicable, "QA", Color.FromRgb(68, 52, 193))  },
             { "suite_run_scheduler", new EntityTypeInformation(
                 "suite_run_scheduler", "Suite Run Schedulers", EntityTypeInformation.CommitMessageNotApplicable, "SCH", Color.FromRgb(255, 45, 191)) }, 
 
@@ -192,18 +192,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
 
-                em.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out entityLabelMetadata);
-                Registry.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out info);
+                em.TryGetValue(Process.SUBTYPE_AUTO_ACTION, out entityLabelMetadata);
+                Registry.TryGetValue(Process.SUBTYPE_AUTO_ACTION, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
-                em.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out entityLabelMetadata);
-                Registry.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out info);
+                em.TryGetValue(Process.SUBTYPE_MANUAL_ACTION, out entityLabelMetadata);
+                Registry.TryGetValue(Process.SUBTYPE_MANUAL_ACTION, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
-                em.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out entityLabelMetadata);
-                Registry.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out info);
+                em.TryGetValue(Process.SUBTYPE_QUALITY_GATE, out entityLabelMetadata);
+                Registry.TryGetValue(Process.SUBTYPE_QUALITY_GATE, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
@@ -262,31 +262,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
 
-                // Suite Run Scheduler
                 DefaultRegistry.TryGetValue("suite_run_scheduler", out newInfo);
                 Registry.TryGetValue("suite_run_scheduler", out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
 
-                // Suite Run Scheduler Run
                 DefaultRegistry.TryGetValue("suite_run_scheduler_run", out newInfo);
                 Registry.TryGetValue("suite_run_scheduler_run", out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
 
 
-                DefaultRegistry.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out newInfo);
-                Registry.TryGetValue(ProcessItem.SUBTYPE_QUALITY_GATE, out oldInfo);
+                DefaultRegistry.TryGetValue(Process.SUBTYPE_QUALITY_GATE, out newInfo);
+                Registry.TryGetValue(Process.SUBTYPE_QUALITY_GATE, out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
 
-                DefaultRegistry.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out newInfo);
-                Registry.TryGetValue(ProcessItem.SUBTYPE_MANUAL_ACTION, out oldInfo);
+                DefaultRegistry.TryGetValue(Process.SUBTYPE_MANUAL_ACTION, out newInfo);
+                Registry.TryGetValue(Process.SUBTYPE_MANUAL_ACTION, out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
 
-                DefaultRegistry.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out newInfo);
-                Registry.TryGetValue(ProcessItem.SUBTYPE_AUTO_ACTION, out oldInfo);
+                DefaultRegistry.TryGetValue(Process.SUBTYPE_AUTO_ACTION, out newInfo);
+                Registry.TryGetValue(Process.SUBTYPE_AUTO_ACTION, out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
 

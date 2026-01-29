@@ -23,7 +23,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.ProcessItems;
 using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
@@ -66,14 +65,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             RegisterCollectorTask(Service.SearchEntitiesByType<ModelItem>(_searchString, _limitPerType, ModelItem.SUBTYPE_MODEL));
             RegisterCollectorTask(Service.SearchEntitiesByType<ModelItem>(_searchString, _limitPerType, ModelItem.SUBTYPE_UNIT));
 
-            RegisterCollectorTask(Service.SearchEntitiesByType<ProcessItem>(_searchString, _limitPerType, ProcessItem.SUBTYPE_AUTO_ACTION));
-            RegisterCollectorTask(Service.SearchEntitiesByType<ProcessItem>(_searchString, _limitPerType, ProcessItem.SUBTYPE_MANUAL_ACTION));
-            RegisterCollectorTask(Service.SearchEntitiesByType<ProcessItem>(_searchString, _limitPerType, ProcessItem.SUBTYPE_QUALITY_GATE));
+            RegisterCollectorTask(Service.SearchEntitiesByType<Process>(_searchString, _limitPerType, Process.SUBTYPE_AUTO_ACTION));
+            RegisterCollectorTask(Service.SearchEntitiesByType<Process>(_searchString, _limitPerType, Process.SUBTYPE_MANUAL_ACTION));
+            RegisterCollectorTask(Service.SearchEntitiesByType<Process>(_searchString, _limitPerType, Process.SUBTYPE_QUALITY_GATE));
 
 
 
-            RegisterCollectorTask(Service.SearchEntitiesByType<Schedule>(_searchString, _limitPerType, null));
-            RegisterCollectorTask(Service.SearchEntitiesByType<ScheduleRun>(_searchString, _limitPerType, null));
+            RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunScheduler>(_searchString, _limitPerType, null));
+            RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunSchedulerRun>(_searchString, _limitPerType, null));
 
 
 

@@ -523,9 +523,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             ModelItem.SUBTYPE_UNIT,
 
             // process item
-            ProcessItem.SUBTYPE_AUTO_ACTION,
-            ProcessItem.SUBTYPE_MANUAL_ACTION,
-            ProcessItem.SUBTYPE_QUALITY_GATE,
+            Process.SUBTYPE_AUTO_ACTION,
+            Process.SUBTYPE_MANUAL_ACTION,
+            Process.SUBTYPE_QUALITY_GATE,
 
             "suite_run_scheduler",
             "suite_run_scheduler_run",

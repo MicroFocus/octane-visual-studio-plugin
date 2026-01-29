@@ -451,46 +451,37 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             },
 
 
-            { ProcessItem.SUBTYPE_AUTO_ACTION, new HashSet<string>
+            { Process.SUBTYPE_AUTO_ACTION, new HashSet<string>
                         {
                             CommonFields.Name,
                             CommonFields.Phase,
                             BaseEntity.ID_FIELD,
-                            CommonFields.HasAttachments,
-                            CommonFields.NewTasks,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
                             CommonFields.Description,
-                            CommonFields.SubType,
-                            // process-specific field
-                            CommonFields.Owner
+                            CommonFields.SubType
                         }
             },
-            { ProcessItem.SUBTYPE_MANUAL_ACTION, new HashSet<string>
+            { Process.SUBTYPE_MANUAL_ACTION, new HashSet<string>
                         {
                             CommonFields.Name,
                             CommonFields.Phase,
                             BaseEntity.ID_FIELD,
-                            CommonFields.HasAttachments,
-                            CommonFields.NewTasks,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
                             CommonFields.Description,
-                            CommonFields.SubType,
-                            "duration",
-                            "start_time",
-                            "end_time",
-                            CommonFields.Owner
+                            CommonFields.SubType
                         }
             },
-            { ProcessItem.SUBTYPE_QUALITY_GATE, new HashSet<string>
+            { Process.SUBTYPE_QUALITY_GATE, new HashSet<string>
                         {
                             CommonFields.Name,
                             CommonFields.Phase,
                             BaseEntity.ID_FIELD,
-                            CommonFields.HasAttachments,
-                            CommonFields.NewTasks,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
                             CommonFields.Description,
-                            CommonFields.SubType,
-                            CommonFields.Owner
+                            CommonFields.SubType
                         }
             },
             { RunManual.SUBTYPE_RUN_MANUAL, new HashSet<string>

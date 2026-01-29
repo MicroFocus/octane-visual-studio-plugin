@@ -94,7 +94,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
 
                 // If it’s the typed Octane result, check Data/data
                 // (Adjust property name to what IntelliSense shows: Data vs data)
-                if (r is EntityListResult<MicroFocus.Adm.Octane.Api.Core.Entities.ProcessItem> pi)
+                if (r is EntityListResult<MicroFocus.Adm.Octane.Api.Core.Entities.Process> pi)
                 {
                    Debug.WriteLine($"Task[{i}] data null? {pi.data == null}, count={(pi.data?.Count ?? -1)}");
                    Debug.WriteLine($"Task[{i}] total_count={pi.total_count}");

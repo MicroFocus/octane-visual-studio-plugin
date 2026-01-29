@@ -23,7 +23,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.ProcessItems;
 using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
@@ -80,7 +79,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         /// Most of the entites are aggregated entities with sub-types, for the exceptions listed
         /// here the Subtype field is not fetched.
         /// </summary>
-        private static readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment) };
+        private static readonly Type[] EntitiesWithoutSubtype = new[] { typeof(Task), typeof(Comment), typeof(SuiteRunScheduler), typeof(SuiteRunSchedulerRun) };
 
         private MyWorkMetadata()
         {
@@ -176,45 +175,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(CommonFields.SubType, "Subtype")
                 );
 
-            AddSubType<Schedule>("suite_run_scheduler",
-                FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtBottom("release", "Release"),
-                FieldAtBottom("milestone", "Milestone")
-            );
-
-            AddSubType<ScheduleRun>("suite_run_scheduler_run",
-                FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtBottom("start_time", "Start Time"),
-                FieldAtBottom("duration", "Duration"),
-                FieldAtBottom("general_run_status", "General Run Status")
-            );
-
-
-
-
-            AddSubType<ProcessItem>(ProcessItem.SUBTYPE_AUTO_ACTION,
-                FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_AUTO_ACTION
                 );
 
-            AddSubType<ProcessItem>(ProcessItem.SUBTYPE_MANUAL_ACTION,
-                FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_MANUAL_ACTION
                 );
 
-            AddSubType<ProcessItem>(ProcessItem.SUBTYPE_QUALITY_GATE,
-                FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_QUALITY_GATE
                 );
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
@@ -265,6 +232,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
                 );
 
+            AddSubType<SuiteRunScheduler>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER
+            );
+
+            AddSubType<SuiteRunSchedulerRun>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER
+            );
+
             AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 FieldAtSubTitle(Comment.TEXT_FIELD, string.Empty, string.Empty, entity =>
                 {
@@ -278,10 +251,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtTop(CommonFields.Owner, "Owner"),
                 FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
                 );
-            _entitiesFieldsFetchInfo[typeof(AutoAction)] = _entitiesFieldsFetchInfo[typeof(ProcessItem)];
-            _entitiesFieldsFetchInfo[typeof(ManualAction)] = _entitiesFieldsFetchInfo[typeof(ProcessItem)];
-            _entitiesFieldsFetchInfo[typeof(QualityGate)] = _entitiesFieldsFetchInfo[typeof(ProcessItem)];
-
         }
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)
         {

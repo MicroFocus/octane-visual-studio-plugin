@@ -112,7 +112,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             var url = $"{OctaneConfiguration.Url}/ui/entity-navigation?p={OctaneConfiguration.SharedSpaceId}/{OctaneConfiguration.WorkSpaceId}&entityType={Utility.GetBaseEntityType(entity)}&id={entity.Id}";
 
             // Open the URL in the user's default browser.
-            Process.Start(url);
+            System.Diagnostics.Process.Start(url);
         }
 
         #region Serialization
