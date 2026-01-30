@@ -175,13 +175,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(CommonFields.SubType, "Subtype")
                 );
 
-            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_AUTO_ACTION
+            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_AUTO_ACTION,
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
                 );
 
-            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_MANUAL_ACTION
+            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_MANUAL_ACTION,
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
                 );
 
-            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_QUALITY_GATE
+            AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_QUALITY_GATE,
+                FieldAtTop(CommonFields.Owner, "Owner"),
+                FieldAtTop(CommonFields.Description, "Description"),
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtBottom(CommonFields.SubType, "Subtype")
                 );
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
@@ -232,10 +244,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(Task.ESTIMATED_HOURS_FIELD, "Estimated Hours")
                 );
 
-            AddSubType<SuiteRunScheduler>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER
+            AddSubType<SuiteRunScheduler>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtTop(CommonFields.Description, "Description")
             );
 
-            AddSubType<SuiteRunSchedulerRun>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER
+            AddSubType<SuiteRunSchedulerRun>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
+                FieldAtTop(CommonFields.Description, "Description")
             );
 
             AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,

@@ -456,10 +456,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.Name,
                             CommonFields.Phase,
                             BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
                             CommonFields.Description,
-                            CommonFields.SubType
+                            CommonFields.SubType,
+                            CommonFields.Owner
                         }
             },
             { Process.SUBTYPE_MANUAL_ACTION, new HashSet<string>
@@ -469,8 +472,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             BaseEntity.ID_FIELD,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
                             CommonFields.Description,
-                            CommonFields.SubType
+                            CommonFields.SubType,
+                             "duration",
+                            "start_time",
+                            "end_time",
+                            CommonFields.Owner
                         }
             },
             { Process.SUBTYPE_QUALITY_GATE, new HashSet<string>
@@ -478,10 +487,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.Name,
                             CommonFields.Phase,
                             BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
                             CommonFields.Description,
-                            CommonFields.SubType
+                            CommonFields.SubType,
+                            CommonFields.Owner
                         }
             },
             { RunManual.SUBTYPE_RUN_MANUAL, new HashSet<string>

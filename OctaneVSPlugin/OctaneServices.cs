@@ -367,7 +367,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             { "work_item", "owner_work_item" },
             { "model_item", "owner_model_item" },
-            { "process_", "owner_process" },
+            { "process", "owner_process" },
             { "task", "owner_task" },
             { "test", "owner_test" },
             { "run", "owner_run" },

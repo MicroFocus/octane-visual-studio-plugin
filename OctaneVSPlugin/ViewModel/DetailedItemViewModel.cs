@@ -197,7 +197,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     await RetrieveComments();
 
                 var transitions = await octaneService.GetTransitionsForEntityType(EntityType);
-                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite")
+                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite" && Entity.TypeName != "suite_run_scheduler" && Entity.TypeName != "suite_run_scheduler_run")
                 {
 
                     var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
