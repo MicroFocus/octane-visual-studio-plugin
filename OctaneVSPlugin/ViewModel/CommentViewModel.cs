@@ -101,10 +101,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
             if (_commentEntity.OwnerTask != null)
                 return _commentEntity.OwnerTask;
+
             if (_commentEntity.OwnerProcess != null)
                 return _commentEntity.OwnerProcess;
+
             if (_commentEntity.OwnerModelItem != null)
                 return _commentEntity.OwnerModelItem;
+
+            if (_commentEntity.OwnerSuiteRunScheduler != null)
+                return _commentEntity.OwnerSuiteRunScheduler;
+
+            if (_commentEntity.OwnerSuiteRunSchedulerRun != null)
+                return _commentEntity.OwnerSuiteRunSchedulerRun;
+
 
             return _commentEntity.OwnerBDDSpec;
         }

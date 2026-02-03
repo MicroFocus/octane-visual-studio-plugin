@@ -434,7 +434,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                     "milestone"
                 }
             },
-
             { "suite_run_scheduler_run", new HashSet<string>
                 {
                     BaseEntity.ID_FIELD,
@@ -449,8 +448,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                     "general_run_status"
                 }
             },
-
-
             { Process.SUBTYPE_AUTO_ACTION, new HashSet<string>
                         {
                             CommonFields.Name,

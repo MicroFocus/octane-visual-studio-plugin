@@ -23,7 +23,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 using MicroFocus.Adm.Octane.VisualStudio.Common;
 using System;
 using System.Collections.Generic;
@@ -83,7 +82,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
         private MyWorkMetadata()
         {
-
             _entitiesFieldsFetchInfo = new Dictionary<Type, Dictionary<string, FieldInfo[]>>();
             fieldsByEntityType = new Dictionary<Type, List<string>>();
 
@@ -283,23 +281,19 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         {
             string subType = GetEntitySubType(entity);
 
-            // Prefer the defined subtitle field if present
             var subtitleField = GetFieldInfoByType(entity.GetType(), subType, FieldPosition.SubTitle).FirstOrDefault();
             if (subtitleField != null)
                 return subtitleField;
 
-            // Try simple-entity placeholder subtype (some entity types store fields there)
             subtitleField = GetFieldInfoByType(entity.GetType(), SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER, FieldPosition.SubTitle).FirstOrDefault();
             if (subtitleField != null)
                 return subtitleField;
 
-            // Last resort: return a fallback FieldInfo using the entity name so the UI has something to render.
             return FieldAtSubTitle(CommonFields.Name, string.Empty, string.Empty, null);
         }
 
         private IEnumerable<FieldInfo> GetFieldInfoByType(Type entityType, string subType, FieldPosition position)
         {
-            // Be defensive: return empty sequence when no metadata exists for the requested type/subtype.
             Dictionary<string, FieldInfo[]> subTypeFields;
             if (!_entitiesFieldsFetchInfo.TryGetValue(entityType, out subTypeFields))
             {

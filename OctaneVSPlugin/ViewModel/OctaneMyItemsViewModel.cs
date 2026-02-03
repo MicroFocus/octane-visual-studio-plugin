@@ -206,8 +206,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 try
                 {
                     octaneService = OctaneServices.GetInstance();
-                }
-                catch (Exception e)
+                }catch (Exception e)
                 {
                     if (e.GetBaseException().Message.Equals("Object not created"))
                     {
@@ -227,9 +226,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 IEnumerable<BaseEntity> items = await octaneService.GetMyItems();
                 // when a user story is converted to feature it might still be in the list of my work items, 
                 // the plugins do not support features in my work, so we just remove those entities
-                //items = items.Where(entity => !WorkItem.SUBTYPE_FEATURE.Equals(entity.GetStringValue(CommonFields.SubType)));
                 // exclude TestSuite entity because we don't support it yet
-                //items = items.Where(entity => !TestSuite.SUBTYPE_TEST_SUITE.Equals(entity.GetStringValue(CommonFields.SubType)));
 
                 if (sublistsMap == null)
                 {
@@ -252,7 +249,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     MyWorkItemsSublist itemSublist;
 
                     string concreteEntityType = Utility.GetConcreteEntityType(entity);
-                    if (sublistsMap.TryGetValue(concreteEntityType, out itemSublist))
+                    if(sublistsMap.TryGetValue(concreteEntityType, out itemSublist))
                     {
                         itemSublist.Items.Add(octaneItem);
                     }
@@ -279,7 +276,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 myWorkItemSublists.ForEach(ms =>
                 {
-                    if (ms.IsSelected)
+                    if(ms.IsSelected)
                     {
                         foreach (var myWorkItem in ms.Items)
                         {
@@ -298,7 +295,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             {
                 MainWindowCommand.Instance?.DisableActiveItemToolbar();
                 Mode = MainWindowMode.FailToLoad;
-                if (ex is NotConnectedException)
+                if(ex is NotConnectedException)
                 {
                     LastExceptionMessage = "Failed to load \"My Work\"";
                 }
@@ -306,7 +303,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     LastExceptionMessage = ex.Message;
                 }
-
             }
         }
 

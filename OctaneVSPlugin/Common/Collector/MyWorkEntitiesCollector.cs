@@ -23,7 +23,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using System;
 using System.Threading.Tasks;
@@ -73,6 +72,5 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
 
             RegisterCollectorTask(fetchTask);
         }
-
     }
 }

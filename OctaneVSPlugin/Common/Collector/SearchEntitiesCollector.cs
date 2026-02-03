@@ -23,7 +23,6 @@
 */
 
 using MicroFocus.Adm.Octane.Api.Core.Entities;
-using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 
 namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
 {
@@ -69,12 +68,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             RegisterCollectorTask(Service.SearchEntitiesByType<Process>(_searchString, _limitPerType, Process.SUBTYPE_MANUAL_ACTION));
             RegisterCollectorTask(Service.SearchEntitiesByType<Process>(_searchString, _limitPerType, Process.SUBTYPE_QUALITY_GATE));
 
-
-
             RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunScheduler>(_searchString, _limitPerType, null));
             RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunSchedulerRun>(_searchString, _limitPerType, null));
-
-
 
             RegisterCollectorTask(Service.SearchEntitiesByType<Task>(_searchString, _limitPerType, Task.TYPE_TASK));
 

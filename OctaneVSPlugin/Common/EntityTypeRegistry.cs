@@ -44,7 +44,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { WorkItem.SUBTYPE_STORY, new EntityTypeInformation(
                 WorkItem.SUBTYPE_STORY, "User Story", "user story", "US", Color.FromRgb(255, 176, 0)) },
 
-
             { WorkItem.SUBTYPE_QUALITY_STORY, new EntityTypeInformation(
                 WorkItem.SUBTYPE_QUALITY_STORY, "Quality Story", "quality story", "QS", Color.FromRgb(51, 193, 128)) },
 
@@ -66,8 +65,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { TestSuite.SUBTYPE_TEST_SUITE, new EntityTypeInformation(
                 TestSuite.SUBTYPE_TEST_SUITE, "Test Suite", EntityTypeInformation.CommitMessageNotApplicable, "TS", Color.FromRgb(39, 23, 130)) },
 
-           { ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, new EntityTypeInformation(
+            { ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, new EntityTypeInformation(
                 ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, "Model Based Test", EntityTypeInformation.CommitMessageNotApplicable, "MBT", Color.FromRgb(168, 230, 240))  },
+
             { ModelItem.SUBTYPE_MODEL, new EntityTypeInformation(
                 ModelItem.SUBTYPE_MODEL, "Model", EntityTypeInformation.CommitMessageNotApplicable, "M", Color.FromRgb(168, 251, 223)) },
 
@@ -81,6 +81,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
 
             { Process.SUBTYPE_QUALITY_GATE, new EntityTypeInformation(
                 Process.SUBTYPE_QUALITY_GATE, "Process Quality Gate", EntityTypeInformation.CommitMessageNotApplicable, "QA", Color.FromRgb(68, 52, 193))  },
+
             { "suite_run_scheduler", new EntityTypeInformation(
                 "suite_run_scheduler", "Suite Run Schedulers", EntityTypeInformation.CommitMessageNotApplicable, "SCH", Color.FromRgb(255, 45, 191)) }, 
 
@@ -154,7 +155,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 Registry.TryGetValue(WorkItem.SUBTYPE_EPIC, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
-
 
                 em.TryGetValue(WorkItem.SUBTYPE_FEATURE, out entityLabelMetadata);
                 Registry.TryGetValue(WorkItem.SUBTYPE_FEATURE, out info);

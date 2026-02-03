@@ -27,7 +27,6 @@ using MicroFocus.Adm.Octane.Api.Core.Connector;
 using MicroFocus.Adm.Octane.Api.Core.Connector.Authentication;
 using MicroFocus.Adm.Octane.Api.Core.Entities;
 using MicroFocus.Adm.Octane.Api.Core.Entities.Base;
-using MicroFocus.Adm.Octane.Api.Core.Entities.SuiteRuns;
 using MicroFocus.Adm.Octane.Api.Core.Services;
 using MicroFocus.Adm.Octane.Api.Core.Services.Query;
 using MicroFocus.Adm.Octane.Api.Core.Services.RequestContext;
@@ -227,41 +226,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             var owner = await GetWorkspaceUser();
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext,
                 BuildUserItemCriteria(owner), BuildUserItemFields());
-            Debug.WriteLine($"MyWork: userItems.total_count={userItems?.total_count ?? 0}");
-            if (userItems?.data != null)
-            {
-                foreach (var ui in userItems.data)
-                {
-                    bool hasWork = ui.GetValue(UserItem.WORK_ITEM_REFERENCE) != null;
-                    bool hasTest = ui.GetValue(UserItem.TEST_REFERENCE) != null;
-                    bool hasRun = ui.GetValue(UserItem.RUN_REFERENCE) != null;
-                    bool hasRequirement = ui.GetValue(UserItem.REQUIREMENT_REFERENCE) != null;
-                    bool hasTask = ui.GetValue(UserItem.TASK_REFERENCE) != null;
-
-                    bool hasScheduler = false;
-                    bool hasSchedulerRun = false;
-
-                    try { hasScheduler = ui.GetValue("my_follow_items_suite_run_scheduler") != null; } catch { hasScheduler = false; }
-                    try { hasSchedulerRun = ui.GetValue("my_follow_items_suite_run_scheduler_run") != null; } catch { hasSchedulerRun = false; }
-
-                    Debug.WriteLine($"MyWork: ... hasScheduler={hasScheduler} hasSchedulerRun={hasSchedulerRun}");
-
-
-                    bool hasModel = false;
-                    try { hasModel = ui.GetValue("my_follow_items_model_item") != null; } catch { hasModel = false; }
-
-                    bool hasProcess = false;
-                    try { hasProcess = ui.GetValue("my_follow_items_process") != null; } catch { hasProcess = false; }
-
-                    Debug.WriteLine($"Process process: value= {ui.GetValue("my_follow_items_process")}");
-                    Debug.WriteLine($"Process model: value= {ui.GetValue("my_follow_items_model_item")}");
-                    Debug.WriteLine($"Process schedule: value= {ui.GetValue("my_follow_items_suite_run_scheduler")}");
-                    Debug.WriteLine($"Process schedule run: value= {ui.GetValue("my_follow_items_suite_run_scheduler_run")}");
-
-
-                    Debug.WriteLine($"MyWork: UserItem id={ui.Id} entity_type={ui.GetStringValue(UserItem.ENTITY_TYPE_FIELD)} hasWork={hasWork} hasTest={hasTest} hasRun={hasRun} hasRequirement={hasRequirement} hasTask={hasTask} hasModel={hasModel} hasProcess={hasProcess}");
-                }
-            }
 
             var collector = new MyWorkEntitiesCollector(this, userItems, MyWorkMetadata.Instance);
             List<BaseEntity> result = await collector.GetAllEntities();
@@ -276,14 +240,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext, 
                 BuildFindUserItemCriteria(owner, baseEntity), BuildUserItemFields());
 
-            var ui = userItems.data.First();
-            var raw = ui.GetValue(UserItem.PROCESS_REFERENCE); // "my_follow_items_process"
-            var model = ui.GetValue(UserItem.MODEL_ITEM_REFERENCE);
-            Debug.WriteLine(
-        $"UserItem id={ui.Id} | model={(model != null)} | process={(raw != null)}"
-    );
-
-
             if (userItems.data.Count > 0)
             {
 				return userItems.data;
@@ -294,14 +250,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
         }
 
-
         public async Task<IList<BaseEntity>> SearchEntities(string searchString, int limitPerType)
         {
             var collector = new SearchEntitiesCollector(this, searchString, limitPerType);
             List<BaseEntity> result = await collector.GetAllEntities();
             return result;
         }
-
 
         public Task<EntityListResult<TEntity>> SearchEntitiesByType<TEntity>(string searchString, int limit, string type)
             where TEntity : BaseEntity
@@ -334,7 +288,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Comment.OWNER_RUN_FIELD,
             Comment.OWNER_REQUIREMENT_FIELD,
             Comment.CREATION_TIME_FIELD,
-            Comment.TEXT_FIELD
+            Comment.TEXT_FIELD,
+            Comment.OWNER_PROCESS_FIELD,
+            Comment.OWNER_MODEL_FIELD,
+            Comment.OWNER_SUITE_RUN_SCHEDULER_FIELD,
+            Comment.OWNER_SUITE_RUN_SCHEDULER_RUN_FIELD
+
         };
 
         public async Task<IList<BaseEntity>> GetMyCommentItems()
@@ -470,9 +429,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
 
             return fetchEntitiesTask;
         }
-
-
-
 
         public Task<TestScript> GetTestScript(EntityId id)
         {
