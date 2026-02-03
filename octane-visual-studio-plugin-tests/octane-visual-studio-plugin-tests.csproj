@@ -85,6 +85,12 @@
     <None Include="app.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OctaneVSPlugin\octane-visual-studio-plugin.csproj">
+      <Project>{95adad0b-a1ff-4be8-ae43-300204e3e667}</Project>
+      <Name>octane-visual-studio-plugin</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
     <None Include="default.runsettings">
       <SubType>Designer</SubType>
     </None>
@@ -99,7 +105,7 @@
     <PackageReference Include="MSTest.TestFramework">
       <Version>2.2.10</Version>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Shell.15.0">
+	<PackageReference Include="Microsoft.VisualStudio.Shell.15.0">
       <Version>15.9.28307</Version>
     </PackageReference>
   </ItemGroup>
