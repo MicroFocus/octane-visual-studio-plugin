@@ -88,7 +88,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { "suite_run_scheduler_run", new EntityTypeInformation(
                 "suite_run_scheduler_run", "Suite Run Scheduler Runs", EntityTypeInformation.CommitMessageNotApplicable, "SCR", Color.FromRgb(22, 150, 181)) },   
 
-
             { RunSuite.SUBTYPE_RUN_SUITE, new EntityTypeInformation(
                 RunSuite.SUBTYPE_RUN_SUITE, "Test Suite Run", EntityTypeInformation.CommitMessageNotApplicable, "SR", Color.FromRgb(0, 171, 243)) },
 

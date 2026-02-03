@@ -240,7 +240,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             EntityListResult<UserItem> userItems = await es.GetAsync<UserItem>(workspaceContext, 
                 BuildFindUserItemCriteria(owner, baseEntity), BuildUserItemFields());
 
-            if (userItems.data.Count > 0)
+            if(userItems.data.Count > 0)
             {
 				return userItems.data;
             }

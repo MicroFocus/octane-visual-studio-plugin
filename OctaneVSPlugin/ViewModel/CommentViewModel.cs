@@ -114,7 +114,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             if (_commentEntity.OwnerSuiteRunSchedulerRun != null)
                 return _commentEntity.OwnerSuiteRunSchedulerRun;
 
-
             return _commentEntity.OwnerBDDSpec;
         }
 

@@ -206,7 +206,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 try
                 {
                     octaneService = OctaneServices.GetInstance();
-                }catch (Exception e)
+                } catch (Exception e)
                 {
                     if (e.GetBaseException().Message.Equals("Object not created"))
                     {
@@ -276,8 +276,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 myWorkItemSublists.ForEach(ms =>
                 {
-                    if(ms.IsSelected)
-                    {
+                    if(ms.IsSelected) {
                         foreach (var myWorkItem in ms.Items)
                         {
                             _myItems.Add(myWorkItem);
@@ -303,6 +302,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     LastExceptionMessage = ex.Message;
                 }
+
             }
         }
 

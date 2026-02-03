@@ -124,7 +124,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
-
             AddSubType<Test>(Test.SUBTYPE_MANUAL_TEST,
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.Phase, "Phase"),
@@ -265,6 +264,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
                 );
         }
+
         internal IEnumerable<FieldInfo> GetBottomFieldsInfo(BaseEntity entity)
         {
             string subType = GetEntitySubType(entity);
