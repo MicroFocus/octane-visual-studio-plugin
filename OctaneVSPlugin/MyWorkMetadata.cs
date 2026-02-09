@@ -173,6 +173,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_AUTO_ACTION,
+                FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
                 FieldAtTop(CommonFields.Description, "Description"),
                 FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
@@ -180,6 +181,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_MANUAL_ACTION,
+                FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
                 FieldAtTop(CommonFields.Description, "Description"),
                 FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
@@ -187,6 +189,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_QUALITY_GATE,
+                FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
                 FieldAtTop(CommonFields.Description, "Description"),
                 FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
@@ -242,11 +245,13 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 );
 
             AddSubType<SuiteRunScheduler>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
+                FieldAtSubTitle(CommonFields.Status, "status"),
                 FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
                 FieldAtTop(CommonFields.Description, "Description")
             );
 
             AddSubType<SuiteRunSchedulerRun>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
+                FieldAtSubTitle(CommonFields.Status, "status"),
                 FieldAtTop(CommonFields.Description, "Description")
             );
 
@@ -290,6 +295,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 return subtitleField;
 
             return FieldAtSubTitle(CommonFields.Name, string.Empty, string.Empty, null);
+            //string subType = GetEntitySubType(entity);
+            //return GetFieldInfoByType(entity.GetType(), subType, FieldPosition.SubTitle).First();
         }
 
         private IEnumerable<FieldInfo> GetFieldInfoByType(Type entityType, string subType, FieldPosition position)
@@ -307,6 +314,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             }
 
             return fieldsForSubtype.Where(field => field.Position == position);
+            //var fieldByTypeQuery =
+            //    from field in _entitiesFieldsFetchInfo[entityType][subType]
+            //    where field.Position == position
+            //    select field;
+
+            //return fieldByTypeQuery;
         }
 
         private string GetEntitySubType(BaseEntity entity)

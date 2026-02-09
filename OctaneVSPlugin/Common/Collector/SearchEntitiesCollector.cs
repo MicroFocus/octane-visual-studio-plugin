@@ -68,8 +68,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             RegisterCollectorTask(Service.SearchEntitiesByType<Process>(_searchString, _limitPerType, Process.SUBTYPE_MANUAL_ACTION));
             RegisterCollectorTask(Service.SearchEntitiesByType<Process>(_searchString, _limitPerType, Process.SUBTYPE_QUALITY_GATE));
 
-            RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunScheduler>(_searchString, _limitPerType, null));
-            RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunSchedulerRun>(_searchString, _limitPerType, null));
+            RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunScheduler>(_searchString, _limitPerType, SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER));
+            RegisterCollectorTask(Service.SearchEntitiesByType<SuiteRunSchedulerRun>(_searchString, _limitPerType, SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN));
 
             RegisterCollectorTask(Service.SearchEntitiesByType<Task>(_searchString, _limitPerType, Task.TYPE_TASK));
 

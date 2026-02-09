@@ -421,31 +421,31 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.SubType
                         }
             },
-            { "suite_run_scheduler", new HashSet<string>
+            { SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, new HashSet<string>
                 {
                     BaseEntity.ID_FIELD,
                     CommonFields.Name,
                     CommonFields.Author,
                     CommonFields.Owner,
                     CommonFields.Description,
-                    "creation_time",
-                    "last_modified",
-                    "release",
-                    "milestone"
+                    CommonFields.CreationTime,
+                    CommonFields.LastModified,
+                    CommonFields.Release,
+                    CommonFields.Milestone
                 }
             },
-            { "suite_run_scheduler_run", new HashSet<string>
+            { SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, new HashSet<string>
                 {
                     BaseEntity.ID_FIELD,
                     CommonFields.Name,
                     CommonFields.Author,
                     CommonFields.Owner,
                     CommonFields.Description,
-                    "creation_time",
-                    "last_modified",
-                    "start_time",
-                    "duration",
-                    "general_run_status"
+                    CommonFields.CreationTime,
+                    CommonFields.LastModified,
+                    CommonFields.StartTime,
+                    CommonFields.Duration,
+                    CommonFields.GeneralRunStatus
                 }
             },
             { Process.SUBTYPE_AUTO_ACTION, new HashSet<string>
@@ -473,9 +473,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.NewTasks,
                             CommonFields.Description,
                             CommonFields.SubType,
-                             "duration",
-                            "start_time",
-                            "end_time",
+                            CommonFields.Duration,
+                            CommonFields.StartTime,
+                            CommonFields.EndTime,
                             CommonFields.Owner
                         }
             },

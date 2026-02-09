@@ -82,11 +82,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
             { Process.SUBTYPE_QUALITY_GATE, new EntityTypeInformation(
                 Process.SUBTYPE_QUALITY_GATE, "Process Quality Gate", EntityTypeInformation.CommitMessageNotApplicable, "QA", Color.FromRgb(68, 52, 193))  },
 
-            { "suite_run_scheduler", new EntityTypeInformation(
-                "suite_run_scheduler", "Suite Run Schedulers", EntityTypeInformation.CommitMessageNotApplicable, "SCH", Color.FromRgb(255, 45, 191)) }, 
+            { SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, new EntityTypeInformation(
+                SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, "Suite Run Schedulers", EntityTypeInformation.CommitMessageNotApplicable, "SCH", Color.FromRgb(255, 45, 191)) }, 
 
-            { "suite_run_scheduler_run", new EntityTypeInformation(
-                "suite_run_scheduler_run", "Suite Run Scheduler Runs", EntityTypeInformation.CommitMessageNotApplicable, "SCR", Color.FromRgb(22, 150, 181)) },   
+            { SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, new EntityTypeInformation(
+                SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, "Suite Run Scheduler Runs", EntityTypeInformation.CommitMessageNotApplicable, "SCR", Color.FromRgb(22, 150, 181)) },
 
             { RunSuite.SUBTYPE_RUN_SUITE, new EntityTypeInformation(
                 RunSuite.SUBTYPE_RUN_SUITE, "Test Suite Run", EntityTypeInformation.CommitMessageNotApplicable, "SR", Color.FromRgb(0, 171, 243)) },
@@ -180,17 +180,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
-                em.TryGetValue("suite_run_scheduler", out entityLabelMetadata);
-                Registry.TryGetValue("suite_run_scheduler", out info);
-                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
-                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
-
-                em.TryGetValue("suite_run_scheduler_run", out entityLabelMetadata);
-                Registry.TryGetValue("suite_run_scheduler_run", out info);
-                info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
-                info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
-
-
                 em.TryGetValue(Process.SUBTYPE_AUTO_ACTION, out entityLabelMetadata);
                 Registry.TryGetValue(Process.SUBTYPE_AUTO_ACTION, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
@@ -260,17 +249,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 Registry.TryGetValue(ModelItem.SUBTYPE_UNIT, out oldInfo);
                 oldInfo.DisplayName = newInfo.DisplayName;
                 oldInfo.ShortLabel = newInfo.ShortLabel;
-
-                DefaultRegistry.TryGetValue("suite_run_scheduler", out newInfo);
-                Registry.TryGetValue("suite_run_scheduler", out oldInfo);
-                oldInfo.DisplayName = newInfo.DisplayName;
-                oldInfo.ShortLabel = newInfo.ShortLabel;
-
-                DefaultRegistry.TryGetValue("suite_run_scheduler_run", out newInfo);
-                Registry.TryGetValue("suite_run_scheduler_run", out oldInfo);
-                oldInfo.DisplayName = newInfo.DisplayName;
-                oldInfo.ShortLabel = newInfo.ShortLabel;
-
 
                 DefaultRegistry.TryGetValue(Process.SUBTYPE_QUALITY_GATE, out newInfo);
                 Registry.TryGetValue(Process.SUBTYPE_QUALITY_GATE, out oldInfo);

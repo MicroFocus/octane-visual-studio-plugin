@@ -527,8 +527,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             Process.SUBTYPE_MANUAL_ACTION,
             Process.SUBTYPE_QUALITY_GATE,
 
-            "suite_run_scheduler",
-            "suite_run_scheduler_run",
+            SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER,
+            SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN,
 
             // requirement
             Requirement.SUBTYPE_DOCUMENT,

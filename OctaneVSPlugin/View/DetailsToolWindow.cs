@@ -80,8 +80,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             RunManual.SUBTYPE_RUN_MANUAL,
             RunSuite.SUBTYPE_RUN_SUITE,
 
-            "suite_run_scheduler",
-            "suite_run_scheduler_run",
+            SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER,
+            SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN,
 
             // requirement
             Requirement.SUBTYPE_DOCUMENT

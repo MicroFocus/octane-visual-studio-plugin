@@ -224,9 +224,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 bool foundActiveItem = false;
                 IEnumerable<BaseEntity> items = await octaneService.GetMyItems();
-                // when a user story is converted to feature it might still be in the list of my work items, 
-                // the plugins do not support features in my work, so we just remove those entities
-                // exclude TestSuite entity because we don't support it yet
 
                 if (sublistsMap == null)
                 {
@@ -349,8 +346,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
                     { TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, new MyWorkItemsSublist( TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST )},
                     { Comment.TYPE_COMMENT, new MyWorkItemsSublist( Comment.TYPE_COMMENT )},
-                    { "suite_run_scheduler", new MyWorkItemsSublist("suite_run_scheduler") },
-                    { "suite_run_scheduler_run", new MyWorkItemsSublist("suite_run_scheduler_run") },
+                    { SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, new MyWorkItemsSublist(SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER) },
+                    { SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, new MyWorkItemsSublist(SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN) },
                 };
         }
 

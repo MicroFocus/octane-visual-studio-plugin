@@ -62,5 +62,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         public const string EndTime = "end_time";
         public const string ActionType = "action_type";
         public const string TransitionNote = "transition_note";
+        public const string Duration = "duration";
+        public const string GeneralRunStatus = "general_run_status";
+        public const string RunMode = "run_mode";
+        public const string Status = "status";
     }
 }
