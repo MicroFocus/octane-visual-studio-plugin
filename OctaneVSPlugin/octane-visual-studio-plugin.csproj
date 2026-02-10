@@ -45,7 +45,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MicroFocus.Adm.Octane.VisualStudio</RootNamespace>
     <AssemblyName>core-software-delivery-platform-visual-studio-plugin</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <GeneratePkgDefFile>true</GeneratePkgDefFile>
     <IncludeAssemblyInVSIXContainer>true</IncludeAssemblyInVSIXContainer>
     <IncludeDebugSymbolsInVSIXContainer>true</IncludeDebugSymbolsInVSIXContainer>
@@ -306,9 +306,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
+    <BootstrapperPackage Include=".NETFramework,Version=v4.8">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4.7.2 %28x86 and x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4.8 %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -322,7 +322,7 @@
       <Version>3.4.0</Version>
     </PackageReference>
     <PackageReference Include="MicroFocus.Adm.Octane.Api.Core">
-      <Version>16.0.200.1</Version>
+      <Version>26.1</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.CoreUtility" Version="16.8.239" />
     <PackageReference Include="Microsoft.VisualStudio.Imaging" Version="15.9.28307" />
@@ -349,6 +349,9 @@
     <PackageReference Include="NSoup">
       <Version>0.8.0</Version>
     </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(VSToolsPath)\VSSDK\Microsoft.VsSDK.targets" Condition="'$(VSToolsPath)' != ''" />
