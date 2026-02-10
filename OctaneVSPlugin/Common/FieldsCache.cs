@@ -323,7 +323,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.Phase,
                             BaseEntity.ID_FIELD,
                             CommonFields.HasAttachments,
-                            CommonFields.NewTasks,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
                             CommonFields.Description,
@@ -427,11 +426,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                     CommonFields.Name,
                     CommonFields.Author,
                     CommonFields.Owner,
-                    CommonFields.Description,
-                    CommonFields.CreationTime,
-                    CommonFields.LastModified,
-                    CommonFields.Release,
-                    CommonFields.Milestone
+                    CommonFields.Description
                 }
             },
             { SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, new HashSet<string>
@@ -440,12 +435,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                     CommonFields.Name,
                     CommonFields.Author,
                     CommonFields.Owner,
-                    CommonFields.Description,
-                    CommonFields.CreationTime,
-                    CommonFields.LastModified,
-                    CommonFields.StartTime,
-                    CommonFields.Duration,
-                    CommonFields.GeneralRunStatus
+                    CommonFields.Description
                 }
             },
             { Process.SUBTYPE_AUTO_ACTION, new HashSet<string>
@@ -473,9 +463,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.NewTasks,
                             CommonFields.Description,
                             CommonFields.SubType,
-                            CommonFields.Duration,
-                            CommonFields.StartTime,
-                            CommonFields.EndTime,
                             CommonFields.Owner
                         }
             },

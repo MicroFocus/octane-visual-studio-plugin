@@ -80,7 +80,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 Process.SUBTYPE_MANUAL_ACTION, "Process Action", EntityTypeInformation.CommitMessageNotApplicable, "MA", Color.FromRgb(189, 79, 216))  },
 
             { Process.SUBTYPE_QUALITY_GATE, new EntityTypeInformation(
-                Process.SUBTYPE_QUALITY_GATE, "Process Quality Gate", EntityTypeInformation.CommitMessageNotApplicable, "QA", Color.FromRgb(68, 52, 193))  },
+                Process.SUBTYPE_QUALITY_GATE, "Process Quality Gate", EntityTypeInformation.CommitMessageNotApplicable, "QG", Color.FromRgb(68, 52, 193))  },
 
             { SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, new EntityTypeInformation(
                 SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, "Suite Run Schedulers", EntityTypeInformation.CommitMessageNotApplicable, "SCH", Color.FromRgb(255, 45, 191)) }, 
