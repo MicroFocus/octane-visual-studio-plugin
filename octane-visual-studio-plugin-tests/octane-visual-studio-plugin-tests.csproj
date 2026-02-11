@@ -90,6 +90,7 @@
       <Name>octane-visual-studio-plugin</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
     <None Include="default.runsettings">
       <SubType>Designer</SubType>
     </None>

@@ -144,7 +144,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
                 info.ShortLabel = entityLabelMetadata.GetStringValue(EntityLabelMetadata.INITIALS_FIELD);
 
-             
                 em.TryGetValue(WorkItem.SUBTYPE_QUALITY_STORY, out entityLabelMetadata);
                 Registry.TryGetValue(WorkItem.SUBTYPE_QUALITY_STORY, out info);
                 info.DisplayName = entityLabelMetadata.GetStringValue(EntityLabelMetadata.NAME_FIELD);
