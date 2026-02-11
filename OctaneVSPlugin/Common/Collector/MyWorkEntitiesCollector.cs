@@ -63,7 +63,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
         }
 
         private void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc)
-            where TEntityType : BaseEntity, new()
+            where TEntityType : BaseEntity
         {
             Task<EntityListResult<TEntityType>> fetchTask = Service.FetchEntities<TEntityType>(
                 _userItems.data,
