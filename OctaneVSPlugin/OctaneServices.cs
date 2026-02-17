@@ -247,7 +247,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 return new List<UserItem>();
             }
         }
-        
 
         public async Task<IList<BaseEntity>> SearchEntities(string searchString, int limitPerType)
         {
@@ -287,7 +286,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             Comment.OWNER_RUN_FIELD,
             Comment.OWNER_REQUIREMENT_FIELD,
             Comment.CREATION_TIME_FIELD,
-            Comment.TEXT_FIELD
+            Comment.TEXT_FIELD,
+            Comment.OWNER_PROCESS_FIELD,
+            Comment.OWNER_MODEL_FIELD,
+            Comment.OWNER_SUITE_RUN_SCHEDULER_FIELD,
+            Comment.OWNER_SUITE_RUN_SCHEDULER_RUN_FIELD
+
         };
 
         public async Task<IList<BaseEntity>> GetMyCommentItems()
@@ -319,10 +323,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
         private readonly Dictionary<string, string> commentSupport = new Dictionary<string, string>
         {
             { "work_item", "owner_work_item" },
+            { "model_item", "owner_model_item" },
+            { "process", "owner_process" },
             { "task", "owner_task" },
             { "test", "owner_test" },
             { "run", "owner_run" },
-            { "requirement", "owner_requirement" }
+            { "requirement", "owner_requirement" },
+            { "suite_run_scheduler", "owner_suite_run_scheduler" },
+            { "suite_run_scheduler_run", "owner_suite_run_scheduler_run" }
         };
 
         /// <summary>
@@ -437,7 +445,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 UserItem.TEST_REFERENCE,
                 UserItem.RUN_REFERENCE,
                 UserItem.REQUIREMENT_REFERENCE,
-                UserItem.TASK_REFERENCE
+                UserItem.TASK_REFERENCE,
+                UserItem.MODEL_ITEM_REFERENCE,
+                UserItem.PROCESS_REFERENCE,
+                UserItem.SUITE_RUN_SCHEDULER_REFERENCE,
+                UserItem.SUITE_RUN_SCHEDULER_RUN_REFERENCE
             };
             return fields.ToList();
         }

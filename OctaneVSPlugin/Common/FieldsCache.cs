@@ -317,6 +317,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.SubType
                         }
             },
+            { WorkItem.SUBTYPE_FEATURE, new HashSet<string>
+                        {
+                            CommonFields.Name,
+                            CommonFields.Phase,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.Description,
+                            CommonFields.SubType
+                        }
+            },
             { Task.TYPE_TASK, new HashSet<string>
                         {
                             CommonFields.Name,
@@ -368,6 +380,106 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.SubType
                         }
             },
+            { ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, new HashSet<string>
+                        {
+                            CommonFields.CreationTime,
+                            CommonFields.Name,
+                            CommonFields.Phase,
+                            BaseEntity.ID_FIELD,
+                            TestGherkin.TEST_STATUS_FIELD,
+                            CommonFields.HasAttachments,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.Description,
+                            CommonFields.SubType
+                        }
+            },
+            { ModelItem.SUBTYPE_MODEL, new HashSet<string>
+                        {
+                            CommonFields.Name,
+                            CommonFields.Phase,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.Description,
+                            CommonFields.SubType
+                        }
+            },
+            { ModelItem.SUBTYPE_UNIT, new HashSet<string>
+                        {
+                            CommonFields.Name,
+                            CommonFields.Phase,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.Description,
+                            CommonFields.SubType
+                        }
+            },
+            { SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, new HashSet<string>
+                {
+                    BaseEntity.ID_FIELD,
+                    CommonFields.Name,
+                    CommonFields.Author,
+                    CommonFields.Owner,
+                    CommonFields.Description
+                }
+            },
+            { SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, new HashSet<string>
+                {
+                    BaseEntity.ID_FIELD,
+                    CommonFields.Name,
+                    CommonFields.Author,
+                    CommonFields.Owner,
+                    CommonFields.Description
+                }
+            },
+            { Process.SUBTYPE_AUTO_ACTION, new HashSet<string>
+                        {
+                            CommonFields.Name,
+                            CommonFields.Phase,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.Description,
+                            CommonFields.SubType,
+                            CommonFields.Owner
+                        }
+            },
+            { Process.SUBTYPE_MANUAL_ACTION, new HashSet<string>
+                        {
+                            CommonFields.Name,
+                            CommonFields.Phase,
+                            BaseEntity.ID_FIELD,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
+                            CommonFields.Description,
+                            CommonFields.SubType,
+                            CommonFields.Owner
+                        }
+            },
+            { Process.SUBTYPE_QUALITY_GATE, new HashSet<string>
+                        {
+                            CommonFields.Name,
+                            CommonFields.Phase,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
+                            CommonFields.NewTasks,
+                            // we want to filter out description because it will be shown separately
+                            // and subtype because it is only used internally
+                            CommonFields.Description,
+                            CommonFields.SubType,
+                            CommonFields.Owner
+                        }
+            },
             { RunManual.SUBTYPE_RUN_MANUAL, new HashSet<string>
                         {
                             CommonFields.Name,
@@ -388,6 +500,18 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             Run.TEST_FIELD,
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
+                            CommonFields.Description,
+                            CommonFields.SubType
+                        }
+            },
+            { TestSuite.SUBTYPE_TEST_SUITE, new HashSet<string>
+                        {
+                            CommonFields.CreationTime,
+                            CommonFields.Name,
+                            CommonFields.TestType,
+                            CommonFields.BacklogCoverage,
+                            BaseEntity.ID_FIELD,
+                            CommonFields.HasAttachments,
                             CommonFields.Description,
                             CommonFields.SubType
                         }

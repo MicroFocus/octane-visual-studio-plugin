@@ -55,6 +55,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             WorkItem.SUBTYPE_DEFECT,
             WorkItem.SUBTYPE_STORY,
             WorkItem.SUBTYPE_QUALITY_STORY,
+            WorkItem.SUBTYPE_FEATURE,
 
             // task
             Api.Core.Entities.Task.TYPE_TASK,
@@ -62,10 +63,25 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             // test
             TestGherkin.SUBTYPE_GHERKIN_TEST,
             Test.SUBTYPE_MANUAL_TEST,
+            TestSuite.SUBTYPE_TEST_SUITE,
+            ModelBasedTest.SUBTYPE_MODEL_BASED_TEST,
+
+            // model item
+            ModelItem.SUBTYPE_MODEL,
+            ModelItem.SUBTYPE_UNIT,  
+            
+            // process item
+            Process.SUBTYPE_AUTO_ACTION,
+            Process.SUBTYPE_MANUAL_ACTION,
+            Process.SUBTYPE_QUALITY_GATE,
+
 
             // run
             RunManual.SUBTYPE_RUN_MANUAL,
             RunSuite.SUBTYPE_RUN_SUITE,
+
+            SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER,
+            SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN,
 
             // requirement
             Requirement.SUBTYPE_DOCUMENT

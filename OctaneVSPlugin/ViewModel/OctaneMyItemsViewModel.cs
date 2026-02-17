@@ -224,12 +224,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
 
                 bool foundActiveItem = false;
                 IEnumerable<BaseEntity> items = await octaneService.GetMyItems();
-                // when a user story is converted to feature it might still be in the list of my work items, 
-                // the plugins do not support features in my work, so we just remove those entities
-                items = items.Where(entity => !WorkItem.SUBTYPE_FEATURE.Equals(entity.GetStringValue(CommonFields.SubType)));
-                // exclude TestSuite entity because we don't support it yet
-                items = items.Where(entity => !TestSuite.SUBTYPE_TEST_SUITE.Equals(entity.GetStringValue(CommonFields.SubType)));
-                
+
                 if (sublistsMap == null)
                 {
                     sublistsMap = createMyWorkItemsSublistsMap();
@@ -238,7 +233,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     cleanSubListsMap(sublistsMap);
                 }
-                
+
                 foreach (BaseEntity entity in items)
                 {
                     var octaneItem = new OctaneItemViewModel(entity);
@@ -304,7 +299,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                 {
                     LastExceptionMessage = ex.Message;
                 }
-               
+
             }
         }
 
@@ -335,14 +330,24 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     { WorkItem.SUBTYPE_STORY, new MyWorkItemsSublist(WorkItem.SUBTYPE_STORY) },
                     { WorkItem.SUBTYPE_QUALITY_STORY, new MyWorkItemsSublist(WorkItem.SUBTYPE_QUALITY_STORY) },
                     { WorkItem.SUBTYPE_DEFECT, new MyWorkItemsSublist(WorkItem.SUBTYPE_DEFECT)},
+                    { WorkItem.SUBTYPE_FEATURE, new MyWorkItemsSublist(WorkItem.SUBTYPE_FEATURE)},
                     { Task.TYPE_TASK, new MyWorkItemsSublist(Task.TYPE_TASK) },
                     { Requirement.SUBTYPE_DOCUMENT, new MyWorkItemsSublist(Requirement.SUBTYPE_DOCUMENT) },
                     { Test.SUBTYPE_MANUAL_TEST, new MyWorkItemsSublist(Test.SUBTYPE_MANUAL_TEST) },
+                    { TestSuite.SUBTYPE_TEST_SUITE, new MyWorkItemsSublist(TestSuite.SUBTYPE_TEST_SUITE)},
                     { TestGherkin.SUBTYPE_GHERKIN_TEST, new MyWorkItemsSublist(TestGherkin.SUBTYPE_GHERKIN_TEST) },
+                    { ModelItem.SUBTYPE_MODEL, new MyWorkItemsSublist(ModelItem.SUBTYPE_MODEL)},
+                    { ModelItem.SUBTYPE_UNIT, new MyWorkItemsSublist(ModelItem.SUBTYPE_UNIT)},
+                    { Process.SUBTYPE_MANUAL_ACTION, new MyWorkItemsSublist(Process.SUBTYPE_MANUAL_ACTION)},
+                    { Process.SUBTYPE_AUTO_ACTION, new MyWorkItemsSublist(Process.SUBTYPE_AUTO_ACTION)},
+                    { Process.SUBTYPE_QUALITY_GATE, new MyWorkItemsSublist(Process.SUBTYPE_QUALITY_GATE)},
+                    { ModelBasedTest.SUBTYPE_MODEL_BASED_TEST, new MyWorkItemsSublist(ModelBasedTest.SUBTYPE_MODEL_BASED_TEST)},
                     { RunSuite.SUBTYPE_RUN_SUITE, new MyWorkItemsSublist(RunSuite.SUBTYPE_RUN_SUITE) },
                     { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
                     { TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, new MyWorkItemsSublist( TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST )},
-                    { Comment.TYPE_COMMENT, new MyWorkItemsSublist( Comment.TYPE_COMMENT )}
+                    { Comment.TYPE_COMMENT, new MyWorkItemsSublist( Comment.TYPE_COMMENT )},
+                    { SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, new MyWorkItemsSublist(SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER) },
+                    { SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, new MyWorkItemsSublist(SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN) },
                 };
         }
 

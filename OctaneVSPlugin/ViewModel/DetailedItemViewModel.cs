@@ -197,7 +197,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     await RetrieveComments();
 
                 var transitions = await octaneService.GetTransitionsForEntityType(EntityType);
-                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite")
+                if (Entity.TypeName != "run" && Entity.TypeName != "run_manual" && Entity.TypeName != "run_suite" && Entity.TypeName != "suite_run_scheduler" && Entity.TypeName != "suite_run_scheduler_run")
                 {
 
                     var phaseEntity = Entity.GetValue(CommonFields.Phase) as BaseEntity;
@@ -506,14 +506,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
             WorkItem.SUBTYPE_DEFECT,
             WorkItem.SUBTYPE_STORY,
             WorkItem.SUBTYPE_QUALITY_STORY,
+            WorkItem.SUBTYPE_FEATURE,
 
             // test
             TestGherkin.SUBTYPE_GHERKIN_TEST,
             Test.SUBTYPE_MANUAL_TEST,
+            TestSuite.SUBTYPE_TEST_SUITE,
+            ModelBasedTest.SUBTYPE_MODEL_BASED_TEST,
 
             // run
             RunManual.SUBTYPE_RUN_MANUAL,
             RunSuite.SUBTYPE_RUN_SUITE,
+
+            // model item
+            ModelItem.SUBTYPE_MODEL,
+            ModelItem.SUBTYPE_UNIT,
+
+            // process item
+            Process.SUBTYPE_AUTO_ACTION,
+            Process.SUBTYPE_MANUAL_ACTION,
+            Process.SUBTYPE_QUALITY_GATE,
+
+            SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER,
+            SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN,
 
             // requirement
             Requirement.SUBTYPE_DOCUMENT,

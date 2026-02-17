@@ -56,9 +56,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common.Collector
             Add<Run>(userItem => userItem.Run);
             Add<Requirement>(userItem => userItem.Requirement);
             Add<OctaneTask>(userItem => userItem.Task);
+            Add<ModelItem>(userItem => userItem.ModelItem);
+            Add<Process>(userItem => userItem.Process);
+            Add<SuiteRunScheduler>(userItem => userItem.SuiteRunScheduler);
+            Add<SuiteRunSchedulerRun>(userItem => userItem.SuiteRunSchedulerRun);
         }
 
-        private void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc) where TEntityType : BaseEntity
+        private void Add<TEntityType>(Func<UserItem, BaseEntity> getReferenceEntityFunc)
+            where TEntityType : BaseEntity
         {
             Task<EntityListResult<TEntityType>> fetchTask = Service.FetchEntities<TEntityType>(
                 _userItems.data,
