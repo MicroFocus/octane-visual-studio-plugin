@@ -2058,7 +2058,28 @@ namespace HTMLConverter
                         //  Convert from font-variant into xaml property
                         break;
                     case "font-weight":
-                        xamlElement.SetAttribute(Xaml_FontWeight, (string)propertyEnumerator.Value);
+                        string fontWeightValue = (string)propertyEnumerator.Value;
+                        switch (fontWeightValue.ToLower())
+                        {
+                            case "bolder":
+                            case "bold":
+                            case "700":
+                            case "800":
+                            case "900":
+                                fontWeightValue = Xaml_FontWeight_Bold;
+                                break;
+                            case "lighter":
+                            case "normal":
+                            case "100":
+                            case "200":
+                            case "300":
+                            case "400":
+                            case "500":
+                            case "600":
+                                fontWeightValue = "Normal";
+                                break;
+                        }
+                        xamlElement.SetAttribute(Xaml_FontWeight, fontWeightValue);
                         break;
                     case "font-size":
                         //  Convert from css size into FontSize
