@@ -55,12 +55,29 @@ namespace MicroFocus.Adm.Octane.VisualStudio.View
             }
 
             SubscribeToAllHyperlinks(flowDocument);
+            FixListFormatting(flowDocument);
 
             flowDocument.FontSize = SystemFonts.IconFontSize;
             flowDocument.FontWeight = SystemFonts.MessageFontWeight;
             flowDocument.FontFamily = SystemFonts.CaptionFontFamily;
 
             return flowDocument;
+        }
+
+        private void FixListFormatting(FlowDocument flowDocument)
+        {
+            var lists = GetVisuals(flowDocument).OfType<List>();
+            foreach (var list in lists)
+            {
+                list.Margin = new Thickness(20, 0, 0, 0);
+                list.Padding = new Thickness(0, 0, 0, 0);
+
+                foreach (var listItem in list.ListItems)
+                {
+                    listItem.Margin = new Thickness(0, 0, 0, 0);
+                    listItem.Padding = new Thickness(0, 0, 0, 5);
+                }
+            }
         }
 
         private void SubscribeToAllHyperlinks(FlowDocument flowDocument)
