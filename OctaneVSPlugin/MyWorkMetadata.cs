@@ -121,12 +121,11 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             AddSubType<WorkItem>(WorkItem.SUBTYPE_FEATURE,
                 FieldAtSubTitle(CommonFields.Environment, "Environment", "No environment"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.DetectedBy, "Detected By"),
+                FieldAtTop(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.StoryPoints, "SP"),
-                FieldAtTop(CommonFields.Severity, "Severity"),
-                FieldAtBottom(CommonFields.InvestedHours, "Invested Hours"),
-                FieldAtBottom(CommonFields.RemainingHours, "Remaining Hours"),
-                FieldAtBottom(CommonFields.EstimatedHours, "Estimated Hours")
+                FieldAtTop(CommonFields.Author, "Author"),
+                FieldAtBottom(CommonFields.Release, "Release"),
+                FieldAtBottom(CommonFields.Team, "Team")
                 );
 
             AddSubType<Test>(Test.SUBTYPE_MANUAL_TEST,
@@ -142,18 +141,14 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtSubTitle("test_type", "Test Type"),
                 FieldAtTop(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.StepsNum, "Steps"),
-                FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
 
             AddSubType<Test>(TestSuite.SUBTYPE_TEST_SUITE,
                FieldAtSubTitle("test_type", "Test Type"),
                FieldAtTop(CommonFields.Phase, "Phase"),
                FieldAtTop(CommonFields.Owner, "Owner"),
-               FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-               FieldAtBottom(CommonFields.StepsNum, "Steps"),
-               FieldAtBottom(CommonFields.AutomationStatus, "Automation status")
+               FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName)
                );
 
             AddSubType<Test>(TestGherkin.SUBTYPE_GHERKIN_TEST,
@@ -169,39 +164,38 @@ namespace MicroFocus.Adm.Octane.VisualStudio
                 FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtBottom(CommonFields.Name, "Model Name"),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName)
                 );
             AddSubType<ModelItem>(ModelItem.SUBTYPE_UNIT,
                 FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtBottom(CommonFields.Name, "Model Name"),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
+                FieldAtTop(CommonFields.Priority, "Risk")
                 );
 
             AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_AUTO_ACTION,
                 FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Parent, "Quality Gate"),
+                FieldAtBottom(CommonFields.ReleaseProcess, "Parent Process")
                 );
 
             AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_MANUAL_ACTION,
                 FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Parent, "Quality Gate"),
+                FieldAtBottom(CommonFields.ReleaseProcess, "Parent Process")
                 );
 
             AddSubType<Api.Core.Entities.Process>(Api.Core.Entities.Process.SUBTYPE_QUALITY_GATE,
                 FieldAtSubTitle(CommonFields.Phase, "Phase"),
                 FieldAtTop(CommonFields.Owner, "Owner"),
-                FieldAtTop(CommonFields.Description, "Description"),
-                FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtBottom(CommonFields.SubType, "Subtype")
+                FieldAtTop(CommonFields.Phase, "Phase"),
+                FieldAtTop(CommonFields.Parent, "Quality Gate"),
+                FieldAtBottom(CommonFields.ReleaseProcess, "Parent Process")
                 );
 
             AddSubType<Run>(RunSuite.SUBTYPE_RUN_SUITE,
@@ -255,14 +249,12 @@ namespace MicroFocus.Adm.Octane.VisualStudio
             AddSubType<SuiteRunScheduler>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 FieldAtSubTitle(CommonFields.Status, "status"),
                 FieldAtTop(CommonFields.Author, "Author", string.Empty, Utility.GetAuthorFullName),
-                FieldAtTop(CommonFields.LastModified, "Last Modified"),
-                FieldAtBottom(CommonFields.CreationTime, "Creation Time")
-
+                FieldAtTop(CommonFields.Status, "Status")
             );
 
             AddSubType<SuiteRunSchedulerRun>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,
                 FieldAtSubTitle(CommonFields.Status, "status"),
-                FieldAtTop(CommonFields.LastModified, "Last Modified")
+                FieldAtTop(CommonFields.Status, "Status")
             );
 
             AddSubType<Comment>(SIMPLE_ENTITY_SUBTYPE_PLACEHOLDER,

@@ -29,22 +29,18 @@
       "Value": [
         "author",
         "owner",
+        "description",
         "creation_time",
         "last_modified",
         "story_points",
-        "item_origin",
         "test_coverage",
         "epic",
         "priority",
-        "application_modules",
         "release",
-        "milestone",
         "target_sprint",
         "team",
-        "items_in_releases",
         "progress",
-        "feature_type",
-        "actual_story_points"
+        "feature_type"
       ]
     },
     {
@@ -53,7 +49,8 @@
         "author",
         "owner",
         "creation_time",
-        "last_modified"
+        "last_modified",
+        "description"
       ]
     },
     {
@@ -63,6 +60,7 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "test_type",
         "automation_coverage",
         "readiness",
@@ -77,6 +75,7 @@
         "author",
         "owner",
         "creation_time",
+        "description",
         "last_modified",
         "automation_status",
         "risk"
@@ -89,6 +88,7 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "start_time",
         "end_time",
         "duration",
@@ -103,6 +103,7 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "start_time",
         "end_time",
         "duration",
@@ -118,6 +119,7 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "start_time",
         "end_time",
         "duration",
@@ -133,6 +135,7 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "release",
         "milestone",
         "status"
@@ -145,8 +148,10 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "start_time",
         "duration",
+        "status",
         "general_run_status"
       ]
     },
@@ -241,7 +246,10 @@
         "last_modified",
         "covered_content",
         "product_areas",
-        "automation_status"
+        "automation_status",
+        "owner",
+        "designer",
+        "description"
       ]
     },
     {
