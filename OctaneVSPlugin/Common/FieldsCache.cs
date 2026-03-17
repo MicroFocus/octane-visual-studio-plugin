@@ -448,8 +448,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
                             CommonFields.Description,
-                            CommonFields.SubType,
-                            CommonFields.Owner
+                            CommonFields.SubType
                         }
             },
             { Process.SUBTYPE_MANUAL_ACTION, new HashSet<string>
@@ -462,8 +461,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             CommonFields.HasAttachments,
                             CommonFields.NewTasks,
                             CommonFields.Description,
-                            CommonFields.SubType,
-                            CommonFields.Owner
+                            CommonFields.SubType
                         }
             },
             { Process.SUBTYPE_QUALITY_GATE, new HashSet<string>
@@ -476,8 +474,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                             // we want to filter out description because it will be shown separately
                             // and subtype because it is only used internally
                             CommonFields.Description,
-                            CommonFields.SubType,
-                            CommonFields.Owner
+                            CommonFields.SubType
                         }
             },
             { RunManual.SUBTYPE_RUN_MANUAL, new HashSet<string>
@@ -508,7 +505,6 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
                         {
                             CommonFields.CreationTime,
                             CommonFields.Name,
-                            CommonFields.TestType,
                             CommonFields.BacklogCoverage,
                             BaseEntity.ID_FIELD,
                             CommonFields.HasAttachments,
