@@ -5,6 +5,7 @@
       "Key": "defect",
       "Value": [
         "detected_by",
+        "milestone",
         "owner",
         "parent",
         "last_modified",
@@ -28,22 +29,25 @@
       "Key": "feature",
       "Value": [
         "author",
+        "parent",
         "owner",
+        "description",
         "creation_time",
         "last_modified",
         "story_points",
-        "item_origin",
         "test_coverage",
         "epic",
         "priority",
-        "application_modules",
         "release",
-        "milestone",
         "target_sprint",
         "team",
-        "items_in_releases",
         "progress",
         "feature_type",
+        "item_origin",
+        "application_modules",
+        "milestone",
+        "sprint",
+        "items_in_releases",
         "actual_story_points"
       ]
     },
@@ -53,22 +57,26 @@
         "author",
         "owner",
         "creation_time",
-        "last_modified"
+        "last_modified",
+        "description"
       ]
     },
     {
       "Key": "model_based_test",
       "Value": [
-        "creation_time",
         "last_modified",
+        "designer",
         "author",
         "owner",
+        "description",
         "test_type",
         "automation_coverage",
         "readiness",
         "backlog_coverage",
         "estimated_duration",
-        "application_modules"
+        "application_modules",
+        "created",
+        "designer"
       ]
     },
     {
@@ -77,38 +85,41 @@
         "author",
         "owner",
         "creation_time",
+        "description",
         "last_modified",
         "automation_status",
-        "risk"
+        "risk",
+        "designer",
+        "priority"
       ]
     },
     {
       "Key": "process_action",
       "Value": [
-        "creation_time",
-        "last_modified",
         "author",
         "owner",
-        "start_time",
-        "end_time",
-        "duration",
-        "parent_process",
-        "parent"
-      ]
-    },
-    {
-      "Key": "process_auto_action",
-      "Value": [
-        "creation_time",
-        "last_modified",
-        "author",
-        "owner",
+        "description",
         "start_time",
         "end_time",
         "duration",
         "parent_process",
         "parent",
-        "action_type"
+        "release_process"
+      ]
+    },
+    {
+      "Key": "process_auto_action",
+      "Value": [
+        "author",
+        "owner",
+        "description",
+        "start_time",
+        "end_time",
+        "duration",
+        "parent_process",
+        "parent",
+        "action_type",
+        "release_process"
       ]
     },
     {
@@ -118,12 +129,14 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "start_time",
         "end_time",
         "duration",
         "parent_process",
         "parent",
-        "transition_note"
+        "transition_note",
+        "release_process"
       ]
     },
     {
@@ -133,6 +146,7 @@
         "last_modified",
         "author",
         "owner",
+        "description",
         "release",
         "milestone",
         "status"
@@ -141,12 +155,11 @@
     {
       "Key": "suite_run_scheduler_run",
       "Value": [
-        "creation_time",
         "last_modified",
-        "author",
-        "owner",
+        "description",
         "start_time",
         "duration",
+        "status",
         "general_run_status"
       ]
     },
@@ -154,19 +167,20 @@
       "Key": "story",
       "Value": [
         "author",
+        "last_runs",
         "owner",
         "creation_time",
         "last_modified",
         "story_points",
         "item_origin",
-        "last_runs",
         "parent",
         "product_areas",
         "release",
         "sprint",
         "team",
         "blocked",
-        "blocked_reason"
+        "blocked_reason",
+        "milestone"
       ]
     },
     {
@@ -185,7 +199,8 @@
         "team",
         "quality_story_type",
         "blocked",
-        "blocked_reason"
+        "blocked_reason",
+        "milestone"
       ]
     },
     {
@@ -234,14 +249,17 @@
     {
       "Key": "test_suite",
       "Value": [
-        "test_type",
         "testing_tool_type",
         "estimated_duration",
         "created",
         "last_modified",
         "covered_content",
         "product_areas",
-        "automation_status"
+        "automation_status",
+        "owner",
+        "designer",
+        "description",
+        "test_type"
       ]
     },
     {
@@ -273,7 +291,10 @@
         "release",
         "draft_run",
         "last_modified",
-        "default_taxonomies"
+        "default_taxonomies",
+        "sprint",
+        "milestone",
+        "covered_content"
       ]
     },
     {

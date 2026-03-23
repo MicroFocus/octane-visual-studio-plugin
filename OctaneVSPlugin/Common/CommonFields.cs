@@ -32,6 +32,8 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         public const string Environment = "taxonomies";
         public const string DetectedBy = "detected_by";
         public const string Release = "release";
+        public const string ReleaseProcess = "release_process";
+        public const string Parent = "parent";
         public const string Owner = "owner";
         public const string Phase = "phase";
         public const string Origin = "origin";
@@ -55,6 +57,7 @@ namespace MicroFocus.Adm.Octane.VisualStudio.Common
         public const string NewTasks = "new_tasks";
         public const string BDDSpec = "bdd_spec";
         public const string Priority = "priority";
+        public const string Team = "team";
         public const string Milestone = "milestone";
         public const string FeatureType = "feature_type";
         public const string BacklogCoverage = "backlog_coverage";

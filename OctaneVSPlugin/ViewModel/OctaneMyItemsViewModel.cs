@@ -345,9 +345,9 @@ namespace MicroFocus.Adm.Octane.VisualStudio.ViewModel
                     { RunSuite.SUBTYPE_RUN_SUITE, new MyWorkItemsSublist(RunSuite.SUBTYPE_RUN_SUITE) },
                     { RunManual.SUBTYPE_RUN_MANUAL, new MyWorkItemsSublist(RunManual.SUBTYPE_RUN_MANUAL) },
                     { TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST, new MyWorkItemsSublist( TestBDDScenario.SUBTYPE_BDD_SCENARIO_TEST )},
-                    { Comment.TYPE_COMMENT, new MyWorkItemsSublist( Comment.TYPE_COMMENT )},
                     { SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER, new MyWorkItemsSublist(SuiteRunScheduler.TYPE_SUITE_RUN_SCHEDULER) },
                     { SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN, new MyWorkItemsSublist(SuiteRunSchedulerRun.TYPE_SUITE_RUN_SCHEDULER_RUN) },
+                    { Comment.TYPE_COMMENT, new MyWorkItemsSublist( Comment.TYPE_COMMENT )}
                 };
         }
 
