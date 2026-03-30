@@ -48,7 +48,9 @@
         "milestone",
         "sprint",
         "items_in_releases",
-        "actual_story_points"
+        "actual_story_points",
+        "last_runs",
+        "product_areas"
       ]
     },
     {
@@ -76,7 +78,9 @@
         "estimated_duration",
         "application_modules",
         "created",
-        "designer"
+        "designer",
+        "product_areas",
+        "covered_content"
       ]
     },
     {
@@ -149,7 +153,9 @@
         "description",
         "release",
         "milestone",
-        "status"
+        "status",
+        "schedule_release",
+        "schedule_milestone"
       ]
     },
     {
