@@ -97,7 +97,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MicroFocus.Adm.Octane.Api.Core">
-      <Version>26.1</Version>
+      <Version>26.2</Version>
     </PackageReference>
     <PackageReference Include="MSTest.TestAdapter">
       <Version>2.2.10</Version>
